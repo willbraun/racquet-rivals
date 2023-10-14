@@ -46,7 +46,7 @@
 		</button>
 	</div>
 
-	<p class="text-sm text-red-500">{error}</p>
+	<p class="text-sm text-red-500 whitespace-pre-line">{error}</p>
 
 	<div class="mt-6">
 		<p>Don't have an account? Create one <a class="underline" href="/create-account">here</a></p>
