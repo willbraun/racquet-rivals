@@ -2,8 +2,8 @@ import type { ClientResponseError } from 'pocketbase'
 
 type ErrorObjData = {
 	[key: string]: {
-		code: string,
-		message: string,
+		code: string
+		message: string
 	}
 }
 
@@ -13,10 +13,14 @@ export const errorMessage = (error: unknown) => {
 	let dataMessage = ''
 
 	if (Object.keys(data).length > 0) {
-		dataMessage = Object.entries(data).map(([key, value]) => `• ${capitalize(key)}: ${value.message}`).join('\n')
+		dataMessage = Object.entries(data)
+			.map(([key, value]) => `• ${capitalize(key)}: ${value.message}`)
+			.join('\n')
 	}
 
-	const result = `Error: ${errorObj.status} - ${errorObj.message}${dataMessage && `\n${dataMessage}`}`
+	const result = `Error: ${errorObj.status} - ${errorObj.message}${
+		dataMessage && `\n${dataMessage}`
+	}`
 	console.error(result)
 	return result
 }
@@ -24,4 +28,10 @@ export const errorMessage = (error: unknown) => {
 const capitalize = (str: string) => {
 	if (!str) return ''
 	return str[0].toUpperCase() + str.slice(1).toLowerCase()
+}
+
+export const isValidEmail = (value: string) => {
+	return !!value.match(
+		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+	)
 }

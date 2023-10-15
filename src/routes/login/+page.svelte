@@ -2,12 +2,32 @@
 	import Pocketbase from 'pocketbase'
 	import { goto } from '$app/navigation'
 	import { errorMessage } from '$lib/utils'
+	import PasswordField from '$lib/PasswordField.svelte'
+	import { localStorageStore } from '@skeletonlabs/skeleton'
+	import { get, type Writable } from 'svelte/store'
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	let usernameOrEmail = ''
 	let password = ''
 	let error = ''
 	let loading = false
+	let rememberMe = false
+
+	type RememberLogin = {
+		rememberMe: boolean
+		usernameOrEmail: string
+	}
+
+	const rememberLogin: Writable<RememberLogin> = localStorageStore('rememberLogin', {
+		rememberMe: false,
+		usernameOrEmail: ''
+	})
+
+	const saved = get(rememberLogin)
+	if (saved.rememberMe) {
+		usernameOrEmail = saved.usernameOrEmail
+		rememberMe = true
+	}
 
 	const handleLogin = async () => {
 		loading = true
@@ -16,6 +36,11 @@
 		try {
 			await pb.collection('user').authWithPassword(usernameOrEmail, password)
 			goto('/')
+
+			rememberLogin.set({
+				rememberMe,
+				usernameOrEmail
+			})
 		} catch (e) {
 			error = errorMessage(e)
 		}
@@ -24,29 +49,30 @@
 	}
 </script>
 
-<div class="mt-12 m-auto p-4 max-w-md [&>*]:mb-4">
-	<h1 class="text-3xl">Login</h1>
-	<label class="label">
-		<span>Username or email</span>
-		<input class="input" type="text" bind:value={usernameOrEmail} />
-	</label>
-	<label class="label">
-		<span>Password</span>
-		<input class="input" type="password" bind:value={password} />
-	</label>
+<div class="mt-12 m-auto p-4 max-w-md">
+	<h1 class="text-3xl mb-4">Login</h1>
+	<form on:submit={handleLogin} class="[&>*]:mb-4">
+		<label class="label">
+			<span>Username or email</span>
+			<input class="input rounded-md" type="text" bind:value={usernameOrEmail} />
+		</label>
+		<PasswordField bind:password />
+		<label class="flex items-center space-x-2">
+			<input class="checkbox" type="checkbox" bind:checked={rememberMe} />
+			<p>Remember me</p>
+		</label>
+		<div class="flex justify-center">
+			<button
+				type="submit"
+				class="btn variant-filled w-1/2 mt-4 mx-auto rounded-xl text-xl font-semibold"
+				disabled={loading}
+			>
+				{loading ? 'Logging in...' : 'Log in'}
+			</button>
+		</div>
+	</form>
 
-	<div class="flex justify-center">
-		<button
-			type="button"
-			class="btn variant-filled w-1/2 mt-4 mx-auto text-xl font-semibold"
-			disabled={loading}
-			on:click={handleLogin}
-		>
-			{loading ? 'Logging in...' : 'Log in'}
-		</button>
-	</div>
-
-	<p class="text-sm text-red-500 whitespace-pre-line">{error}</p>
+	<p class="text-xs text-red-500 whitespace-pre-line mt-2">{error}</p>
 
 	<div class="mt-6">
 		<p>Don't have an account? Create one <a class="underline" href="/create-account">here</a></p>
