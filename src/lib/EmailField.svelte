@@ -1,5 +1,6 @@
 <script lang="ts">
-	let showValidation = false
+	export let email = ''
+	export let showValidation = false
 
 	const isValidEmail = (value: string) => {
 		return !!value.match(
@@ -14,12 +15,10 @@
 		}
 		showValidation = !isValidEmail(email)
 	}
-
-	export let email = ''
 </script>
 
 <label class="label">
-	<span>Email</span>
+	<p>Email</p>
 	<input
 		class="input rounded-md"
 		type="text"
@@ -27,7 +26,7 @@
 		bind:value={email}
 		on:change={handleEmailValidation}
 	/>
-	<p class="text-red-500 text-xs" class:invisible={!showValidation}>
-		Please enter a valid email address
+	<p class="text-red-500 text-xs my-0" class:invisible={!showValidation}>
+		Please enter an email address with a valid format
 	</p>
 </label>

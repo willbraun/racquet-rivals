@@ -5,6 +5,7 @@
 	import PasswordField from '$lib/PasswordField.svelte'
 	import { localStorageStore } from '@skeletonlabs/skeleton'
 	import { get, type Writable } from 'svelte/store'
+	import FormError from '$lib/FormError.svelte'
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	let usernameOrEmail = ''
@@ -53,14 +54,17 @@
 	<h1 class="text-3xl mb-4">Login</h1>
 	<form on:submit={handleLogin} class="[&>*]:mb-4">
 		<label class="label">
-			<span>Username or email</span>
+			<p>Username or email</p>
 			<input class="input rounded-md" type="text" bind:value={usernameOrEmail} />
 		</label>
 		<PasswordField bind:password />
-		<label class="flex items-center space-x-2">
-			<input class="checkbox" type="checkbox" bind:checked={rememberMe} />
-			<p>Remember me</p>
-		</label>
+		<div class="flex justify-between">
+			<label class="flex items-center space-x-2">
+				<input class="checkbox" type="checkbox" bind:checked={rememberMe} />
+				<p>Remember me</p>
+			</label>
+			<a class="text-sm text-gray-500 -translate-y-4" href="/reset-password">Forgot password?</a>
+		</div>
 		<div class="flex justify-center">
 			<button
 				type="submit"
@@ -72,7 +76,7 @@
 		</div>
 	</form>
 
-	<p class="text-xs text-red-500 whitespace-pre-line mt-2">{error}</p>
+	<FormError bind:error />
 
 	<div class="mt-6">
 		<p>Don't have an account? Create one <a class="underline" href="/create-account">here</a></p>

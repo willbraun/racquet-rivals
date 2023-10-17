@@ -29,9 +29,3 @@ const capitalize = (str: string) => {
 	if (!str) return ''
 	return str[0].toUpperCase() + str.slice(1).toLowerCase()
 }
-
-export const isValidEmail = (value: string) => {
-	return !!value.match(
-		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-	)
-}
