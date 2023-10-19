@@ -9,7 +9,7 @@
 	let showEmailValidation = false
 	let error = ''
 	let loading = false
-	let success = true
+	let success = false
 	let buttonRef: HTMLButtonElement
 
 	$: disabled = loading || showEmailValidation
