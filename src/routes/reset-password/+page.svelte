@@ -9,9 +9,14 @@
 	let showEmailValidation = false
 	let error = ''
 	let loading = false
-	let success = false
+	let success = true
+	let buttonRef: HTMLButtonElement
 
 	$: disabled = loading || showEmailValidation
+	$: if (buttonRef && !showEmailValidation) {
+		buttonRef.disabled = false
+		buttonRef.focus()
+	}
 
 	const handleResetPassword = async () => {
 		loading = true
@@ -38,6 +43,7 @@
 				type="submit"
 				class="btn variant-filled w-2/3 my-4 mx-auto rounded-xl text-xl font-semibold"
 				{disabled}
+				bind:this={buttonRef}
 			>
 				{loading ? 'Sending...' : 'Send password reset link'}
 			</button>
