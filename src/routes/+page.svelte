@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { errorMessage } from '$lib/utils'
 	import Pocketbase from 'pocketbase'
+	export let data
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	const refreshToken = async () => {
@@ -59,28 +60,30 @@
 	</section>
 	<section>
 		<h3 class="text-3xl mb-4">Active Draws</h3>
-		<a href="/">
-			<button type="button" class="btn variant-ringed rounded-xl w-full mb-4"
-				>Australian Open Mens Singles 2024</button
-			>
-		</a>
-		<a href="/">
-			<button type="button" class="btn variant-ringed rounded-xl w-full mb-4"
-				>Australian Open Womens Singles 2024</button
-			>
-		</a>
+		{#if data.active.totalItems > 0}
+			{#each data.active.items as draw}
+				<a href={`/draw/${draw.id}`}>
+					<button type="button" class="btn variant-ringed rounded-xl w-full mb-4">
+						{`${draw.name} ${draw.event} ${draw.year}`}
+					</button>
+				</a>
+			{/each}
+		{:else}
+			<p class="text-center mb-4">No active draws</p>
+		{/if}
 	</section>
 	<section>
 		<h3 class="text-3xl mb-4">Completed Draws</h3>
-		<a href="/">
-			<button type="button" class="btn variant-ringed rounded-xl w-full mb-4"
-				>US Open Mens Singles 2023</button
-			>
-		</a>
-		<a href="/">
-			<button type="button" class="btn variant-ringed rounded-xl w-full mb-4"
-				>US Open Womens Singles 2023</button
-			>
-		</a>
+		{#if data.completed.totalItems > 0}
+			{#each data.completed.items as draw}
+				<a href={`/draw/${draw.id}`}>
+					<button type="button" class="btn variant-ringed rounded-xl w-full mb-4">
+						{`${draw.name} ${draw.event} ${draw.year}`}
+					</button>
+				</a>
+			{/each}
+		{:else}
+			<p class="text-center mb-4">No completed draws</p>
+		{/if}
 	</section>
 </div>
