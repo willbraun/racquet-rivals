@@ -6,6 +6,7 @@
 	import { localStorageStore } from '@skeletonlabs/skeleton'
 	import { get, type Writable } from 'svelte/store'
 	import FormError from '$lib/FormError.svelte'
+	import { currentUser } from '$lib/store'
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	let usernameOrEmail = ''
@@ -35,7 +36,8 @@
 		error = ''
 
 		try {
-			await pb.collection('user').authWithPassword(usernameOrEmail, password)
+			const data = await pb.collection('user').authWithPassword(usernameOrEmail, password)
+			currentUser.set(data.record)
 			goto('/')
 
 			rememberLogin.set({

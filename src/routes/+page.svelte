@@ -1,18 +1,15 @@
 <script lang="ts">
 	import { errorMessage } from '$lib/utils'
 	import Pocketbase from 'pocketbase'
+	import type { Draw } from './draw/[slug]/+page.server.js'
+	import { currentUser, emptyUser } from '$lib/store.js'
 	export let data
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
-	const refreshToken = async () => {
-		try {
-			pb.authStore.isValid && (await pb.collection('user').authRefresh())
-		} catch (e) {
-			pb.authStore.clear()
-		}
+	const getSlug = (draw: Draw): string => {
+		const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-')
+		return `${slugify(draw.name)}-${slugify(draw.event)}-${draw.year}-${draw.id}`
 	}
-
-	refreshToken()
 </script>
 
 <header class="flex justify-end gap-2 p-2">
@@ -24,18 +21,12 @@
 				on:click={() => {
 					try {
 						pb.authStore.clear()
+						currentUser.set(emptyUser)
 					} catch (e) {
 						errorMessage(e)
 					}
 				}}>Logout</button
 			>
-		</a>
-	{:else}
-		<a href="/login">
-			<button type="button" class="btn variant-ghost rounded-xl">Login</button>
-		</a>
-		<a href="/create-account">
-			<button type="button" class="btn variant-filled rounded-xl">Sign up</button>
 		</a>
 	{/if}
 </header>
@@ -50,10 +41,10 @@
 			<p class="text-center mb-2">Log in to create a bracket</p>
 			<div class="flex justify-center gap-2 w-full">
 				<a href="/login">
-					<button type="button" class="btn variant-ghost rounded-xl w-40">Login</button>
+					<button type="button" class="btn variant-ghost rounded-lg w-40">Login</button>
 				</a>
 				<a href="/create-account">
-					<button type="button" class="btn variant-filled rounded-xl w-40">Sign up</button>
+					<button type="button" class="btn variant-filled rounded-lg w-40">Sign up</button>
 				</a>
 			</div>
 		{/if}
@@ -62,7 +53,7 @@
 		<h3 class="text-3xl mb-4">Active Draws</h3>
 		{#if data.active.totalItems > 0}
 			{#each data.active.items as draw}
-				<a href={`/draw/${draw.id}`}>
+				<a href={`/draw/${getSlug(draw)}`}>
 					<button type="button" class="btn variant-ringed rounded-xl w-full mb-4">
 						{`${draw.name} ${draw.event} ${draw.year}`}
 					</button>
@@ -76,7 +67,7 @@
 		<h3 class="text-3xl mb-4">Completed Draws</h3>
 		{#if data.completed.totalItems > 0}
 			{#each data.completed.items as draw}
-				<a href={`/draw/${draw.id}`}>
+				<a href={`/draw/${getSlug(draw)}`}>
 					<button type="button" class="btn variant-ringed rounded-xl w-full mb-4">
 						{`${draw.name} ${draw.event} ${draw.year}`}
 					</button>
