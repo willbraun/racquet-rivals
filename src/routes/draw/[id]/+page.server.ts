@@ -46,9 +46,6 @@ export async function load({ fetch, params }) {
 	)
 	const slotData: SlotRes = await slotRes.json()
 
-	console.log(drawData)
-	console.log(slotData)
-
 	return {
 		draw: drawData,
 		slots: slotData
