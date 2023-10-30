@@ -35,6 +35,24 @@ interface SlotRes {
 	items: Slot[]
 }
 
+interface Prediction {
+	collectionId: string
+	collectionName: 'view_predictions'
+	draw_id: string
+	draw_slot_id: string
+	id: string
+	user_id: string
+	username: string
+}
+
+interface PredictionRes {
+	page: number
+	perPage: number
+	totalItems: number
+	totalPages: number
+	items: Prediction[]
+}
+
 export async function load({ fetch, params }) {
 	const id = params.slug.split('-').at(-1)
 
@@ -48,8 +66,16 @@ export async function load({ fetch, params }) {
 	)
 	const slotData: SlotRes = await slotRes.json()
 
+	const filter = `(draw_id="${id}" && user_id="gvi2dlpb8gltpvo")`
+	const encoded = encodeURIComponent(filter)
+	const predictionRes = await fetch(
+		`https://tennisbracket.willbraun.dev/api/collections/view_predictions/records?perPage=300&filter=${encoded}`
+	)
+	const predictionData: PredictionRes = await predictionRes.json()
+
 	return {
 		draw: drawData,
-		slots: slotData
+		slots: slotData,
+		predictions: predictionData
 	}
 }
