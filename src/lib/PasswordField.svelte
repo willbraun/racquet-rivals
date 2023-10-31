@@ -13,6 +13,7 @@
 			id="password"
 			class="input rounded-md"
 			type={show ? 'text' : 'password'}
+			name="password"
 			on:input={(e) => (password = e.currentTarget.value)}
 		/>
 		<button

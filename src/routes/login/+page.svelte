@@ -7,6 +7,8 @@
 	import { get, type Writable } from 'svelte/store'
 	import FormError from '$lib/FormError.svelte'
 	import { currentUser } from '$lib/store'
+	import { enhance } from '$app/forms'
+	export let form
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	let usernameOrEmail = ''
@@ -14,6 +16,8 @@
 	let error = ''
 	let loading = false
 	let rememberMe = false
+
+	$: error = form?.error ?? ''
 
 	type RememberLogin = {
 		rememberMe: boolean
@@ -54,10 +58,27 @@
 
 <div class="mt-12 m-auto p-4 max-w-md">
 	<h1 class="text-3xl mb-4">Login</h1>
-	<form on:submit={handleLogin} class="[&>*]:mb-4">
+	<form
+		method="POST"
+		action="/login"
+		class="[&>*]:mb-4"
+		use:enhance={() => {
+			loading = true
+			error = ''
+			return async ({ update }) => {
+				await update()
+				loading = false
+			}
+		}}
+	>
 		<label class="label">
 			<p>Username or email</p>
-			<input class="input rounded-md" type="text" bind:value={usernameOrEmail} />
+			<input
+				class="input rounded-md"
+				type="text"
+				name="usernameOrEmail"
+				bind:value={usernameOrEmail}
+			/>
 		</label>
 		<PasswordField bind:password />
 		<div class="flex justify-between">
