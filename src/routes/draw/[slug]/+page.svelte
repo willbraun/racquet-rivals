@@ -1,11 +1,7 @@
 <script lang="ts">
 	import Prediction from '$lib/Prediction.svelte'
-	import { errorMessage } from '$lib/utils.js'
-	import { currentUser, emptyUser } from '$lib/store'
-	import Pocketbase, { type RecordModel } from 'pocketbase'
-	import { get } from 'svelte/store'
+	import Logout from '$lib/Logout.svelte'
 	export let data
-	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
 	const fullDrawRounds = Math.log2(data.draw.size)
@@ -24,21 +20,8 @@
 <header class="grid grid-cols-4 items-center p-2">
 	<h1 class="col-span-3 text-lg md:text-2xl font-bold ml-4">{`Tennis Bracket - ${title}`}</h1>
 	<div class="col-span-1 flex justify-end gap-2 flex-wrap">
-		{#if pb.authStore.isValid}
-			<a data-sveltekit-reload href="/">
-				<button
-					type="button"
-					class="btn btn-sm md:btn-md variant-ghost rounded-lg"
-					on:click={() => {
-						try {
-							pb.authStore.clear()
-							currentUser.set(emptyUser)
-						} catch (e) {
-							errorMessage(e)
-						}
-					}}>Logout</button
-				>
-			</a>
+		{#if data.auth.token}
+			<Logout />
 		{:else}
 			<a href="/login">
 				<button type="button" class="btn btn-sm md:btn-md variant-ghost rounded-lg">Login</button>

@@ -1,4 +1,4 @@
-export async function load({ fetch }) {
+export async function load({ fetch, cookies }) {
 	const todayDate = new Date()
 	const year = todayDate.getFullYear()
 	const month = String(todayDate.getMonth() + 1).padStart(2, '0')
@@ -17,6 +17,7 @@ export async function load({ fetch }) {
 
 	return {
 		active: activeData,
-		completed: completedData
+		completed: completedData,
+		auth: JSON.parse(cookies.get('auth') ?? '{}')
 	}
 }

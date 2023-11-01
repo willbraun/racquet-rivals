@@ -53,7 +53,7 @@ interface PredictionRes {
 	items: Prediction[]
 }
 
-export async function load({ fetch, params }) {
+export async function load({ fetch, params, cookies }) {
 	const id = params.slug.split('-').at(-1)
 
 	const drawRes = await fetch(
@@ -76,6 +76,7 @@ export async function load({ fetch, params }) {
 	return {
 		draw: drawData,
 		slots: slotData,
-		predictions: predictionData
+		predictions: predictionData,
+		auth: JSON.parse(cookies.get('auth') ?? '{}')
 	}
 }

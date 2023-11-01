@@ -22,6 +22,7 @@
 	<input
 		class="input rounded-md"
 		type="text"
+		name="email"
 		class:input-error={showValidation}
 		bind:value={email}
 		on:change={handleEmailValidation}

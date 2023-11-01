@@ -5,15 +5,21 @@ import Pocketbase, { ClientResponseError } from 'pocketbase'
 const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 export const actions = {
-	login: async ({ request, cookies }) => {
+	register: async ({ request, cookies }) => {
 		const form = await request.formData()
-		const usernameOrEmail = (form.get('usernameOrEmail') ?? '') as string
+		const username = (form.get('username') ?? '') as string
+		const email = (form.get('email') ?? '') as string
 		const password = (form.get('password') ?? '') as string
 		let clientError = ''
 		let isClientError = false
 
-		if (usernameOrEmail === '') {
-			clientError = 'Please enter your username or email\n'
+		if (username === '') {
+			clientError = 'Please enter your username\n'
+			isClientError = true
+		}
+
+		if (email === '') {
+			clientError += 'Please enter your email\n'
 			isClientError = true
 		}
 
@@ -28,9 +34,18 @@ export const actions = {
 			})
 		}
 
+		const data = {
+			username,
+			email,
+			emailVisibility: true,
+			password,
+			passwordConfirm: password
+		}
+
 		try {
-			const data = await pb.collection('user').authWithPassword(usernameOrEmail, password)
-			cookies.set('auth', JSON.stringify({ token: data.token, userId: data.record.id }), {
+			await pb.collection('user').create(data)
+			const authRes = await pb.collection('user').authWithPassword(email, password)
+			cookies.set('auth', JSON.stringify({ token: authRes.token, userId: authRes.record.id }), {
 				maxAge: 60 * 60 * 24 * 7
 			})
 			return {
@@ -41,15 +56,6 @@ export const actions = {
 			return fail(statusCode, {
 				error: errorMessage(e)
 			})
-		}
-	},
-
-	logout: async ({ cookies }) => {
-		try {
-			pb.authStore.clear()
-			cookies.delete('auth')
-		} catch (e) {
-			errorMessage(e)
 		}
 	}
 }

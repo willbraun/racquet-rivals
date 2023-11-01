@@ -1,10 +1,11 @@
 <script lang="ts">
 	import Pocketbase from 'pocketbase'
 	import { goto } from '$app/navigation'
-	import { errorMessage } from '$lib/utils'
 	import EmailField from '$lib/EmailField.svelte'
 	import PasswordField from '$lib/PasswordField.svelte'
 	import FormError from '$lib/FormError.svelte'
+	import { enhance } from '$app/forms'
+	export let form
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	let username = ''
@@ -15,37 +16,29 @@
 	let loading = false
 
 	$: disabled = !username || !email || password.length < 8 || loading || showEmailValidation
-
-	const handleRegister = async () => {
-		loading = true
-		error = ''
-
-		const data = {
-			username,
-			email,
-			emailVisibility: true,
-			password,
-			passwordConfirm: password
-		}
-
-		try {
-			await pb.collection('user').create(data)
-			await pb.collection('user').authWithPassword(email, password)
-			goto('/')
-		} catch (e) {
-			error = errorMessage(e)
-		}
-
-		loading = false
-	}
+	$: error = form?.error ?? ''
 </script>
 
 <div class="mt-12 m-auto p-4 max-w-md">
 	<h1 class="text-3xl mb-4">Create Account</h1>
-	<form on:submit={handleRegister}>
+	<form
+		action="?/register"
+		method="POST"
+		use:enhance={() => {
+			loading = true
+			error = ''
+			return async ({ result, update }) => {
+				await update()
+				if (result.status === 200) {
+					goto('/')
+				}
+				loading = false
+			}
+		}}
+	>
 		<label class="label mb-4">
 			<p>Username</p>
-			<input class="input rounded-md" type="text" bind:value={username} />
+			<input class="input rounded-md" type="text" name="username" bind:value={username} />
 		</label>
 		<EmailField bind:email bind:showValidation={showEmailValidation} />
 		<PasswordField bind:password />

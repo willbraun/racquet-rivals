@@ -1,10 +1,7 @@
 <script lang="ts">
-	import { errorMessage } from '$lib/utils'
-	import Pocketbase from 'pocketbase'
 	import type { Draw } from './draw/[slug]/+page.server.js'
-	import { currentUser, emptyUser } from '$lib/store.js'
+	import Logout from '$lib/Logout.svelte'
 	export let data
-	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	const getSlug = (draw: Draw): string => {
 		const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-')
@@ -12,22 +9,9 @@
 	}
 </script>
 
-<header class="flex justify-end gap-2 p-2">
-	{#if pb.authStore.isValid}
-		<a data-sveltekit-reload href="/">
-			<button
-				type="button"
-				class="btn variant-ghost rounded-xl"
-				on:click={() => {
-					try {
-						pb.authStore.clear()
-						currentUser.set(emptyUser)
-					} catch (e) {
-						errorMessage(e)
-					}
-				}}>Logout</button
-			>
-		</a>
+<header class="flex justify-end gap-2 p-2 h-12">
+	{#if data.auth.token}
+		<Logout />
 	{/if}
 </header>
 <div class="mx-auto max-w-xl px-4">
@@ -37,7 +21,7 @@
 			Create a bracket for the last 16 players of pro tennis tournaments, and see how you stack up
 			with your friends.
 		</h2>
-		{#if !pb.authStore.isValid}
+		{#if !data.auth.token}
 			<p class="text-center mb-2">Log in to create a bracket</p>
 			<div class="flex justify-center gap-2 w-full">
 				<a href="/login">

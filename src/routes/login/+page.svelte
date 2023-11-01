@@ -1,15 +1,12 @@
 <script lang="ts">
 	import Pocketbase from 'pocketbase'
 	import { goto } from '$app/navigation'
-	import { errorMessage } from '$lib/utils'
 	import PasswordField from '$lib/PasswordField.svelte'
 	import { localStorageStore } from '@skeletonlabs/skeleton'
 	import { get, type Writable } from 'svelte/store'
 	import FormError from '$lib/FormError.svelte'
-	import { currentUser } from '$lib/store'
 	import { enhance } from '$app/forms'
 	export let form
-	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	let usernameOrEmail = ''
 	let password = ''
@@ -34,39 +31,26 @@
 		usernameOrEmail = saved.usernameOrEmail
 		rememberMe = true
 	}
-
-	const handleLogin = async () => {
-		loading = true
-		error = ''
-
-		try {
-			const data = await pb.collection('user').authWithPassword(usernameOrEmail, password)
-			currentUser.set(data.record)
-			goto('/')
-
-			rememberLogin.set({
-				rememberMe,
-				usernameOrEmail
-			})
-		} catch (e) {
-			error = errorMessage(e)
-		}
-
-		loading = false
-	}
 </script>
 
 <div class="mt-12 m-auto p-4 max-w-md">
 	<h1 class="text-3xl mb-4">Login</h1>
 	<form
 		method="POST"
-		action="/login"
+		action="?/login"
 		class="[&>*]:mb-4"
 		use:enhance={() => {
 			loading = true
 			error = ''
-			return async ({ update }) => {
+			return async ({ result, update }) => {
 				await update()
+				if (result.status === 200) {
+					rememberLogin.set({
+						rememberMe,
+						usernameOrEmail
+					})
+					goto('/')
+				}
 				loading = false
 			}
 		}}
