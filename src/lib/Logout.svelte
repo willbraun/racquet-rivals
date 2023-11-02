@@ -16,6 +16,6 @@
 	}}
 >
 	<a data-sveltekit-reload href="/">
-		<button type="submit" class="btn variant-ghost rounded-xl">Logout</button>
+		<button type="submit" class="btn btn-sm variant-ghost rounded-xl">Logout</button>
 	</a>
 </form>

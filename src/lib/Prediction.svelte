@@ -1,17 +1,23 @@
 <script lang="ts">
-	import Pocketbase from 'pocketbase'
-	// passing in SOME PREDICTION table values, as necessary
+	// import Pocketbase from 'pocketbase'
 	export let name: string
-	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
+	export let userId: string
+	export let points: number
+
+	console.log(userId) // clear once using userId
+	// const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 </script>
 
 <div
-	class="relative flex items-center border border-black rounded-full h-6 min-w-[50px] p-2"
+	class="flex justify-between items-center border border-black rounded-full h-6 w-fit min-w-[50px] p-1 pr-0.5 bg-white"
 	class:border-dashed={!name}
 >
-	<p class="text-xs">{name}</p>
-
-	<!-- <div class="absolute top-0 left-1/2 border border-black rounded-full h-full w-full text-sm">
-    <p>+1</p>
-  </div> -->
+	<div class="">
+		<p class="text-xs">{name}</p>
+	</div>
+	{#if points}
+		<div class="rounded-full aspect-square h-5 text-sm ml-1 bg-green-400">
+			<p>{points}</p>
+		</div>
+	{/if}
 </div>

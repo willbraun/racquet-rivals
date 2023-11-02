@@ -41,6 +41,8 @@ interface Prediction {
 	draw_id: string
 	draw_slot_id: string
 	id: string
+	name: string
+	points: number
 	user_id: string
 	username: string
 }
@@ -55,6 +57,7 @@ interface PredictionRes {
 
 export async function load({ fetch, params, cookies }) {
 	const id = params.slug.split('-').at(-1)
+	const userId = JSON.parse(cookies.get('auth') ?? '{}').userId
 
 	const drawRes = await fetch(
 		`https://tennisbracket.willbraun.dev/api/collections/draw/records/${id}`
@@ -66,7 +69,7 @@ export async function load({ fetch, params, cookies }) {
 	)
 	const slotData: SlotRes = await slotRes.json()
 
-	const filter = `(draw_id="${id}" && user_id="gvi2dlpb8gltpvo")`
+	const filter = `(draw_id="${id}" && user_id="${userId}")`
 	const encoded = encodeURIComponent(filter)
 	const predictionRes = await fetch(
 		`https://tennisbracket.willbraun.dev/api/collections/view_predictions/records?perPage=300&filter=${encoded}`

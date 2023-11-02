@@ -7,6 +7,8 @@
 	const fullDrawRounds = Math.log2(data.draw.size)
 	const ourRounds = [...Array(fullDrawRounds + 1).keys()].map((x) => x + 1).slice(-5)
 	const slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 3)
+	const predictions = data.predictions.items
+	const userId = data.auth.userId
 
 	const getHeight = (roundIndex: number, position: number): number => {
 		if (position === 1) {
@@ -63,11 +65,15 @@
 					<p>{`${slot.seed} ${slot.name}`}</p>
 					{#if index > 0}
 						<div
-							class="absolute bottom-0 translate-y-full border border-red-500 h-20 w-full flex flex-wrap justify-center p-1 gap-1"
+							class="absolute bottom-0 translate-y-full border border-red-500 h-20 w-full p-1 flex flex-wrap justify-center content-start gap-1"
 						>
-							<!-- render predictions for current user and all selected users -->
-							<Prediction name={''} />
-							<Prediction name={'Alcaraz'} />
+							{#each predictions.filter((p) => p.draw_slot_id === slot.id) as prediction}
+								<Prediction
+									name={prediction.name}
+									userId={prediction.user_id}
+									points={prediction.points}
+								/>
+							{/each}
 						</div>
 					{/if}
 				</div>
