@@ -1,21 +1,17 @@
 <script>
 	import { enhance } from '$app/forms'
-	import { goto } from '$app/navigation'
 </script>
 
 <form
 	action="/login?/logout"
 	method="POST"
 	use:enhance={() => {
-		return async ({ result, update }) => {
+		return async ({ update }) => {
 			await update()
-			if (result.status === 200) {
-				goto('/')
-			}
 		}
 	}}
 >
-	<a data-sveltekit-reload href="/">
-		<button type="submit" class="btn btn-sm variant-ghost rounded-xl">Logout</button>
+	<a data-sveltekit-reload href="#top">
+		<button type="submit" class="btn btn-sm md:btn-md variant-ghost rounded-lg">Logout</button>
 	</a>
 </form>

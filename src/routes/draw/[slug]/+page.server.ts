@@ -56,8 +56,8 @@ interface PredictionRes {
 }
 
 export async function load({ fetch, params, cookies }) {
-	const id = params.slug.split('-').at(-1)
-	const userId = JSON.parse(cookies.get('auth') ?? '{}').userId
+	const id: string = params.slug.split('-').at(-1) ?? ''
+	const userId: string = JSON.parse(cookies.get('auth') ?? '{}').userId ?? ''
 
 	const drawRes = await fetch(
 		`https://tennisbracket.willbraun.dev/api/collections/draw/records/${id}`
