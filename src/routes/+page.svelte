@@ -14,7 +14,7 @@
 		<Logout />
 	{/if}
 </header>
-<div class="mx-auto max-w-xl px-4">
+<main class="mx-auto max-w-xl px-4">
 	<section class="my-6">
 		<h1 class="mb-6 text-7xl text-center">Tennis Bracket</h1>
 		<h2 class="mb-6 font-light text-center text-xl">
@@ -61,4 +61,4 @@
 			<p class="text-center mb-4">No completed draws</p>
 		{/if}
 	</section>
-</div>
+</main>
