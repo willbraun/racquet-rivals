@@ -7,7 +7,7 @@
 </script>
 
 <div
-	class="chip relative variant-filled flex justify-between items-center border border-black rounded-full h-6 w-fit"
+	class="relative chip variant-filled flex justify-between items-center border border-black rounded-full h-6 w-fit"
 	class:border-dashed={!name}
 	class:w-12={!name}
 >

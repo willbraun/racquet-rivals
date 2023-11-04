@@ -1,3 +1,10 @@
+import { fail } from '@sveltejs/kit'
+import { errorMessage } from '$lib/utils'
+import Pocketbase, { ClientResponseError } from 'pocketbase'
+import type { AuthCookie, SelectedUser } from '$lib/types'
+
+const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
+
 export interface Draw {
 	collectionId: string
 	collectionName: 'draw'
@@ -80,6 +87,44 @@ export async function load({ fetch, params, cookies }) {
 		draw: drawData,
 		slots: slotData,
 		predictions: predictionData,
-		auth: JSON.parse(cookies.get('auth') ?? '{}')
+		auth: JSON.parse(cookies.get('auth') ?? '{}') as AuthCookie,
+		selectedUsers: JSON.parse(cookies.get('selectedUsers') ?? '[]') as SelectedUser[]
+	}
+}
+
+export const actions = {
+	selectUser: async ({ request, cookies }) => {
+		const form = await request.formData()
+		const username = (form.get('username') ?? '') as string
+		const selectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
+
+		if (username === '') {
+			return fail(400, {
+				error: 'Please enter a username'
+			})
+		}
+
+		try {
+			const data = await pb.collection('user').getFirstListItem(`username="${username}"`)
+			selectedUsers.push({
+				id: data.id,
+				username: data.username
+			})
+			cookies.set('selectedUsers', JSON.stringify(selectedUsers), {
+				maxAge: 60 * 60 * 24 * 7
+			})
+			return {
+				user: {
+					id: data.id,
+					username: data.username
+				} as SelectedUser,
+				error: ''
+			}
+		} catch (e) {
+			const statusCode = (e as ClientResponseError).status
+			return fail(statusCode, {
+				error: errorMessage(e)
+			})
+		}
 	}
 }

@@ -27,9 +27,17 @@ export const actions = {
 
 		try {
 			const data = await pb.collection('user').authWithPassword(usernameOrEmail, password)
-			cookies.set('auth', JSON.stringify({ token: data.token, userId: data.record.id }), {
-				maxAge: 60 * 60 * 24 * 7
-			})
+			cookies.set(
+				'auth',
+				JSON.stringify({
+					token: data.token,
+					userId: data.record.id,
+					username: data.record.username
+				}),
+				{
+					maxAge: 60 * 60 * 24 * 7
+				}
+			)
 			return {
 				error: ''
 			}
