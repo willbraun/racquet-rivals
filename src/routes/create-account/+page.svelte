@@ -54,9 +54,9 @@
 			</button>
 		</div>
 	</form>
-
-	<FormError bind:error />
-
+	<div class="mt-2">
+		<FormError bind:error />
+	</div>
 	<div class="mt-6">
 		<p>Already have an account? Login <a class="underline" href="/login">here</a></p>
 		<p><a class="underline" href="/">Home</a></p>

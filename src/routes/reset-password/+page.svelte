@@ -55,9 +55,9 @@
 			Sent! Please check your email and spam folder for your password reset link
 		</p>
 	{/if}
-
-	<FormError bind:error />
-
+	<div class="mt-2">
+		<FormError bind:error />
+	</div>
 	<div class="mt-6">
 		<p><a class="underline" href="/login">Back to Login</a></p>
 		<p>Don't have an account? Create one <a class="underline" href="/create-account">here</a></p>

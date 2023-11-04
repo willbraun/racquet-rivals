@@ -122,6 +122,11 @@ export const actions = {
 			}
 		} catch (e) {
 			const statusCode = (e as ClientResponseError).status
+			if (statusCode === 404) {
+				return fail(statusCode, {
+					error: 'Error: 404 - Username not found'
+				})
+			}
 			return fail(statusCode, {
 				error: errorMessage(e)
 			})
