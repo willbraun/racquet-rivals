@@ -16,6 +16,11 @@
 	let deletedUserId = ''
 	let users: SelectedUser[] = $modalStore[0].meta.selectedUsers
 
+	let inputRef: HTMLInputElement
+	const refocus = () => {
+		inputRef.focus()
+	}
+
 	const setTypeSelect = (result: ActionResult) => {
 		return result as SelectUserResult
 	}
@@ -41,6 +46,7 @@
 			use:enhance={() => {
 				loading = true
 				return async ({ result, update }) => {
+					await applyAction(result)
 					await update()
 					const typedResult = setTypeSelect(result)
 					if (result.status === 200) {
@@ -50,13 +56,20 @@
 						error = typedResult.data.error
 					}
 					loading = false
+					refocus()
 				}
 			}}
 		>
 			<label class="label">
 				<span>Username</span>
 				<div class="flex gap-2">
-					<input class="input flex-grow rounded-md" type="text" name="username" bind:value autofocus/>
+					<input
+						class="input flex-grow rounded-md"
+						type="text"
+						name="username"
+						bind:value
+						bind:this={inputRef}
+					/>
 					<button class="btn btn-md variant-filled rounded-md" disabled={loading}>Add</button>
 				</div>
 			</label>
@@ -75,6 +88,7 @@
 						const index = users.map((user) => user.id).indexOf(typedResult.data.deletedId)
 						users = users.toSpliced(index, 1)
 					}
+					refocus()
 				}
 			}}
 		>
