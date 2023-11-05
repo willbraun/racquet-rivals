@@ -131,5 +131,28 @@ export const actions = {
 				error: errorMessage(e)
 			})
 		}
+	},
+
+	deselectUser: async ({ request, cookies }) => {
+		const form = await request.formData()
+		const userId = (form.get('userId') ?? '') as string
+		const selectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
+
+		try {
+			const index = selectedUsers.map((user) => user.id).indexOf(userId)
+			selectedUsers.splice(index, 1)
+			cookies.set('selectedUsers', JSON.stringify(selectedUsers), {
+				maxAge: 60 * 60 * 24 * 7
+			})
+			return {
+				deletedId: userId,
+				error: ''
+			}
+		} catch (e) {
+			const statusCode = (e as ClientResponseError).status
+			return fail(statusCode, {
+				error: errorMessage(e)
+			})
+		}
 	}
 }

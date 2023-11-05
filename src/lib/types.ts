@@ -17,3 +17,12 @@ export interface SelectUserResult {
 	status: number
 	type: string
 }
+
+export interface DeselectUserResult {
+	data: {
+		deletedId: string
+		error: string
+	}
+	status: number
+	type: string
+}

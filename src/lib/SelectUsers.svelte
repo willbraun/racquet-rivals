@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type { SvelteComponent } from 'svelte'
 	import { getModalStore } from '@skeletonlabs/skeleton'
-	import type { SelectUserResult, SelectedUser } from './types'
-	import { enhance } from '$app/forms'
+	import type { DeselectUserResult, SelectUserResult, SelectedUser } from './types'
+	import { applyAction, enhance } from '$app/forms'
 	import type { ActionResult } from '@sveltejs/kit'
 	import FormError from './FormError.svelte'
+	import { afterNavigate } from '$app/navigation'
 	export let parent: SvelteComponent
 
 	const modalStore = getModalStore()
@@ -12,10 +13,15 @@
 	let value = ''
 	let loading = false
 	let error = ''
+	let deletedUserId = ''
 	let users: SelectedUser[] = $modalStore[0].meta.selectedUsers
 
-	const setType = (result: ActionResult) => {
+	const setTypeSelect = (result: ActionResult) => {
 		return result as SelectUserResult
+	}
+
+	const setTypeDeselect = (result: ActionResult) => {
+		return result as DeselectUserResult
 	}
 
 	// Base Classes
@@ -36,7 +42,7 @@
 				loading = true
 				return async ({ result, update }) => {
 					await update()
-					const typedResult = setType(result)
+					const typedResult = setTypeSelect(result)
 					if (result.status === 200) {
 						users = [...users, typedResult.data.user]
 						error = ''
@@ -50,26 +56,53 @@
 			<label class="label">
 				<span>Username</span>
 				<div class="flex gap-2">
-					<input class="input flex-grow rounded-md" type="text" name="username" bind:value />
+					<input class="input flex-grow rounded-md" type="text" name="username" bind:value autofocus/>
 					<button class="btn btn-md variant-filled rounded-md" disabled={loading}>Add</button>
 				</div>
 			</label>
-			<div class="">
-				<FormError bind:error />
-			</div>
+			<FormError bind:error />
 		</form>
-		<div class="flex gap-1">
+		<form
+			class="flex gap-1"
+			method="POST"
+			action="?/deselectUser"
+			use:enhance={() => {
+				return async ({ result, update }) => {
+					if (result.status === 200) {
+						await applyAction(result)
+						await update()
+						const typedResult = setTypeDeselect(result)
+						const index = users.map((user) => user.id).indexOf(typedResult.data.deletedId)
+						users = users.toSpliced(index, 1)
+					}
+				}
+			}}
+		>
 			{#if $modalStore[0].meta.currentUsername}
-				<div class="chip variant-filled rounded-full">
+				<div class="chip variant-filled rounded-full pointer-events-none">
 					<p>{$modalStore[0].meta.currentUsername}</p>
 				</div>
 			{/if}
+			<input type="hidden" name="userId" bind:value={deletedUserId} />
 			{#each users as user}
-				<div class="chip variant-filled rounded-full">
-					<p>{user.username}{'X'}</p>
-				</div>
+				<button
+					type="submit"
+					class="chip variant-filled rounded-full"
+					on:click={() => (deletedUserId = user.id)}
+				>
+					<p>{user.username}</p>
+					<svg
+						class="fill-white"
+						xmlns="http://www.w3.org/2000/svg"
+						height="1rem"
+						viewBox="0 0 384 512"
+						><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path
+							d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+						/></svg
+					>
+				</button>
 			{/each}
-		</div>
+		</form>
 		<footer class="modal-footer {parent.regionFooter}">
 			<button class="btn rounded-xl {parent.buttonNeutral}" on:click={parent.onClose}>Close</button>
 		</footer>
