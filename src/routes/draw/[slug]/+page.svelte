@@ -53,9 +53,9 @@
 {#if data.auth.token}
 	<section class="flex gap-1 ml-6 mb-2 h-6">
 		<p>Users:</p>
-		<div class="chip rounded-full variant-filled">{data.auth.username}</div>
+		<div class="chip rounded-full variant-filled pointer-events-none">{data.auth.username}</div>
 		{#each data.selectedUsers as user}
-			<div class="chip rounded-full variant-filled">{user.username}</div>
+			<div class="chip rounded-full variant-filled pointer-events-none">{user.username}</div>
 		{/each}
 		<button
 			class="chip rounded-full variant-filled flex justify-center"
