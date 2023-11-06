@@ -3,6 +3,7 @@
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import type { SelectedUser } from '$lib/types.js'
+	import { colors } from '$lib/utils.js'
 	export let data
 
 	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
@@ -25,7 +26,7 @@
 		type: 'component',
 		component: 'selectUsers',
 		title: 'Select Users',
-		body: 'Compare predictions with your friends',
+		body: 'Compare predictions with your friends (max of 5)',
 		meta: {
 			currentUserId: data.auth.userId,
 			currentUsername: data.auth.username,
@@ -53,9 +54,17 @@
 {#if data.auth.token}
 	<section class="flex gap-1 ml-6 mb-2 h-6">
 		<p>Users:</p>
-		<div class="chip rounded-full variant-filled pointer-events-none">{data.auth.username}</div>
-		{#each data.selectedUsers as user}
-			<div class="chip rounded-full variant-filled pointer-events-none">{user.username}</div>
+		<div class={`chip rounded-full variant-filled pointer-events-none text-black ${colors[0]}`}>
+			{data.auth.username}
+		</div>
+		{#each data.selectedUsers as user, index}
+			<div
+				class={`chip rounded-full variant-filled pointer-events-none text-black ${
+					colors[index + 1]
+				}`}
+			>
+				{user.username}
+			</div>
 		{/each}
 		<button
 			class="chip rounded-full variant-filled flex justify-center"
@@ -106,11 +115,7 @@
 							class="absolute bottom-0 translate-y-full h-20 w-full p-1.5 flex flex-wrap justify-center content-start gap-1"
 						>
 							{#each predictions.filter((p) => p.draw_slot_id === slot.id) as prediction}
-								<Prediction
-									name={prediction.name}
-									userId={prediction.user_id}
-									points={prediction.points}
-								/>
+								<Prediction name={prediction.name} points={prediction.points} />
 							{/each}
 						</div>
 					{/if}

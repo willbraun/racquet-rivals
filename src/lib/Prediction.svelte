@@ -1,9 +1,6 @@
 <script lang="ts">
 	export let name: string
-	export let userId: string
 	export let points: number
-
-	console.log(userId) // remove once using userId
 </script>
 
 <div

@@ -6,12 +6,14 @@
 	import type { ActionResult } from '@sveltejs/kit'
 	import FormError from './FormError.svelte'
 	import { afterNavigate } from '$app/navigation'
+	import { colors } from './utils'
 	export let parent: SvelteComponent
 
 	const modalStore = getModalStore()
 
 	let value = ''
-	let loading = false
+	let selectLoading = false
+	let deselectLoading = false
 	let error = ''
 	let deletedUserId = ''
 	let users: SelectedUser[] = $modalStore[0].meta.selectedUsers
@@ -44,7 +46,7 @@
 			method="POST"
 			action="?/selectUser"
 			use:enhance={() => {
-				loading = true
+				selectLoading = true
 				return async ({ result, update }) => {
 					await applyAction(result)
 					await update()
@@ -55,7 +57,7 @@
 					} else {
 						error = typedResult.data.error
 					}
-					loading = false
+					selectLoading = false
 					refocus()
 				}
 			}}
@@ -70,7 +72,7 @@
 						bind:value
 						bind:this={inputRef}
 					/>
-					<button class="btn btn-md variant-filled rounded-md" disabled={loading}>Add</button>
+					<button class="btn btn-md variant-filled rounded-md" disabled={selectLoading}>Add</button>
 				</div>
 			</label>
 			<FormError bind:error />
@@ -80,6 +82,7 @@
 			method="POST"
 			action="?/deselectUser"
 			use:enhance={() => {
+				deselectLoading = true
 				return async ({ result, update }) => {
 					if (result.status === 200) {
 						await applyAction(result)
@@ -88,28 +91,26 @@
 						const index = users.map((user) => user.id).indexOf(typedResult.data.deletedId)
 						users = users.toSpliced(index, 1)
 					}
+					deselectLoading = false
 					refocus()
 				}
 			}}
 		>
 			{#if $modalStore[0].meta.currentUsername}
-				<div class="chip variant-filled rounded-full pointer-events-none">
+				<div class={`chip variant-filled rounded-full pointer-events-none text-black ${colors[0]}`}>
 					<p>{$modalStore[0].meta.currentUsername}</p>
 				</div>
 			{/if}
 			<input type="hidden" name="userId" bind:value={deletedUserId} />
-			{#each users as user}
+			{#each users as user, index}
 				<button
 					type="submit"
-					class="chip variant-filled rounded-full"
+					class={`chip variant-filled rounded-full text-black ${colors[index + 1]}`}
+					disabled={deletedUserId === user.id && deselectLoading}
 					on:click={() => (deletedUserId = user.id)}
 				>
 					<p>{user.username}</p>
-					<svg
-						class="fill-white"
-						xmlns="http://www.w3.org/2000/svg"
-						height="1rem"
-						viewBox="0 0 384 512"
+					<svg xmlns="http://www.w3.org/2000/svg" height="1rem" viewBox="0 0 384 512"
 						><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path
 							d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
 						/></svg

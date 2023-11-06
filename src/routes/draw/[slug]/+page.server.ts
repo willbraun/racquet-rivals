@@ -65,6 +65,7 @@ interface PredictionRes {
 export async function load({ fetch, params, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const userId: string = JSON.parse(cookies.get('auth') ?? '{}').userId ?? ''
+	const selectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
 
 	const drawRes = await fetch(
 		`https://tennisbracket.willbraun.dev/api/collections/draw/records/${id}`
@@ -76,7 +77,10 @@ export async function load({ fetch, params, cookies }) {
 	)
 	const slotData: SlotRes = await slotRes.json()
 
-	const filter = `(draw_id="${id}" && user_id="${userId}")`
+	const allUserIds = [userId, ...selectedUsers.map((user) => user.id)]
+	const userFilter = allUserIds.map((id) => `user_id="${id}"`).join('||')
+	const filter = `(draw_id="${id}" && (${userFilter}))`
+
 	const encoded = encodeURIComponent(filter)
 	const predictionRes = await fetch(
 		`https://tennisbracket.willbraun.dev/api/collections/view_predictions/records?perPage=300&filter=${encoded}`
@@ -96,11 +100,26 @@ export const actions = {
 	selectUser: async ({ request, cookies }) => {
 		const form = await request.formData()
 		const username = (form.get('username') ?? '') as string
+		const currentUser: string = JSON.parse(cookies.get('auth') ?? '{}').username ?? ''
 		const selectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
 
 		if (username === '') {
 			return fail(400, {
 				error: 'Please enter a username'
+			})
+		}
+
+		const allUsernames = [currentUser, ...selectedUsers.map((user) => user.username)]
+
+		if (allUsernames.length >= 6) {
+			return fail(400, {
+				error: 'Exceeds max of 5 selections'
+			})
+		}
+
+		if (allUsernames.includes(username)) {
+			return fail(400, {
+				error: `User "${username}" is already selected`
 			})
 		}
 
@@ -111,7 +130,7 @@ export const actions = {
 				username: data.username
 			})
 			cookies.set('selectedUsers', JSON.stringify(selectedUsers), {
-				maxAge: 60 * 60 * 24 * 7
+				maxAge: 60 * 60 * 24 * 400
 			})
 			return {
 				user: {
@@ -142,7 +161,7 @@ export const actions = {
 			const index = selectedUsers.map((user) => user.id).indexOf(userId)
 			selectedUsers.splice(index, 1)
 			cookies.set('selectedUsers', JSON.stringify(selectedUsers), {
-				maxAge: 60 * 60 * 24 * 7
+				maxAge: 60 * 60 * 24 * 400
 			})
 			return {
 				deletedId: userId,
