@@ -41,9 +41,20 @@ export const actions = {
 		try {
 			await pb.collection('user').create(data)
 			const authRes = await pb.collection('user').authWithPassword(email, password)
-			cookies.set('auth', JSON.stringify({ token: authRes.token, userId: authRes.record.id }), {
-				maxAge: 60 * 60 * 24 * 7
-			})
+			cookies.set(
+				'auth',
+				JSON.stringify({
+					token: authRes.token,
+					user: {
+						id: authRes.record.id,
+						username: authRes.record.username,
+						color: 'bg-blue-300'
+					}
+				}),
+				{
+					maxAge: 60 * 60 * 24 * 7
+				}
+			)
 			return {
 				error: ''
 			}

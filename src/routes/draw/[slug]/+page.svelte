@@ -1,9 +1,7 @@
 <script lang="ts">
-	import Prediction from '$lib/Prediction.svelte'
+	import Prediction from './Prediction.svelte'
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
-	import type { SelectedUser } from '$lib/types.js'
-	import { colors } from '$lib/utils.js'
 	export let data
 
 	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
@@ -11,6 +9,11 @@
 	const ourRounds = [...Array(fullDrawRounds + 1).keys()].map((x) => x + 1).slice(-5)
 	const slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 3)
 	$: predictions = data.predictions.items
+	$: users = [data.auth.user, ...data.selectedUsers].filter(Boolean)
+	$: userIds = users.map((user) => user.id)
+
+	const colorMap: Map<string, string> = new Map()
+	$: users.forEach((user) => colorMap.set(user.id, user.color))
 
 	const getHeight = (roundIndex: number, position: number): number => {
 		if (position === 1) {
@@ -22,15 +25,17 @@
 
 	const modalStore = getModalStore()
 	let modal: ModalSettings
-	$: modal = {
-		type: 'component',
-		component: 'selectUsers',
-		title: 'Select Users',
-		body: 'Compare predictions with your friends (max of 5)',
-		meta: {
-			currentUserId: data.auth.userId,
-			currentUsername: data.auth.username,
-			selectedUsers: data.selectedUsers
+	$: if (data.auth.user) {
+		modal = {
+			type: 'component',
+			component: 'selectUsers',
+			title: 'Select Users',
+			body: 'Compare predictions with your friends (max of 6 total)',
+			meta: {
+				currentUserId: data.auth.user.id,
+				currentUsername: data.auth.user.username,
+				selectedUsers: data.selectedUsers
+			}
 		}
 	}
 </script>
@@ -52,18 +57,23 @@
 	</div>
 </header>
 {#if data.auth.token}
-	<section class="flex gap-1 ml-6 mb-2 h-6">
+	<section class="flex gap-2 ml-6 mb-2 h-6">
 		<p>Users:</p>
-		<div class={`chip rounded-full variant-filled pointer-events-none text-black ${colors[0]}`}>
-			{data.auth.username}
-		</div>
-		{#each data.selectedUsers as user, index}
+		{#each users as user}
 			<div
-				class={`chip rounded-full variant-filled pointer-events-none text-black ${
-					colors[index + 1]
-				}`}
+				class={`relative chip rounded-full variant-filled pointer-events-none text-black ${user.color} shadow`}
 			>
-				{user.username}
+				<p>{user.username}</p>
+				<div
+					class="absolute badge-icon -top-1 -right-2 rounded-full aspect-square h-4 text-sm bg-green-400 z-10"
+				>
+					<p>
+						{predictions
+							.filter((p) => p.user_id === user.id)
+							.map((p) => p.points)
+							.reduce((a, b) => a + b, 0)}
+					</p>
+				</div>
 			</div>
 		{/each}
 		<button
@@ -112,10 +122,16 @@
 					<p>{`${slot.seed} ${slot.name}`}</p>
 					{#if index > 0}
 						<div
-							class="absolute bottom-0 translate-y-full h-20 w-full p-1.5 flex flex-wrap justify-center content-start gap-1"
+							class="absolute bottom-0 translate-y-full h-20 w-full p-1.5 flex flex-wrap justify-center content-start gap-2"
 						>
-							{#each predictions.filter((p) => p.draw_slot_id === slot.id) as prediction}
-								<Prediction name={prediction.name} points={prediction.points} />
+							{#each predictions
+								.filter((p) => p.draw_slot_id === slot.id)
+								.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id)) as prediction}
+								<Prediction
+									name={prediction.name}
+									points={prediction.points}
+									color={colorMap.get(prediction.user_id) ?? 'bg-white'}
+								/>
 							{/each}
 						</div>
 					{/if}

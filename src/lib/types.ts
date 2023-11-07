@@ -1,12 +1,12 @@
 export interface SelectedUser {
 	id: string
 	username: string
+	color: string
 }
 
 export interface AuthCookie {
 	token: string
-	userId: string
-	username: string
+	user: SelectedUser
 }
 
 export interface SelectUserResult {

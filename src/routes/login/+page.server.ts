@@ -31,8 +31,11 @@ export const actions = {
 				'auth',
 				JSON.stringify({
 					token: data.token,
-					userId: data.record.id,
-					username: data.record.username
+					user: {
+						id: data.record.id,
+						username: data.record.username,
+						color: 'bg-blue-300'
+					}
 				}),
 				{
 					maxAge: 60 * 60 * 24 * 7

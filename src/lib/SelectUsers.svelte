@@ -5,8 +5,6 @@
 	import { applyAction, enhance } from '$app/forms'
 	import type { ActionResult } from '@sveltejs/kit'
 	import FormError from './FormError.svelte'
-	import { afterNavigate } from '$app/navigation'
-	import { colors } from './utils'
 	export let parent: SvelteComponent
 
 	const modalStore = getModalStore()
@@ -97,15 +95,15 @@
 			}}
 		>
 			{#if $modalStore[0].meta.currentUsername}
-				<div class={`chip variant-filled rounded-full pointer-events-none text-black ${colors[0]}`}>
+				<div class={`chip variant-filled rounded-full pointer-events-none text-black bg-blue-300 shadow`}>
 					<p>{$modalStore[0].meta.currentUsername}</p>
 				</div>
 			{/if}
 			<input type="hidden" name="userId" bind:value={deletedUserId} />
-			{#each users as user, index}
+			{#each users as user}
 				<button
 					type="submit"
-					class={`chip variant-filled rounded-full text-black ${colors[index + 1]}`}
+					class={`chip variant-filled rounded-full text-black ${user.color} shadow`}
 					disabled={deletedUserId === user.id && deselectLoading}
 					on:click={() => (deletedUserId = user.id)}
 				>

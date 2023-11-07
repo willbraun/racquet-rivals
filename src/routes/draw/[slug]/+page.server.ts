@@ -1,5 +1,5 @@
 import { fail } from '@sveltejs/kit'
-import { errorMessage } from '$lib/utils'
+import { colors, errorMessage } from '$lib/utils'
 import Pocketbase, { ClientResponseError } from 'pocketbase'
 import type { AuthCookie, SelectedUser } from '$lib/types'
 
@@ -64,7 +64,7 @@ interface PredictionRes {
 
 export async function load({ fetch, params, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
-	const userId: string = JSON.parse(cookies.get('auth') ?? '{}').userId ?? ''
+	const userId: string = JSON.parse(cookies.get('auth') ?? '{}').user?.id ?? ''
 	const selectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
 
 	const drawRes = await fetch(
@@ -113,7 +113,7 @@ export const actions = {
 
 		if (allUsernames.length >= 6) {
 			return fail(400, {
-				error: 'Exceeds max of 5 selections'
+				error: 'Exceeds max of 6 total'
 			})
 		}
 
@@ -123,11 +123,15 @@ export const actions = {
 			})
 		}
 
+		const usedColors = selectedUsers.map((user) => user.color)
+		const availableColors = colors.filter((color) => !usedColors.includes(color))
+
 		try {
 			const data = await pb.collection('user').getFirstListItem(`username="${username}"`)
 			selectedUsers.push({
 				id: data.id,
-				username: data.username
+				username: data.username,
+				color: availableColors[0]
 			})
 			cookies.set('selectedUsers', JSON.stringify(selectedUsers), {
 				maxAge: 60 * 60 * 24 * 400
@@ -135,7 +139,8 @@ export const actions = {
 			return {
 				user: {
 					id: data.id,
-					username: data.username
+					username: data.username,
+					color: availableColors[0]
 				} as SelectedUser,
 				error: ''
 			}
