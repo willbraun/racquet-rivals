@@ -56,13 +56,11 @@
 		{/if}
 	</div>
 </header>
-{#if data.auth.token}
-	<section class="flex gap-2 ml-6 mb-2 h-6">
+<section class="flex gap-2 ml-6 mb-2 h-6">
+	{#if data.auth.token}
 		<p>Users:</p>
 		{#each users as user}
-			<div
-				class={`relative chip rounded-full variant-filled pointer-events-none text-black ${user.color} shadow`}
-			>
+			<div class={`relative chip rounded-full pointer-events-none text-black ${user.color} shadow`}>
 				<p>{user.username}</p>
 				<div
 					class="absolute badge-icon -top-1 -right-2 rounded-full aspect-square h-4 text-sm bg-green-400 z-10"
@@ -77,11 +75,11 @@
 			</div>
 		{/each}
 		<button
-			class="chip rounded-full variant-filled flex justify-center"
+			class="chip variant-ghost rounded-full flex justify-center"
 			on:click={() => modalStore.trigger(modal)}
 		>
 			<svg
-				class="fill-white ml-0.5 mb-0.5"
+				class="fill-black ml-0.5 mb-0.5"
 				xmlns="http://www.w3.org/2000/svg"
 				height="1rem"
 				viewBox="0 0 512 512"
@@ -90,8 +88,10 @@
 				/></svg
 			>
 		</button>
-	</section>
-{/if}
+	{:else}
+		<p class="italic w-full text-right mr-2">Log in to play!</p>
+	{/if}
+</section>
 <section
 	class="sticky top-0 z-10 border-y-2 border-black overflow-auto overflow-x-hidden syncscroll"
 	id="round-header"

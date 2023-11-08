@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class={`relative chip variant-filled flex justify-between items-center rounded-full h-6 w-fit text-black ${color} shadow`}
+	class={`relative chip flex justify-between items-center rounded-full h-6 w-fit text-black ${color} shadow`}
 >
 	<div>
 		<p class="text-xs">{name}</p>

@@ -65,7 +65,7 @@ interface PredictionRes {
 export async function load({ fetch, params, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const userId: string = JSON.parse(cookies.get('auth') ?? '{}').user?.id ?? ''
-	const selectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
+	const selectedUsers: SelectedUser[] = JSON.parse(cookies.get(`selectedUsers-${userId}`) ?? '[]')
 
 	const drawRes = await fetch(
 		`https://tennisbracket.willbraun.dev/api/collections/draw/records/${id}`
@@ -92,7 +92,7 @@ export async function load({ fetch, params, cookies }) {
 		slots: slotData,
 		predictions: predictionData,
 		auth: JSON.parse(cookies.get('auth') ?? '{}') as AuthCookie,
-		selectedUsers: JSON.parse(cookies.get('selectedUsers') ?? '[]') as SelectedUser[]
+		selectedUsers: JSON.parse(cookies.get(`selectedUsers-${userId}`) ?? '[]') as SelectedUser[]
 	}
 }
 
@@ -100,8 +100,12 @@ export const actions = {
 	selectUser: async ({ request, cookies }) => {
 		const form = await request.formData()
 		const username = (form.get('username') ?? '') as string
-		const currentUser: string = JSON.parse(cookies.get('auth') ?? '{}').username ?? ''
-		const selectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
+		const auth = JSON.parse(cookies.get('auth') ?? '{}') as AuthCookie
+		const currentUsername = auth.user?.username ?? ''
+		const currentUserId = auth.user?.id ?? ''
+		const selectedUsers: SelectedUser[] = JSON.parse(
+			cookies.get(`selectedUsers-${currentUserId}`) ?? '[]'
+		)
 
 		if (username === '') {
 			return fail(400, {
@@ -109,7 +113,7 @@ export const actions = {
 			})
 		}
 
-		const allUsernames = [currentUser, ...selectedUsers.map((user) => user.username)]
+		const allUsernames = [currentUsername, ...selectedUsers.map((user) => user.username)]
 
 		if (allUsernames.length >= 6) {
 			return fail(400, {
@@ -133,7 +137,7 @@ export const actions = {
 				username: data.username,
 				color: availableColors[0]
 			})
-			cookies.set('selectedUsers', JSON.stringify(selectedUsers), {
+			cookies.set(`selectedUsers-${currentUserId}`, JSON.stringify(selectedUsers), {
 				maxAge: 60 * 60 * 24 * 400
 			})
 			return {
@@ -160,12 +164,16 @@ export const actions = {
 	deselectUser: async ({ request, cookies }) => {
 		const form = await request.formData()
 		const userId = (form.get('userId') ?? '') as string
-		const selectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
+		const auth = JSON.parse(cookies.get('auth') ?? '{}') as AuthCookie
+		const currentUserId = auth.user?.id ?? ''
+		const selectedUsers: SelectedUser[] = JSON.parse(
+			cookies.get(`selectedUsers-${currentUserId}`) ?? '[]'
+		)
 
 		try {
 			const index = selectedUsers.map((user) => user.id).indexOf(userId)
 			selectedUsers.splice(index, 1)
-			cookies.set('selectedUsers', JSON.stringify(selectedUsers), {
+			cookies.set(`selectedUsers-${currentUserId}`, JSON.stringify(selectedUsers), {
 				maxAge: 60 * 60 * 24 * 400
 			})
 			return {
