@@ -30,7 +30,9 @@ const capitalize = (str: string) => {
 	return str[0].toUpperCase() + str.slice(1).toLowerCase()
 }
 
-export const colors = [
+export const mainColor = 'bg-blue-300'
+
+export const selectColors = [
 	'bg-red-300',
 	'bg-yellow-300',
 	'bg-green-300',

@@ -1,8 +1,13 @@
 <script lang="ts">
+	import { browser } from '$app/environment'
 	import Prediction from './Prediction.svelte'
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	export let data
+
+	// if (browser) {
+	// 	import('$lib/syncscroll.js')
+	// }
 
 	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
 	const fullDrawRounds = Math.log2(data.draw.size)

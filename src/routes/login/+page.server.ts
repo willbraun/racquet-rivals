@@ -1,5 +1,5 @@
 import { fail } from '@sveltejs/kit'
-import { errorMessage } from '$lib/utils'
+import { errorMessage, mainColor } from '$lib/utils'
 import Pocketbase, { ClientResponseError } from 'pocketbase'
 
 const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
@@ -34,7 +34,7 @@ export const actions = {
 					user: {
 						id: data.record.id,
 						username: data.record.username,
-						color: 'bg-blue-300'
+						color: mainColor
 					}
 				}),
 				{

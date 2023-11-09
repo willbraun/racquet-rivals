@@ -1,5 +1,5 @@
 import { fail } from '@sveltejs/kit'
-import { colors, errorMessage } from '$lib/utils'
+import { errorMessage, selectColors } from '$lib/utils'
 import Pocketbase, { ClientResponseError } from 'pocketbase'
 import type { AuthCookie, SelectedUser } from '$lib/types'
 
@@ -128,7 +128,7 @@ export const actions = {
 		}
 
 		const usedColors = selectedUsers.map((user) => user.color)
-		const availableColors = colors.filter((color) => !usedColors.includes(color))
+		const availableColors = selectColors.filter((color) => !usedColors.includes(color))
 
 		try {
 			const data = await pb.collection('user').getFirstListItem(`username="${username}"`)

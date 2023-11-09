@@ -59,3 +59,5 @@
 		}
 	'complete' == document.readyState ? l() : window[d]('load', l, 0), (e.reset = l)
 })
+
+export default true

@@ -5,6 +5,7 @@
 	import { applyAction, enhance } from '$app/forms'
 	import type { ActionResult } from '@sveltejs/kit'
 	import FormError from './FormError.svelte'
+	import { mainColor } from './utils'
 	export let parent: SvelteComponent
 
 	const modalStore = getModalStore()
@@ -95,7 +96,9 @@
 			}}
 		>
 			{#if $modalStore[0].meta.currentUsername}
-				<div class={`chip variant-filled rounded-full pointer-events-none text-black bg-blue-300 shadow`}>
+				<div
+					class={`chip variant-filled rounded-full pointer-events-none text-black ${mainColor} shadow`}
+				>
 					<p>{$modalStore[0].meta.currentUsername}</p>
 				</div>
 			{/if}
