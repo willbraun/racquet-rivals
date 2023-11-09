@@ -1,13 +1,9 @@
 <script lang="ts">
-	import { browser } from '$app/environment'
 	import Prediction from './Prediction.svelte'
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
+	import { onMount } from 'svelte'
 	export let data
-
-	// if (browser) {
-	// 	import('$lib/syncscroll.js')
-	// }
 
 	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
 	const fullDrawRounds = Math.log2(data.draw.size)
@@ -27,6 +23,20 @@
 			return 2 ** roundIndex * 4
 		}
 	}
+
+	let roundHeader: HTMLElement
+	let drawGrid: HTMLElement
+	onMount(() => {
+		if (roundHeader && drawGrid) {
+			roundHeader.addEventListener('scroll', () => {
+				drawGrid.scrollLeft = roundHeader.scrollLeft
+			})
+
+			drawGrid.addEventListener('scroll', () => {
+				roundHeader.scrollLeft = drawGrid.scrollLeft
+			})
+		}
+	})
 
 	const modalStore = getModalStore()
 	let modal: ModalSettings
@@ -98,9 +108,8 @@
 	{/if}
 </section>
 <section
-	class="sticky top-0 z-10 border-y-2 border-black overflow-auto overflow-x-hidden syncscroll"
-	id="round-header"
-	data-name="syncscroll"
+	class="sticky top-0 z-10 border-y-2 border-black overflow-auto overflow-x-hidden"
+	bind:this={roundHeader}
 >
 	<div class="grid" style="grid-template-columns: repeat(5, minmax(200px, 1fr));">
 		<div class="bg-white text-center py-2">Round of 16</div>
@@ -111,9 +120,8 @@
 	</div>
 </section>
 <main
-	class="relative grid overflow-x-auto syncscroll pb-24"
-	id="draw-grid"
-	data-name="syncscroll"
+	class="relative grid overflow-x-auto pb-24"
+	bind:this={drawGrid}
 	style="grid-template-columns: repeat(5, minmax(200px, 1fr));"
 >
 	{#each ourRounds as round, index}
