@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { SvelteComponent } from 'svelte'
 	import { getModalStore } from '@skeletonlabs/skeleton'
-	import type { DeselectUserResult, SelectUserResult, SelectedUser } from './types'
+	import type { DeselectUserResult, SelectUserResult, SelectedUser } from '../../../lib/types'
 	import { applyAction, enhance } from '$app/forms'
 	import type { ActionResult } from '@sveltejs/kit'
-	import FormError from './FormError.svelte'
-	import { mainColor } from './utils'
+	import FormError from '../../../lib/FormError.svelte'
+	import { mainColor } from '../../../lib/utils'
 	export let parent: SvelteComponent
 
 	const modalStore = getModalStore()

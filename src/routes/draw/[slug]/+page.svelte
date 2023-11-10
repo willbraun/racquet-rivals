@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Prediction from './Prediction.svelte'
+	import AddPrediction from './AddPrediction.svelte'
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
@@ -16,12 +17,14 @@
 	const colorMap: Map<string, string> = new Map()
 	$: users.forEach((user) => colorMap.set(user.id, user.color))
 
-	const getHeight = (roundIndex: number, position: number): number => {
+	const getHeight = (roundIndex: number, position: number): string => {
+		let rems = 0
 		if (position === 1) {
-			return 2 ** (roundIndex - 1) * 4 + 2
+			rems = 2 ** (roundIndex - 1) * 4 + 2
 		} else {
-			return 2 ** roundIndex * 4
+			rems = 2 ** roundIndex * 4
 		}
+		return `${rems}rem`
 	}
 
 	let roundHeader: HTMLElement
@@ -108,10 +111,10 @@
 	{/if}
 </section>
 <section
-	class="sticky top-0 z-10 border-y-2 border-black overflow-auto overflow-x-hidden"
+	class="sticky top-0 z-20 border-y-2 border-black overflow-auto overflow-x-hidden"
 	bind:this={roundHeader}
 >
-	<div class="grid" style="grid-template-columns: repeat(5, minmax(200px, 1fr));">
+	<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
 		<div class="bg-white text-center py-2">Round of 16</div>
 		<div class="bg-white text-center py-2">Quarterfinals</div>
 		<div class="bg-white text-center py-2">Semifinals</div>
@@ -121,8 +124,8 @@
 </section>
 <main
 	class="relative grid overflow-x-auto pb-24"
+	style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
 	bind:this={drawGrid}
-	style="grid-template-columns: repeat(5, minmax(200px, 1fr));"
 >
 	{#each ourRounds as round, index}
 		<div class="column">
@@ -130,16 +133,20 @@
 				<div
 					class="relative flex justify-center items-end text-center border-b-2 border-black"
 					class:border-r-2={!(slot.position % 2)}
-					style="height: {getHeight(index, slot.position)}rem"
+					style:height={getHeight(index, slot.position)}
 				>
 					<p>{`${slot.seed} ${slot.name}`}</p>
 					{#if index > 0}
+						{@const slotPredictions = predictions
+							.filter((p) => p.draw_slot_id === slot.id)
+							.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))}
 						<div
-							class="absolute bottom-0 translate-y-full h-20 w-full p-1.5 flex flex-wrap justify-center content-start gap-2"
+							class="absolute bottom-0 translate-y-full h-20 w-full p-1.5 flex flex-wrap justify-center content-start gap-2 z-10"
 						>
-							{#each predictions
-								.filter((p) => p.draw_slot_id === slot.id)
-								.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id)) as prediction}
+							{#if !slotPredictions.map((p) => p.user_id).includes(data.auth.user?.id)}
+								<AddPrediction />
+							{/if}
+							{#each slotPredictions as prediction}
 								<Prediction
 									name={prediction.name}
 									points={prediction.points}

@@ -38,6 +38,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@floating-ui/dom": "^1.5.3",
     "pocketbase": "^0.18.2"
   }
 }
