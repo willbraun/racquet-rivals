@@ -21,7 +21,7 @@ export interface Draw {
 	year: number
 }
 
-interface Slot {
+export interface Slot {
 	collectionId: string
 	collectionName: 'draw_slot'
 	created: string
@@ -42,7 +42,7 @@ interface SlotRes {
 	items: Slot[]
 }
 
-interface Prediction {
+export interface Prediction {
 	collectionId: string
 	collectionName: 'view_predictions'
 	draw_id: string

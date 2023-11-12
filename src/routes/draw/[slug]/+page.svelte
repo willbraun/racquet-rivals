@@ -1,9 +1,10 @@
 <script lang="ts">
-	import Prediction from './Prediction.svelte'
 	import AddPrediction from './AddPrediction.svelte'
+	import ViewPrediction from './ViewPrediction.svelte'
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
+	import type { Slot } from './+page.server'
 	export let data
 
 	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
@@ -16,6 +17,7 @@
 
 	const colorMap: Map<string, string> = new Map()
 	$: users.forEach((user) => colorMap.set(user.id, user.color))
+	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
 
 	const getHeight = (roundIndex: number, position: number): string => {
 		let rems = 0
@@ -25,6 +27,25 @@
 			rems = 2 ** roundIndex * 4
 		}
 		return `${rems}rem`
+	}
+
+	const getPlayerOptions = (slot: Slot, slots: Slot[]): [string, string] => {
+		const round = slot.round
+		const position = slot.position
+		const slot1 = slots.find((s) => s.round === round - 1 && s.position === position * 2 - 1)
+		const slot2 = slots.find((s) => s.round === round - 1 && s.position === position * 2)
+
+		let player1 = ''
+		if (slot1) {
+			player1 = `${slot1.seed} ${slot1.name}`
+		}
+
+		let player2 = ''
+		if (slot2) {
+			player2 = `${slot2.seed} ${slot2.name}`
+		}
+
+		return [player1, player2]
 	}
 
 	let roundHeader: HTMLElement
@@ -93,7 +114,7 @@
 			</div>
 		{/each}
 		<button
-			class="chip variant-ghost rounded-full flex justify-center"
+			class="chip border border-black border-dashed rounded-full flex justify-center"
 			on:click={() => modalStore.trigger(modal)}
 		>
 			<svg
@@ -140,17 +161,27 @@
 						{@const slotPredictions = predictions
 							.filter((p) => p.draw_slot_id === slot.id)
 							.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))}
+						{@const currentUserPrediction = slotPredictions.find(
+							(p) => p.user_id === data.auth.user?.id
+						)}
+						{@const selectedUserPredictions = slotPredictions.filter(
+							(p) => p.id !== currentUserPrediction?.id
+						)}
+						{@const players = getPlayerOptions(slot, slots)}
 						<div
 							class="absolute bottom-0 translate-y-full h-20 w-full p-1.5 flex flex-wrap justify-center content-start gap-2 z-10"
 						>
-							{#if !slotPredictions.map((p) => p.user_id).includes(data.auth.user?.id)}
-								<AddPrediction />
-							{/if}
-							{#each slotPredictions as prediction}
-								<Prediction
+							<AddPrediction
+								roundIndex={index}
+								{players}
+								prediction={currentUserPrediction}
+								color={getColor(currentUserPrediction?.user_id)}
+							/>
+							{#each selectedUserPredictions as prediction}
+								<ViewPrediction
 									name={prediction.name}
 									points={prediction.points}
-									color={colorMap.get(prediction.user_id) ?? 'bg-white'}
+									color={getColor(prediction.user_id)}
 								/>
 							{/each}
 						</div>
