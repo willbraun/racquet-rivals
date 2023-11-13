@@ -186,5 +186,12 @@ export const actions = {
 				error: errorMessage(e)
 			})
 		}
+	},
+
+	addPrediction: async ({ request, cookies }) => {
+		const form = await request.formData()
+		const auth = JSON.parse(cookies.get('auth') ?? '{}') as AuthCookie
+		console.log(form.get('predictionValue'))
+		console.log(auth)
 	}
 }

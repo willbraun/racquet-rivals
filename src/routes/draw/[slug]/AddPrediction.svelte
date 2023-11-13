@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { ListBox, ListBoxItem, popup, type PopupSettings } from '@skeletonlabs/skeleton'
+	import { popup } from '@skeletonlabs/skeleton'
 	import ViewPrediction from './ViewPrediction.svelte'
 	import type { Prediction } from './+page.server'
+	import { enhance } from '$app/forms'
 	export let roundIndex: number
 	export let players: [string, string]
 	export let prediction: Prediction | undefined
@@ -19,6 +20,10 @@
 		} else {
 			return 'Predict previous round'
 		}
+	}
+
+	const handleClick = (value: string) => {
+		predictionValue = value
 	}
 </script>
 
@@ -46,13 +51,25 @@
 		<!-- message that says None in italics -->
 	{/if}
 </button>
+
 <div class="card shadow-lg" data-popup="popupCombobox-{player1}-{player2}">
-	<ListBox rounded="rounded-none">
-		<ListBoxItem bind:group={predictionValue} name="prediction" value={player1}
-			>{getDisplay(player1)}</ListBoxItem
-		>
-		<ListBoxItem bind:group={predictionValue} name="prediction" value={player2}
-			>{getDisplay(player2)}</ListBoxItem
-		>
-	</ListBox>
+	<form
+		method="POST"
+		action="?/addPrediction"
+		use:enhance={() => {
+			return async ({ update }) => {
+				await update()
+			}
+		}}
+	>
+		<input type="hidden" name="predictionValue" bind:value={predictionValue} />
+		<div class="btn-group-vertical">
+			<button type="submit" disabled={!player1} on:click={() => handleClick(player1)}
+				>{getDisplay(player1)}</button
+			>
+			<button type="submit" disabled={!player2} on:click={() => handleClick(player2)}
+				>{getDisplay(player2)}</button
+			>
+		</div>
+	</form>
 </div>
