@@ -190,8 +190,57 @@ export const actions = {
 
 	addPrediction: async ({ request, cookies }) => {
 		const form = await request.formData()
+		const slotId = (form.get('slotId') ?? '') as string
+		const currentPredictionId = (form.get('currentPredictionId') ?? '') as string
+		const predictionValue = (form.get('predictionValue') ?? '') as string
 		const auth = JSON.parse(cookies.get('auth') ?? '{}') as AuthCookie
-		console.log(form.get('predictionValue'))
-		console.log(auth)
+
+		if (!auth.token) {
+			return fail(400, {
+				error: 'Must be logged in to make a prediction'
+			})
+		}
+
+		if (!predictionValue) {
+			return fail(400, {
+				error: `Invalid prediction: "${predictionValue}"`
+			})
+		}
+
+		if (!slotId) {
+			return fail(400, {
+				error: `Invalid slot: "${slotId}"`
+			})
+		}
+
+		const data = {
+			draw_slot_id: slotId,
+			user_id: auth.user.id,
+			name: predictionValue.split(' ').at(-1),
+			points: 0
+		}
+
+		console.log({ data }, { currentPredictionId })
+
+		try {
+			await pb.collection('user').authRefresh()
+		} catch (e) {
+			errorMessage(e)
+		}
+
+		if (currentPredictionId) {
+			try {
+				await pb.collection('prediction').update(currentPredictionId, data)
+			} catch (e) {
+				errorMessage(e)
+			}
+		} else {
+			try {
+				const record = await pb.collection('prediction').create(data)
+				console.log({ record })
+			} catch (e) {
+				errorMessage(e)
+			}
+		}
 	}
 }

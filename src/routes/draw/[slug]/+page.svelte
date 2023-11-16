@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Pocketbase from 'pocketbase'
 	import AddPrediction from './AddPrediction.svelte'
 	import ViewPrediction from './ViewPrediction.svelte'
 	import Logout from '$lib/Logout.svelte'
@@ -6,6 +7,8 @@
 	import { onMount } from 'svelte'
 	import type { Slot } from './+page.server'
 	export let data
+
+	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
 	const fullDrawRounds = Math.log2(data.draw.size)
@@ -172,6 +175,7 @@
 							class="absolute bottom-0 translate-y-full h-20 w-full p-1.5 flex flex-wrap justify-center content-start gap-2 z-10"
 						>
 							<AddPrediction
+								slotId={slot.id}
 								roundIndex={index}
 								{players}
 								prediction={currentUserPrediction}

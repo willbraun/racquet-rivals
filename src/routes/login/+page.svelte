@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Pocketbase from 'pocketbase'
 	import { goto } from '$app/navigation'
 	import PasswordField from '$lib/PasswordField.svelte'
 	import { localStorageStore } from '@skeletonlabs/skeleton'

@@ -3,6 +3,7 @@
 	import ViewPrediction from './ViewPrediction.svelte'
 	import type { Prediction } from './+page.server'
 	import { enhance } from '$app/forms'
+	export let slotId: string
 	export let roundIndex: number
 	export let players: [string, string]
 	export let prediction: Prediction | undefined
@@ -62,6 +63,8 @@
 			}
 		}}
 	>
+		<input type="hidden" name="slotId" bind:value={slotId} />
+		<input type="hidden" name="currentPredictionId" value={prediction?.id ?? ''} />
 		<input type="hidden" name="predictionValue" bind:value={predictionValue} />
 		<div class="btn-group-vertical">
 			<button type="submit" disabled={!player1} on:click={() => handleClick(player1)}
