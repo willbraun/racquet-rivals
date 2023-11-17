@@ -1,11 +1,14 @@
 <script lang="ts">
+	import Pocketbase from 'pocketbase'
 	import { goto } from '$app/navigation'
 	import PasswordField from '$lib/PasswordField.svelte'
 	import { localStorageStore } from '@skeletonlabs/skeleton'
 	import { get, type Writable } from 'svelte/store'
 	import FormError from '$lib/FormError.svelte'
-	import { enhance } from '$app/forms'
-	export let form
+	import { errorMessage, mainColor } from '$lib/utils'
+	import Cookies from 'js-cookie'
+
+	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	let usernameOrEmail = ''
 	let password = ''
@@ -13,7 +16,45 @@
 	let loading = false
 	let rememberMe = false
 
-	$: error = form?.error ?? ''
+	const login = async () => {
+		loading = true
+
+		if (usernameOrEmail === '') {
+			error = 'Please enter your username or email\n'
+		}
+
+		if (password === '') {
+			error += 'Please enter your password'
+		}
+
+		if (error) {
+			loading = false
+			return
+		}
+
+		try {
+			const authResponse = await pb.collection('user').authWithPassword(usernameOrEmail, password)
+			Cookies.set(
+				'currentUser',
+				JSON.stringify({
+					id: authResponse.record.id,
+					username: authResponse.record.username,
+					color: mainColor
+				}),
+				{ expires: 7 }
+			)
+			rememberLogin.set({
+				rememberMe,
+				usernameOrEmail
+			})
+			goto('/')
+			loading = false
+		} catch (e) {
+			error = errorMessage(e)
+		}
+
+		loading = false
+	}
 
 	type RememberLogin = {
 		rememberMe: boolean
@@ -34,26 +75,7 @@
 
 <div class="mt-12 m-auto p-4 max-w-md">
 	<h1 class="text-3xl mb-4">Login</h1>
-	<form
-		method="POST"
-		action="?/login"
-		class="[&>*]:mb-4"
-		use:enhance={() => {
-			loading = true
-			error = ''
-			return async ({ result, update }) => {
-				await update()
-				if (result.status === 200) {
-					rememberLogin.set({
-						rememberMe,
-						usernameOrEmail
-					})
-					goto('/')
-				}
-				loading = false
-			}
-		}}
-	>
+	<form class="[&>*]:mb-4" on:submit={login}>
 		<label class="label">
 			<p>Username or email</p>
 			<input

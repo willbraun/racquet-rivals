@@ -1,7 +1,7 @@
 import { fail } from '@sveltejs/kit'
 import { errorMessage, selectColors } from '$lib/utils'
 import Pocketbase, { ClientResponseError } from 'pocketbase'
-import type { AuthCookie, SelectedUser } from '$lib/types'
+import type { SelectedUser } from '$lib/types'
 
 const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
@@ -64,8 +64,10 @@ interface PredictionRes {
 
 export async function load({ fetch, params, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
-	const userId: string = JSON.parse(cookies.get('auth') ?? '{}').user?.id ?? ''
-	const selectedUsers: SelectedUser[] = JSON.parse(cookies.get(`selectedUsers-${userId}`) ?? '[]')
+	const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
+	const selectedUsers: SelectedUser[] = JSON.parse(
+		cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
+	)
 
 	const drawRes = await fetch(
 		`https://tennisbracket.willbraun.dev/api/collections/draw/records/${id}`
@@ -77,7 +79,7 @@ export async function load({ fetch, params, cookies }) {
 	)
 	const slotData: SlotRes = await slotRes.json()
 
-	const allUserIds = [userId, ...selectedUsers.map((user) => user.id)]
+	const allUserIds = [currentUser.id, ...selectedUsers.map((user) => user.id)]
 	const userFilter = allUserIds.map((id) => `user_id="${id}"`).join('||')
 	const filter = `(draw_id="${id}" && (${userFilter}))`
 
@@ -91,8 +93,8 @@ export async function load({ fetch, params, cookies }) {
 		draw: drawData,
 		slots: slotData,
 		predictions: predictionData,
-		auth: JSON.parse(cookies.get('auth') ?? '{}') as AuthCookie,
-		selectedUsers: JSON.parse(cookies.get(`selectedUsers-${userId}`) ?? '[]') as SelectedUser[]
+		currentUser: currentUser,
+		selectedUsers: selectedUsers
 	}
 }
 
@@ -100,11 +102,9 @@ export const actions = {
 	selectUser: async ({ request, cookies }) => {
 		const form = await request.formData()
 		const username = (form.get('username') ?? '') as string
-		const auth = JSON.parse(cookies.get('auth') ?? '{}') as AuthCookie
-		const currentUsername = auth.user?.username ?? ''
-		const currentUserId = auth.user?.id ?? ''
+		const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
 		const selectedUsers: SelectedUser[] = JSON.parse(
-			cookies.get(`selectedUsers-${currentUserId}`) ?? '[]'
+			cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
 		)
 
 		if (username === '') {
@@ -113,7 +113,7 @@ export const actions = {
 			})
 		}
 
-		const allUsernames = [currentUsername, ...selectedUsers.map((user) => user.username)]
+		const allUsernames = [currentUser.username, ...selectedUsers.map((user) => user.username)]
 
 		if (allUsernames.length >= 6) {
 			return fail(400, {
@@ -137,7 +137,7 @@ export const actions = {
 				username: data.username,
 				color: availableColors[0]
 			})
-			cookies.set(`selectedUsers-${currentUserId}`, JSON.stringify(selectedUsers), {
+			cookies.set(`selectedUsers-${currentUser.id}`, JSON.stringify(selectedUsers), {
 				maxAge: 60 * 60 * 24 * 400
 			})
 			return {
@@ -164,16 +164,15 @@ export const actions = {
 	deselectUser: async ({ request, cookies }) => {
 		const form = await request.formData()
 		const userId = (form.get('userId') ?? '') as string
-		const auth = JSON.parse(cookies.get('auth') ?? '{}') as AuthCookie
-		const currentUserId = auth.user?.id ?? ''
+		const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
 		const selectedUsers: SelectedUser[] = JSON.parse(
-			cookies.get(`selectedUsers-${currentUserId}`) ?? '[]'
+			cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
 		)
 
 		try {
 			const index = selectedUsers.map((user) => user.id).indexOf(userId)
 			selectedUsers.splice(index, 1)
-			cookies.set(`selectedUsers-${currentUserId}`, JSON.stringify(selectedUsers), {
+			cookies.set(`selectedUsers-${currentUser.id}`, JSON.stringify(selectedUsers), {
 				maxAge: 60 * 60 * 24 * 400
 			})
 			return {
@@ -185,62 +184,6 @@ export const actions = {
 			return fail(statusCode, {
 				error: errorMessage(e)
 			})
-		}
-	},
-
-	addPrediction: async ({ request, cookies }) => {
-		const form = await request.formData()
-		const slotId = (form.get('slotId') ?? '') as string
-		const currentPredictionId = (form.get('currentPredictionId') ?? '') as string
-		const predictionValue = (form.get('predictionValue') ?? '') as string
-		const auth = JSON.parse(cookies.get('auth') ?? '{}') as AuthCookie
-
-		if (!auth.token) {
-			return fail(400, {
-				error: 'Must be logged in to make a prediction'
-			})
-		}
-
-		if (!predictionValue) {
-			return fail(400, {
-				error: `Invalid prediction: "${predictionValue}"`
-			})
-		}
-
-		if (!slotId) {
-			return fail(400, {
-				error: `Invalid slot: "${slotId}"`
-			})
-		}
-
-		const data = {
-			draw_slot_id: slotId,
-			user_id: auth.user.id,
-			name: predictionValue.split(' ').at(-1),
-			points: 0
-		}
-
-		console.log({ data }, { currentPredictionId })
-
-		try {
-			await pb.collection('user').authRefresh()
-		} catch (e) {
-			errorMessage(e)
-		}
-
-		if (currentPredictionId) {
-			try {
-				await pb.collection('prediction').update(currentPredictionId, data)
-			} catch (e) {
-				errorMessage(e)
-			}
-		} else {
-			try {
-				const record = await pb.collection('prediction').create(data)
-				console.log({ record })
-			} catch (e) {
-				errorMessage(e)
-			}
 		}
 	}
 }

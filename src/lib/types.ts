@@ -4,11 +4,6 @@ export interface SelectedUser {
 	color: string
 }
 
-export interface AuthCookie {
-	token: string
-	user: SelectedUser
-}
-
 export interface SelectUserResult {
 	data: {
 		user: SelectedUser

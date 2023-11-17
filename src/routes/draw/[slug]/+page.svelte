@@ -5,17 +5,20 @@
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
+	import { predictionStore } from '$lib/store'
 	import type { Slot } from './+page.server'
 	export let data
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
+	const isAuth = pb.authStore.isValid
+
 	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
 	const fullDrawRounds = Math.log2(data.draw.size)
 	const ourRounds = [...Array(fullDrawRounds + 1).keys()].map((x) => x + 1).slice(-5)
 	const slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 3)
-	$: predictions = data.predictions.items
-	$: users = [data.auth.user, ...data.selectedUsers].filter(Boolean)
+	$: predictionStore.set(data.predictions.items)
+	$: users = [data.currentUser, ...data.selectedUsers].filter(Boolean)
 	$: userIds = users.map((user) => user.id)
 
 	const colorMap: Map<string, string> = new Map()
@@ -67,15 +70,15 @@
 
 	const modalStore = getModalStore()
 	let modal: ModalSettings
-	$: if (data.auth.user) {
+	$: if (isAuth) {
 		modal = {
 			type: 'component',
 			component: 'selectUsers',
 			title: 'Select Users',
 			body: 'Compare predictions with your friends (max of 6 total)',
 			meta: {
-				currentUserId: data.auth.user.id,
-				currentUsername: data.auth.user.username,
+				currentUserId: data.currentUser.id,
+				currentUsername: data.currentUser.username,
 				selectedUsers: data.selectedUsers
 			}
 		}
@@ -85,7 +88,7 @@
 <header class="grid grid-cols-4 items-center p-2">
 	<h1 class="col-span-3 text-lg md:text-2xl font-bold ml-4">{`Tennis Bracket - ${title}`}</h1>
 	<div class="col-span-1 flex justify-end gap-2 flex-wrap">
-		{#if data.auth.token}
+		{#if isAuth}
 			<Logout />
 		{:else}
 			<a href="/login">
@@ -99,7 +102,7 @@
 	</div>
 </header>
 <section class="flex gap-2 ml-6 mb-2 h-6">
-	{#if data.auth.token}
+	{#if isAuth}
 		<p>Users:</p>
 		{#each users as user}
 			<div class={`relative chip rounded-full pointer-events-none text-black ${user.color} shadow`}>
@@ -108,7 +111,7 @@
 					class="absolute badge-icon -top-1 -right-2 rounded-full aspect-square h-4 text-sm bg-green-400 z-10"
 				>
 					<p>
-						{predictions
+						{$predictionStore
 							.filter((p) => p.user_id === user.id)
 							.map((p) => p.points)
 							.reduce((a, b) => a + b, 0)}
@@ -160,15 +163,15 @@
 					style:height={getHeight(index, slot.position)}
 				>
 					<p>{`${slot.seed} ${slot.name}`}</p>
-					{#if index > 0}
-						{@const slotPredictions = predictions
+					{#if isAuth && index > 0}
+						{@const slotPredictions = $predictionStore
 							.filter((p) => p.draw_slot_id === slot.id)
 							.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))}
 						{@const currentUserPrediction = slotPredictions.find(
-							(p) => p.user_id === data.auth.user?.id
+							(p) => p.user_id === data.currentUser.id
 						)}
 						{@const selectedUserPredictions = slotPredictions.filter(
-							(p) => p.id !== currentUserPrediction?.id
+							(p) => p.user_id !== data.currentUser.id
 						)}
 						{@const players = getPlayerOptions(slot, slots)}
 						<div

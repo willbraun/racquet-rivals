@@ -2,8 +2,7 @@
 	import Pocketbase from 'pocketbase'
 	import EmailField from '$lib/EmailField.svelte'
 	import FormError from '$lib/FormError.svelte'
-	import { enhance } from '$app/forms'
-	export let form
+	import { errorMessage } from '$lib/utils.js'
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	let email = ''
@@ -14,29 +13,35 @@
 	let buttonRef: HTMLButtonElement
 
 	$: disabled = loading || showEmailValidation
-	$: error = form?.error ?? ''
-	$: success = form?.success ?? false
 	$: if (buttonRef && !showEmailValidation) {
 		buttonRef.disabled = false
 		buttonRef.focus()
+	}
+
+	const resetPassword = async () => {
+		loading = false
+
+		if (email === '') {
+			success = false
+			error = 'Please enter your email'
+			return
+		}
+
+		try {
+			await pb.collection('user').requestPasswordReset(email)
+			success = true
+			error = ''
+		} catch (e) {
+			success = false
+			error = errorMessage(e)
+		}
 	}
 </script>
 
 <div class="mt-12 m-auto p-4 max-w-md">
 	<h1 class="text-3xl mb-4">Reset Password</h1>
 	<p class="mb-4">Enter your email and we'll send you a link to reset your password</p>
-	<form
-		action="?/resetPassword"
-		method="POST"
-		use:enhance={() => {
-			loading = true
-			error = ''
-			return async ({ update }) => {
-				await update()
-				loading = false
-			}
-		}}
-	>
+	<form on:submit={resetPassword}>
 		<EmailField bind:email bind:showValidation={showEmailValidation} />
 		<div class="flex justify-center">
 			<button
