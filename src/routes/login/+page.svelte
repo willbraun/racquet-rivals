@@ -43,6 +43,7 @@
 				}),
 				{ expires: 7 }
 			)
+			Cookies.set('pb_auth', 'true', { expires: 7 })
 			rememberLogin.set({
 				rememberMe,
 				usernameOrEmail

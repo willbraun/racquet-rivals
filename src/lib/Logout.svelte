@@ -1,18 +1,15 @@
 <script>
 	import Pocketbase from 'pocketbase'
 	import { errorMessage } from './utils'
-	import { goto } from '$app/navigation'
-	import { page } from '$app/stores'
 	import Cookies from 'js-cookie'
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
-
-	const pathname = $page.url.pathname
 
 	const logout = () => {
 		try {
 			pb.authStore.clear()
 			Cookies.remove('currentUser')
+			Cookies.remove('pb_auth')
 			location.reload()
 		} catch (e) {
 			errorMessage(e)

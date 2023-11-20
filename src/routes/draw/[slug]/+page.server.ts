@@ -94,7 +94,8 @@ export async function load({ fetch, params, cookies }) {
 		slots: slotData,
 		predictions: predictionData,
 		currentUser: currentUser,
-		selectedUsers: selectedUsers
+		selectedUsers: selectedUsers,
+		pb_auth: cookies.get('pb_auth')
 	}
 }
 

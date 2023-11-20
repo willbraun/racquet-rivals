@@ -7,11 +7,21 @@
 	import { onMount } from 'svelte'
 	import { predictionStore } from '$lib/store'
 	import type { Slot } from './+page.server'
+	import Cookies from 'js-cookie'
+	import { afterNavigate } from '$app/navigation'
 	export let data
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
-	const isAuth = pb.authStore.isValid
+	let isAuth = data.pb_auth === 'true'
+	afterNavigate(() => {
+		isAuth = pb.authStore.isValid
+		if (isAuth) {
+			Cookies.set('pb_auth', 'true', { expires: 7 })
+		} else {
+			Cookies.remove('pb_auth')
+		}
+	})
 
 	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
 	const fullDrawRounds = Math.log2(data.draw.size)
