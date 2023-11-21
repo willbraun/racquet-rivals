@@ -2,9 +2,21 @@
 	import Pocketbase from 'pocketbase'
 	import type { Draw } from './draw/[slug]/+page.server.js'
 	import Logout from '$lib/Logout.svelte'
+	import { afterNavigate } from '$app/navigation'
+	import Cookies from 'js-cookie'
 	export let data
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
+
+	let isAuth = data.pb_auth === 'true'
+	afterNavigate(() => {
+		isAuth = pb.authStore.isValid
+		if (isAuth) {
+			Cookies.set('pb_auth', 'true', { expires: 7 })
+		} else {
+			Cookies.remove('pb_auth')
+		}
+	})
 
 	const getSlug = (draw: Draw): string => {
 		const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-')
@@ -13,7 +25,7 @@
 </script>
 
 <header class="flex justify-end gap-2 p-2 h-12">
-	{#if pb.authStore.isValid}
+	{#if isAuth}
 		<Logout />
 	{/if}
 </header>
@@ -24,7 +36,7 @@
 			Create a bracket for the last 16 players of pro tennis tournaments, and see how you stack up
 			with your friends.
 		</h2>
-		{#if !pb.authStore.isValid}
+		{#if !isAuth}
 			<p class="text-center mb-2">Log in to create a bracket</p>
 			<div class="flex justify-center gap-2 w-full">
 				<a href="/login">

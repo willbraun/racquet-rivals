@@ -1,9 +1,7 @@
+import { format } from 'date-fns'
+
 export async function load({ fetch, cookies }) {
-	const todayDate = new Date()
-	const year = todayDate.getFullYear()
-	const month = String(todayDate.getMonth() + 1).padStart(2, '0')
-	const day = String(todayDate.getDate()).padStart(2, '0')
-	const today = `${year}-${month}-${day}`
+	const today = format(new Date(), 'yyyy-mm-dd')
 
 	const activeRes = await fetch(
 		`https://tennisbracket.willbraun.dev/api/collections/draw/records?filter=(end_date>="${today}")`
@@ -18,6 +16,6 @@ export async function load({ fetch, cookies }) {
 	return {
 		active: activeData,
 		completed: completedData,
-		auth: JSON.parse(cookies.get('auth') ?? '{}')
+		pb_auth: cookies.get('pb_auth')
 	}
 }

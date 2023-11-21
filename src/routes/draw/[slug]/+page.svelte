@@ -9,6 +9,7 @@
 	import type { Slot } from './+page.server'
 	import Cookies from 'js-cookie'
 	import { afterNavigate } from '$app/navigation'
+	import { format } from 'date-fns'
 	export let data
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
@@ -27,6 +28,10 @@
 	const fullDrawRounds = Math.log2(data.draw.size)
 	const ourRounds = [...Array(fullDrawRounds + 1).keys()].map((x) => x + 1).slice(-5)
 	const slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 3)
+	const now = new Date()
+	const pcDate = new Date(data.draw.prediction_close)
+	const predictionClose = format(pcDate, 'M/dd/yyyy h:mmaaa')
+	$: predictionsAllowed = now < pcDate
 	$: predictionStore.set(data.predictions.items)
 	$: users = [data.currentUser, ...data.selectedUsers].filter(Boolean)
 	$: userIds = users.map((user) => user.id)
@@ -95,9 +100,9 @@
 	}
 </script>
 
-<header class="grid grid-cols-4 items-center p-2">
+<header class="grid grid-cols-4 items-center">
 	<h1 class="col-span-3 text-lg md:text-2xl font-bold ml-4">{`Tennis Bracket - ${title}`}</h1>
-	<div class="col-span-1 flex justify-end gap-2 flex-wrap">
+	<div class="col-span-1 flex justify-end gap-2 flex-wrap p-2">
 		{#if isAuth}
 			<Logout />
 		{:else}
@@ -110,8 +115,17 @@
 			</a>
 		{/if}
 	</div>
+	{#if predictionsAllowed}
+		<div class="col-span-4 text-sm text-center bg-green-500 py-1">
+			Predictions open until <span class="font-bold text-black">{predictionClose}</span>
+		</div>
+	{:else}
+		<div class="col-span-4 text-sm text-center bg-red-500 py-1">
+			Predictions closed <span class="font-bold text-black">{predictionClose}</span>
+		</div>
+	{/if}
 </header>
-<section class="flex gap-2 ml-6 mb-2 h-6">
+<section class="flex gap-2 ml-6 my-2 h-6">
 	{#if isAuth}
 		<p>Users:</p>
 		{#each users as user}
@@ -193,6 +207,7 @@
 								{players}
 								prediction={currentUserPrediction}
 								color={getColor(currentUserPrediction?.user_id)}
+								{predictionsAllowed}
 							/>
 							{#each selectedUserPredictions as prediction}
 								<ViewPrediction
