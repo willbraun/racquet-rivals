@@ -52,7 +52,6 @@
 
 	const getPlayerOptions = (
 		slot: Slot,
-		slots: Slot[],
 		predictionStore: Prediction[],
 		index: number
 	): [string, string] => {
@@ -222,7 +221,7 @@
 						{@const selectedUserPredictions = slotPredictions.filter(
 							(p) => p.user_id !== data.currentUser.id
 						)}
-						{@const players = getPlayerOptions(slot, slots, $predictionStore, index)}
+						{@const players = getPlayerOptions(slot, $predictionStore, index)}
 						<div
 							class="absolute bottom-0 translate-y-full h-20 w-full p-1.5 flex flex-wrap justify-center content-start gap-2 z-10"
 						>

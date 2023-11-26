@@ -15,7 +15,7 @@
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
-	const [player1, player2] = players
+	$: [player1, player2] = players
 
 	let loading = false
 	let error = ''
@@ -33,6 +33,10 @@
 	}
 
 	const addPrediction = async (player: string) => {
+		if (prediction?.name === player) {
+			return
+		}
+
 		loading = true
 		error = ''
 
@@ -61,9 +65,15 @@
 			points: 0
 		}
 
-		if (prediction?.id) {
+		if (prediction) {
 			try {
-				const record: Prediction = await pb.collection('prediction').update(prediction.id, data)
+				await pb.collection('prediction').update(prediction.id, data)
+				// PB updates all predictions in future rounds for this draw/user/predictionName to have the new name
+				// - add Dao function to do this
+				// after update, in pb.collection('view_predictions'), get all predictions for this draw_id and set store to that, rather than updating store
+
+				const record: Prediction = await pb.collection('view_predictions').getOne(prediction.id)
+
 				predictionStore.update((store) => {
 					const copy = [...store]
 					const index = copy.map((p) => p.id).indexOf(record.id)
@@ -76,7 +86,9 @@
 			}
 		} else {
 			try {
-				const record: Prediction = await pb.collection('prediction').create(data)
+				const response: Prediction = await pb.collection('prediction').create(data)
+				const record: Prediction = await pb.collection('view_predictions').getOne(response.id)
+
 				predictionStore.update((store) => [...store, record])
 				prediction = record
 			} catch (e) {
@@ -92,8 +104,9 @@
 	type="button"
 	class={`${!prediction && 'chip rounded-full h-6 bg-blue-200 '}
 		${!prediction && predictionsAllowed && 'border border-black border-dashed '}
-		${predictionsAllowed && 'hover:brightness-110 '}
-		${!predictionsAllowed && 'pointer-events-none'}`}
+		${predictionsAllowed && 'hover:brightness-105 '}
+		${!predictionsAllowed && 'pointer-events-none '}
+		${loading && 'brightness-90'}`}
 	disabled={!predictionsAllowed}
 	use:popup={{
 		event: 'click',
