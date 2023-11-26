@@ -10,8 +10,8 @@
 	export let roundIndex: number
 	export let players: [string, string]
 	export let prediction: Prediction | undefined
-	export let color: string
 	export let predictionsAllowed: boolean
+	export let getColor: (userId: string | undefined) => string
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
@@ -20,7 +20,9 @@
 	let loading = false
 	let error = ''
 
-	const getDisplay = (str: string) => {
+	const disabledOptionStyle = 'pointer-events-none text-sm italic'
+
+	const displayPrediction = (str: string) => {
 		if (str) return str
 
 		if (roundIndex === 1) {
@@ -55,7 +57,7 @@
 		const data = {
 			draw_slot_id: slotId,
 			user_id: pb.authStore.model.id,
-			name: player.split(' ').at(-1),
+			name: player,
 			points: 0
 		}
 
@@ -68,6 +70,7 @@
 					copy.splice(index, 1, record)
 					return copy
 				})
+				prediction = record
 			} catch (e) {
 				error = errorMessage(e)
 			}
@@ -75,6 +78,7 @@
 			try {
 				const record: Prediction = await pb.collection('prediction').create(data)
 				predictionStore.update((store) => [...store, record])
+				prediction = record
 			} catch (e) {
 				error = errorMessage(e)
 			}
@@ -99,7 +103,7 @@
 	}}
 >
 	{#if prediction}
-		<ViewPrediction name={prediction.name} points={prediction.points} {color} />
+		<ViewPrediction {prediction} {getColor} />
 	{:else if predictionsAllowed}
 		<span class="text-xs">Add</span>
 		<svg xmlns="http://www.w3.org/2000/svg" height="1.2em" viewBox="0 0 448 512"
@@ -117,13 +121,15 @@
 		<div class="btn-group-vertical">
 			<button
 				type="submit"
+				class={`${!player1 && disabledOptionStyle}`}
 				disabled={!player1 || loading}
-				on:click|preventDefault={() => addPrediction(player1)}>{getDisplay(player1)}</button
+				on:click|preventDefault={() => addPrediction(player1)}>{displayPrediction(player1)}</button
 			>
 			<button
 				type="submit"
+				class={`${!player2 && disabledOptionStyle}`}
 				disabled={!player2 || loading}
-				on:click|preventDefault={() => addPrediction(player2)}>{getDisplay(player2)}</button
+				on:click|preventDefault={() => addPrediction(player2)}>{displayPrediction(player2)}</button
 			>
 		</div>
 		<FormError bind:error />

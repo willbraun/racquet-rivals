@@ -47,6 +47,9 @@ export interface Prediction {
 	collectionName: 'view_predictions'
 	draw_id: string
 	draw_slot_id: string
+	round: number
+	position: number
+	seed: string
 	id: string
 	name: string
 	points: number

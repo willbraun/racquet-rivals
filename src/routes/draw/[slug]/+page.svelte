@@ -6,7 +6,7 @@
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
 	import { predictionStore } from '$lib/store'
-	import type { Slot } from './+page.server'
+	import type { Prediction, Slot } from './+page.server'
 	import Cookies from 'js-cookie'
 	import { afterNavigate } from '$app/navigation'
 	import { format } from 'date-fns'
@@ -50,20 +50,45 @@
 		return `${rems}rem`
 	}
 
-	const getPlayerOptions = (slot: Slot, slots: Slot[]): [string, string] => {
+	const getPlayerOptions = (
+		slot: Slot,
+		slots: Slot[],
+		predictionStore: Prediction[],
+		index: number
+	): [string, string] => {
+		let player1 = ''
+		let player2 = ''
 		const round = slot.round
 		const position = slot.position
-		const slot1 = slots.find((s) => s.round === round - 1 && s.position === position * 2 - 1)
-		const slot2 = slots.find((s) => s.round === round - 1 && s.position === position * 2)
 
-		let player1 = ''
-		if (slot1) {
-			player1 = `${slot1.seed} ${slot1.name}`
-		}
+		if (index > 1) {
+			const prediction1 = predictionStore.find(
+				(p) =>
+					p.user_id === data.currentUser.id &&
+					p.round === round - 1 &&
+					p.position === position * 2 - 1
+			)
+			const prediction2 = predictionStore.find(
+				(p) =>
+					p.user_id === data.currentUser.id && p.round === round - 1 && p.position === position * 2
+			)
 
-		let player2 = ''
-		if (slot2) {
-			player2 = `${slot2.seed} ${slot2.name}`
+			if (prediction1) {
+				player1 = prediction1.name
+			}
+			if (prediction2) {
+				player2 = prediction2.name
+			}
+		} else {
+			const slot1 = slots.find((s) => s.round === round - 1 && s.position === position * 2 - 1)
+			const slot2 = slots.find((s) => s.round === round - 1 && s.position === position * 2)
+
+			if (slot1) {
+				player1 = `${slot1.seed} ${slot1.name}`
+			}
+			if (slot2) {
+				player2 = `${slot2.seed} ${slot2.name}`
+			}
 		}
 
 		return [player1, player2]
@@ -197,7 +222,7 @@
 						{@const selectedUserPredictions = slotPredictions.filter(
 							(p) => p.user_id !== data.currentUser.id
 						)}
-						{@const players = getPlayerOptions(slot, slots)}
+						{@const players = getPlayerOptions(slot, slots, $predictionStore, index)}
 						<div
 							class="absolute bottom-0 translate-y-full h-20 w-full p-1.5 flex flex-wrap justify-center content-start gap-2 z-10"
 						>
@@ -206,15 +231,11 @@
 								roundIndex={index}
 								{players}
 								prediction={currentUserPrediction}
-								color={getColor(currentUserPrediction?.user_id)}
+								{getColor}
 								{predictionsAllowed}
 							/>
 							{#each selectedUserPredictions as prediction}
-								<ViewPrediction
-									name={prediction.name}
-									points={prediction.points}
-									color={getColor(prediction.user_id)}
-								/>
+								<ViewPrediction {prediction} {getColor} />
 							{/each}
 						</div>
 					{/if}
