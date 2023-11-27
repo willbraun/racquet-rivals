@@ -6,7 +6,7 @@
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
 	import { predictionStore } from '$lib/store'
-	import type { Prediction, Slot } from './+page.server'
+	import type { Prediction, Slot } from '$lib/types'
 	import Cookies from 'js-cookie'
 	import { afterNavigate } from '$app/navigation'
 	import { format } from 'date-fns'
@@ -226,7 +226,7 @@
 							class="absolute bottom-0 translate-y-full h-20 w-full p-1.5 flex flex-wrap justify-center content-start gap-2 z-10"
 						>
 							<AddPrediction
-								slotId={slot.id}
+								{slot}
 								roundIndex={index}
 								{players}
 								prediction={currentUserPrediction}

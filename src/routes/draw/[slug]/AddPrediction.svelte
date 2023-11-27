@@ -2,11 +2,12 @@
 	import Pocketbase from 'pocketbase'
 	import { popup } from '@skeletonlabs/skeleton'
 	import ViewPrediction from './ViewPrediction.svelte'
-	import type { Prediction } from './+page.server'
+	import type { Prediction, Slot } from '$lib/types'
 	import { errorMessage } from '$lib/utils'
 	import FormError from '$lib/FormError.svelte'
 	import { predictionStore } from '$lib/store'
-	export let slotId: string
+	import type { PredictionRecord } from '$lib/types'
+	export let slot: Slot
 	export let roundIndex: number
 	export let players: [string, string]
 	export let prediction: Prediction | undefined
@@ -52,14 +53,14 @@
 			return
 		}
 
-		if (!slotId) {
-			error = `Invalid slot: "${slotId}"`
+		if (!slot) {
+			error = `Invalid slot: "${(slot as Slot).id}"`
 			loading = false
 			return
 		}
 
 		const data = {
-			draw_slot_id: slotId,
+			draw_slot_id: slot.id,
 			user_id: pb.authStore.model.id,
 			name: player,
 			points: 0
@@ -67,12 +68,18 @@
 
 		if (prediction) {
 			try {
-				await pb.collection('prediction').update(prediction.id, data)
-				// PB updates all predictions in future rounds for this draw/user/predictionName to have the new name
-				// - add Dao function to do this
-				// after update, in pb.collection('view_predictions'), get all predictions for this draw_id and set store to that, rather than updating store
-
-				const record: Prediction = await pb.collection('view_predictions').getOne(prediction.id)
+				const response: PredictionRecord = await pb
+					.collection('prediction')
+					.update(prediction.id, data)
+				const record: Prediction = {
+					...response,
+					collectionName: 'view_predictions',
+					draw_id: slot.draw_id,
+					position: slot.position,
+					round: slot.round,
+					seed: slot.seed,
+					username: pb.authStore.model.username
+				}
 
 				predictionStore.update((store) => {
 					const copy = [...store]
@@ -86,8 +93,16 @@
 			}
 		} else {
 			try {
-				const response: Prediction = await pb.collection('prediction').create(data)
-				const record: Prediction = await pb.collection('view_predictions').getOne(response.id)
+				const response: PredictionRecord = await pb.collection('prediction').create(data)
+				const record: Prediction = {
+					...response,
+					collectionName: 'view_predictions',
+					draw_id: slot.draw_id,
+					position: slot.position,
+					round: slot.round,
+					seed: slot.seed,
+					username: pb.authStore.model.username
+				}
 
 				predictionStore.update((store) => [...store, record])
 				prediction = record
