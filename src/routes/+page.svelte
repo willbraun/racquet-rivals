@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Pocketbase from 'pocketbase'
-	import type { Draw } from './draw/[slug]/+page.server.js'
+	import type { Draw } from '$lib/types'
 	import Logout from '$lib/Logout.svelte'
 	import { afterNavigate } from '$app/navigation'
 	import Cookies from 'js-cookie'

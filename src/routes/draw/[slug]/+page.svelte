@@ -25,9 +25,10 @@
 	})
 
 	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
-	const fullDrawRounds = Math.log2(data.draw.size)
-	const ourRounds = [...Array(fullDrawRounds + 1).keys()].map((x) => x + 1).slice(-5)
-	const slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 3)
+	const fullDrawRounds = Math.log2(data.draw.size) + 1
+	const allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1)
+	const ourRounds = allRounds.slice(-5)
+	const slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4)
 	const now = new Date()
 	const pcDate = new Date(data.draw.prediction_close)
 	const predictionClose = format(pcDate, 'M/dd/yyyy h:mmaaa')
@@ -50,9 +51,40 @@
 		return `${rems}rem`
 	}
 
+	const getRoundLabel = () => {
+		const tbdRounds = allRounds.filter((round) => {
+			return slots
+				.filter((slot) => {
+					return slot.round === round
+				})
+				.some((slot) => slot.name.trim() === '')
+		})
+
+		if (tbdRounds.length === 0) {
+			return 'Tournament Completed'
+		}
+
+		const activeRound = Math.min(...tbdRounds) - 1
+
+		const labels = [
+			'Current Round: Round of 16',
+			'Current Round: Quarterfinals',
+			'Current Round: Semifinals',
+			'Current Round: Finals'
+		]
+		const index = ourRounds.indexOf(activeRound)
+
+		if (index !== -1) {
+			return labels[index]
+		} else {
+			const earlyLabels = ['1st Round', '2nd Round', '3rd Round']
+			return `Current Round: ${earlyLabels[activeRound - 1]}`
+		}
+	}
+
 	const getPlayerOptions = (
 		slot: Slot,
-		predictionStore: Prediction[],
+		predictions: Prediction[],
 		index: number
 	): [string, string] => {
 		let player1 = ''
@@ -61,13 +93,13 @@
 		const position = slot.position
 
 		if (index > 1) {
-			const prediction1 = predictionStore.find(
+			const prediction1 = predictions.find(
 				(p) =>
 					p.user_id === data.currentUser.id &&
 					p.round === round - 1 &&
 					p.position === position * 2 - 1
 			)
-			const prediction2 = predictionStore.find(
+			const prediction2 = predictions.find(
 				(p) =>
 					p.user_id === data.currentUser.id && p.round === round - 1 && p.position === position * 2
 			)
@@ -140,12 +172,14 @@
 		{/if}
 	</div>
 	{#if predictionsAllowed}
-		<div class="col-span-4 text-sm text-center bg-green-500 py-1">
-			Predictions open until <span class="font-bold text-black">{predictionClose}</span>
+		<div class="col-span-4 flex justify-around text-sm text-center bg-green-500 py-1">
+			<p>{getRoundLabel()}</p>
+			<p>Predictions open until <span class="font-bold text-black">{predictionClose}</span></p>
 		</div>
 	{:else}
-		<div class="col-span-4 text-sm text-center bg-red-500 py-1">
-			Predictions closed <span class="font-bold text-black">{predictionClose}</span>
+		<div class="col-span-4 flex justify-around text-sm text-center bg-red-500 py-1">
+			<p>{getRoundLabel()}</p>
+			<p>Predictions closed <span class="font-bold text-black">{predictionClose}</span></p>
 		</div>
 	{/if}
 </header>

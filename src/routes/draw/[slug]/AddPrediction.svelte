@@ -21,8 +21,6 @@
 	let loading = false
 	let error = ''
 
-	const disabledOptionStyle = 'pointer-events-none text-sm italic'
-
 	const displayPrediction = (str: string) => {
 		if (str) return str
 
@@ -149,13 +147,13 @@
 		<div class="btn-group-vertical">
 			<button
 				type="submit"
-				class={`${!player1 && disabledOptionStyle}`}
+				class={`${!player1 && 'pointer-events-none text-sm italic'}`}
 				disabled={!player1 || loading}
 				on:click|preventDefault={() => addPrediction(player1)}>{displayPrediction(player1)}</button
 			>
 			<button
 				type="submit"
-				class={`${!player2 && disabledOptionStyle}`}
+				class={`${!player2 && 'pointer-events-none text-sm italic'}`}
 				disabled={!player2 || loading}
 				on:click|preventDefault={() => addPrediction(player2)}>{displayPrediction(player2)}</button
 			>

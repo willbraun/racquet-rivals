@@ -1,4 +1,4 @@
 import { writable } from 'svelte/store'
-import type { Prediction } from '../routes/draw/[slug]/+page.server'
+import type { Prediction } from '$lib/types'
 
 export const predictionStore = writable<Prediction[]>([])
