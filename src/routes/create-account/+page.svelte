@@ -57,7 +57,7 @@
 				}),
 				{ expires: 7 }
 			)
-			Cookies.set('pb_auth', 'true', { expires: 7 })
+			// Cookies.set('pb_auth', 'true', { expires: 7 })
 			goto('/')
 		} catch (e) {
 			error = errorMessage(e)

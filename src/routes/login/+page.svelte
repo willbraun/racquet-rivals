@@ -43,7 +43,8 @@
 				}),
 				{ expires: 7 }
 			)
-			Cookies.set('pb_auth', 'true', { expires: 7 })
+			const authCookie = pb.authStore.exportToCookie()
+			Cookies.set('pb_auth', pb.authStore.exportToCookie(), { expires: 7 })
 			rememberLogin.set({
 				rememberMe,
 				usernameOrEmail

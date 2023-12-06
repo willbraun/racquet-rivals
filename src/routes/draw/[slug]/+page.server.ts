@@ -3,7 +3,7 @@ import { errorMessage, selectColors } from '$lib/utils'
 import Pocketbase, { ClientResponseError } from 'pocketbase'
 import type { Draw, PredictionRes, SelectedUser, SlotRes } from '$lib/types'
 
-const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
+// const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 export async function load({ fetch, params, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
@@ -15,6 +15,7 @@ export async function load({ fetch, params, cookies }) {
 	const drawRes = await fetch(
 		`https://tennisbracket.willbraun.dev/api/collections/draw/records/${id}`
 	)
+	// const drawRes = await locals.pb.collection('draw')
 	const drawData: Draw = await drawRes.json()
 
 	const slotRes = await fetch(
@@ -43,7 +44,7 @@ export async function load({ fetch, params, cookies }) {
 }
 
 export const actions = {
-	selectUser: async ({ request, cookies }) => {
+	selectUser: async ({ request, cookies, locals }) => {
 		const form = await request.formData()
 		const username = (form.get('username') ?? '') as string
 		const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
@@ -75,7 +76,8 @@ export const actions = {
 		const availableColors = selectColors.filter((color) => !usedColors.includes(color))
 
 		try {
-			const data = await pb.collection('user').getFirstListItem(`username="${username}"`)
+			console.log(locals.pb.authStore.isValid)
+			const data = await locals.pb.collection('user').getFirstListItem(`username="${username}"`)
 			selectedUsers.push({
 				id: data.id,
 				username: data.username,
@@ -94,6 +96,7 @@ export const actions = {
 			}
 		} catch (e) {
 			const statusCode = (e as ClientResponseError).status
+			console.log(e)
 			if (statusCode === 404) {
 				return fail(statusCode, {
 					error: 'Error: 404 - Username not found'

@@ -8,15 +8,16 @@
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
-	let isAuth = data.pb_auth === 'true'
-	afterNavigate(() => {
-		isAuth = pb.authStore.isValid
-		if (isAuth) {
-			Cookies.set('pb_auth', 'true', { expires: 7 })
-		} else {
-			Cookies.remove('pb_auth')
-		}
-	})
+	let isAuth = pb.authStore.isValid
+	// let isAuth = data.pb_auth === 'true'
+	// afterNavigate(() => {
+	// 	isAuth = pb.authStore.isValid
+	// 	if (isAuth) {
+	// 		Cookies.set('pb_auth', 'true', { expires: 7 })
+	// 	} else {
+	// 		Cookies.remove('pb_auth')
+	// 	}
+	// })
 
 	const getSlug = (draw: Draw): string => {
 		const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-')
