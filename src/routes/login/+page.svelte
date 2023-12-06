@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Pocketbase from 'pocketbase'
+	import Pocketbase, { getTokenPayload } from 'pocketbase'
 	import { goto } from '$app/navigation'
 	import PasswordField from '$lib/PasswordField.svelte'
 	import { localStorageStore } from '@skeletonlabs/skeleton'
@@ -43,8 +43,11 @@
 				}),
 				{ expires: 7 }
 			)
-			const authCookie = pb.authStore.exportToCookie()
-			Cookies.set('pb_auth', pb.authStore.exportToCookie(), { expires: 7 })
+
+			const payload = getTokenPayload(pb.authStore.token);
+			Cookies.set("pb_auth", JSON.stringify({token: pb.authStore.token}), {
+				expires: new Date(payload.exp * 1000)
+			})
 			rememberLogin.set({
 				rememberMe,
 				usernameOrEmail

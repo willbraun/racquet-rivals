@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 
-export async function load({ fetch, cookies }) {
+export async function load({ fetch, locals }) {
 	const today = format(new Date(), 'yyyy-mm-dd')
 
 	const activeRes = await fetch(
@@ -16,6 +16,6 @@ export async function load({ fetch, cookies }) {
 	return {
 		active: activeData,
 		completed: completedData,
-		pb_auth: cookies.get('pb_auth')
+		isAuthServer: locals.pb.authStore.isValid
 	}
 }

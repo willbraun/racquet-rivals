@@ -1,11 +1,9 @@
 import { fail } from '@sveltejs/kit'
 import { errorMessage, selectColors } from '$lib/utils'
-import Pocketbase, { ClientResponseError } from 'pocketbase'
+import type { ClientResponseError } from 'pocketbase'
 import type { Draw, PredictionRes, SelectedUser, SlotRes } from '$lib/types'
 
-// const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
-
-export async function load({ fetch, params, cookies }) {
+export async function load({ fetch, params, cookies, locals }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
 	const selectedUsers: SelectedUser[] = JSON.parse(
@@ -15,7 +13,6 @@ export async function load({ fetch, params, cookies }) {
 	const drawRes = await fetch(
 		`https://tennisbracket.willbraun.dev/api/collections/draw/records/${id}`
 	)
-	// const drawRes = await locals.pb.collection('draw')
 	const drawData: Draw = await drawRes.json()
 
 	const slotRes = await fetch(
@@ -39,7 +36,7 @@ export async function load({ fetch, params, cookies }) {
 		predictions: predictionData,
 		currentUser: currentUser,
 		selectedUsers: selectedUsers,
-		pb_auth: cookies.get('pb_auth')
+		isAuthServer: locals.pb.authStore.isValid
 	}
 }
 
@@ -76,7 +73,6 @@ export const actions = {
 		const availableColors = selectColors.filter((color) => !usedColors.includes(color))
 
 		try {
-			console.log(locals.pb.authStore.isValid)
 			const data = await locals.pb.collection('user').getFirstListItem(`username="${username}"`)
 			selectedUsers.push({
 				id: data.id,

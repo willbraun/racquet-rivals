@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Pocketbase from 'pocketbase'
+	import Pocketbase, { getTokenPayload } from 'pocketbase'
 	import { goto } from '$app/navigation'
 	import EmailField from '$lib/EmailField.svelte'
 	import PasswordField from '$lib/PasswordField.svelte'
@@ -57,7 +57,10 @@
 				}),
 				{ expires: 7 }
 			)
-			// Cookies.set('pb_auth', 'true', { expires: 7 })
+			const payload = getTokenPayload(pb.authStore.token)
+			Cookies.set('pb_auth', JSON.stringify({ token: pb.authStore.token }), {
+				expires: new Date(payload.exp * 1000)
+			})
 			goto('/')
 		} catch (e) {
 			error = errorMessage(e)
