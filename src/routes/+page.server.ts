@@ -16,6 +16,7 @@ export async function load({ fetch, locals }) {
 	return {
 		active: activeData,
 		completed: completedData,
-		isAuthServer: locals.pb.authStore.isValid
+		isAuthServer: locals.pb.authStore.isValid,
+		pb_auth_cookie: locals.pb.authStore.exportToCookie()
 	}
 }

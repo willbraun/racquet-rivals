@@ -10,10 +10,12 @@
 
 	let isAuth = data.isAuthServer
 	afterNavigate(() => {
-		isAuth = pb.authStore.isValid
-		if (!isAuth) {
-			Cookies.remove('pb_auth')
+		if (data.pb_auth_cookie) {
+			pb.authStore.loadFromCookie(data.pb_auth_cookie)
+		} else {
+			pb.authStore.clear()
 		}
+		isAuth = pb.authStore.isValid
 	})
 
 	const getSlug = (draw: Draw): string => {

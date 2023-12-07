@@ -7,6 +7,7 @@
 	import FormError from '$lib/FormError.svelte'
 	import { errorMessage, mainColor } from '$lib/utils'
 	import Cookies from 'js-cookie'
+	import { enhance } from '$app/forms'
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
@@ -16,50 +17,50 @@
 	let loading = false
 	let rememberMe = false
 
-	const login = async () => {
-		loading = true
+	// const login = async () => {
+	// 	loading = true
 
-		if (usernameOrEmail === '') {
-			error = 'Please enter your username or email\n'
-		}
+	// 	if (usernameOrEmail === '') {
+	// 		error = 'Please enter your username or email\n'
+	// 	}
 
-		if (password === '') {
-			error += 'Please enter your password'
-		}
+	// 	if (password === '') {
+	// 		error += 'Please enter your password'
+	// 	}
 
-		if (error) {
-			loading = false
-			return
-		}
+	// 	if (error) {
+	// 		loading = false
+	// 		return
+	// 	}
 
-		try {
-			const authResponse = await pb.collection('user').authWithPassword(usernameOrEmail, password)
-			Cookies.set(
-				'currentUser',
-				JSON.stringify({
-					id: authResponse.record.id,
-					username: authResponse.record.username,
-					color: mainColor
-				}),
-				{ expires: 7 }
-			)
+	// 	try {
+	// 		const authResponse = await pb.collection('user').authWithPassword(usernameOrEmail, password)
+	// 		Cookies.set(
+	// 			'currentUser',
+	// 			JSON.stringify({
+	// 				id: authResponse.record.id,
+	// 				username: authResponse.record.username,
+	// 				color: mainColor
+	// 			}),
+	// 			{ expires: 7 }
+	// 		)
 
-			const payload = getTokenPayload(pb.authStore.token);
-			Cookies.set("pb_auth", JSON.stringify({token: pb.authStore.token}), {
-				expires: new Date(payload.exp * 1000)
-			})
-			rememberLogin.set({
-				rememberMe,
-				usernameOrEmail
-			})
-			goto('/')
-			loading = false
-		} catch (e) {
-			error = errorMessage(e)
-		}
+	// 		const payload = getTokenPayload(pb.authStore.token);
+	// 		Cookies.set("pb_auth", JSON.stringify({token: pb.authStore.token}), {
+	// 			expires: new Date(payload.exp * 1000)
+	// 		})
+	// 		rememberLogin.set({
+	// 			rememberMe,
+	// 			usernameOrEmail
+	// 		})
+	// 		goto('/')
+	// 		loading = false
+	// 	} catch (e) {
+	// 		error = errorMessage(e)
+	// 	}
 
-		loading = false
-	}
+	// 	loading = false
+	// }
 
 	type RememberLogin = {
 		rememberMe: boolean
@@ -80,7 +81,27 @@
 
 <div class="mt-12 m-auto p-4 max-w-md">
 	<h1 class="text-3xl mb-4">Login</h1>
-	<form class="[&>*]:mb-4" on:submit={login}>
+	<!-- <form class="[&>*]:mb-4" on:submit={login}> -->
+		<form
+		method="POST"
+		action="?/login"
+		class="[&>*]:mb-4"
+		use:enhance={() => {
+			loading = true
+			error = ''
+			return async ({ result, update }) => {
+				await update()
+				if (result.status === 200) {
+					rememberLogin.set({
+						rememberMe,
+						usernameOrEmail
+					})
+					goto('/')
+				}
+				loading = false
+			}
+		}}
+	>
 		<label class="label">
 			<p>Username or email</p>
 			<input

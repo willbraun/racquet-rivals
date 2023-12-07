@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit'
+import { fail, type Actions } from '@sveltejs/kit'
 import { errorMessage, selectColors } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type { Draw, PredictionRes, SelectedUser, SlotRes } from '$lib/types'
@@ -36,11 +36,12 @@ export async function load({ fetch, params, cookies, locals }) {
 		predictions: predictionData,
 		currentUser: currentUser,
 		selectedUsers: selectedUsers,
-		isAuthServer: locals.pb.authStore.isValid
+		isAuthServer: locals.pb.authStore.isValid,
+		pb_auth_cookie: locals.pb.authStore.exportToCookie()
 	}
 }
 
-export const actions = {
+export const actions: Actions = {
 	selectUser: async ({ request, cookies, locals }) => {
 		const form = await request.formData()
 		const username = (form.get('username') ?? '') as string
