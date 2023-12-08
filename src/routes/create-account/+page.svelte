@@ -4,8 +4,13 @@
 	import EmailField from '$lib/EmailField.svelte'
 	import PasswordField from '$lib/PasswordField.svelte'
 	import FormError from '$lib/FormError.svelte'
-	import { errorMessage, mainColor } from '$lib/utils.js'
+	import { errorMessage, mainColor, makeSetType } from '$lib/utils.js'
 	import Cookies from 'js-cookie'
+	import { enhance } from '$app/forms'
+	import { isAuth } from '$lib/store'
+	import type { ActionResult } from '@sveltejs/kit'
+	import type { AuthResult } from '$lib/types'
+
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	let username = ''
@@ -17,60 +22,29 @@
 
 	$: disabled = !username || !email || password.length < 8 || loading || showEmailValidation
 
-	const register = async () => {
-		loading = true
-
-		if (username === '') {
-			error = 'Please enter your username\n'
-		}
-
-		if (email === '') {
-			error += 'Please enter your email\n'
-		}
-
-		if (password === '') {
-			error += 'Please enter your password'
-		}
-
-		if (error) {
-			loading = false
-			return
-		}
-
-		const data = {
-			username,
-			email,
-			emailVisibility: true,
-			password,
-			passwordConfirm: password
-		}
-
-		try {
-			await pb.collection('user').create(data)
-			const authResponse = await pb.collection('user').authWithPassword(email, password)
-			Cookies.set(
-				'currentUser',
-				JSON.stringify({
-					id: authResponse.record.id,
-					username: authResponse.record.username,
-					color: mainColor
-				}),
-				{ expires: 7 }
-			)
-			const payload = getTokenPayload(pb.authStore.token)
-			Cookies.set('pb_auth', JSON.stringify({ token: pb.authStore.token }), {
-				expires: new Date(payload.exp * 1000)
-			})
-			goto('/')
-		} catch (e) {
-			error = errorMessage(e)
-		}
-	}
+	const setTypeAuth = makeSetType<AuthResult>()
 </script>
 
 <div class="mt-12 m-auto p-4 max-w-md">
 	<h1 class="text-3xl mb-4">Create Account</h1>
-	<form on:submit={register}>
+	<form
+		action="?/register"
+		method="POST"
+		use:enhance={() => {
+			loading = true
+			error = ''
+			return async ({ result, update }) => {
+				await update()
+				const typedResult = setTypeAuth(result)
+				if (result.status === 200) {
+					goto('/')
+				} else {
+					error = typedResult.data.error
+				}
+				loading = false
+			}
+		}}
+	>
 		<label class="label mb-4">
 			<p>Username</p>
 			<input class="input rounded-md" type="text" name="username" bind:value={username} />

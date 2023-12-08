@@ -5,24 +5,18 @@
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
-	import { predictionStore } from '$lib/store'
+	import { isAuth, predictionStore } from '$lib/store'
 	import type { Prediction, Slot } from '$lib/types'
 	import Cookies from 'js-cookie'
 	import { afterNavigate } from '$app/navigation'
 	import { format } from 'date-fns'
+	import { updatePageAuth } from '$lib/utils'
 	export let data
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
-	let isAuth = data.isAuthServer
-	afterNavigate(() => {
-		if (data.pb_auth_cookie) {
-			pb.authStore.loadFromCookie(data.pb_auth_cookie)
-		} else {
-			pb.authStore.clear()
-		}
-		isAuth = pb.authStore.isValid
-	})
+	isAuth.set(data.pb_auth_valid)
+	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
 	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
 	const fullDrawRounds = Math.log2(data.draw.size) + 1
@@ -159,7 +153,7 @@
 <header class="grid grid-cols-4 items-center">
 	<h1 class="col-span-3 text-lg md:text-2xl font-bold ml-4">{`Tennis Bracket - ${title}`}</h1>
 	<div class="col-span-1 flex justify-end gap-2 flex-wrap p-2">
-		{#if isAuth}
+		{#if $isAuth}
 			<Logout />
 		{:else}
 			<a href="/login">
@@ -184,7 +178,7 @@
 	{/if}
 </header>
 <section class="flex gap-2 ml-6 my-2 h-6">
-	{#if isAuth}
+	{#if $isAuth}
 		<p>Users:</p>
 		{#each users as user}
 			<div class={`relative chip rounded-full pointer-events-none text-black ${user.color} shadow`}>
@@ -245,7 +239,7 @@
 					style:height={getHeight(index, slot.position)}
 				>
 					<p>{`${slot.seed} ${slot.name}`}</p>
-					{#if isAuth && index > 0}
+					{#if $isAuth && index > 0}
 						{@const slotPredictions = $predictionStore
 							.filter((p) => p.draw_slot_id === slot.id)
 							.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))}

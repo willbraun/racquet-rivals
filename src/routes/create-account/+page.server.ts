@@ -1,19 +1,23 @@
-import { fail, type Actions } from '@sveltejs/kit'
+import { fail } from '@sveltejs/kit'
 import { errorMessage, mainColor } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
 
-// const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
-
-export const actions: Actions = {
-	login: async ({ request, cookies, locals }) => {
+export const actions = {
+	register: async ({ request, cookies, locals }) => {
 		const form = await request.formData()
-		const usernameOrEmail = (form.get('usernameOrEmail') ?? '') as string
+		const username = (form.get('username') ?? '') as string
+		const email = (form.get('email') ?? '') as string
 		const password = (form.get('password') ?? '') as string
 		let clientError = ''
 		let isClientError = false
 
-		if (usernameOrEmail === '') {
-			clientError = 'Please enter your username or email\n'
+		if (username === '') {
+			clientError = 'Please enter your username\n'
+			isClientError = true
+		}
+
+		if (email === '') {
+			clientError += 'Please enter your email\n'
 			isClientError = true
 		}
 
@@ -28,10 +32,17 @@ export const actions: Actions = {
 			})
 		}
 
+		const data = {
+			username,
+			email,
+			emailVisibility: true,
+			password,
+			passwordConfirm: password
+		}
+
 		try {
-			const authResponse = await locals.pb
-				.collection('user')
-				.authWithPassword(usernameOrEmail, password)
+			await locals.pb.collection('user').create(data)
+			const authResponse = await locals.pb.collection('user').authWithPassword(email, password)
 			cookies.set(
 				'currentUser',
 				JSON.stringify({
@@ -41,22 +52,6 @@ export const actions: Actions = {
 				}),
 				{ maxAge: 60 * 60 * 24 * 7 }
 			)
-			return {
-				error: ''
-			}
-		} catch (e) {
-			const statusCode = (e as ClientResponseError).status
-			return fail(statusCode, {
-				error: errorMessage(e)
-			})
-		}
-	},
-
-	logout: async ({ cookies, locals }) => {
-		try {
-			console.log('logout server')
-			locals.pb.authStore.clear()
-			cookies.delete('currentUser')
 			return {
 				error: ''
 			}

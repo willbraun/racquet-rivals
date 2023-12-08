@@ -5,7 +5,7 @@
 	import { applyAction, enhance } from '$app/forms'
 	import type { ActionResult } from '@sveltejs/kit'
 	import FormError from '../../../lib/FormError.svelte'
-	import { mainColor } from '../../../lib/utils'
+	import { mainColor, makeSetType } from '../../../lib/utils'
 	export let parent: SvelteComponent
 
 	const modalStore = getModalStore()
@@ -22,13 +22,8 @@
 		inputRef.focus()
 	}
 
-	const setTypeSelect = (result: ActionResult) => {
-		return result as SelectUserResult
-	}
-
-	const setTypeDeselect = (result: ActionResult) => {
-		return result as DeselectUserResult
-	}
+	const setTypeSelect = makeSetType<SelectUserResult>()
+	const setTypeDeselect = makeSetType<DeselectUserResult>()
 
 	// Base Classes
 	const cBase = 'card p-4 w-modal shadow-xl space-y-4'

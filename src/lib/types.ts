@@ -76,6 +76,14 @@ export interface SelectedUser {
 	color: string
 }
 
+export interface AuthResult {
+	data: {
+		error: string
+	}
+	status: number
+	type: string
+}
+
 export interface SelectUserResult {
 	data: {
 		user: SelectedUser

@@ -1,4 +1,7 @@
+import type Client from 'pocketbase'
 import type { ClientResponseError } from 'pocketbase'
+import { isAuth } from './store'
+import type { ActionResult } from '@sveltejs/kit'
 
 type ErrorObjData = {
 	[key: string]: {
@@ -28,6 +31,21 @@ export const errorMessage = (error: unknown) => {
 const capitalize = (str: string) => {
 	if (!str) return ''
 	return str[0].toUpperCase() + str.slice(1).toLowerCase()
+}
+
+export const updatePageAuth = (pb: Client, serverPbValid: boolean, serverPbCookie: string) => {
+	if (serverPbValid) {
+		pb.authStore.loadFromCookie(serverPbCookie)
+	} else {
+		pb.authStore.clear()
+	}
+	isAuth.set(pb.authStore.isValid)
+}
+
+export const makeSetType = <T>() => {
+	return (result: ActionResult): T => {
+		return result as T
+	}
 }
 
 export const mainColor = 'bg-blue-300'

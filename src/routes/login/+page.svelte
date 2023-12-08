@@ -5,9 +5,11 @@
 	import { localStorageStore } from '@skeletonlabs/skeleton'
 	import { get, type Writable } from 'svelte/store'
 	import FormError from '$lib/FormError.svelte'
-	import { errorMessage, mainColor } from '$lib/utils'
+	import { errorMessage, mainColor, makeSetType } from '$lib/utils'
 	import Cookies from 'js-cookie'
 	import { enhance } from '$app/forms'
+	import type { ActionResult } from '@sveltejs/kit'
+	import type { AuthResult } from '$lib/types'
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
@@ -17,50 +19,7 @@
 	let loading = false
 	let rememberMe = false
 
-	// const login = async () => {
-	// 	loading = true
-
-	// 	if (usernameOrEmail === '') {
-	// 		error = 'Please enter your username or email\n'
-	// 	}
-
-	// 	if (password === '') {
-	// 		error += 'Please enter your password'
-	// 	}
-
-	// 	if (error) {
-	// 		loading = false
-	// 		return
-	// 	}
-
-	// 	try {
-	// 		const authResponse = await pb.collection('user').authWithPassword(usernameOrEmail, password)
-	// 		Cookies.set(
-	// 			'currentUser',
-	// 			JSON.stringify({
-	// 				id: authResponse.record.id,
-	// 				username: authResponse.record.username,
-	// 				color: mainColor
-	// 			}),
-	// 			{ expires: 7 }
-	// 		)
-
-	// 		const payload = getTokenPayload(pb.authStore.token);
-	// 		Cookies.set("pb_auth", JSON.stringify({token: pb.authStore.token}), {
-	// 			expires: new Date(payload.exp * 1000)
-	// 		})
-	// 		rememberLogin.set({
-	// 			rememberMe,
-	// 			usernameOrEmail
-	// 		})
-	// 		goto('/')
-	// 		loading = false
-	// 	} catch (e) {
-	// 		error = errorMessage(e)
-	// 	}
-
-	// 	loading = false
-	// }
+	const setTypeAuth = makeSetType<AuthResult>()
 
 	type RememberLogin = {
 		rememberMe: boolean
@@ -81,8 +40,7 @@
 
 <div class="mt-12 m-auto p-4 max-w-md">
 	<h1 class="text-3xl mb-4">Login</h1>
-	<!-- <form class="[&>*]:mb-4" on:submit={login}> -->
-		<form
+	<form
 		method="POST"
 		action="?/login"
 		class="[&>*]:mb-4"
@@ -91,12 +49,15 @@
 			error = ''
 			return async ({ result, update }) => {
 				await update()
+				const typedResult = setTypeAuth(result)
 				if (result.status === 200) {
 					rememberLogin.set({
 						rememberMe,
 						usernameOrEmail
 					})
 					goto('/')
+				} else {
+					error = typedResult.data.error
 				}
 				loading = false
 			}
