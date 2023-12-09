@@ -1,3 +1,11 @@
+export interface PbListResponse<T> {
+	page: number
+	perPage: number
+	totalItems: number
+	totalPages: number
+	items: T[]
+}
+
 export interface Draw {
 	collectionId: string
 	collectionName: 'draw'
@@ -27,14 +35,6 @@ export interface Slot {
 	updated: string
 }
 
-export interface SlotRes {
-	page: number
-	perPage: number
-	totalItems: number
-	totalPages: number
-	items: Slot[]
-}
-
 export interface Prediction {
 	collectionId: string
 	collectionName: 'view_predictions'
@@ -48,14 +48,6 @@ export interface Prediction {
 	points: number
 	user_id: string
 	username: string
-}
-
-export interface PredictionRes {
-	page: number
-	perPage: number
-	totalItems: number
-	totalPages: number
-	items: Prediction[]
 }
 
 export interface PredictionRecord {

@@ -7,7 +7,6 @@
 	import { onMount } from 'svelte'
 	import { isAuth, predictionStore } from '$lib/store'
 	import type { Prediction, Slot } from '$lib/types'
-	import Cookies from 'js-cookie'
 	import { afterNavigate } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { updatePageAuth } from '$lib/utils'

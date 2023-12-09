@@ -3,7 +3,6 @@
 	import type { Draw } from '$lib/types'
 	import Logout from '$lib/Logout.svelte'
 	import { afterNavigate } from '$app/navigation'
-	import Cookies from 'js-cookie'
 	import { isAuth } from '$lib/store.js'
 	import { updatePageAuth } from '$lib/utils.js'
 	export let data
@@ -57,7 +56,7 @@
 			<p class="text-center mb-4">No active draws</p>
 		{/if}
 	</section>
-	<section>
+	<section class="pb-12">
 		<h3 class="text-3xl mb-4">Completed Draws</h3>
 		{#if data.completed.totalItems > 0}
 			{#each data.completed.items as draw}
@@ -68,7 +67,7 @@
 				</a>
 			{/each}
 		{:else}
-			<p class="text-center mb-4">No completed draws</p>
+			<p class="text-center">No completed draws</p>
 		{/if}
 	</section>
 </main>

@@ -1,7 +1,7 @@
 import { fail, type Actions } from '@sveltejs/kit'
 import { errorMessage, selectColors } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
-import type { Draw, PredictionRes, SelectedUser, SlotRes } from '$lib/types'
+import type { Draw, PbListResponse, Prediction, SelectedUser, Slot } from '$lib/types'
 
 export async function load({ fetch, params, cookies, locals }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
@@ -18,7 +18,7 @@ export async function load({ fetch, params, cookies, locals }) {
 	const slotRes = await fetch(
 		`https://tennisbracket.willbraun.dev/api/collections/draw_slot/records?perPage=255&filter=(draw_id="${id}")`
 	)
-	const slotData: SlotRes = await slotRes.json()
+	const slotData: PbListResponse<Slot> = await slotRes.json()
 
 	const allUserIds = [currentUser.id, ...selectedUsers.map((user) => user.id)]
 	const userFilter = allUserIds.map((id) => `user_id="${id}"`).join('||')
@@ -28,7 +28,7 @@ export async function load({ fetch, params, cookies, locals }) {
 	const predictionRes = await fetch(
 		`https://tennisbracket.willbraun.dev/api/collections/view_predictions/records?perPage=300&filter=${encoded}`
 	)
-	const predictionData: PredictionRes = await predictionRes.json()
+	const predictionData: PbListResponse<Prediction> = await predictionRes.json()
 
 	return {
 		draw: drawData,
@@ -36,8 +36,8 @@ export async function load({ fetch, params, cookies, locals }) {
 		predictions: predictionData,
 		currentUser: currentUser,
 		selectedUsers: selectedUsers,
-		pb_auth_valid: locals.pb.authStore.isValid,
-		pb_auth_cookie: locals.pb.authStore.exportToCookie()
+		pb_auth_valid: locals.pb.authStore.isValid as boolean,
+		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string
 	}
 }
 
