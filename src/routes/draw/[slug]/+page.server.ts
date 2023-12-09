@@ -9,24 +9,32 @@ export async function load({ fetch, params, cookies, locals }) {
 	const selectedUsers: SelectedUser[] = JSON.parse(
 		cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
 	)
+	const options = {
+		headers: {
+			Authorization: locals.pb.authStore.token
+		}
+	}
 
 	const drawRes = await fetch(
-		`https://tennisbracket.willbraun.dev/api/collections/draw/records/${id}`
+		`https://tennisbracket.willbraun.dev/api/collections/draw/records/${id}`,
+		options
 	)
 	const drawData: Draw = await drawRes.json()
 
 	const slotRes = await fetch(
-		`https://tennisbracket.willbraun.dev/api/collections/draw_slot/records?perPage=255&filter=(draw_id="${id}")`
+		`https://tennisbracket.willbraun.dev/api/collections/draw_slot/records?perPage=255&filter=(draw_id="${id}")`,
+		options
 	)
 	const slotData: PbListResponse<Slot> = await slotRes.json()
 
 	const allUserIds = [currentUser.id, ...selectedUsers.map((user) => user.id)]
 	const userFilter = allUserIds.map((id) => `user_id="${id}"`).join('||')
 	const filter = `(draw_id="${id}" && (${userFilter}))`
-
 	const encoded = encodeURIComponent(filter)
+
 	const predictionRes = await fetch(
-		`https://tennisbracket.willbraun.dev/api/collections/view_predictions/records?perPage=300&filter=${encoded}`
+		`https://tennisbracket.willbraun.dev/api/collections/view_predictions/records?perPage=300&filter=${encoded}`,
+		options
 	)
 	const predictionData: PbListResponse<Prediction> = await predictionRes.json()
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Prediction } from './+page.server'
+	import type { Prediction } from '$lib/types'
 
 	export let prediction: Prediction
 	export let getColor: (userId: string | undefined) => string

@@ -6,15 +6,21 @@ import type { ClientResponseError } from 'pocketbase'
 
 export async function load({ fetch, locals }) {
 	const today = format(new Date(), 'yyyy-MM-dd')
-	console.log(today)
+	const options = {
+		headers: {
+			Authorization: locals.pb.authStore.token
+		}
+	}
 
 	const activeRes = await fetch(
-		`https://tennisbracket.willbraun.dev/api/collections/draw/records?filter=(end_date>="${today}")&sort=start_date,event`
+		`https://tennisbracket.willbraun.dev/api/collections/draw/records?filter=(end_date>="${today}")&sort=start_date,event`,
+		options
 	)
 	const activeData: PbListResponse<Draw> = await activeRes.json()
 
 	const completedRes = await fetch(
-		`https://tennisbracket.willbraun.dev/api/collections/draw/records?filter=(end_date<"${today}")&sort=start_date,event`
+		`https://tennisbracket.willbraun.dev/api/collections/draw/records?filter=(end_date<"${today}")&sort=start_date,event`,
+		options
 	)
 	const completedData: PbListResponse<Draw> = await completedRes.json()
 
