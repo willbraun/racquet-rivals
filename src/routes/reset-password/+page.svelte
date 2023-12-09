@@ -20,7 +20,7 @@
 		buttonRef.focus()
 	}
 
-	const setTypeAuth = makeSetType<AuthResult>()
+	const setType = makeSetType<AuthResult>()
 
 	// const resetPassword = async () => {
 	// 	loading = false
@@ -52,7 +52,7 @@
 			error = ''
 			return async ({ result, update }) => {
 				await update()
-				const typedResult = setTypeAuth(result)
+				const typedResult = setType(result)
 				if (result.status === 200) {
 					success = true
 				} else {

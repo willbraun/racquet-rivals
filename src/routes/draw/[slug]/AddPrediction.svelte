@@ -2,11 +2,11 @@
 	import Pocketbase from 'pocketbase'
 	import { popup } from '@skeletonlabs/skeleton'
 	import ViewPrediction from './ViewPrediction.svelte'
-	import type { Prediction, Slot } from '$lib/types'
-	import { errorMessage } from '$lib/utils'
+	import type { Prediction, Slot, AddPredictionResult } from '$lib/types'
+	import { makeSetType } from '$lib/utils'
 	import FormError from '$lib/FormError.svelte'
 	import { predictionStore } from '$lib/store'
-	import type { PredictionRecord } from '$lib/types'
+	import { enhance } from '$app/forms'
 	export let slot: Slot
 	export let roundIndex: number
 	export let players: [string, string]
@@ -20,6 +20,7 @@
 
 	let loading = false
 	let error = ''
+	let predictionValue = ''
 
 	const displayPrediction = (str: string) => {
 		if (str) return str
@@ -31,86 +32,8 @@
 		}
 	}
 
-	const addPrediction = async (player: string) => {
-		if (prediction?.name === player) {
-			return
-		}
-
-		loading = true
-		error = ''
-
-		if (!pb.authStore.isValid || !pb.authStore.model) {
-			error = 'Must be logged in to make a prediction'
-			loading = false
-			return
-		}
-
-		if (!player) {
-			error = `Invalid prediction: "${player}"`
-			loading = false
-			return
-		}
-
-		if (!slot) {
-			error = `Invalid slot: "${(slot as Slot).id}"`
-			loading = false
-			return
-		}
-
-		const data = {
-			draw_slot_id: slot.id,
-			user_id: pb.authStore.model.id,
-			name: player,
-			points: 0
-		}
-
-		if (prediction) {
-			try {
-				const response: PredictionRecord = await pb
-					.collection('prediction')
-					.update(prediction.id, data)
-				const record: Prediction = {
-					...response,
-					collectionName: 'view_predictions',
-					draw_id: slot.draw_id,
-					position: slot.position,
-					round: slot.round,
-					seed: slot.seed,
-					username: pb.authStore.model.username
-				}
-
-				predictionStore.update((store) => {
-					const copy = [...store]
-					const index = copy.map((p) => p.id).indexOf(record.id)
-					copy.splice(index, 1, record)
-					return copy
-				})
-				prediction = record
-			} catch (e) {
-				error = errorMessage(e)
-			}
-		} else {
-			try {
-				const response: PredictionRecord = await pb.collection('prediction').create(data)
-				const record: Prediction = {
-					...response,
-					collectionName: 'view_predictions',
-					draw_id: slot.draw_id,
-					position: slot.position,
-					round: slot.round,
-					seed: slot.seed,
-					username: pb.authStore.model.username
-				}
-
-				predictionStore.update((store) => [...store, record])
-				prediction = record
-			} catch (e) {
-				error = errorMessage(e)
-			}
-		}
-
-		loading = false
-	}
+	const setTypeAddPredictionResult = makeSetType<AddPredictionResult>()
+	const setTypePrediction = makeSetType<Prediction>()
 </script>
 
 <button
@@ -123,7 +46,7 @@
 	disabled={!predictionsAllowed}
 	use:popup={{
 		event: 'click',
-		target: `popupCombobox-${player1}-${player2}`,
+		target: `popupCombobox-${slot.id}`,
 		placement: 'top',
 		closeQuery: 'button'
 	}}
@@ -142,20 +65,56 @@
 	{/if}
 </button>
 
-<div class="card shadow-lg" data-popup="popupCombobox-{player1}-{player2}">
-	<form>
+<div class="card shadow-lg" data-popup="popupCombobox-{slot.id}">
+	<form
+		method="POST"
+		action="?/addPrediction"
+		use:enhance={() => {
+			loading = true
+			error = ''
+			return async ({ result, update }) => {
+				await update()
+				const typedResult = setTypeAddPredictionResult(result)
+				if (result.status == 200) {
+					const record = setTypePrediction({
+						...typedResult.data.record,
+						collectionName: 'view_predictions',
+						draw_id: slot.draw_id,
+						position: slot.position,
+						round: slot.round,
+						seed: slot.seed,
+						username: pb.authStore.model?.username ?? ''
+					})
+
+					predictionStore.update((store) => {
+						const copy = [...store]
+						const index = copy.map((p) => p.id).indexOf(record.id)
+						copy.splice(index, 1, record)
+						return copy
+					})
+					prediction = record
+				} else {
+					error = typedResult.data.error
+				}
+				loading = false
+			}
+		}}
+	>
+		<input type="hidden" name="slotId" bind:value={slot.id} />
+		<input type="hidden" name="currentPredictionId" value={prediction?.id ?? ''} />
+		<input type="hidden" name="predictionValue" bind:value={predictionValue} />
 		<div class="btn-group-vertical">
 			<button
 				type="submit"
 				class={`${!player1 && 'pointer-events-none text-sm italic'}`}
 				disabled={!player1 || loading}
-				on:click|preventDefault={() => addPrediction(player1)}>{displayPrediction(player1)}</button
+				on:click={() => (predictionValue = player1)}>{displayPrediction(player1)}</button
 			>
 			<button
 				type="submit"
 				class={`${!player2 && 'pointer-events-none text-sm italic'}`}
 				disabled={!player2 || loading}
-				on:click|preventDefault={() => addPrediction(player2)}>{displayPrediction(player2)}</button
+				on:click={() => (predictionValue = player2)}>{displayPrediction(player2)}</button
 			>
 		</div>
 		<FormError bind:error />

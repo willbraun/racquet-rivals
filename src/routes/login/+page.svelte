@@ -14,7 +14,7 @@
 	let loading = false
 	let rememberMe = false
 
-	const setTypeAuth = makeSetType<AuthResult>()
+	const setType = makeSetType<AuthResult>()
 
 	type RememberLogin = {
 		rememberMe: boolean
@@ -43,7 +43,7 @@
 			error = ''
 			return async ({ result, update }) => {
 				await update()
-				const typedResult = setTypeAuth(result)
+				const typedResult = setType(result)
 				if (result.status === 200) {
 					rememberLogin.set({
 						rememberMe,

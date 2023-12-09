@@ -16,7 +16,7 @@
 
 	$: disabled = !username || !email || password.length < 8 || loading || showEmailValidation
 
-	const setTypeAuth = makeSetType<AuthResult>()
+	const setType = makeSetType<AuthResult>()
 </script>
 
 <div class="mt-12 m-auto p-4 max-w-md">
@@ -28,7 +28,7 @@
 			error = ''
 			return async ({ result, update }) => {
 				await update()
-				const typedResult = setTypeAuth(result)
+				const typedResult = setType(result)
 				if (result.status === 200) {
 					goto('/')
 				} else {

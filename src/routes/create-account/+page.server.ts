@@ -9,24 +9,20 @@ export const actions = {
 		const email = (form.get('email') ?? '') as string
 		const password = (form.get('password') ?? '') as string
 		let clientError = ''
-		let isClientError = false
 
 		if (username === '') {
 			clientError = 'Please enter your username\n'
-			isClientError = true
 		}
 
 		if (email === '') {
 			clientError += 'Please enter your email\n'
-			isClientError = true
 		}
 
 		if (password === '') {
 			clientError += 'Please enter your password'
-			isClientError = true
 		}
 
-		if (isClientError) {
+		if (clientError) {
 			return fail(400, {
 				error: clientError
 			})

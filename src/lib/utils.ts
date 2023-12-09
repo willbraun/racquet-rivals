@@ -1,7 +1,6 @@
 import type Client from 'pocketbase'
 import type { ClientResponseError } from 'pocketbase'
 import { isAuth } from './store'
-import type { ActionResult } from '@sveltejs/kit'
 
 type ErrorObjData = {
 	[key: string]: {
@@ -43,7 +42,7 @@ export const updatePageAuth = (pb: Client, serverPbValid: boolean, serverPbCooki
 }
 
 export const makeSetType = <T>() => {
-	return (result: ActionResult): T => {
+	return (result: object): T => {
 		return result as T
 	}
 }

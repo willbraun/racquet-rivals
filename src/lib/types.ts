@@ -93,3 +93,12 @@ export interface DeselectUserResult {
 	status: number
 	type: string
 }
+
+export interface AddPredictionResult {
+	data: {
+		record: PredictionRecord
+		error: string
+	}
+	status: number
+	type: string
+}

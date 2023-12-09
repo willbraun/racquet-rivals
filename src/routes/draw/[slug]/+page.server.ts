@@ -1,7 +1,14 @@
 import { fail, type Actions } from '@sveltejs/kit'
 import { errorMessage, selectColors } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
-import type { Draw, PbListResponse, Prediction, SelectedUser, Slot } from '$lib/types'
+import type {
+	Draw,
+	PbListResponse,
+	Prediction,
+	PredictionRecord,
+	SelectedUser,
+	Slot
+} from '$lib/types'
 
 export async function load({ fetch, params, cookies, locals }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
@@ -135,6 +142,66 @@ export const actions: Actions = {
 			return fail(statusCode, {
 				error: errorMessage(e)
 			})
+		}
+	},
+
+	addPrediction: async ({ request, locals }) => {
+		const form = await request.formData()
+		const slotId = (form.get('slotId') ?? '') as string
+		const currentPredictionId = (form.get(`currentPredictionId`) ?? '') as string
+		const predictionValue = (form.get(`predictionValue`) ?? '') as string
+
+		if (!locals.pb.authStore.isValid || !locals.pb.authStore.model) {
+			return fail(400, {
+				error: 'Must be logged in to make a prediction'
+			})
+		}
+
+		if (!predictionValue) {
+			return fail(400, {
+				error: `Invalid prediction: "${predictionValue}"`
+			})
+		}
+
+		if (!slotId) {
+			return fail(400, {
+				error: `Invalid slot: "${slotId}"`
+			})
+		}
+
+		const data = {
+			draw_slot_id: slotId,
+			user_id: locals.pb.authStore.model.id,
+			name: predictionValue,
+			points: 0
+		}
+
+		if (currentPredictionId) {
+			try {
+				const record: PredictionRecord = await locals.pb
+					.collection('prediction')
+					.update(currentPredictionId, data)
+				return {
+					record
+				}
+			} catch (e) {
+				const statusCode = (e as ClientResponseError).status
+				return fail(statusCode, {
+					error: errorMessage(e)
+				})
+			}
+		} else {
+			try {
+				const record: PredictionRecord = await locals.pb.collection('prediction').create(data)
+				return {
+					record
+				}
+			} catch (e) {
+				const statusCode = (e as ClientResponseError).status
+				return fail(statusCode, {
+					error: errorMessage(e)
+				})
+			}
 		}
 	}
 }
