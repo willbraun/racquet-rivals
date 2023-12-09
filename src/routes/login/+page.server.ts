@@ -2,10 +2,8 @@ import { fail, type Actions } from '@sveltejs/kit'
 import { errorMessage, mainColor } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
 
-// const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
-
 export const actions: Actions = {
-	login: async ({ request, cookies, locals }) => {
+	default: async ({ request, cookies, locals }) => {
 		const form = await request.formData()
 		const usernameOrEmail = (form.get('usernameOrEmail') ?? '') as string
 		const password = (form.get('password') ?? '') as string
@@ -41,21 +39,6 @@ export const actions: Actions = {
 				}),
 				{ maxAge: 60 * 60 * 24 * 7 }
 			)
-			return {
-				error: ''
-			}
-		} catch (e) {
-			const statusCode = (e as ClientResponseError).status
-			return fail(statusCode, {
-				error: errorMessage(e)
-			})
-		}
-	},
-
-	logout: async ({ cookies, locals }) => {
-		try {
-			locals.pb.authStore.clear()
-			cookies.delete('currentUser')
 			return {
 				error: ''
 			}

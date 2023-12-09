@@ -1,17 +1,11 @@
 <script lang="ts">
-	import Pocketbase, { getTokenPayload } from 'pocketbase'
 	import { goto } from '$app/navigation'
 	import EmailField from '$lib/EmailField.svelte'
 	import PasswordField from '$lib/PasswordField.svelte'
 	import FormError from '$lib/FormError.svelte'
-	import { errorMessage, mainColor, makeSetType } from '$lib/utils.js'
-	import Cookies from 'js-cookie'
+	import { makeSetType } from '$lib/utils.js'
 	import { enhance } from '$app/forms'
-	import { isAuth } from '$lib/store'
-	import type { ActionResult } from '@sveltejs/kit'
 	import type { AuthResult } from '$lib/types'
-
-	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	let username = ''
 	let email = ''
@@ -28,7 +22,6 @@
 <div class="mt-12 m-auto p-4 max-w-md">
 	<h1 class="text-3xl mb-4">Create Account</h1>
 	<form
-		action="?/register"
 		method="POST"
 		use:enhance={() => {
 			loading = true

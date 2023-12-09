@@ -4,7 +4,7 @@
 </script>
 
 <form
-	action="/login?/logout"
+	action="/?/logout"
 	method="POST"
 	use:enhance={() => {
 		return async ({ result, update }) => {

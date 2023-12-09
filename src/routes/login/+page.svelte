@@ -1,17 +1,12 @@
 <script lang="ts">
-	import Pocketbase, { getTokenPayload } from 'pocketbase'
 	import { goto } from '$app/navigation'
 	import PasswordField from '$lib/PasswordField.svelte'
 	import { localStorageStore } from '@skeletonlabs/skeleton'
 	import { get, type Writable } from 'svelte/store'
 	import FormError from '$lib/FormError.svelte'
-	import { errorMessage, mainColor, makeSetType } from '$lib/utils'
-	import Cookies from 'js-cookie'
+	import { makeSetType } from '$lib/utils'
 	import { enhance } from '$app/forms'
-	import type { ActionResult } from '@sveltejs/kit'
 	import type { AuthResult } from '$lib/types'
-
-	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	let usernameOrEmail = ''
 	let password = ''
@@ -42,9 +37,8 @@
 	<h1 class="text-3xl mb-4">Login</h1>
 	<form
 		method="POST"
-		action="?/login"
 		class="[&>*]:mb-4"
-		use:enhance={() => {
+		use:enhance={({ formData }) => {
 			loading = true
 			error = ''
 			return async ({ result, update }) => {

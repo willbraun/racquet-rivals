@@ -3,7 +3,7 @@ import { errorMessage, mainColor } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
 
 export const actions = {
-	register: async ({ request, cookies, locals }) => {
+	default: async ({ request, cookies, locals }) => {
 		const form = await request.formData()
 		const username = (form.get('username') ?? '') as string
 		const email = (form.get('email') ?? '') as string

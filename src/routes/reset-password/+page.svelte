@@ -2,7 +2,9 @@
 	import Pocketbase from 'pocketbase'
 	import EmailField from '$lib/EmailField.svelte'
 	import FormError from '$lib/FormError.svelte'
-	import { errorMessage } from '$lib/utils.js'
+	import { errorMessage, makeSetType } from '$lib/utils.js'
+	import { enhance } from '$app/forms'
+	import type { AuthResult } from '$lib/types'
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	let email = ''
@@ -18,30 +20,49 @@
 		buttonRef.focus()
 	}
 
-	const resetPassword = async () => {
-		loading = false
+	const setTypeAuth = makeSetType<AuthResult>()
 
-		if (email === '') {
-			success = false
-			error = 'Please enter your email'
-			return
-		}
+	// const resetPassword = async () => {
+	// 	loading = false
 
-		try {
-			await pb.collection('user').requestPasswordReset(email)
-			success = true
-			error = ''
-		} catch (e) {
-			success = false
-			error = errorMessage(e)
-		}
-	}
+	// 	if (email === '') {
+	// 		success = false
+	// 		error = 'Please enter your email'
+	// 		return
+	// 	}
+
+	// 	try {
+	// 		await pb.collection('user').requestPasswordReset(email)
+	// 		success = true
+	// 		error = ''
+	// 	} catch (e) {
+	// 		success = false
+	// 		error = errorMessage(e)
+	// 	}
+	// }
 </script>
 
 <div class="mt-12 m-auto p-4 max-w-md">
 	<h1 class="text-3xl mb-4">Reset Password</h1>
 	<p class="mb-4">Enter your email and we'll send you a link to reset your password</p>
-	<form on:submit={resetPassword}>
+	<form
+		method="POST"
+		use:enhance={() => {
+			loading = true
+			error = ''
+			return async ({ result, update }) => {
+				await update()
+				const typedResult = setTypeAuth(result)
+				if (result.status === 200) {
+					success = true
+				} else {
+					success = false
+					error = typedResult.data.error
+				}
+				loading = false
+			}
+		}}
+	>
 		<EmailField bind:email bind:showValidation={showEmailValidation} />
 		<div class="flex justify-center">
 			<button
