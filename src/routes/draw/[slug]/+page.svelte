@@ -5,11 +5,11 @@
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
-	import { isAuth, predictionStore } from '$lib/store'
+	import { isAuth, activeDraws, completedDraws, predictionStore } from '$lib/store'
 	import type { Prediction, Slot } from '$lib/types'
-	import { afterNavigate } from '$app/navigation'
+	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
-	import { updatePageAuth } from '$lib/utils'
+	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
 	export let data
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
@@ -17,18 +17,22 @@
 	isAuth.set(data.pb_auth_valid)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
-	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
 	const fullDrawRounds = Math.log2(data.draw.size) + 1
 	const allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1)
 	const ourRounds = allRounds.slice(-5)
 	const slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4)
 	const now = new Date()
-	const pcDate = new Date(data.draw.prediction_close)
-	const predictionClose = format(pcDate, 'M/dd/yyyy h:mmaaa')
+	$: pcDate = new Date(data.draw.prediction_close)
+	$: predictionClose = format(pcDate, 'M/dd/yyyy h:mmaaa')
 	$: predictionsAllowed = now < pcDate
 	$: predictionStore.set(data.predictions.items)
 	$: users = [data.currentUser, ...data.selectedUsers].filter(Boolean)
 	$: userIds = users.map((user) => user.id)
+
+	let drawUrl = ''
+	$: if (drawUrl) {
+		goto(drawUrl, { invalidateAll: true })
+	}
 
 	const colorMap: Map<string, string> = new Map()
 	$: users.forEach((user) => colorMap.set(user.id, user.color))
@@ -150,16 +154,38 @@
 </script>
 
 <header class="grid grid-cols-4 items-center">
-	<h1 class="col-span-3 text-lg md:text-2xl font-bold ml-4">{`Tennis Bracket - ${title}`}</h1>
+	<a href="/">
+		<h1 class="col-span-1 text-lg lg:text-2xl font-bold ml-4">Tennis Bracket</h1>
+	</a>
+	<select
+		class="select col-span-2 text-center bg-transparent text-lg lg:text-2xl font-bold border-none cursor-pointer whitespace-normal"
+		on:change={(e) => (drawUrl = e.currentTarget.value)}
+	>
+		{#if $activeDraws.length === 0 && $completedDraws.length === 0}
+			<option selected>{getTitle(data.draw)}</option>
+		{/if}
+		<option disabled>Active Draws</option>
+		{#each $activeDraws as draw (draw.id)}
+			<option selected={data.draw.id === draw.id} value={`/draw/${getSlug(draw)}`}
+				>{getTitle(draw)}</option
+			>
+		{/each}
+		<option disabled>Completed Draws</option>
+		{#each $completedDraws as draw (draw.id)}
+			<option selected={data.draw.id === draw.id} value={`/draw/${getSlug(draw)}`}
+				>{getTitle(draw)}</option
+			>
+		{/each}
+	</select>
 	<div class="col-span-1 flex justify-end gap-2 flex-wrap p-2">
 		{#if $isAuth}
 			<Logout />
 		{:else}
 			<a href="/login">
-				<button type="button" class="btn btn-sm md:btn-md variant-ghost rounded-lg">Login</button>
+				<button type="button" class="btn btn-sm lg:btn-md variant-ghost rounded-lg">Login</button>
 			</a>
 			<a href="/create-account">
-				<button type="button" class="btn btn-sm md:btn-md variant-filled rounded-lg">Sign up</button
+				<button type="button" class="btn btn-sm lg:btn-md variant-filled rounded-lg">Sign up</button
 				>
 			</a>
 		{/if}

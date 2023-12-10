@@ -1,6 +1,7 @@
 import type Client from 'pocketbase'
 import type { ClientResponseError } from 'pocketbase'
 import { isAuth } from './store'
+import type { Draw } from './types'
 
 type ErrorObjData = {
 	[key: string]: {
@@ -45,6 +46,15 @@ export const makeSetType = <T>() => {
 	return (result: object): T => {
 		return result as T
 	}
+}
+
+export const getSlug = (draw: Draw): string => {
+	const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-')
+	return `${slugify(draw.name)}-${slugify(draw.event)}-${draw.year}-${draw.id}`
+}
+
+export const getTitle = (draw: Draw): string => {
+	return `${draw.name} ${draw.event} ${draw.year}`
 }
 
 export const mainColor = 'bg-blue-300'
