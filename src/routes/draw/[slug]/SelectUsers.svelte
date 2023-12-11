@@ -3,7 +3,6 @@
 	import { getModalStore } from '@skeletonlabs/skeleton'
 	import type { DeselectUserResult, SelectUserResult, SelectedUser } from '../../../lib/types'
 	import { applyAction, enhance } from '$app/forms'
-	import type { ActionResult } from '@sveltejs/kit'
 	import FormError from '../../../lib/FormError.svelte'
 	import { mainColor, makeSetType } from '../../../lib/utils'
 	export let parent: SvelteComponent

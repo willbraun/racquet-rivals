@@ -28,7 +28,8 @@ export async function load({ fetch, locals }) {
 		active: activeData,
 		completed: completedData,
 		pb_auth_valid: locals.pb.authStore.isValid as boolean,
-		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string
+		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string,
+		pb_auth_username: (locals.pb.authStore.model?.username ?? '') as string
 	}
 }
 
