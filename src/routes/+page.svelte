@@ -2,7 +2,7 @@
 	import Pocketbase from 'pocketbase'
 	import Logout from '$lib/Logout.svelte'
 	import { afterNavigate } from '$app/navigation'
-	import { isAuth, activeDraws, completedDraws } from '$lib/store.js'
+	import { isAuth } from '$lib/store.js'
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils.js'
 	export let data
 
@@ -10,9 +10,6 @@
 
 	isAuth.set(data.pb_auth_valid)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
-
-	activeDraws.set(data.active.items)
-	completedDraws.set(data.completed.items)
 </script>
 
 <header class="flex justify-end gap-2 p-2 h-12">

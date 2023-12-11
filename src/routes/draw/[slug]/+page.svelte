@@ -5,7 +5,7 @@
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
-	import { isAuth, activeDraws, completedDraws, predictionStore } from '$lib/store'
+	import { isAuth, predictionStore } from '$lib/store'
 	import type { Prediction, Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
@@ -17,6 +17,7 @@
 	isAuth.set(data.pb_auth_valid)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
+	const title = getTitle(data.draw)
 	const fullDrawRounds = Math.log2(data.draw.size) + 1
 	const allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1)
 	const ourRounds = allRounds.slice(-5)
@@ -155,9 +156,10 @@
 
 <header class="grid grid-cols-4 items-center">
 	<a href="/">
-		<h1 class="col-span-1 text-lg lg:text-2xl font-bold ml-4">Tennis Bracket</h1>
+		<p class="col-span-1 text-lg lg:text-2xl font-bold ml-4">Tennis Bracket</p>
 	</a>
-	<select
+	<h1 class="col-span-2 text-lg lg:text-2xl font-bold text-center">{title}</h1>
+	<!-- <select
 		class="select col-span-2 text-center bg-transparent text-lg lg:text-2xl font-bold border-none cursor-pointer whitespace-normal"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
 	>
@@ -176,7 +178,7 @@
 				>{getTitle(draw)}</option
 			>
 		{/each}
-	</select>
+	</select> -->
 	<div class="col-span-1 flex justify-end gap-2 flex-wrap p-2">
 		{#if $isAuth}
 			<Logout />
