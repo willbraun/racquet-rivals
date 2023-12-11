@@ -21,11 +21,13 @@
 <main class="mx-auto max-w-xl px-4">
 	<section class="my-6">
 		<h1 class="mb-6 text-7xl text-center">Tennis Bracket</h1>
-		<h2 class="mb-6 font-light text-center text-xl">
-			Create a bracket for the last 16 players of pro tennis tournaments, and see how you stack up
-			with your friends.
-		</h2>
-		{#if !$isAuth}
+		{#if $isAuth}
+			<p class="text-center text-xl font-bold">Welcome back, {data.pb_auth_username}!</p>
+		{:else}
+			<p class="mb-6 text-center text-xl">
+				Create a bracket for the last 16 players of pro tennis tournaments, and see how you stack up
+				with your friends.
+			</p>
 			<p class="text-center mb-2">Log in to create a bracket</p>
 			<div class="flex justify-center gap-2 w-full">
 				<a href="/login">

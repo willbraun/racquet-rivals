@@ -9,7 +9,7 @@
 	import type { Prediction, Slot } from '$lib/types'
 	import { afterNavigate } from '$app/navigation'
 	import { format } from 'date-fns'
-	import { updatePageAuth } from '$lib/utils'
+	import { getTitle, updatePageAuth } from '$lib/utils'
 	export let data
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
@@ -17,7 +17,7 @@
 	isAuth.set(data.pb_auth_valid)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
-	const title = `${data.draw.name} ${data.draw.event} ${data.draw.year}`
+	const title = getTitle(data.draw)
 	const fullDrawRounds = Math.log2(data.draw.size) + 1
 	const allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1)
 	const ourRounds = allRounds.slice(-5)
@@ -150,16 +150,19 @@
 </script>
 
 <header class="grid grid-cols-4 items-center">
-	<h1 class="col-span-3 text-lg md:text-2xl font-bold ml-4">{`Tennis Bracket - ${title}`}</h1>
+	<a href="/">
+		<p class="col-span-1 text-lg md:text-2xl font-bold ml-4">{'Tennis Bracket'}</p>
+	</a>
+	<h1 class="col-span-2 text-lg md:text-2xl font-bold text-center ml-4">{title}</h1>
 	<div class="col-span-1 flex justify-end gap-2 flex-wrap p-2">
 		{#if $isAuth}
 			<Logout />
 		{:else}
 			<a href="/login">
-				<button type="button" class="btn btn-sm md:btn-md variant-ghost rounded-lg">Login</button>
+				<button type="button" class="btn btn-sm lg:btn-md variant-ghost rounded-lg">Login</button>
 			</a>
 			<a href="/create-account">
-				<button type="button" class="btn btn-sm md:btn-md variant-filled rounded-lg">Sign up</button
+				<button type="button" class="btn btn-sm lg:btn-md variant-filled rounded-lg">Sign up</button
 				>
 			</a>
 		{/if}
