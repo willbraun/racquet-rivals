@@ -4,18 +4,13 @@
 	import Logout from '$lib/Logout.svelte'
 	import { afterNavigate } from '$app/navigation'
 	import { isAuth } from '$lib/store.js'
-	import { updatePageAuth } from '$lib/utils.js'
+	import { getSlug, getTitle, updatePageAuth } from '$lib/utils.js'
 	export let data
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
 
 	isAuth.set(data.pb_auth_valid)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
-
-	const getSlug = (draw: Draw): string => {
-		const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-')
-		return `${slugify(draw.name)}-${slugify(draw.event)}-${draw.year}-${draw.id}`
-	}
 </script>
 
 <header class="flex justify-end gap-2 p-2 h-12">
@@ -48,7 +43,7 @@
 			{#each data.active.items as draw}
 				<a href={`/draw/${getSlug(draw)}`}>
 					<button type="button" class="btn variant-ringed rounded-xl w-full mb-4">
-						{`${draw.name} ${draw.event} ${draw.year}`}
+						{getTitle(draw)}
 					</button>
 				</a>
 			{/each}
@@ -62,7 +57,7 @@
 			{#each data.completed.items as draw}
 				<a href={`/draw/${getSlug(draw)}`}>
 					<button type="button" class="btn variant-ringed rounded-xl w-full mb-4">
-						{`${draw.name} ${draw.event} ${draw.year}`}
+						{getTitle(draw)}
 					</button>
 				</a>
 			{/each}
