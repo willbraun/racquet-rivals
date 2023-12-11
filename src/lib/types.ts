@@ -102,3 +102,9 @@ export interface AddPredictionResult {
 	status: number
 	type: string
 }
+
+declare global {
+	interface SvelteFetch {
+		(url: string, init?: RequestInit): Promise<Response>
+	}
+}

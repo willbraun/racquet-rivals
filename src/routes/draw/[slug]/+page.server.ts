@@ -1,5 +1,5 @@
 import { fail, type Actions } from '@sveltejs/kit'
-import { errorMessage, selectColors } from '$lib/utils'
+import { errorMessage, fetchDraws, selectColors } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
 	Draw,
@@ -45,7 +45,11 @@ export async function load({ fetch, params, cookies, locals }) {
 	)
 	const predictionData: PbListResponse<Prediction> = await predictionRes.json()
 
+	const [activeData, completedData] = await fetchDraws(fetch, locals.pb.authStore.token)
+
 	return {
+		active: activeData,
+		completed: completedData,
 		draw: drawData,
 		slots: slotData,
 		predictions: predictionData,

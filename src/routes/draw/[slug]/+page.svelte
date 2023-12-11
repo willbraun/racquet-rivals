@@ -13,16 +13,15 @@
 	export let data
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
+	const now = new Date()
 
 	isAuth.set(data.pb_auth_valid)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
-	const title = getTitle(data.draw)
-	const fullDrawRounds = Math.log2(data.draw.size) + 1
-	const allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1)
-	const ourRounds = allRounds.slice(-5)
-	const slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4)
-	const now = new Date()
+	$: fullDrawRounds = Math.log2(data.draw.size) + 1
+	$: allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1)
+	$: ourRounds = allRounds.slice(-5)
+	$: slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4)
 	$: pcDate = new Date(data.draw.prediction_close)
 	$: predictionClose = format(pcDate, 'M/dd/yyyy h:mmaaa')
 	$: predictionsAllowed = now < pcDate
@@ -156,29 +155,25 @@
 
 <header class="grid grid-cols-4 items-center">
 	<a href="/">
-		<p class="col-span-1 text-lg lg:text-2xl font-bold ml-4">Tennis Bracket</p>
+		<p class="col-span-1 text-md sm:text-lg lg:text-2xl font-bold ml-4">Tennis Bracket</p>
 	</a>
-	<h1 class="col-span-2 text-lg lg:text-2xl font-bold text-center">{title}</h1>
-	<!-- <select
-		class="select col-span-2 text-center bg-transparent text-lg lg:text-2xl font-bold border-none cursor-pointer whitespace-normal"
+	<select
+		class="select col-span-2 text-center bg-transparent text-md sm:text-lg lg:text-2xl font-bold border-none cursor-pointer whitespace-normal"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
 	>
-		{#if $activeDraws.length === 0 && $completedDraws.length === 0}
-			<option selected>{getTitle(data.draw)}</option>
-		{/if}
 		<option disabled>Active Draws</option>
-		{#each $activeDraws as draw (draw.id)}
+		{#each data.active.items as draw}
 			<option selected={data.draw.id === draw.id} value={`/draw/${getSlug(draw)}`}
 				>{getTitle(draw)}</option
 			>
 		{/each}
 		<option disabled>Completed Draws</option>
-		{#each $completedDraws as draw (draw.id)}
+		{#each data.completed.items as draw}
 			<option selected={data.draw.id === draw.id} value={`/draw/${getSlug(draw)}`}
 				>{getTitle(draw)}</option
 			>
 		{/each}
-	</select> -->
+	</select>
 	<div class="col-span-1 flex justify-end gap-2 flex-wrap p-2">
 		{#if $isAuth}
 			<Logout />
@@ -253,7 +248,7 @@
 	</div>
 </section>
 <main
-	class="relative grid overflow-x-auto pb-24"
+	class="relative grid overflow-x-auto pb-12"
 	style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
 	bind:this={drawGrid}
 >

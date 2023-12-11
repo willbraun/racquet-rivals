@@ -1,28 +1,9 @@
-import type { Draw, PbListResponse } from '$lib/types.js'
-import { errorMessage } from '$lib/utils'
+import { errorMessage, fetchDraws } from '$lib/utils'
 import { fail, type Actions } from '@sveltejs/kit'
-import { format } from 'date-fns'
 import type { ClientResponseError } from 'pocketbase'
 
 export async function load({ fetch, locals }) {
-	const today = format(new Date(), 'yyyy-MM-dd')
-	const options = {
-		headers: {
-			Authorization: locals.pb.authStore.token
-		}
-	}
-
-	const activeRes = await fetch(
-		`https://tennisbracket.willbraun.dev/api/collections/draw/records?filter=(end_date>="${today}")&sort=start_date,event`,
-		options
-	)
-	const activeData: PbListResponse<Draw> = await activeRes.json()
-
-	const completedRes = await fetch(
-		`https://tennisbracket.willbraun.dev/api/collections/draw/records?filter=(end_date<"${today}")&sort=start_date,event`,
-		options
-	)
-	const completedData: PbListResponse<Draw> = await completedRes.json()
+	const [activeData, completedData] = await fetchDraws(fetch, locals.pb.authStore.token)
 
 	return {
 		active: activeData,
