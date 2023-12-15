@@ -63,19 +63,14 @@
 
 		const activeRound = Math.min(...tbdRounds) - 1
 
-		const labels = [
-			'Current Round: Round of 16',
-			'Current Round: Quarterfinals',
-			'Current Round: Semifinals',
-			'Current Round: Finals'
-		]
+		const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Finals']
 		const index = ourRounds.indexOf(activeRound)
 
 		if (index !== -1) {
 			return labels[index]
 		} else {
 			const earlyLabels = ['1st Round', '2nd Round', '3rd Round']
-			return `Current Round: ${earlyLabels[activeRound - 1]}`
+			return `${earlyLabels[activeRound - 1]}`
 		}
 	}
 
@@ -153,12 +148,9 @@
 	}
 </script>
 
-<header class="grid grid-cols-4 items-center bg-primary-500">
-	<a href="/">
-		<p class="col-span-1 text-md sm:text-lg lg:text-2xl font-bold ml-4">Tennis Bracket</p>
-	</a>
+<header class="flex items-center bg-surface-500 p-4">
 	<select
-		class="select col-span-2 text-center bg-transparent text-md sm:text-lg lg:text-2xl font-bold border-none cursor-pointer whitespace-normal brightness-0 hover:brightness-0"
+		class="select max-w-max w-2/3 bg-transparent text-md sm:text-lg md:text-3xl font-bold border-none cursor-pointer whitespace-normal brightness-0 hover:brightness-0"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
@@ -174,36 +166,38 @@
 			>
 		{/each}
 	</select>
-	<div class="col-span-1 flex justify-end gap-2 flex-wrap p-2">
+	<div class="col-span-1 ml-auto flex justify-end gap-2 flex-wrap">
+		<a href="/">
+			<button type="button" class="btn btn-sm md:btn-md">Home</button>
+		</a>
 		{#if $isAuth}
 			<Logout />
 		{:else}
 			<a href="/login">
-				<button type="button" class="btn btn-sm lg:btn-md bg-black text-white rounded-lg"
+				<button type="button" class="btn btn-sm md:btn-md bg-black text-white rounded-lg"
 					>Login</button
 				>
 			</a>
 			<a href="/create-account">
-				<button type="button" class="btn btn-sm lg:btn-md bg-black text-white rounded-lg"
+				<button type="button" class="btn btn-sm md:btn-md bg-black text-white rounded-lg"
 					>Sign up</button
 				>
 			</a>
 		{/if}
 	</div>
-	{#if predictionsAllowed}
-		<div class="col-span-4 flex justify-around text-sm text-center py-1">
-			<p>{getRoundLabel()}</p>
-			<p>Predictions open until <span class="font-bold text-black">{predictionClose}</span></p>
-		</div>
-	{:else}
-		<div class="col-span-4 flex justify-around text-sm text-center py-1">
-			<p>{getRoundLabel()}</p>
-			<p>Predictions closed <span class="font-bold text-black">{predictionClose}</span></p>
-		</div>
-	{/if}
 </header>
+<section>
+	<div class="flex gap-2 p-2 [&>*]:text-lg">
+		<div class="card px-2 py-1 bg-secondary-300 text-black">{`Status: ${getRoundLabel()}`}</div>
+		<div class="card px-2 py-1 bg-secondary-300 text-black">
+			{predictionsAllowed ? 'Predictions open until: ' : 'Predictions closed: '}<span
+				class="font-bold">{predictionClose}</span
+			>
+		</div>
+	</div>
+</section>
 {#if $isAuth}
-	<section class="flex gap-2 pl-6 py-4 h-6 bg-surface-500">
+	<section class="flex gap-2 pl-6 h-6 bg-surface-500">
 		<p>Users:</p>
 		{#each users as user}
 			<div class="relative chip rounded-full pointer-events-none text-black {user.color} shadow">
@@ -236,13 +230,20 @@
 		</button>
 	</section>
 {/if}
-<section class="sticky top-0 z-20 overflow-auto overflow-x-hidden shadow" bind:this={roundHeader}>
+<section
+	class="sticky top-0 z-20 overflow-auto overflow-x-hidden shadow border-y-4 border-white [&>*]:text-lg tracking-wide"
+	bind:this={roundHeader}
+>
 	<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
-		<div class="bg-secondary-800 text-white text-center py-2">Round of 16</div>
-		<div class="bg-secondary-500 text-white text-center py-2">Quarterfinals</div>
-		<div class="bg-secondary-800 text-white text-center py-2">Semifinals</div>
-		<div class="bg-secondary-500 text-white text-center py-2">Final</div>
-		<div class="bg-secondary-800 text-white text-center py-2">Champion</div>
+		<div class="bg-primary-500 text-white text-center py-2 border-r-4 border-white">
+			Round of 16
+		</div>
+		<div class="bg-secondary-500 text-white text-center py-2 border-r-4 border-white">
+			Quarterfinals
+		</div>
+		<div class="bg-primary-500 text-white text-center py-2 border-r-4 border-white">Semifinals</div>
+		<div class="bg-secondary-500 text-white text-center py-2 border-r-4 border-white">Final</div>
+		<div class="bg-primary-500 text-white text-center py-2">Champion</div>
 	</div>
 </section>
 <main

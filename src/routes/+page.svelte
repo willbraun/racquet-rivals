@@ -17,9 +17,9 @@
 		<Logout />
 	{/if}
 </header>
-<main class="w-full h-full pt-12 px-4 bg-gradient-to-b variant-gradient-primary-secondary">
-	<div class="max-w-xl mx-auto">
-		<section class="mb-6">
+<main class="w-full h-max px-4 bg-primary-500 text-white">
+	<div class="h-full max-w-3xl mx-auto bg-secondary-500 border-white border-x-16 [&>section]:p-16">
+		<section class="border-white border-b-16">
 			<h1 class="mb-6 text-7xl text-center font-bold">Tennis Bracket</h1>
 			{#if $isAuth}
 				<p class="text-center text-xl font-bold">Welcome back, {data.pb_auth_username}!</p>
@@ -44,7 +44,7 @@
 			{#if data.active.totalItems > 0}
 				{#each data.active.items as draw}
 					<a href={`/draw/${getSlug(draw)}`}>
-						<button type="button" class="btn variant-ghost-primary rounded-xl w-full mb-4">
+						<button type="button" class="btn variant-ghost rounded-xl w-full mb-4">
 							{getTitle(draw)}
 						</button>
 					</a>
@@ -52,13 +52,11 @@
 			{:else}
 				<p class="text-center mb-4">No active draws</p>
 			{/if}
-		</section>
-		<section class="pb-12">
-			<h3 class="text-3xl mb-4">Completed Draws</h3>
+			<h3 class="text-3xl pt-4 mb-4">Completed Draws</h3>
 			{#if data.completed.totalItems > 0}
 				{#each data.completed.items as draw}
 					<a href={`/draw/${getSlug(draw)}`}>
-						<button type="button" class="btn variant-ghost-primary rounded-xl w-full mb-4">
+						<button type="button" class="btn variant-ghost rounded-xl w-full mb-4">
 							{getTitle(draw)}
 						</button>
 					</a>
