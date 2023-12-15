@@ -16,6 +16,7 @@
 	}}
 >
 	<a href="#top">
-		<button type="submit" class="btn btn-sm lg:btn-md variant-ghost rounded-lg">Logout</button>
+		<button type="submit" class="btn btn-sm lg:btn-md bg-black text-white rounded-lg">Logout</button
+		>
 	</a>
 </form>

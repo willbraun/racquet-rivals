@@ -153,12 +153,12 @@
 	}
 </script>
 
-<header class="grid grid-cols-4 items-center">
+<header class="grid grid-cols-4 items-center bg-primary-500">
 	<a href="/">
 		<p class="col-span-1 text-md sm:text-lg lg:text-2xl font-bold ml-4">Tennis Bracket</p>
 	</a>
 	<select
-		class="select col-span-2 text-center bg-transparent text-md sm:text-lg lg:text-2xl font-bold border-none cursor-pointer whitespace-normal"
+		class="select col-span-2 text-center bg-transparent text-md sm:text-lg lg:text-2xl font-bold border-none cursor-pointer whitespace-normal brightness-0 hover:brightness-0"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
@@ -179,31 +179,34 @@
 			<Logout />
 		{:else}
 			<a href="/login">
-				<button type="button" class="btn btn-sm lg:btn-md variant-ghost rounded-lg">Login</button>
+				<button type="button" class="btn btn-sm lg:btn-md bg-black text-white rounded-lg"
+					>Login</button
+				>
 			</a>
 			<a href="/create-account">
-				<button type="button" class="btn btn-sm lg:btn-md variant-filled rounded-lg">Sign up</button
+				<button type="button" class="btn btn-sm lg:btn-md bg-black text-white rounded-lg"
+					>Sign up</button
 				>
 			</a>
 		{/if}
 	</div>
 	{#if predictionsAllowed}
-		<div class="col-span-4 flex justify-around text-sm text-center bg-green-500 py-1">
+		<div class="col-span-4 flex justify-around text-sm text-center py-1">
 			<p>{getRoundLabel()}</p>
 			<p>Predictions open until <span class="font-bold text-black">{predictionClose}</span></p>
 		</div>
 	{:else}
-		<div class="col-span-4 flex justify-around text-sm text-center bg-red-500 py-1">
+		<div class="col-span-4 flex justify-around text-sm text-center py-1">
 			<p>{getRoundLabel()}</p>
 			<p>Predictions closed <span class="font-bold text-black">{predictionClose}</span></p>
 		</div>
 	{/if}
 </header>
-<section class="flex gap-2 ml-6 my-2 h-6">
-	{#if $isAuth}
+{#if $isAuth}
+	<section class="flex gap-2 pl-6 py-4 h-6 bg-surface-500">
 		<p>Users:</p>
 		{#each users as user}
-			<div class={`relative chip rounded-full pointer-events-none text-black ${user.color} shadow`}>
+			<div class="relative chip rounded-full pointer-events-none text-black {user.color} shadow">
 				<p>{user.username}</p>
 				<div
 					class="absolute badge-icon -top-1 -right-2 rounded-full aspect-square h-4 text-sm bg-green-400 z-10"
@@ -231,24 +234,19 @@
 				/></svg
 			>
 		</button>
-	{:else}
-		<p class="italic w-full text-right mr-2">Log in to play!</p>
-	{/if}
-</section>
-<section
-	class="sticky top-0 z-20 border-y-2 border-black overflow-auto overflow-x-hidden"
-	bind:this={roundHeader}
->
+	</section>
+{/if}
+<section class="sticky top-0 z-20 overflow-auto overflow-x-hidden shadow" bind:this={roundHeader}>
 	<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
-		<div class="bg-white text-center py-2">Round of 16</div>
-		<div class="bg-white text-center py-2">Quarterfinals</div>
-		<div class="bg-white text-center py-2">Semifinals</div>
-		<div class="bg-white text-center py-2">Final</div>
-		<div class="bg-white text-center py-2">Champion</div>
+		<div class="bg-secondary-800 text-white text-center py-2">Round of 16</div>
+		<div class="bg-secondary-500 text-white text-center py-2">Quarterfinals</div>
+		<div class="bg-secondary-800 text-white text-center py-2">Semifinals</div>
+		<div class="bg-secondary-500 text-white text-center py-2">Final</div>
+		<div class="bg-secondary-800 text-white text-center py-2">Champion</div>
 	</div>
 </section>
 <main
-	class="relative grid overflow-x-auto pb-12"
+	class="relative grid overflow-x-auto pb-12 bg-surface-500"
 	style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
 	bind:this={drawGrid}
 >
