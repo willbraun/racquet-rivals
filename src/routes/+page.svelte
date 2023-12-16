@@ -25,16 +25,16 @@
 				<p class="text-center text-xl font-bold">Welcome back, {data.pb_auth_username}!</p>
 			{:else}
 				<p class="mb-6 text-center text-xl">
-					Create a bracket for the last 16 players of pro tennis tournaments, and see how you stack
+					Create brackets for the last 16 players of pro tennis tournaments, and see how you stack
 					up with your friends.
 				</p>
-				<p class="text-center mb-2">Log in to create a bracket</p>
 				<div class="flex justify-center gap-2 w-full">
 					<a href="/login">
-						<button type="button" class="btn bg-slate-800 rounded-lg w-40">Login</button>
+						<button type="button" class="btn variant-ghost rounded-lg text-2xl w-40">Login</button>
 					</a>
 					<a href="/create-account">
-						<button type="button" class="btn bg-slate-800 rounded-lg w-40">Sign up</button>
+						<button type="button" class="btn variant-ghost rounded-lg text-2xl w-40">Sign up</button
+						>
 					</a>
 				</div>
 			{/if}
@@ -44,25 +44,25 @@
 			{#if data.active.totalItems > 0}
 				{#each data.active.items as draw}
 					<a href={`/draw/${getSlug(draw)}`}>
-						<button type="button" class="btn variant-ghost rounded-xl w-full mb-4">
+						<button type="button" class="btn variant-ghost rounded-xl w-full mb-4 text-2xl">
 							{getTitle(draw)}
 						</button>
 					</a>
 				{/each}
 			{:else}
-				<p class="text-center mb-4">No active draws</p>
+				<p class="text-center text-xl mb-4">No active draws</p>
 			{/if}
 			<h3 class="text-3xl pt-4 mb-4">Completed Draws</h3>
 			{#if data.completed.totalItems > 0}
 				{#each data.completed.items as draw}
 					<a href={`/draw/${getSlug(draw)}`}>
-						<button type="button" class="btn variant-ghost rounded-xl w-full mb-4">
+						<button type="button" class="btn variant-ghost rounded-xl w-full mb-4 text-2xl">
 							{getTitle(draw)}
 						</button>
 					</a>
 				{/each}
 			{:else}
-				<p class="text-center">No completed draws</p>
+				<p class="text-center text-xl">No completed draws</p>
 			{/if}
 		</section>
 	</div>

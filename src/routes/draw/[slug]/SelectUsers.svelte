@@ -71,7 +71,7 @@
 			<FormError bind:error />
 		</form>
 		<form
-			class="flex gap-1"
+			class="flex flex-wrap gap-1"
 			method="POST"
 			action="?/deselectUser"
 			use:enhance={() => {

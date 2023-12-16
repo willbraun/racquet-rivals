@@ -18,6 +18,7 @@
 	isAuth.set(data.pb_auth_valid)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
+	const headerColor = 'bg-white'
 	$: fullDrawRounds = Math.log2(data.draw.size) + 1
 	$: allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1)
 	$: ourRounds = allRounds.slice(-5)
@@ -148,9 +149,16 @@
 	}
 </script>
 
-<header class="flex items-center bg-surface-500 p-4">
+<header class="flex items-center gap-4 p-4 {headerColor}">
+	<a href="/">
+		<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 576 512"
+			><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path
+				d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"
+			/></svg
+		>
+	</a>
 	<select
-		class="select max-w-max w-2/3 bg-transparent text-md sm:text-lg md:text-3xl font-bold border-none cursor-pointer whitespace-normal brightness-0 hover:brightness-0"
+		class="select max-w-max w-2/3 bg-transparent text-lg md:text-3xl font-bold border-none cursor-pointer whitespace-normal brightness-0 hover:brightness-0"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
@@ -167,9 +175,6 @@
 		{/each}
 	</select>
 	<div class="col-span-1 ml-auto flex justify-end gap-2 flex-wrap">
-		<a href="/">
-			<button type="button" class="btn btn-sm md:btn-md">Home</button>
-		</a>
 		{#if $isAuth}
 			<Logout />
 		{:else}
@@ -186,68 +191,66 @@
 		{/if}
 	</div>
 </header>
-<section>
-	<div class="flex gap-2 p-2 [&>*]:text-lg">
-		<div class="card px-2 py-1 bg-secondary-300 text-black">{`Status: ${getRoundLabel()}`}</div>
-		<div class="card px-2 py-1 bg-secondary-300 text-black">
-			{predictionsAllowed ? 'Predictions open until: ' : 'Predictions closed: '}<span
-				class="font-bold">{predictionClose}</span
-			>
-		</div>
-	</div>
-</section>
-{#if $isAuth}
-	<section class="flex gap-2 pl-6 h-6 bg-surface-500">
-		<p>Users:</p>
-		{#each users as user}
-			<div class="relative chip rounded-full pointer-events-none text-black {user.color} shadow">
-				<p>{user.username}</p>
-				<div
-					class="absolute badge-icon -top-1 -right-2 rounded-full aspect-square h-4 text-sm bg-green-400 z-10"
-				>
-					<p>
-						{$predictionStore
-							.filter((p) => p.user_id === user.id)
-							.map((p) => p.points)
-							.reduce((a, b) => a + b, 0)}
-					</p>
-				</div>
-			</div>
-		{/each}
-		<button
-			class="chip border border-black border-dashed rounded-full flex justify-center"
-			on:click={() => modalStore.trigger(modal)}
+<section class="grid grid-cols-3 gap-2 p-4 {headerColor} [&>*]:text-lg">
+	<div class="col-span-3 sm:col-span-1 text-center text-black">{`Status: ${getRoundLabel()}`}</div>
+	<div class="col-span-3 sm:col-span-1 text-center text-black">
+		{predictionsAllowed ? 'Predictions open until: ' : 'Predictions closed: '}<span
+			class="font-bold">{predictionClose}</span
 		>
-			<svg
-				class="fill-black ml-0.5 mb-0.5"
-				xmlns="http://www.w3.org/2000/svg"
-				height="1rem"
-				viewBox="0 0 512 512"
-				><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path
-					d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z"
-				/></svg
+	</div>
+	{#if $isAuth}
+		<div class="col-span-3 sm:col-span-1 flex flex-wrap gap-2 justify-center">
+			<p>Users:</p>
+			{#each users as user}
+				<div
+					class="relative chip h-6 rounded-full pointer-events-none text-black {user.color} shadow"
+				>
+					<p>{user.username}</p>
+					<div
+						class="absolute badge-icon -top-1 -right-2 rounded-full aspect-square h-4 text-sm bg-green-400 z-10"
+					>
+						<p>
+							{$predictionStore
+								.filter((p) => p.user_id === user.id)
+								.map((p) => p.points)
+								.reduce((a, b) => a + b, 0)}
+						</p>
+					</div>
+				</div>
+			{/each}
+			<button
+				class="chip h-6 border border-black border-dashed rounded-full flex justify-center"
+				on:click={() => modalStore.trigger(modal)}
 			>
-		</button>
-	</section>
-{/if}
+				<svg
+					class="fill-black ml-0.5 mb-0.5"
+					xmlns="http://www.w3.org/2000/svg"
+					height="1rem"
+					viewBox="0 0 512 512"
+					><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path
+						d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z"
+					/></svg
+				>
+			</button>
+		</div>
+	{:else}
+		<p class="italic text-center col-span-3 sm:col-span-1">Log in to play!</p>
+	{/if}
+</section>
 <section
-	class="sticky top-0 z-20 overflow-auto overflow-x-hidden shadow border-y-4 border-white [&>*]:text-lg tracking-wide"
+	class="sticky top-0 z-20 overflow-x-hidden {headerColor} shadow [&>*]:text-lg font-semibold tracking-wide"
 	bind:this={roundHeader}
 >
 	<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
-		<div class="bg-primary-500 text-white text-center py-2 border-r-4 border-white">
-			Round of 16
-		</div>
-		<div class="bg-secondary-500 text-white text-center py-2 border-r-4 border-white">
-			Quarterfinals
-		</div>
-		<div class="bg-primary-500 text-white text-center py-2 border-r-4 border-white">Semifinals</div>
-		<div class="bg-secondary-500 text-white text-center py-2 border-r-4 border-white">Final</div>
-		<div class="bg-primary-500 text-white text-center py-2">Champion</div>
+		<div class="bg-blue-200 text-center py-2">Round of 16</div>
+		<div class="bg-blue-100 text-center py-2">Quarterfinals</div>
+		<div class="bg-blue-200 text-center py-2">Semifinals</div>
+		<div class="bg-blue-100 text-center py-2">Final</div>
+		<div class="bg-blue-200 text-center py-2">Champion</div>
 	</div>
 </section>
 <main
-	class="relative grid overflow-x-auto pb-12 bg-surface-500"
+	class="relative grid overflow-x-auto pb-12 bg-stone-100"
 	style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
 	bind:this={drawGrid}
 >
