@@ -242,11 +242,11 @@
 	bind:this={roundHeader}
 >
 	<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
-		<div class="bg-blue-200 text-center py-2">Round of 16</div>
-		<div class="bg-blue-100 text-center py-2">Quarterfinals</div>
-		<div class="bg-blue-200 text-center py-2">Semifinals</div>
-		<div class="bg-blue-100 text-center py-2">Final</div>
-		<div class="bg-blue-200 text-center py-2">Champion</div>
+		<div class="bg-stone-50 text-center py-2">Round of 16</div>
+		<div class="bg-stone-100 text-center py-2">Quarterfinals</div>
+		<div class="bg-stone-200 text-center py-2">Semifinals</div>
+		<div class="bg-stone-300 text-center py-2">Final</div>
+		<div class="bg-stone-400 text-center py-2">Champion</div>
 	</div>
 </section>
 <main
