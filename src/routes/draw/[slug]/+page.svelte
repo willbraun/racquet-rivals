@@ -18,7 +18,7 @@
 	isAuth.set(data.pb_auth_valid)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
-	const headerColor = 'bg-white'
+	const headerColor = 'bg-primary-50'
 	$: fullDrawRounds = Math.log2(data.draw.size) + 1
 	$: allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1)
 	$: ourRounds = allRounds.slice(-5)
@@ -63,7 +63,6 @@
 		}
 
 		const activeRound = Math.min(...tbdRounds) - 1
-
 		const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Finals']
 		const index = ourRounds.indexOf(activeRound)
 
@@ -140,6 +139,7 @@
 			component: 'selectUsers',
 			title: 'Select Users',
 			body: 'Compare predictions with your friends (max of 6 total)',
+			backdropClasses: 'bg-surface-500',
 			meta: {
 				currentUserId: data.currentUser.id,
 				currentUsername: data.currentUser.username,
@@ -149,7 +149,7 @@
 	}
 </script>
 
-<header class="flex items-center gap-4 p-4 {headerColor}">
+<header class="flex justify-between items-center p-4 {headerColor}">
 	<a href="/">
 		<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 576 512"
 			><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path
@@ -158,7 +158,7 @@
 		>
 	</a>
 	<select
-		class="select max-w-max w-2/3 bg-transparent text-lg md:text-3xl font-bold border-none cursor-pointer whitespace-normal brightness-0 hover:brightness-0"
+		class="select w-fit ml-4 bg-transparent text-lg md:text-3xl font-bold border-none cursor-pointer whitespace-normal brightness-0 hover:brightness-0"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
@@ -174,7 +174,7 @@
 			>
 		{/each}
 	</select>
-	<div class="col-span-1 ml-auto flex justify-end gap-2 flex-wrap">
+	<div class="col-span-1 flex-grow flex justify-end gap-2 flex-wrap">
 		{#if $isAuth}
 			<Logout />
 		{:else}
@@ -199,7 +199,7 @@
 		>
 	</div>
 	{#if $isAuth}
-		<div class="col-span-3 sm:col-span-1 flex flex-wrap gap-2 justify-center">
+		<div class="col-span-3 sm:col-span-1 flex flex-wrap gap-2.5 justify-center">
 			<p>Users:</p>
 			{#each users as user}
 				<div
@@ -207,7 +207,7 @@
 				>
 					<p>{user.username}</p>
 					<div
-						class="absolute badge-icon -top-1 -right-2 rounded-full aspect-square h-4 text-sm bg-green-400 z-10"
+						class="absolute badge-icon -top-1.5 -right-2 rounded-full h-4 w-fit px-1 text-sm bg-green-400 z-10"
 					>
 						<p>
 							{$predictionStore
@@ -242,11 +242,11 @@
 	bind:this={roundHeader}
 >
 	<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
-		<div class="bg-stone-50 text-center py-2">Round of 16</div>
-		<div class="bg-stone-100 text-center py-2">Quarterfinals</div>
-		<div class="bg-stone-200 text-center py-2">Semifinals</div>
-		<div class="bg-stone-300 text-center py-2">Final</div>
-		<div class="bg-stone-400 text-center py-2">Champion</div>
+		<div class="bg-primary-300 text-center py-2">Round of 16</div>
+		<div class="bg-primary-300 text-center py-2">Quarterfinals</div>
+		<div class="bg-primary-300 text-center py-2">Semifinals</div>
+		<div class="bg-primary-300 text-center py-2">Final</div>
+		<div class="bg-primary-300 text-center py-2">Champion</div>
 	</div>
 </section>
 <main

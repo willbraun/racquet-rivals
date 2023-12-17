@@ -18,7 +18,7 @@
 		/>
 		<button
 			type="button"
-			class="btn btn-sm rounded-md variant-ghost w-14 absolute right-1.5 top-1/2 -translate-y-1/2"
+			class="btn btn-sm rounded-md variant-glass-primary w-14 absolute right-1.5 top-1/2 -translate-y-1/2"
 			on:click={toggleShow}
 		>
 			{show ? 'Hide' : 'Show'}

@@ -25,7 +25,7 @@
 	const setTypeDeselect = makeSetType<DeselectUserResult>()
 
 	// Base Classes
-	const cBase = 'card p-4 w-modal shadow-xl space-y-4'
+	const cBase = 'card p-4 w-modal shadow-xl space-y-4 bg-white'
 	const cHeader = 'text-2xl font-bold'
 	const cForm = 'rounded-container-token'
 </script>
@@ -65,7 +65,9 @@
 						bind:value
 						bind:this={inputRef}
 					/>
-					<button class="btn btn-md variant-filled rounded-md" disabled={selectLoading}>Add</button>
+					<button class="btn btn-md variant-filled-primary rounded-md" disabled={selectLoading}
+						>Add</button
+					>
 				</div>
 			</label>
 			<FormError bind:error />
@@ -91,7 +93,7 @@
 		>
 			{#if $modalStore[0].meta.currentUsername}
 				<div
-					class={`chip variant-filled rounded-full pointer-events-none text-black ${mainColor} shadow`}
+					class="chip variant-filled rounded-full pointer-events-none text-black {mainColor} shadow"
 				>
 					<p>{$modalStore[0].meta.currentUsername}</p>
 				</div>
@@ -100,7 +102,7 @@
 			{#each users as user}
 				<button
 					type="submit"
-					class={`chip variant-filled rounded-full text-black ${user.color} shadow`}
+					class="chip variant-filled rounded-full text-black {user.color} shadow"
 					disabled={deletedUserId === user.id && deselectLoading}
 					on:click={() => (deletedUserId = user.id)}
 				>
@@ -114,7 +116,7 @@
 			{/each}
 		</form>
 		<footer class="modal-footer {parent.regionFooter}">
-			<button class="btn rounded-xl {parent.buttonNeutral}" on:click={parent.onClose}>Close</button>
+			<button class="btn rounded-md variant-glass-tertiary" on:click={parent.onClose}>Close</button>
 		</footer>
 	</div>
 {/if}

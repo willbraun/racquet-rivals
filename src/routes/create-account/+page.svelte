@@ -21,7 +21,7 @@
 
 <main class="w-full h-screen bg-white">
 	<div class="pt-24 px-4 max-w-md mx-auto">
-		<h1 class="text-3xl mb-4">Create Account</h1>
+		<h1 class="text-4xl mb-4">Create Account</h1>
 		<form
 			method="POST"
 			use:enhance={() => {
