@@ -149,7 +149,7 @@
 	}
 </script>
 
-<header class="flex justify-between items-center p-4 {headerColor}">
+<header class="flex items-center p-4 {headerColor}">
 	<a href="/">
 		<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 576 512"
 			><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path
@@ -199,7 +199,7 @@
 		>
 	</div>
 	{#if $isAuth}
-		<div class="col-span-3 sm:col-span-1 flex flex-wrap gap-2.5 justify-center">
+		<div class="col-span-3 sm:col-span-1 flex flex-wrap gap-2 justify-center">
 			<p>Users:</p>
 			{#each users as user}
 				<div
@@ -207,7 +207,7 @@
 				>
 					<p>{user.username}</p>
 					<div
-						class="absolute badge-icon -top-1.5 -right-2 rounded-full h-4 w-fit px-1 text-sm bg-green-400 z-10"
+						class="absolute badge-icon -top-1.5 -right-1.5 rounded-full h-4 w-fit px-1 text-sm bg-green-400 z-10"
 					>
 						<p>
 							{$predictionStore

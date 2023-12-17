@@ -73,7 +73,7 @@
 			<FormError bind:error />
 		</form>
 		<form
-			class="flex flex-wrap gap-1"
+			class="flex flex-wrap gap-2"
 			method="POST"
 			action="?/deselectUser"
 			use:enhance={() => {
@@ -116,7 +116,7 @@
 			{/each}
 		</form>
 		<footer class="modal-footer {parent.regionFooter}">
-			<button class="btn rounded-md variant-glass-tertiary" on:click={parent.onClose}>Close</button>
+			<button class="btn rounded-md variant-glass-primary" on:click={parent.onClose}>Close</button>
 		</footer>
 	</div>
 {/if}
