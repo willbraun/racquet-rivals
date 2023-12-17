@@ -21,25 +21,6 @@
 	}
 
 	const setType = makeSetType<AuthResult>()
-
-	// const resetPassword = async () => {
-	// 	loading = false
-
-	// 	if (email === '') {
-	// 		success = false
-	// 		error = 'Please enter your email'
-	// 		return
-	// 	}
-
-	// 	try {
-	// 		await pb.collection('user').requestPasswordReset(email)
-	// 		success = true
-	// 		error = ''
-	// 	} catch (e) {
-	// 		success = false
-	// 		error = errorMessage(e)
-	// 	}
-	// }
 </script>
 
 <div class="mt-12 m-auto p-4 max-w-md">

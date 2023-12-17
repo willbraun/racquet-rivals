@@ -33,62 +33,64 @@
 	}
 </script>
 
-<div class="mt-12 m-auto p-4 max-w-md">
-	<h1 class="text-3xl mb-4">Login</h1>
-	<form
-		method="POST"
-		class="[&>*]:mb-4"
-		use:enhance={({ formData }) => {
-			loading = true
-			error = ''
-			return async ({ result, update }) => {
-				await update()
-				const typedResult = setType(result)
-				if (result.status === 200) {
-					rememberLogin.set({
-						rememberMe,
-						usernameOrEmail
-					})
-					goto('/')
-				} else {
-					error = typedResult.data.error
+<main class="w-full h-screen bg-white">
+	<div class="pt-24 px-4 max-w-md mx-auto">
+		<h1 class="text-3xl mb-4">Login</h1>
+		<form
+			method="POST"
+			class="[&>*]:mb-4"
+			use:enhance={() => {
+				loading = true
+				error = ''
+				return async ({ result, update }) => {
+					await update()
+					const typedResult = setType(result)
+					if (result.status === 200) {
+						rememberLogin.set({
+							rememberMe,
+							usernameOrEmail
+						})
+						goto('/')
+					} else {
+						error = typedResult.data.error
+					}
+					loading = false
 				}
-				loading = false
-			}
-		}}
-	>
-		<label class="label">
-			<p>Username or email</p>
-			<input
-				class="input rounded-md"
-				type="text"
-				name="usernameOrEmail"
-				bind:value={usernameOrEmail}
-			/>
-		</label>
-		<PasswordField bind:password />
-		<div class="flex justify-between">
-			<label class="flex items-center space-x-2">
-				<input class="checkbox" type="checkbox" bind:checked={rememberMe} />
-				<p>Remember me</p>
+			}}
+		>
+			<label class="label">
+				<p>Username or email</p>
+				<input
+					class="input rounded-md"
+					type="text"
+					name="usernameOrEmail"
+					bind:value={usernameOrEmail}
+				/>
 			</label>
-			<a class="text-sm text-gray-500 -translate-y-4" href="/reset-password">Forgot password?</a>
-		</div>
-		<div class="flex justify-center">
-			<button
-				type="submit"
-				class="btn variant-filled w-1/2 mt-4 mx-auto rounded-xl text-xl font-semibold"
-				disabled={loading}
-			>
-				{loading ? 'Logging in...' : 'Log in'}
-			</button>
-		</div>
-	</form>
+			<PasswordField bind:password />
+			<div class="flex justify-between">
+				<label class="flex items-center space-x-2">
+					<input class="checkbox" type="checkbox" bind:checked={rememberMe} />
+					<p>Remember me</p>
+				</label>
+				<a class="text-sm text-gray-500 -translate-y-4" href="/reset-password">Forgot password?</a>
+			</div>
+			<div class="flex justify-center">
+				<button
+					type="submit"
+					class="btn variant-filled-primary w-1/2 mt-4 mx-auto rounded-xl text-xl font-semibold"
+					disabled={loading}
+				>
+					{loading ? 'Logging in...' : 'Log in'}
+				</button>
+			</div>
+		</form>
 
-	<FormError bind:error />
+		<FormError bind:error />
 
-	<div class="mt-6">
-		<p>Don't have an account? Create one <a class="underline" href="/create-account">here</a></p>
-		<p><a class="underline" href="/">Home</a></p>
+		<div class="mt-6">
+			<p>Don't have an account? Create one <a class="underline" href="/create-account">here</a></p>
+			<p><a class="underline" href="/">Home</a></p>
+		</div>
 	</div>
-</div>
+</main>
