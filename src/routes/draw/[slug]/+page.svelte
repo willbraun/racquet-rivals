@@ -117,9 +117,12 @@
 		return [player1, player2]
 	}
 
+	let titleSelect: HTMLSelectElement
 	let roundHeader: HTMLElement
 	let drawGrid: HTMLElement
 	onMount(() => {
+		titleSelect.style.width = `${titleSelect.offsetWidth + 20}px`
+
 		if (roundHeader && drawGrid) {
 			roundHeader.addEventListener('scroll', () => {
 				drawGrid.scrollLeft = roundHeader.scrollLeft
@@ -160,6 +163,7 @@
 	<select
 		class="select w-fit ml-4 bg-transparent text-lg md:text-3xl font-bold border-none cursor-pointer whitespace-normal brightness-0 hover:brightness-0"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
+		bind:this={titleSelect}
 	>
 		<option disabled>Active Draws</option>
 		{#each data.active.items as draw}

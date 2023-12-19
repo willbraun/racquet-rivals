@@ -40,7 +40,7 @@
 	type="button"
 	class={`${!prediction && 'chip rounded-full h-6 bg-blue-200 '}
 		${!prediction && predictionsAllowed && 'border border-black border-dashed '}
-		${predictionsAllowed && 'hover:brightness-105 '}
+		${predictionsAllowed && 'hover:brightness-110 '}
 		${!predictionsAllowed && 'pointer-events-none '}
 		${loading && 'brightness-90'}`}
 	disabled={!predictionsAllowed}
@@ -65,7 +65,8 @@
 	{/if}
 </button>
 
-<div class="card shadow-lg" data-popup="popupCombobox-{slot.id}">
+<!-- Popup form -->
+<div class="card shadow-lg w-fit" data-popup="popupCombobox-{slot.id}">
 	<form
 		method="POST"
 		action="?/addPrediction"
@@ -103,19 +104,31 @@
 		<input type="hidden" name="slotId" bind:value={slot.id} />
 		<input type="hidden" name="currentPredictionId" value={prediction?.id ?? ''} />
 		<input type="hidden" name="predictionValue" bind:value={predictionValue} />
-		<div class="btn-group-vertical">
+		<div class="flex flex-col rounded overflow-hidden">
 			<button
 				type="submit"
-				class={`${!player1 && 'pointer-events-none text-sm italic'}`}
+				class={`hover:bg-surface-400 whitespace-nowrap px-4 py-2 border-b-[1px] border-surface-500 ${
+					!player1 && 'pointer-events-none italic'
+				}`}
 				disabled={!player1 || loading}
-				on:click={() => (predictionValue = player1)}>{displayPrediction(player1)}</button
+				on:click={() => (predictionValue = player1)}
 			>
+				<span class="text-xl">
+					{displayPrediction(player1)}
+				</span>
+			</button>
 			<button
 				type="submit"
-				class={`${!player2 && 'pointer-events-none text-sm italic'}`}
+				class={`hover:bg-surface-400 whitespace-nowrap px-4 py-2 ${
+					!player2 && 'pointer-events-none italic'
+				}`}
 				disabled={!player2 || loading}
-				on:click={() => (predictionValue = player2)}>{displayPrediction(player2)}</button
+				on:click={() => (predictionValue = player2)}
 			>
+				<span class="text-xl">
+					{displayPrediction(player2)}
+				</span>
+			</button>
 		</div>
 		<FormError bind:error />
 	</form>

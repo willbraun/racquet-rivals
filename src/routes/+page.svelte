@@ -14,7 +14,7 @@
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
 	const pillStyle =
-		'flex justify-center items-center text-center text-md md:text-2xl shadow-xl rounded-full px-6 py-2'
+		'flex justify-center items-center text-center text-md md:text-2xl rounded-full px-6 py-2'
 </script>
 
 <header class="absolute right-2 flex justify-end gap-2 p-2 h-12">
@@ -22,7 +22,7 @@
 		<Logout />
 	{/if}
 </header>
-<main class="w-full h-max p-4">
+<main class="w-full h-max p-4 bg-stone-100">
 	<div class="max-w-5xl mx-auto h-full">
 		<section class="mb-16">
 			<div class="grid grid-cols-4 items-center my-16">
@@ -35,26 +35,28 @@
 				<img src={bracketRight} alt="right bracket" />
 			</div>
 			{#if $isAuth}
-				<div class="{pillStyle} col-start-1 col-end-2 bg-blue-300 w-fit mx-auto">
+				<div class="{pillStyle} shadow-lg col-start-1 col-end-2 bg-blue-300 w-fit mx-auto">
 					Welcome back, {data.pb_auth_username}!
 				</div>
 			{:else}
 				<div class="grid grid-rows-4 grid-cols-2 gap-4">
-					<div class="{pillStyle} col-start-1 col-end-3 sm:col-end-2 bg-blue-300">
+					<div class="{pillStyle} shadow-xl col-start-1 col-end-3 sm:col-end-2 bg-blue-300">
 						Create brackets for the last 16 players of pro tennis tournaments
 					</div>
-					<div class="{pillStyle} row-start-2 col-start-1 sm:col-start-2 col-end-3 bg-orange-300">
+					<div
+						class="{pillStyle} shadow-xl row-start-2 col-start-1 sm:col-start-2 col-end-3 bg-orange-300"
+					>
 						See how you stack up with your friends
 					</div>
 					<a
 						href="/login"
-						class="block {pillStyle} font-semibold row-start-3 col-start-1 col-end-3 sm:col-end-2 bg-yellow-200 hover:scale-105 duration-200"
+						class="block {pillStyle} shadow-xl font-semibold row-start-3 col-start-1 col-end-3 sm:col-end-2 bg-yellow-200 hover:scale-105 duration-200"
 					>
 						<button type="button">Login</button>
 					</a>
 					<a
 						href="/create-account"
-						class="block {pillStyle} font-semibold row-start-4 col-start-1 sm:col-start-2 col-end-3 bg-purple-300 hover:scale-105 duration-200"
+						class="block {pillStyle} shadow-xl font-semibold row-start-4 col-start-1 sm:col-start-2 col-end-3 bg-purple-300 hover:scale-105 duration-200"
 					>
 						<button type="button">Sign up</button>
 					</a>
@@ -67,7 +69,7 @@
 				{#each data.active.items as draw}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class="{pillStyle} bg-green-300 p-4 mb-4 w-fit mx-auto hover:scale-105 duration-200"
+						class="{pillStyle} shadow-lg bg-green-300 p-4 mb-4 w-fit mx-auto hover:scale-105 duration-200"
 					>
 						<button type="button">
 							{getTitle(draw)}
@@ -77,12 +79,12 @@
 			{:else}
 				<p class="text-center text-xl mb-16">No active draws</p>
 			{/if}
-			<h3 class="text-4xl sm:text-6xl text-center mt-8 mb-8">Completed Draws</h3>
+			<h3 class="text-4xl sm:text-6xl text-center mt-16 mb-8">Completed Draws</h3>
 			{#if data.completed.totalItems > 0}
 				{#each data.completed.items as draw}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class="{pillStyle} bg-red-300 p-4 mb-4 w-fit mx-auto hover:scale-105 duration-200"
+						class="{pillStyle} shadow-lg bg-red-300 p-4 mb-4 w-fit mx-auto hover:scale-105 duration-200"
 					>
 						<button type="button">
 							{getTitle(draw)}
@@ -93,6 +95,5 @@
 				<p class="text-center text-xl">No completed draws</p>
 			{/if}
 		</section>
-		<!-- </div> -->
 	</div>
 </main>
