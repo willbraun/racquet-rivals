@@ -10,6 +10,7 @@
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
+	import { fade } from 'svelte/transition'
 	export let data
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
@@ -19,6 +20,14 @@
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
 	const headerColor = 'bg-primary-50'
+	const pointsByRound = {
+		'Round of 16': 0,
+		Quarterfinals: 1,
+		Semifinals: 2,
+		Final: 4,
+		Champion: 8
+	}
+
 	$: fullDrawRounds = Math.log2(data.draw.size) + 1
 	$: allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1)
 	$: ourRounds = allRounds.slice(-5)
@@ -33,6 +42,7 @@
 	let drawUrl = ''
 	$: if (drawUrl) {
 		goto(drawUrl, { invalidateAll: true })
+		sessionStorage.setItem('loginGoto', drawUrl)
 	}
 
 	const colorMap: Map<string, string> = new Map()
@@ -118,10 +128,15 @@
 	}
 
 	let titleSelect: HTMLSelectElement
+	let headerButtons: HTMLElement
 	let roundHeader: HTMLElement
 	let drawGrid: HTMLElement
 	onMount(() => {
-		titleSelect.style.width = `${titleSelect.offsetWidth + 20}px`
+		sessionStorage.setItem('loginGoto', location.pathname)
+
+		// titleSelect.style.width = `${titleSelect.offsetWidth + 20}px`
+		// console.log(headerButtons.style)
+		// headerButtons.style.marginLeft = `${parseInt(headerButtons.style.marginLeft) - 20}px`
 
 		if (roundHeader && drawGrid) {
 			roundHeader.addEventListener('scroll', () => {
@@ -161,7 +176,7 @@
 		>
 	</a>
 	<select
-		class="select w-fit ml-4 bg-transparent text-lg md:text-3xl font-bold border-none cursor-pointer whitespace-normal brightness-0 hover:brightness-0"
+		class="select flex-grow ml-4 bg-transparent text-lg md:text-3xl font-bold border-none cursor-pointer whitespace-pre-wrap brightness-0 hover:brightness-0"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
 		bind:this={titleSelect}
 	>
@@ -178,7 +193,10 @@
 			>
 		{/each}
 	</select>
-	<div class="col-span-1 flex-grow flex justify-end gap-2 flex-wrap">
+	<div
+		class="w-fit ml-auto flex-none self-start flex flex-col justify-end items-end gap-2 flex-wrap"
+		bind:this={headerButtons}
+	>
 		{#if $isAuth}
 			<Logout />
 		{:else}
@@ -196,7 +214,9 @@
 	</div>
 </header>
 <section class="grid grid-cols-3 gap-2 p-4 {headerColor} [&>*]:text-lg">
-	<div class="col-span-3 sm:col-span-1 text-center text-black">{`Status: ${getRoundLabel()}`}</div>
+	<div class="col-span-3 sm:col-span-1 text-center text-black">
+		Tournament Status: <span class="font-bold">{getRoundLabel()}</span>
+	</div>
 	<div class="col-span-3 sm:col-span-1 text-center text-black">
 		{predictionsAllowed ? 'Predictions open until: ' : 'Predictions closed: '}<span
 			class="font-bold">{predictionClose}</span
@@ -208,6 +228,7 @@
 			{#each users as user}
 				<div
 					class="relative chip h-6 rounded-full pointer-events-none text-black {user.color} shadow"
+					transition:fade={{ duration: 100 }}
 				>
 					<p>{user.username}</p>
 					<div
@@ -223,7 +244,7 @@
 				</div>
 			{/each}
 			<button
-				class="chip h-6 border border-black border-dashed rounded-full flex justify-center"
+				class="chip h-6 border border-black border-dashed rounded-full flex justify-center hover:bg-primary-100"
 				on:click={() => modalStore.trigger(modal)}
 			>
 				<svg
@@ -246,11 +267,14 @@
 	bind:this={roundHeader}
 >
 	<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
-		<div class="bg-primary-300 text-center py-2">Round of 16</div>
-		<div class="bg-primary-300 text-center py-2">Quarterfinals</div>
-		<div class="bg-primary-300 text-center py-2">Semifinals</div>
-		<div class="bg-primary-300 text-center py-2">Final</div>
-		<div class="bg-primary-300 text-center py-2">Champion</div>
+		{#each Object.entries(pointsByRound) as [round, points]}
+			<div class="bg-primary-300 text-center py-2 flex justify-center gap-2">
+				<p>{round}</p>
+				{#if points > 0}
+					<div class="bg-green-400 rounded-full aspect-square h-full shadow">{points}</div>
+				{/if}
+			</div>
+		{/each}
 	</div>
 </section>
 <main
@@ -266,7 +290,7 @@
 					class:border-r-2={!(slot.position % 2)}
 					style:height={getHeight(index, slot.position)}
 				>
-					<p>{`${slot.seed} ${slot.name}`}</p>
+					<p class="text-lg">{`${slot.seed} ${slot.name}`}</p>
 					{#if $isAuth && index > 0}
 						{@const slotPredictions = $predictionStore
 							.filter((p) => p.draw_slot_id === slot.id)

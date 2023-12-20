@@ -50,7 +50,7 @@
 							rememberMe,
 							usernameOrEmail
 						})
-						goto('/')
+						goto(sessionStorage.getItem('loginGoto') || '/')
 					} else {
 						error = typedResult.data.error
 					}

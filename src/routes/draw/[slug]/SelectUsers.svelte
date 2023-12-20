@@ -5,6 +5,7 @@
 	import { applyAction, enhance } from '$app/forms'
 	import FormError from '../../../lib/FormError.svelte'
 	import { mainColor, makeSetType } from '../../../lib/utils'
+	import { fade } from 'svelte/transition'
 	export let parent: SvelteComponent
 
 	const modalStore = getModalStore()
@@ -105,6 +106,7 @@
 					class="chip variant-filled rounded-full text-black {user.color} shadow"
 					disabled={deletedUserId === user.id && deselectLoading}
 					on:click={() => (deletedUserId = user.id)}
+					transition:fade={{ duration: 100 }}
 				>
 					<p>{user.username}</p>
 					<svg xmlns="http://www.w3.org/2000/svg" height="1rem" viewBox="0 0 384 512"

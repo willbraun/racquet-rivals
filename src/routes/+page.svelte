@@ -6,6 +6,7 @@
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils.js'
 	import bracketLeft from '$lib/images/bracket-left.svg'
 	import bracketRight from '$lib/images/bracket-right.svg'
+	import { onMount } from 'svelte'
 	export let data
 
 	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
@@ -15,9 +16,13 @@
 
 	const pillStyle =
 		'flex justify-center items-center text-center text-md md:text-2xl rounded-full px-6 py-2'
+
+	onMount(() => {
+		sessionStorage.setItem('loginGoto', '/')
+	})
 </script>
 
-<header class="absolute right-2 flex justify-end gap-2 p-2 h-12">
+<header class="absolute right-0 flex justify-end gap-2 p-4">
 	{#if $isAuth}
 		<Logout />
 	{/if}
@@ -36,7 +41,7 @@
 			</div>
 			{#if $isAuth}
 				<div class="{pillStyle} shadow-lg col-start-1 col-end-2 bg-blue-300 w-fit mx-auto">
-					Welcome back, {data.pb_auth_username}!
+					Welcome {data.pb_auth_username}!
 				</div>
 			{:else}
 				<div class="grid grid-rows-4 grid-cols-2 gap-4">
@@ -63,7 +68,7 @@
 				</div>
 			{/if}
 		</section>
-		<section>
+		<section class="mb-24">
 			<h3 class="text-4xl sm:text-6xl text-center mb-8">Active Draws</h3>
 			{#if data.active.totalItems > 0}
 				{#each data.active.items as draw}

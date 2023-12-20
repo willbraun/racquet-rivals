@@ -31,7 +31,7 @@
 					await update()
 					const typedResult = setType(result)
 					if (result.status === 200) {
-						goto('/')
+						goto(sessionStorage.getItem('loginGoto') || '/')
 					} else {
 						error = typedResult.data.error
 					}
