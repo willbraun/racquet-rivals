@@ -133,10 +133,6 @@
 		sessionStorage.setItem('loginGoto', location.pathname)
 
 		if (roundHeader && drawGrid) {
-			roundHeader.addEventListener('scroll', () => {
-				drawGrid.scrollLeft = roundHeader.scrollLeft
-			})
-
 			drawGrid.addEventListener('scroll', () => {
 				roundHeader.scrollLeft = drawGrid.scrollLeft
 			})
