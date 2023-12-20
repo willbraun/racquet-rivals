@@ -266,7 +266,7 @@
 	</div>
 </section>
 <main
-	class="relative grid overflow-x-auto pb-12 bg-stone-100"
+	class="relative grid overflow-x-auto overscroll-x-none pb-12 bg-stone-100"
 	style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
 	bind:this={drawGrid}
 >
