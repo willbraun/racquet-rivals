@@ -1,8 +1,9 @@
+import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import PocketBase from 'pocketbase'
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
-	event.locals.pb = new PocketBase('https://tennisbracket.willbraun.dev')
+	event.locals.pb = new PocketBase(PUBLIC_POCKETBASE_URL)
 
 	// load the store data from the request cookie string
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '')

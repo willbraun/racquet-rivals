@@ -9,9 +9,11 @@ import type {
 	SelectedUser,
 	Slot
 } from '$lib/types'
+import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 
 export async function load({ fetch, params, cookies, locals }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
+	const url = PUBLIC_POCKETBASE_URL
 	const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
 	const selectedUsers: SelectedUser[] = JSON.parse(
 		cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
@@ -22,14 +24,11 @@ export async function load({ fetch, params, cookies, locals }) {
 		}
 	}
 
-	const drawRes = await fetch(
-		`https://tennisbracket.willbraun.dev/api/collections/draw/records/${id}`,
-		options
-	)
+	const drawRes = await fetch(`${url}/api/collections/draw/records/${id}`, options)
 	const drawData: Draw = await drawRes.json()
 
 	const slotRes = await fetch(
-		`https://tennisbracket.willbraun.dev/api/collections/draw_slot/records?perPage=255&filter=(draw_id="${id}")`,
+		`${url}/api/collections/draw_slot/records?perPage=255&filter=(draw_id="${id}")`,
 		options
 	)
 	const slotData: PbListResponse<Slot> = await slotRes.json()
@@ -40,12 +39,12 @@ export async function load({ fetch, params, cookies, locals }) {
 	const encoded = encodeURIComponent(filter)
 
 	const predictionRes = await fetch(
-		`https://tennisbracket.willbraun.dev/api/collections/view_predictions/records?perPage=300&filter=${encoded}`,
+		`${url}/api/collections/view_predictions/records?perPage=300&filter=${encoded}`,
 		options
 	)
 	const predictionData: PbListResponse<Prediction> = await predictionRes.json()
 
-	const [activeData, completedData] = await fetchDraws(fetch, locals.pb.authStore.token)
+	const [activeData, completedData] = await fetchDraws(fetch, url, locals.pb.authStore.token)
 
 	return {
 		active: activeData,

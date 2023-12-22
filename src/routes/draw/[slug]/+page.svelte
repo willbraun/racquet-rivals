@@ -11,9 +11,10 @@
 	import { format } from 'date-fns'
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
 	import { fade } from 'svelte/transition'
+	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	export let data
 
-	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
+	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 	const now = new Date()
 
 	isAuth.set(data.pb_auth_valid)
@@ -41,6 +42,7 @@
 
 	let drawUrl = ''
 	$: if (drawUrl) {
+		console.log(drawUrl)
 		goto(drawUrl, { invalidateAll: true })
 		sessionStorage.setItem('loginGoto', drawUrl)
 	}

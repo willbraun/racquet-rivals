@@ -7,9 +7,10 @@
 	import bracketLeft from '$lib/images/bracket-left.svg'
 	import bracketRight from '$lib/images/bracket-right.svg'
 	import { onMount } from 'svelte'
+	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	export let data
 
-	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
+	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 
 	isAuth.set(data.pb_auth_valid)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))

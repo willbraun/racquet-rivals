@@ -2,10 +2,12 @@
 	import Pocketbase from 'pocketbase'
 	import EmailField from '$lib/EmailField.svelte'
 	import FormError from '$lib/FormError.svelte'
-	import { errorMessage, makeSetType } from '$lib/utils.js'
+	import { makeSetType } from '$lib/utils.js'
 	import { enhance } from '$app/forms'
 	import type { AuthResult } from '$lib/types'
-	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
+	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
+
+	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 
 	let email = ''
 	let showEmailValidation = false

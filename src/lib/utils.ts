@@ -69,7 +69,7 @@ export const selectColors = [
 ]
 
 // server utils
-export const fetchDraws = async (svelteFetch: SvelteFetch, token: string) => {
+export const fetchDraws = async (svelteFetch: SvelteFetch, url: string, token: string) => {
 	const today = format(new Date(), 'yyyy-MM-dd')
 	const options = {
 		headers: {
@@ -78,13 +78,13 @@ export const fetchDraws = async (svelteFetch: SvelteFetch, token: string) => {
 	}
 
 	const activeRes = await svelteFetch(
-		`https://tennisbracket.willbraun.dev/api/collections/draw/records?filter=(end_date>="${today}")&sort=start_date,event`,
+		`${url}/api/collections/draw/records?filter=(end_date>="${today}")&sort=start_date,event`,
 		options
 	)
 	const activeData: PbListResponse<Draw> = await activeRes.json()
 
 	const completedRes = await svelteFetch(
-		`https://tennisbracket.willbraun.dev/api/collections/draw/records?filter=(end_date<"${today}")&sort=start_date,event`,
+		`${url}/api/collections/draw/records?filter=(end_date<"${today}")&sort=start_date,event`,
 		options
 	)
 	const completedData: PbListResponse<Draw> = await completedRes.json()

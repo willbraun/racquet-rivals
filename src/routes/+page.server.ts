@@ -1,9 +1,11 @@
+import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { errorMessage, fetchDraws } from '$lib/utils'
 import { fail, type Actions } from '@sveltejs/kit'
 import type { ClientResponseError } from 'pocketbase'
 
 export async function load({ fetch, locals }) {
-	const [activeData, completedData] = await fetchDraws(fetch, locals.pb.authStore.token)
+	const url = PUBLIC_POCKETBASE_URL
+	const [activeData, completedData] = await fetchDraws(fetch, url, locals.pb.authStore.token)
 
 	return {
 		active: activeData,

@@ -7,6 +7,7 @@
 	import FormError from '$lib/FormError.svelte'
 	import { predictionStore } from '$lib/store'
 	import { enhance } from '$app/forms'
+	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	export let slot: Slot
 	export let roundIndex: number
 	export let players: [string, string]
@@ -14,7 +15,7 @@
 	export let predictionsAllowed: boolean
 	export let getColor: (userId: string | undefined) => string
 
-	const pb = new Pocketbase('https://tennisbracket.willbraun.dev')
+	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 
 	$: [player1, player2] = players
 
