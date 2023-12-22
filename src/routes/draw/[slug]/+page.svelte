@@ -39,29 +39,7 @@
 	$: predictionStore.set(data.predictions.items)
 	$: users = [data.currentUser, ...data.selectedUsers].filter(Boolean)
 	$: userIds = users.map((user) => user.id)
-
-	let drawUrl = ''
-	$: if (drawUrl) {
-		console.log(drawUrl)
-		goto(drawUrl, { invalidateAll: true })
-		sessionStorage.setItem('loginGoto', drawUrl)
-	}
-
-	const colorMap: Map<string, string> = new Map()
-	$: users.forEach((user) => colorMap.set(user.id, user.color))
-	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
-
-	const getHeight = (roundIndex: number, position: number): string => {
-		let rems = 0
-		if (position === 1) {
-			rems = 2 ** (roundIndex - 1) * 4 + 2
-		} else {
-			rems = 2 ** roundIndex * 4
-		}
-		return `${rems}rem`
-	}
-
-	const getRoundLabel = () => {
+	$: roundLabel = (() => {
 		const tbdRounds = allRounds.filter((round) => {
 			return slots
 				.filter((slot) => {
@@ -71,7 +49,7 @@
 		})
 
 		if (tbdRounds.length === 0) {
-			return 'Tournament Completed'
+			return 'Completed'
 		}
 
 		const activeRound = Math.min(...tbdRounds) - 1
@@ -84,6 +62,26 @@
 			const earlyLabels = ['1st Round', '2nd Round', '3rd Round']
 			return `${earlyLabels[activeRound - 1]}`
 		}
+	})()
+
+	const colorMap: Map<string, string> = new Map()
+	$: users.forEach((user) => colorMap.set(user.id, user.color))
+	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
+
+	let drawUrl = ''
+	$: if (drawUrl) {
+		goto(drawUrl, { invalidateAll: true })
+		sessionStorage.setItem('loginGoto', drawUrl)
+	}
+
+	const getHeight = (roundIndex: number, position: number): string => {
+		let rems = 0
+		if (position === 1) {
+			rems = 2 ** (roundIndex - 1) * 4 + 2
+		} else {
+			rems = 2 ** roundIndex * 4
+		}
+		return `${rems}rem`
 	}
 
 	const getPlayerOptions = (
@@ -205,7 +203,7 @@
 </header>
 <section class="grid grid-cols-3 gap-2 p-4 {headerColor} [&>*]:text-lg">
 	<div class="col-span-3 sm:col-span-1 text-center text-black">
-		Tournament Status: <span class="font-bold">{getRoundLabel()}</span>
+		Tournament Status: <span class="font-bold">{roundLabel}</span>
 	</div>
 	<div class="col-span-3 sm:col-span-1 text-center text-black">
 		{predictionsAllowed ? 'Predictions open until: ' : 'Predictions closed: '}<span

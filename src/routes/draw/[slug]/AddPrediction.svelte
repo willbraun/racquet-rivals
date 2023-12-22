@@ -108,9 +108,8 @@
 		<div class="flex flex-col rounded overflow-hidden">
 			<button
 				type="submit"
-				class={`hover:bg-surface-400 whitespace-nowrap px-4 py-2 border-b-[1px] border-surface-500 ${
-					!player1 && 'pointer-events-none italic'
-				}`}
+				class="hover:bg-surface-400 whitespace-nowrap px-4 py-2 border-b-1 border-surface-500 {!player1 &&
+					'pointer-events-none italic'}"
 				disabled={!player1 || loading}
 				on:click={() => (predictionValue = player1)}
 			>
@@ -120,9 +119,8 @@
 			</button>
 			<button
 				type="submit"
-				class={`hover:bg-surface-400 whitespace-nowrap px-4 py-2 ${
-					!player2 && 'pointer-events-none italic'
-				}`}
+				class="hover:bg-surface-400 whitespace-nowrap px-4 py-2 {!player2 &&
+					'pointer-events-none italic'}"
 				disabled={!player2 || loading}
 				on:click={() => (predictionValue = player2)}
 			>

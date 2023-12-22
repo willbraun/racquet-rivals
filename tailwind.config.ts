@@ -14,6 +14,7 @@ export default {
 	theme: {
 		extend: {
 			borderWidth: {
+				'1': '1px',
 				'16': '16px'
 			}
 		}
