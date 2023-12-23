@@ -36,7 +36,7 @@
 				<h1
 					class="col-span-2 text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-center font-bold tracking-tight whitespace-pre-line"
 				>
-					{'Tennis\nBracket'}
+					{'Racquet\nRivals'}
 				</h1>
 				<img src={bracketRight} alt="right bracket" />
 			</div>
@@ -52,7 +52,7 @@
 					<div
 						class="{pillStyle} shadow-xl row-start-2 col-start-1 sm:col-start-2 col-end-3 bg-orange-300"
 					>
-						See how you stack up with your friends
+						Earn points if your players win, and see how you stack up with your friends
 					</div>
 					<a
 						href="/login"
