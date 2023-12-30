@@ -34,33 +34,33 @@
 	$: ourRounds = allRounds.slice(-5)
 	$: slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4)
 	$: pcDate = new Date(data.draw.prediction_close)
-	$: predictionClose = format(pcDate, 'M/dd/yyyy h:mmaaa')
+	$: predictionClose = format(pcDate, 'M/d/yyyy h:mmaaa')
 	$: predictionsAllowed = now < pcDate
 	$: predictionStore.set(data.predictions.items)
 	$: users = [data.currentUser, ...data.selectedUsers].filter(Boolean)
 	$: userIds = users.map((user) => user.id)
 	$: roundLabel = (() => {
-		const tbdRounds = allRounds.filter((round) => {
-			return slots
+		const filledRounds = allRounds.filter((round) => {
+			return data.slots.items
 				.filter((slot) => {
 					return slot.round === round
 				})
-				.some((slot) => slot.name.trim() === '')
+				.every((slot) => slot.name.trim() !== '')
 		})
 
-		if (tbdRounds.length === 0) {
+		if (filledRounds.at(-1) === fullDrawRounds) {
 			return 'Completed'
 		}
 
-		const activeRound = Math.min(...tbdRounds) - 1
+		const activeRound = Math.max(0, ...filledRounds)
 		const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Finals']
 		const index = ourRounds.indexOf(activeRound)
 
 		if (index !== -1) {
 			return labels[index]
 		} else {
-			const earlyLabels = ['1st Round', '2nd Round', '3rd Round']
-			return `${earlyLabels[activeRound - 1]}`
+			const earlyLabels = ['Qualifying Rounds', '1st Round', '2nd Round', '3rd Round']
+			return `${earlyLabels[activeRound]}`
 		}
 	})()
 
@@ -117,10 +117,10 @@
 			const slot2 = slots.find((s) => s.round === round - 1 && s.position === position * 2)
 
 			if (slot1) {
-				player1 = `${slot1.seed} ${slot1.name}`
+				player1 = `${slot1.seed} ${slot1.name}`.trim()
 			}
 			if (slot2) {
-				player2 = `${slot2.seed} ${slot2.name}`
+				player2 = `${slot2.seed} ${slot2.name}`.trim()
 			}
 		}
 
@@ -278,7 +278,11 @@
 					class:border-r-2={!(slot.position % 2)}
 					style:height={getHeight(index, slot.position)}
 				>
-					<p class="text-lg">{`${slot.seed} ${slot.name}`}</p>
+					{#if slot.name.trim()}
+						<p class="text-lg">{`${slot.seed} ${slot.name}`}</p>
+					{:else}
+						<p class="text-lg italic text-surface-800">TBD</p>
+					{/if}
 					{#if $isAuth && index > 0}
 						{@const slotPredictions = $predictionStore
 							.filter((p) => p.draw_slot_id === slot.id)
