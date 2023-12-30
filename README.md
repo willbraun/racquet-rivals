@@ -22,7 +22,7 @@ Feel free to create an account and play along! You can view other players' predi
 - Frontend
   - this repo, hosted on Netlify
 - Backend
-  - Pocketbase - self-hosted BaaS with built-in APIs and SQLite database
+  - Pocketbase - self-hosted BaaS with a SQLite database and built-in APIs
   - Hosted on Digital Ocean Droplet VM running Linux Ubuntu
   - Extended with additional logic in this [repo](https://github.com/willbraun/tennis-bracket-pb-extend)
 - Web Scraper
