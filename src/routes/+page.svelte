@@ -5,7 +5,6 @@
 	import { isAuth } from '$lib/store.js'
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils.js'
 	import bracketLeft from '$lib/images/bracket-left.svg'
-	import bracketRight from '$lib/images/bracket-right.svg'
 	import { onMount } from 'svelte'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	export let data
@@ -16,7 +15,7 @@
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
 	const pillStyle =
-		'flex justify-center items-center text-center text-md md:text-2xl rounded-full px-6 py-2'
+		'flex justify-center items-center text-center text-lg sm:text-xl md:text-2xl rounded-full px-6 py-2'
 
 	onMount(() => {
 		sessionStorage.setItem('loginGoto', '/')
@@ -34,11 +33,11 @@
 			<div class="grid grid-cols-4 items-center my-16">
 				<img src={bracketLeft} alt="left bracket" />
 				<h1
-					class="col-span-2 text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-center font-bold tracking-tight whitespace-pre-line"
+					class="col-span-2 text-5xl sm:text-6xl md:text-8xl lg:text-9xl text-center font-bold tracking-tight whitespace-pre-line"
 				>
 					{'Racquet\nRivals'}
 				</h1>
-				<img src={bracketRight} alt="right bracket" />
+				<img src={bracketLeft} alt="right bracket" class="rotate-180" />
 			</div>
 			{#if $isAuth}
 				<div class="{pillStyle} shadow-lg col-start-1 col-end-2 bg-blue-300 w-fit mx-auto">
