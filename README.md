@@ -20,7 +20,7 @@ Feel free to create an account and play along! You can view other players' predi
 # Project Structure
 
 - Frontend
-  - this repo, hosted on Netlify
+  - this repo, hosted on Netlify 
 - Backend
   - Pocketbase - self-hosted BaaS with a SQLite database and built-in APIs
   - Hosted on Digital Ocean Droplet VM running Linux Ubuntu
