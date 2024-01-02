@@ -33,9 +33,20 @@
 	$: allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1)
 	$: ourRounds = allRounds.slice(-5)
 	$: slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4)
-	$: pcDate = new Date(data.draw.prediction_close)
-	$: predictionClose = format(pcDate, 'M/d/yyyy h:mmaaa')
-	$: predictionsAllowed = now < pcDate
+
+	let pcDate: Date | undefined
+	let predictionClose: string
+	let predictionsAllowed: boolean
+	$: if (data.draw.prediction_close) {
+		pcDate = new Date(data.draw.prediction_close)
+		predictionClose = format(pcDate, 'M/d/yyyy h:mmaaa')
+		predictionsAllowed = now < pcDate
+	} else {
+		pcDate = undefined
+		predictionClose = '12h after R16 is full'
+		predictionsAllowed = true
+	}
+
 	$: predictionStore.set(data.predictions.items)
 	$: users = [data.currentUser, ...data.selectedUsers].filter(Boolean)
 	$: userIds = users.map((user) => user.id)
