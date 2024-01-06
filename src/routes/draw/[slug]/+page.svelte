@@ -30,7 +30,7 @@
 	}
 
 	$: fullDrawRounds = Math.log2(data.draw.size) + 1
-	$: allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1)
+	$: allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1) // rounds start at 1
 	$: ourRounds = allRounds.slice(-5)
 	$: slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4)
 
@@ -60,17 +60,23 @@
 		})
 
 		if (filledRounds.at(-1) === fullDrawRounds) {
-			return 'Completed'
+			return 'Tournament Completed'
 		}
 
-		const activeRound = Math.max(0, ...filledRounds)
+		const activeRound = Math.max(0, ...filledRounds) // round being played
 		const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Finals']
 		const index = ourRounds.indexOf(activeRound)
 
 		if (index !== -1) {
 			return labels[index]
 		} else {
-			const earlyLabels = ['Qualifying Rounds', '1st Round', '2nd Round', '3rd Round']
+			const sizeLabel = `(R${2 ** (fullDrawRounds - activeRound)})`
+			const earlyLabels = [
+				'Qualifying Rounds',
+				`1st Round ${sizeLabel}`,
+				`2nd Round ${sizeLabel}`,
+				`3rd Round ${sizeLabel}`
+			]
 			return `${earlyLabels[activeRound]}`
 		}
 	})()
@@ -214,7 +220,7 @@
 </header>
 <section class="grid grid-cols-3 gap-2 p-4 {headerColor} [&>*]:text-lg">
 	<div class="col-span-3 sm:col-span-1 text-center text-black">
-		Tournament Status: <span class="font-bold">{roundLabel}</span>
+		Active Round: <span class="font-bold">{roundLabel}</span>
 	</div>
 	<div class="col-span-3 sm:col-span-1 text-center text-black">
 		{predictionsAllowed ? 'Predictions open until: ' : 'Predictions closed: '}<span
