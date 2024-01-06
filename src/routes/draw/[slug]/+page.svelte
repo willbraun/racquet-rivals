@@ -64,7 +64,7 @@
 		}
 
 		const activeRound = Math.max(0, ...filledRounds) // round being played
-		const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Finals']
+		const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Final']
 		const index = ourRounds.indexOf(activeRound)
 
 		if (index !== -1) {
