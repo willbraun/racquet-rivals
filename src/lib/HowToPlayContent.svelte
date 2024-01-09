@@ -25,7 +25,7 @@
 				</li>
 				<li class="mb-4">Select an active tournament and follow along.</li>
 				<li class="mb-4">
-					Once all players reach the Round of 16, you'll be notified via email and have 12 hours to
+					Once all slots in the Round of 16 are filled, you'll be notified via email and have 12 hours to
 					create your bracket for the tournament. You may enter predictions before this point for
 					any available players.
 				</li>
