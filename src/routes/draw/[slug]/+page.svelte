@@ -12,6 +12,7 @@
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
 	import { fade } from 'svelte/transition'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
+	import HowToPlay from '$lib/HowToPlay.svelte'
 	export let data
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -174,7 +175,7 @@
 	}
 </script>
 
-<header class="flex items-center p-4 {headerColor}">
+<header class="flex items-center p-4 gap-2 {headerColor}">
 	<a class="hover:bg-primary-200 p-2 rounded" href="/">
 		<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 576 512"
 			><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path
@@ -183,7 +184,7 @@
 		>
 	</a>
 	<select
-		class="select flex-grow ml-2 mr-4 bg-transparent text-lg md:text-3xl font-bold border-none cursor-pointer whitespace-pre-wrap hover:bg-primary-200"
+		class="select flex-grow bg-transparent text-lg md:text-3xl font-bold border-none cursor-pointer whitespace-pre-wrap hover:bg-primary-200"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
@@ -200,8 +201,9 @@
 		{/each}
 	</select>
 	<div
-		class="w-fit ml-auto flex-none self-start flex flex-col sm:flex-row justify-end items-end gap-2 flex-wrap"
+		class="w-fit ml-auto flex-none flex flex-col sm:flex-row sm:self-start justify-end items-center gap-2 sm:gap-4 flex-wrap"
 	>
+		<HowToPlay />
 		{#if $isAuth}
 			<Logout />
 		{:else}

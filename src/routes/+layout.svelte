@@ -4,9 +4,11 @@
 	import SelectUsers from './draw/[slug]/SelectUsers.svelte'
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
 	import { storePopup } from '@skeletonlabs/skeleton'
+	import HowToPlayContent from '$lib/HowToPlayContent.svelte'
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
 	const modalRegistry: Record<string, ModalComponent> = {
+		howToPlayContent: { ref: HowToPlayContent },
 		selectUsers: { ref: SelectUsers }
 	}
 

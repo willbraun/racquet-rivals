@@ -7,6 +7,7 @@
 	import bracketLeft from '$lib/images/bracket-left.svg'
 	import { onMount } from 'svelte'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
+	import HowToPlay from '$lib/HowToPlay.svelte'
 	export let data
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -22,7 +23,8 @@
 	})
 </script>
 
-<header class="absolute right-0 flex justify-end gap-2 p-4">
+<header class="absolute top-0 right-0 flex justify-end items-center gap-4 p-4">
+	<HowToPlay />
 	{#if $isAuth}
 		<Logout />
 	{/if}
