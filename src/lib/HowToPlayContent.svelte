@@ -18,13 +18,13 @@
 		<header class="text-2xl font-bold">{$modalStore[0].title ?? '(title missing)'}</header>
 		<article>
 			<p class="mb-4">Welcome to Racquet Rivals! Follow these steps to join the fun.</p>
-			<ol class="list-decimal px-8 [&>li]:mb-4">
-				<li>
+			<ol class="list-decimal px-8">
+				<li class="mb-4">
 					Create an account. Choose a username, as well as an email address to receive
 					notifications.
 				</li>
-				<li>Select an active tournament and follow along.</li>
-				<li>
+				<li class="mb-4">Select an active tournament and follow along.</li>
+				<li class="mb-4">
 					Once all players reach the Round of 16, you'll be notified via email and have 12 hours to
 					create your bracket for the tournament. You may enter predictions before this point for
 					any available players.
