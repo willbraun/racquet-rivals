@@ -5,6 +5,8 @@
 
 	const modalStore = getModalStore()
 
+	const scoreFormatting = 'font-bold bg-green-300 rounded-full px-1.5 shadow'
+
 	let buttonRef: HTMLButtonElement
 	onMount(() => {
 		if (buttonRef) {
@@ -25,16 +27,16 @@
 				</li>
 				<li class="mb-4">Select an active tournament and follow along.</li>
 				<li class="mb-4">
-					Once all slots in the Round of 16 are filled, you'll be notified via email and have 12 hours to
-					create your bracket for the tournament. You may enter predictions before this point for
-					any available players.
+					When all slots in the Round of 16 have been filled, you'll be notified via email and have
+					12 hours to create your bracket. You may enter predictions before this point for any
+					available players.
 				</li>
 				<li>As matches are completed, you'll win points if your predictions are correct.</li>
 				<ul class="list-disc ml-8 mb-4">
-					<li>Quarterfinals: 1 point</li>
-					<li>Semifinals: 2 points</li>
-					<li>Final: 4 points</li>
-					<li>Champion: 8 points</li>
+					<li>Quarterfinals: <span class={scoreFormatting}>1</span></li>
+					<li>Semifinals: <span class={scoreFormatting}>2</span></li>
+					<li>Final: <span class={scoreFormatting}>4</span></li>
+					<li>Champion: <span class={scoreFormatting}>8</span></li>
 				</ul>
 				<li>Enter your friends' usernames in the Users menu to see how you stack up!</li>
 			</ol>
