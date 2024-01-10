@@ -28,7 +28,7 @@
 				<li class="mb-4">Select an active tournament and follow along.</li>
 				<li class="mb-4">
 					When all slots in the Round of 16 have been filled, you'll be notified via email and have
-					12 hours to create your bracket. You may enter predictions before this point for any
+					12 hours to create your bracket. You may choose your players before this point for any
 					available players.
 				</li>
 				<li>As matches are completed, you'll win points if your predictions are correct.</li>
@@ -38,7 +38,9 @@
 					<li>Final: <span class={scoreFormatting}>4</span></li>
 					<li>Champion: <span class={scoreFormatting}>8</span></li>
 				</ul>
-				<li>Enter your friends' usernames in the Users menu to see how you stack up!</li>
+				<li>
+					Enter your friends' usernames in the Users menu to see their picks and compare scores!
+				</li>
 			</ol>
 		</article>
 		<footer class="modal-footer {parent.regionFooter}">

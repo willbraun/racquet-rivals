@@ -23,7 +23,7 @@
 	})
 </script>
 
-<header class="absolute top-0 right-0 flex justify-end items-center gap-4 p-4">
+<header class="absolute top-0 right-0 flex justify-end items-center gap-2 p-4">
 	<HowToPlay />
 	{#if $isAuth}
 		<Logout />

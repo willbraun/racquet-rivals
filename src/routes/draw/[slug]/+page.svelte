@@ -201,7 +201,7 @@
 		{/each}
 	</select>
 	<div
-		class="w-fit ml-auto flex-none flex flex-col sm:flex-row sm:self-start justify-end items-center gap-2 sm:gap-4 flex-wrap"
+		class="w-fit ml-auto flex-none flex flex-col sm:flex-row sm:self-start justify-end items-center gap-2 flex-wrap"
 	>
 		<HowToPlay />
 		{#if $isAuth}
