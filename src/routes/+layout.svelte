@@ -19,20 +19,26 @@
 <slot />
 <footer class="bg-black text-stone-100 text-md px-16 py-8">
 	<div class="w-full text-center">
-		<p class="mb-4">
-			Racquet Rivals is in an early state, and I would love to hear your suggestions for future
-			development. Thanks!
-		</p>
-		<a
-			href="https://docs.google.com/forms/d/e/1FAIpQLSe7fc5Z2MNam-AHp-GOXya2cwcdnjVPHRo2lcUy4_YBNwFL9A/viewform"
-			target="_blank"
-			rel="noopener noreferrer"
-			class="block mb-8"
-		>
-			<button class="btn variant-filled bg-stone-100 text-gray-800 text-md hover:scale-105"
-				>Give feedback</button
+		<div class="flex flex-col items-center sm:flex-row sm:justify-evenly gap-8 mb-8">
+			<a
+				href="https://docs.google.com/forms/d/e/1FAIpQLSe7fc5Z2MNam-AHp-GOXya2cwcdnjVPHRo2lcUy4_YBNwFL9A/viewform"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="block"
 			>
-		</a>
+				<button
+					class="h-[50px] rounded-[10px] variant-filled bg-stone-100 text-gray-800 text-lg px-8 hover:scale-105 duration-100"
+					>Send feedback <span class="ml-2" /></button
+				>
+			</a>
+			<a href="https://www.buymeacoffee.com/willbraun"
+				><img
+					src="https://img.buymeacoffee.com/button-api/?text=Buy me a doughnut&emoji=🍩&slug=willbraun&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00"
+					alt="buy me a coffee link"
+					class="hover:scale-105 duration-100"
+				/></a
+			>
+		</div>
 		<hr class="mb-4 bg-stone-100" />
 		<p class="mb-4">
 			This site is not affiliated with the ATP, WTA, NCAA, any tournament or player. I'm just a big

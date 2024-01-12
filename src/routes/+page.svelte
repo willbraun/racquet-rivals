@@ -57,13 +57,13 @@
 					</div>
 					<a
 						href="/login"
-						class="block {pillStyle} shadow-xl font-semibold row-start-3 col-start-1 col-end-3 sm:col-end-2 bg-yellow-200 hover:scale-105 duration-200"
+						class="block {pillStyle} shadow-xl font-semibold row-start-3 col-start-1 col-end-3 sm:col-end-2 bg-yellow-200 hover:scale-105 duration-100"
 					>
 						<button type="button">Login</button>
 					</a>
 					<a
 						href="/create-account"
-						class="block {pillStyle} shadow-xl font-semibold row-start-4 col-start-1 sm:col-start-2 col-end-3 bg-purple-300 hover:scale-105 duration-200"
+						class="block {pillStyle} shadow-xl font-semibold row-start-4 col-start-1 sm:col-start-2 col-end-3 bg-purple-300 hover:scale-105 duration-100"
 					>
 						<button type="button">Sign up</button>
 					</a>
@@ -76,7 +76,7 @@
 				{#each data.active.items as draw}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class="{pillStyle} shadow-lg bg-green-300 p-4 mb-4 w-fit mx-auto hover:scale-105 duration-200"
+						class="{pillStyle} shadow-lg bg-green-300 p-4 mb-4 w-fit mx-auto hover:scale-105 duration-100"
 					>
 						<button type="button">
 							{getTitle(draw)}
@@ -91,7 +91,7 @@
 				{#each data.completed.items as draw}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class="{pillStyle} shadow-lg bg-red-300 p-4 mb-4 w-fit mx-auto hover:scale-105 duration-200"
+						class="{pillStyle} shadow-lg bg-red-300 p-4 mb-4 w-fit mx-auto hover:scale-105 duration-100"
 					>
 						<button type="button">
 							{getTitle(draw)}
