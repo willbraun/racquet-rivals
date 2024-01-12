@@ -91,7 +91,7 @@
 				{#each data.completed.items as draw}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class="{pillStyle} shadow-lg bg-red-300 p-4 mb-4 w-fit mx-auto hover:scale-105 duration-100"
+						class="{pillStyle} shadow-lg bg-slate-300 p-4 mb-4 w-fit mx-auto hover:scale-105 duration-100"
 					>
 						<button type="button">
 							{getTitle(draw)}
