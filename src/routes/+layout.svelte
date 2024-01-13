@@ -27,15 +27,14 @@
 				class="block"
 			>
 				<button
-					class="h-[50px] rounded-[10px] variant-filled bg-stone-100 text-gray-800 text-lg px-8 hover:scale-105 duration-100"
+					class="h-[50px] rounded-[10px] variant-filled bg-stone-100 text-gray-800 text-lg px-8"
 					>Send feedback <span class="ml-2" /></button
 				>
 			</a>
-			<a href="https://www.buymeacoffee.com/willbraun" target="_blank" rel="noopener noreferrer"
+			<a href="https://www.buymeacoffee.com/willbraun" target="_blank"
 				><img
 					src="https://img.buymeacoffee.com/button-api/?text=Buy me a doughnut&emoji=🍩&slug=willbraun&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00"
 					alt="buy me a coffee link"
-					class="hover:scale-105 duration-100"
 				/></a
 			>
 		</div>
