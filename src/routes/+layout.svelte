@@ -35,6 +35,7 @@
 				><img
 					src="https://img.buymeacoffee.com/button-api/?text=Buy me a doughnut&emoji=🍩&slug=willbraun&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00"
 					alt="buy me a coffee link"
+					style="height: 50px !important;width: 253px !important;"
 				/></a
 			>
 		</div>
