@@ -5,7 +5,6 @@
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
 	import { storePopup } from '@skeletonlabs/skeleton'
 	import HowToPlayContent from '$lib/HowToPlayContent.svelte'
-	import { browser } from '$app/environment'
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
 	const modalRegistry: Record<string, ModalComponent> = {
@@ -32,14 +31,12 @@
 					>Send feedback <span class="ml-2" /></button
 				>
 			</a>
-			{#if browser}
-				<a href="https://www.buymeacoffee.com/willbraun" target="_blank" class="block"
-					><img
-						src="https://img.buymeacoffee.com/button-api/?text=Buy me a doughnut&emoji=🍩&slug=willbraun&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00"
-						alt="buy me a coffee link"
-					/></a
-				>
-			{/if}
+			<a href="https://www.buymeacoffee.com/willbraun" target="_blank"
+				><img
+					src="https://img.buymeacoffee.com/button-api/?text=Buy me a doughnut&emoji=🍩&slug=willbraun&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00"
+					alt="buy me a coffee link"
+				/></a
+			>
 		</div>
 		<hr class="mb-4 bg-stone-100" />
 		<p class="mb-4">
