@@ -50,7 +50,7 @@ export const makeSetType = <T>() => {
 }
 
 export const getSlug = (draw: Draw): string => {
-	const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-')
+	const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-').replaceAll("'", '')
 	return `${slugify(draw.name)}-${slugify(draw.event)}-${draw.year}-${draw.id}`
 }
 
