@@ -28,8 +28,8 @@
 				<li class="mb-4">Select an active tournament and follow along.</li>
 				<li class="mb-4">
 					When all slots in the Round of 16 have been filled, you'll be notified via email and have
-					12 hours to create your bracket. You may choose your players before this point for any
-					available players.
+					12 hours to create your bracket for the entire rest of the tournament. You may choose your
+					players before this point for any available players.
 				</li>
 				<li>As matches are completed, you'll win points if your predictions are correct.</li>
 				<ul class="list-disc ml-8 mb-4">
