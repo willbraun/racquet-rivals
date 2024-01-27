@@ -5,7 +5,7 @@
 	export let getColor: (userId: string | undefined) => string
 
 	$: color = getColor(prediction.user_id)
-	$: display = prediction.name.split('.').at(-1)?.trim()
+	$: display = prediction.name.split(' ').at(-1)
 </script>
 
 <div
