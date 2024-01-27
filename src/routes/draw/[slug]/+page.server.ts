@@ -92,7 +92,9 @@ export const actions: Actions = {
 		const availableColors = selectColors.filter((color) => !usedColors.includes(color))
 
 		try {
-			const data = await locals.pb.collection('user').getFirstListItem(`username="${username}"`)
+			const data = await locals.pb
+				.collection('user')
+				.getFirstListItem(`username~"${username}"&&"${username}"~username`) // search for username, case insensitive
 			selectedUsers.push({
 				id: data.id,
 				username: data.username,
@@ -110,6 +112,7 @@ export const actions: Actions = {
 				error: ''
 			}
 		} catch (e) {
+			console.log(e)
 			const statusCode = (e as ClientResponseError).status
 			if (statusCode === 404) {
 				return fail(statusCode, {
