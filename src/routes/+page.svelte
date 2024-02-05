@@ -71,6 +71,11 @@
 			{/if}
 		</section>
 		<section class="mb-24">
+			<h3
+				class="text-2xl sm:text-4xl text-center rounded-xl p-4 text-white font-bold bg-orange-600 shadow-lg mb-8 mx-4"
+			>
+				Join us for the next major tournament - the French Open!<br /><br /> May 20, 2024 - June 9, 2024
+			</h3>
 			<h3 class="text-4xl sm:text-6xl text-center mb-8">Active Draws</h3>
 			{#if data.active.totalItems > 0}
 				{#each data.active.items as draw}
