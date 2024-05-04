@@ -4,6 +4,7 @@ import forms from '@tailwindcss/forms'
 import typography from '@tailwindcss/typography'
 import { skeleton } from '@skeletonlabs/tw-plugin'
 import { myCustomTheme } from './src/myCustomTheme.ts'
+import { mainColor, selectColors } from './src/lib/utils'
 
 export default {
 	darkMode: 'class',
@@ -11,6 +12,7 @@ export default {
 		'./src/**/*.{html,js,svelte,ts}',
 		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
+	safelist: [mainColor, ...selectColors],
 	theme: {
 		extend: {
 			borderWidth: {
