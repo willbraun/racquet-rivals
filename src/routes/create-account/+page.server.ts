@@ -46,7 +46,7 @@ export const actions = {
 					username: authResponse.record.username,
 					color: mainColor
 				}),
-				{ maxAge: 60 * 60 * 24 * 7 }
+				{ maxAge: 60 * 60 * 24 * 7, path: '/' }
 			)
 			return {
 				error: ''

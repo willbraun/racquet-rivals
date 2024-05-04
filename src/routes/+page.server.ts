@@ -20,7 +20,7 @@ export const actions: Actions = {
 	logout: async ({ cookies, locals }) => {
 		try {
 			locals.pb.authStore.clear()
-			cookies.delete('currentUser')
+			cookies.delete('currentUser', { path: '/' })
 			return {
 				error: ''
 			}

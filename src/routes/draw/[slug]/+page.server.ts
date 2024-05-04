@@ -100,9 +100,14 @@ export const actions: Actions = {
 				username: data.username,
 				color: availableColors[0]
 			})
-			cookies.set(`selectedUsers-${currentUser.id}`, JSON.stringify(selectedUsers), {
-				maxAge: 60 * 60 * 24 * 400
-			})
+			/* @migration task: add path argument */ cookies.set(
+				`selectedUsers-${currentUser.id}`,
+				JSON.stringify(selectedUsers),
+				{
+					maxAge: 60 * 60 * 24 * 400,
+					path: '/'
+				}
+			)
 			return {
 				user: {
 					id: data.id,
@@ -137,7 +142,8 @@ export const actions: Actions = {
 			const index = selectedUsers.map((user) => user.id).indexOf(userId)
 			selectedUsers.splice(index, 1)
 			cookies.set(`selectedUsers-${currentUser.id}`, JSON.stringify(selectedUsers), {
-				maxAge: 60 * 60 * 24 * 400
+				maxAge: 60 * 60 * 24 * 400,
+				path: '/'
 			})
 			return {
 				deletedId: userId,
