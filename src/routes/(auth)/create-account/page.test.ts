@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/vitest'
 import page from './+page.svelte'
 import userEvent from '@testing-library/user-event'
 
-describe('PasswordField component', () => {
+describe('Create account component', () => {
 	test('Renders', () => {
 		render(page)
 

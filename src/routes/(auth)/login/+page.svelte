@@ -64,6 +64,7 @@
 					class="input rounded-md"
 					type="text"
 					name="usernameOrEmail"
+					data-testid="UsernameOrEmailField"
 					bind:value={usernameOrEmail}
 				/>
 			</label>
