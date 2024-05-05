@@ -14,6 +14,7 @@
 			class="input rounded-md"
 			type={show ? 'text' : 'password'}
 			name="password"
+			data-testid="PasswordField"
 			on:input={(e) => (password = e.currentTarget.value)}
 		/>
 		<button

@@ -41,7 +41,13 @@
 		>
 			<label class="label mb-4">
 				<p>Username</p>
-				<input class="input rounded-md" type="text" name="username" bind:value={username} />
+				<input
+					class="input rounded-md"
+					type="text"
+					name="username"
+					data-testid="UsernameField"
+					bind:value={username}
+				/>
 			</label>
 			<EmailField bind:email bind:showValidation={showEmailValidation} />
 			<PasswordField bind:password />

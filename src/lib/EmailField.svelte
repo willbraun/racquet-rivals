@@ -23,6 +23,7 @@
 		class="input rounded-md"
 		type="text"
 		name="email"
+		data-testid="EmailField"
 		class:input-error={showValidation}
 		bind:value={email}
 		on:change={handleEmailValidation}
