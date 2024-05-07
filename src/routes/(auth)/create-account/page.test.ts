@@ -14,6 +14,7 @@ describe('Create account component', () => {
 	test('Renders, check if button is enabled', async () => {
 		render(page)
 
+		const user = userEvent.setup()
 		const username = screen.getByTestId('UsernameField')
 		const email = screen.getByTestId('EmailField')
 		const password = screen.getByTestId('PasswordField')
@@ -27,15 +28,15 @@ describe('Create account component', () => {
 		expect(button).toBeInTheDocument()
 
 		expect(button).toBeDisabled()
-		await userEvent.type(username, 'username')
+		await user.type(username, 'username')
 		expect(button).toBeDisabled()
-		await userEvent.type(email, 'test@email.com')
+		await user.type(email, 'test@email.com')
 		expect(button).toBeDisabled()
-		await userEvent.type(password, '7chars7')
+		await user.type(password, '7chars7')
 		expect(button).toBeDisabled()
-		await userEvent.type(password, 'moreThan8Chars')
+		await user.type(password, 'moreThan8Chars')
 		expect(button).toBeEnabled()
-		await userEvent.clear(username)
+		await user.clear(username)
 		expect(button).toBeDisabled()
 	})
 })

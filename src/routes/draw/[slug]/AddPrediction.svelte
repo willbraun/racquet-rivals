@@ -26,7 +26,9 @@
 	const displayPrediction = (str: string) => {
 		if (str) return str
 
-		if (roundIndex === 1) {
+		if (roundIndex < 1 || roundIndex > 4) {
+			return 'Invalid round index'
+		} else if (roundIndex === 1) {
 			return 'Awaiting previous round'
 		} else {
 			return 'Predict previous round'
@@ -62,7 +64,7 @@
 			/></svg
 		>
 	{:else}
-		<p class="italic">None</p>
+		<span class="italic">None</span>
 	{/if}
 </button>
 
@@ -110,7 +112,7 @@
 				type="submit"
 				class="hover:bg-surface-400 whitespace-nowrap px-4 py-2 border-b-1 border-surface-500 {!player1 &&
 					'pointer-events-none italic'}"
-				disabled={!player1 || loading}
+				disabled={!player1 || !predictionsAllowed || loading}
 				on:click={() => (predictionValue = player1)}
 			>
 				<span class="text-xl">
@@ -121,7 +123,7 @@
 				type="submit"
 				class="hover:bg-surface-400 whitespace-nowrap px-4 py-2 {!player2 &&
 					'pointer-events-none italic'}"
-				disabled={!player2 || loading}
+				disabled={!player2 || !predictionsAllowed || loading}
 				on:click={() => (predictionValue = player2)}
 			>
 				<span class="text-xl">
