@@ -8,6 +8,8 @@
 	import { fade } from 'svelte/transition'
 	export let parent: SvelteComponent
 
+	console.log(parent)
+
 	const modalStore = getModalStore()
 
 	let value = ''
