@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
 import '@testing-library/jest-dom/vitest'
-import page from './+page.svelte'
 import type { Draw, DrawPageData, PbListResponse, Prediction, SelectedUser, Slot } from '$lib/types'
 import slotData from '$lib/testing/data/slot_data.json'
+import DrawPageSetup from '$lib/testing/components/DrawPageSetup.svelte'
 
 const data = {
 	active: {
@@ -85,12 +85,9 @@ const data = {
 	pb_auth_cookie: 'dummy_cookie'
 } as DrawPageData
 
-describe('Login page component', () => {
+describe('Draw page component', () => {
 	test('Renders', () => {
-		render(page, { data })
-
-		// DrawPageWrapper, initializeStores() in script tag
-		// see if TestRootLayout is needed here
+		render(DrawPageSetup, { props: { data } })
 
 		expect(screen.getByText('Round of 16')).toBeInTheDocument()
 	})

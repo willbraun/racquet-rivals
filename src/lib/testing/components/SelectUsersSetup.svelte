@@ -1,9 +1,18 @@
 <script lang="ts">
-	import { getModalStore, initializeStores, type ModalSettings } from '@skeletonlabs/skeleton'
-	import TestRootLayout from './TestRootLayout.svelte'
+	import {
+		getModalStore,
+		initializeStores,
+		storePopup,
+		type ModalSettings
+	} from '@skeletonlabs/skeleton'
+	import TestModal from './TestModal.svelte'
 	import SelectUsers from '../../../routes/draw/[slug]/SelectUsers.svelte'
+	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
+
+	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
 	initializeStores()
+
 	const modalStore = getModalStore()
 
 	const modal: ModalSettings = {
@@ -33,6 +42,4 @@
 	modalStore.trigger(modal)
 </script>
 
-<TestRootLayout let:TestModal>
-	<SelectUsers parent={TestModal} />
-</TestRootLayout>
+<SelectUsers parent={TestModal} />
