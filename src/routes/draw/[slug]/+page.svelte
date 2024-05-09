@@ -15,8 +15,6 @@
 	import HowToPlay from '$lib/HowToPlay.svelte'
 	export let data: DrawPageData
 
-	console.log(data)
-
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 	const now = new Date()
 
