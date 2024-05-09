@@ -1,12 +1,15 @@
 import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
 import '@testing-library/jest-dom/vitest'
-import SelectUsers from './SelectUsers.svelte'
+import SelectUsersWrapper from '../../../testing/SelectUsersWrapper.svelte'
 
 describe('SelectUsers component', () => {
 	test('Renders', () => {
-		render(SelectUsers)
+		render(SelectUsersWrapper)
 
 		expect(screen.getByText('Select Users')).toBeInTheDocument()
+		expect(screen.getByText('will')).toBeInTheDocument()
+		expect(screen.getByText('john')).toBeInTheDocument()
+		expect(screen.getByText('sally')).toBeInTheDocument()
 	})
 })

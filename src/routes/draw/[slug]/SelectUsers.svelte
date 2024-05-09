@@ -6,9 +6,7 @@
 	import FormError from '../../../lib/FormError.svelte'
 	import { mainColor, makeSetType } from '../../../lib/utils'
 	import { fade } from 'svelte/transition'
-	export let parent: SvelteComponent
-
-	console.log(parent)
+	export let parent
 
 	const modalStore = getModalStore()
 
@@ -17,7 +15,7 @@
 	let deselectLoading = false
 	let error = ''
 	let deletedUserId = ''
-	let users: SelectedUser[] = $modalStore[0].meta.selectedUsers
+	let users: SelectedUser[] = $modalStore[0]?.meta?.selectedUsers
 
 	let inputRef: HTMLInputElement
 	const refocus = () => {
