@@ -11,7 +11,7 @@ export interface Draw {
 	collectionName: 'draw'
 	created: string
 	end_date: string
-	event: 'Mens Singles' | 'Womens Singles'
+	event: "Men's Singles" | "Women's Singles"
 	id: string
 	name: string
 	prediction_close: string
@@ -107,4 +107,16 @@ declare global {
 	interface SvelteFetch {
 		(url: string, init?: RequestInit): Promise<Response>
 	}
+}
+
+export interface DrawPageData {
+	active: PbListResponse<Draw>
+	completed: PbListResponse<Draw>
+	draw: Draw
+	slots: PbListResponse<Slot>
+	predictions: PbListResponse<Prediction>
+	currentUser: SelectedUser
+	selectedUsers: SelectedUser[]
+	pb_auth_valid: boolean
+	pb_auth_cookie: string
 }

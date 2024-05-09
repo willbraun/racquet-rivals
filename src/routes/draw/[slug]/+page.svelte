@@ -6,14 +6,16 @@
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
 	import { isAuth, predictionStore } from '$lib/store'
-	import type { Prediction, Slot } from '$lib/types'
+	import type { DrawPageData, Prediction, Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
 	import { fade } from 'svelte/transition'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import HowToPlay from '$lib/HowToPlay.svelte'
-	export let data
+	export let data: DrawPageData
+
+	console.log(data)
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 	const now = new Date()

@@ -1,11 +1,7 @@
-<!-- used for testing SelectUsers only -->
 <script lang="ts">
 	import { getModalStore, initializeStores, type ModalSettings } from '@skeletonlabs/skeleton'
-	import SelectUsers from '../routes/draw/[slug]/SelectUsers.svelte'
-	import TestModal from './TestModal.svelte'
-	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
-	import { storePopup } from '@skeletonlabs/skeleton'
-	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
+	import TestRootLayout from './TestRootLayout.svelte'
+	import SelectUsers from '../../../routes/draw/[slug]/SelectUsers.svelte'
 
 	initializeStores()
 	const modalStore = getModalStore()
@@ -37,4 +33,6 @@
 	modalStore.trigger(modal)
 </script>
 
-<SelectUsers parent={TestModal} />
+<TestRootLayout let:TestModal>
+	<SelectUsers parent={TestModal} />
+</TestRootLayout>

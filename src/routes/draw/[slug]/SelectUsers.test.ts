@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
 import '@testing-library/jest-dom/vitest'
-import SelectUsersWrapper from '../../../testing/SelectUsersWrapper.svelte'
+import SelectUsersWrapper from '$lib/testing/components/SelectUsersWrapper.svelte'
 
 describe('SelectUsers component', () => {
 	test('Renders', () => {

@@ -3,6 +3,7 @@ import { errorMessage, fetchDraws, selectColors } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
 	Draw,
+	DrawPageData,
 	PbListResponse,
 	Prediction,
 	PredictionRecord,
@@ -56,7 +57,7 @@ export async function load({ fetch, params, cookies, locals }) {
 		selectedUsers: selectedUsers,
 		pb_auth_valid: locals.pb.authStore.isValid as boolean,
 		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string
-	}
+	} as DrawPageData
 }
 
 export const actions: Actions = {
