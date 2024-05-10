@@ -26,8 +26,8 @@ Feel free to create an account and play along! You can view other players' predi
   - Hosted on Digital Ocean Droplet VM running Linux Ubuntu
   - Extended with additional logic in this [repo](https://github.com/willbraun/tennis-bracket-pb-extend)
 - Web Scraper
-  - Run by cron job on Digital Ocean Droplet to gather tournament results ([repo](https://github.com/willbraun/tennis-bracket-scripts))
+  - Run by cron job on Digital Ocean Droplet to gather tournament results, in this [repo](https://github.com/willbraun/tennis-bracket-scripts)
 
 # Technologies Used (this repo)
 
-Sveltekit, Skeleton UI, TypeScript, TailwindCSS, Netlify
+Sveltekit, Skeleton UI, TypeScript, TailwindCSS, Vitest, Svelte Testing Library, Netlify
