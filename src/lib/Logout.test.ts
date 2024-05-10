@@ -8,7 +8,7 @@ describe('Logout component', () => {
 		render(Logout)
 
 		const button = screen.getByRole('button')
-		const text = screen.queryByText(/Logout/iu)
+		const text = screen.queryByText(/Logout/u)
 
 		expect(button).toBeInTheDocument()
 		expect(text).toBeInTheDocument()

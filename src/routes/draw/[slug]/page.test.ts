@@ -89,7 +89,11 @@ describe('Draw page component', () => {
 	test('Renders', () => {
 		render(DrawPageSetup, { props: { data } })
 
-		expect(screen.getByText('Round of 16')).toBeInTheDocument()
+		expect(screen.getByText('Active Round:')).toHaveTextContent('Active Round: Qualifying Rounds')
+		expect(screen.getByText('Predictions open until:')).toHaveTextContent(
+			'Predictions open until: 12h after R16 is full'
+		)
+		expect(screen.queryByText('Predictions closed:')).not.toBeInTheDocument()
 		expect(screen.getByText('Users:')).toBeInTheDocument()
 		expect(screen.queryByText('Log in to play!')).not.toBeInTheDocument()
 		expect(screen.getByTestId('slot_R8_P1')).toHaveTextContent('TBD')
@@ -107,7 +111,6 @@ describe('Draw page component', () => {
 
 		expect(screen.queryByText('Users:')).not.toBeInTheDocument()
 		expect(screen.getByText('Log in to play!')).toBeInTheDocument()
-		expect(screen.getByTestId('slot_R8_P1')).toHaveTextContent('TBD')
 	})
 
 	test('Name and seed render in slot', () => {
@@ -136,25 +139,84 @@ describe('Draw page component', () => {
 
 	test('Correct slots render, 128 draw', () => {
 		render(DrawPageSetup, { props: { data } })
-		// for draw size 128
-		// round 4, positions 1-16
-		// round 5, positions 1-8
-		// round 6, positions 1-4
-		// round 7, positions 1-2
-		// round 8, position 1
 
-		const totalRounds = Math.log2(data.draw.size) + 1
-		for (let i = 1; i <= totalRounds; i++) {
-			const currentRound = i
-			const positions = 2 ** (totalRounds - currentRound)
+		const totalRounds = 8
+		for (let round = 1; round <= totalRounds; round++) {
+			const positions = 2 ** (totalRounds - round)
 			for (let position = 1; position <= positions; position++) {
-				const testId = `slot_R${currentRound}_P${position}`
-				if (currentRound >= totalRounds - 4) {
+				const testId = `slot_R${round}_P${position}`
+				if (round >= 4) {
 					expect(screen.getByTestId(testId)).toBeInTheDocument()
 				} else {
 					expect(screen.queryByTestId(testId)).not.toBeInTheDocument()
 				}
 			}
 		}
+	})
+
+	const testActiveRound = (activeRound: number, expectedTextContent: string) => {
+		const newSlots = slotData.items.map((slot) => {
+			return slot.round <= activeRound ? { ...slot, name: 'Some Player' } : slot
+		}) as Slot[]
+
+		render(DrawPageSetup, {
+			props: {
+				data: {
+					...data,
+					slots: {
+						...slotData,
+						items: newSlots
+					}
+				}
+			}
+		})
+
+		expect(screen.getByText('Active Round:')).toHaveTextContent(expectedTextContent)
+	}
+
+	test('Active Round: 1st Round', () => {
+		testActiveRound(1, 'Active Round: 1st Round (R128)')
+	})
+	test('Active Round: 2nd Round', () => {
+		testActiveRound(2, 'Active Round: 2nd Round (R64)')
+	})
+	test('Active Round: 3rd Round', () => {
+		testActiveRound(3, 'Active Round: 3rd Round (R32)')
+	})
+	test('Active Round: Round of 16', () => {
+		testActiveRound(4, 'Active Round: Round of 16')
+	})
+	test('Active Round: Quarterfinals', () => {
+		testActiveRound(5, 'Active Round: Quarterfinals')
+	})
+	test('Active Round: Semifinals', () => {
+		testActiveRound(6, 'Active Round: Semifinals')
+	})
+	test('Active Round: Final', () => {
+		testActiveRound(7, 'Active Round: Final')
+	})
+	test('Active Round: Tournament Completed', () => {
+		testActiveRound(8, 'Active Round: Tournament Completed')
+	})
+
+	test('Predictions closed', () => {
+		render(DrawPageSetup, {
+			props: {
+				data: {
+					...data,
+					draw: {
+						...data.draw,
+						prediction_close: '2024-01-28 05:32:34.187Z' // UTC
+					}
+				}
+			}
+		})
+
+		screen.debug()
+
+		expect(screen.getByText('Predictions closed:')).toHaveTextContent(
+			'Predictions closed: 1/28/2024 12:32am' // America/New_York
+		)
+		expect(screen.queryByText('Predictions open until:')).not.toBeInTheDocument()
 	})
 })
