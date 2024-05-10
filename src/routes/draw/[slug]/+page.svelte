@@ -298,9 +298,16 @@
 					style:height={getHeight(index, slot.position)}
 				>
 					{#if slot.name.trim()}
-						<p class="text-lg">{`${slot.seed} ${slot.name}`}</p>
+						<p class="text-lg" data-testid={`slot_R${slot.round}_P${slot.position}`}>
+							{`${slot.seed} ${slot.name}`}
+						</p>
 					{:else}
-						<p class="text-lg italic text-surface-800">TBD</p>
+						<p
+							class="text-lg italic text-surface-800"
+							data-testid={`slot_R${slot.round}_P${slot.position}`}
+						>
+							TBD
+						</p>
 					{/if}
 					{#if $isAuth && index > 0}
 						{@const slotPredictions = $predictionStore

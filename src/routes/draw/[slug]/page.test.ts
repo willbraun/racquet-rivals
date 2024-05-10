@@ -90,5 +90,71 @@ describe('Draw page component', () => {
 		render(DrawPageSetup, { props: { data } })
 
 		expect(screen.getByText('Round of 16')).toBeInTheDocument()
+		expect(screen.getByText('Users:')).toBeInTheDocument()
+		expect(screen.queryByText('Log in to play!')).not.toBeInTheDocument()
+		expect(screen.getByTestId('slot_R8_P1')).toHaveTextContent('TBD')
+	})
+
+	test('Logged out', () => {
+		render(DrawPageSetup, {
+			props: {
+				data: {
+					...data,
+					pb_auth_valid: false
+				}
+			}
+		})
+
+		expect(screen.queryByText('Users:')).not.toBeInTheDocument()
+		expect(screen.getByText('Log in to play!')).toBeInTheDocument()
+		expect(screen.getByTestId('slot_R8_P1')).toHaveTextContent('TBD')
+	})
+
+	test('Name and seed render in slot', () => {
+		const slot = slotData.items.at(-1) as Slot
+		const newSlot = {
+			...slot,
+			name: 'Roger Federer',
+			seed: '(1)'
+		} as Slot
+		const newSlots = slotData.items.toSpliced(-1, 1, newSlot) as Slot[]
+
+		render(DrawPageSetup, {
+			props: {
+				data: {
+					...data,
+					slots: {
+						...slotData,
+						items: newSlots
+					}
+				}
+			}
+		})
+
+		expect(screen.getByTestId('slot_R8_P1')).toHaveTextContent('(1) Roger Federer')
+	})
+
+	test('Correct slots render, 128 draw', () => {
+		render(DrawPageSetup, { props: { data } })
+		// for draw size 128
+		// round 4, positions 1-16
+		// round 5, positions 1-8
+		// round 6, positions 1-4
+		// round 7, positions 1-2
+		// round 8, position 1
+
+		const totalRounds = Math.log2(data.draw.size) + 1
+		for (let i = 1; i <= totalRounds; i++) {
+			const currentRound = i
+			const positions = 2 ** (totalRounds - currentRound)
+			for (let position = 1; position <= positions; position++) {
+				const testId = `slot_R${currentRound}_P${position}`
+				if (currentRound >= totalRounds - 4) {
+					expect(screen.getByTestId(testId)).toBeInTheDocument()
+				} else {
+					expect(screen.queryByTestId(testId)).not.toBeInTheDocument()
+				}
+			}
+		}
 	})
 })
