@@ -2,8 +2,7 @@ import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import EmailField from './EmailField.svelte'
-
-const baseClasses = 'text-red-500 text-xs my-0'
+import userEvent from '@testing-library/user-event'
 
 describe('EmailField component', () => {
 	test('Renders', () => {
@@ -12,23 +11,25 @@ describe('EmailField component', () => {
 		expect(screen.getByText('Email')).toBeInTheDocument()
 	})
 
-	test('Renders with valid email, error does not show', () => {
-		render(EmailField, { email: 'test@example.com', showValidation: false })
+	test('Valid email, error does not show', async () => {
+		render(EmailField)
 
-		expect(screen.getByText('Email')).toBeInTheDocument()
-		expect(screen.getByDisplayValue('test@example.com')).toBeInTheDocument()
-		expect(screen.getByText('Please enter an email address with a valid format')).toHaveClass(
-			`${baseClasses} invisible`
-		)
+		const email = screen.getByTestId('EmailField')
+		const user = userEvent.setup()
+
+		await user.type(email, 'test@example.com')
+		await user.tab()
+		expect(screen.getByTestId('EmailFieldError')).toHaveClass('invisible')
 	})
 
-	test('Renders with invalid email, error shows', () => {
-		render(EmailField, { email: 'test', showValidation: false })
+	test('Invalid email, error shows', async () => {
+		render(EmailField)
 
-		expect(screen.getByText('Email')).toBeInTheDocument()
-		expect(screen.getByDisplayValue('test')).toBeInTheDocument()
-		expect(screen.getByText('Please enter an email address with a valid format')).toHaveClass(
-			`${baseClasses}`
-		)
+		const email = screen.getByTestId('EmailField')
+		const user = userEvent.setup()
+
+		await user.type(email, 'test')
+		await user.tab()
+		expect(screen.getByTestId('EmailFieldError')).not.toHaveClass('invisible')
 	})
 })

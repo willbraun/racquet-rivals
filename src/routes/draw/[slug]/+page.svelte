@@ -235,11 +235,13 @@
 			{#each users as user}
 				<div
 					class="relative chip h-6 rounded-full pointer-events-none text-black {user.color} shadow"
+					data-testid={`User_${user.username}`}
 					transition:fade={{ duration: 100 }}
 				>
 					<p>{user.username}</p>
 					<div
 						class="absolute badge-icon -top-1.5 -right-1.5 rounded-full h-4 w-fit px-1 text-sm bg-green-400 z-10"
+						data-testid={`UserPoints_${user.username}`}
 					>
 						<p>
 							{$predictionStore
@@ -298,13 +300,13 @@
 					style:height={getHeight(index, slot.position)}
 				>
 					{#if slot.name.trim()}
-						<p class="text-lg" data-testid={`slot_R${slot.round}_P${slot.position}`}>
+						<p class="text-lg" data-testid={`SlotR${slot.round}P${slot.position}`}>
 							{`${slot.seed} ${slot.name}`}
 						</p>
 					{:else}
 						<p
 							class="text-lg italic text-surface-800"
-							data-testid={`slot_R${slot.round}_P${slot.position}`}
+							data-testid={`SlotR${slot.round}P${slot.position}`}
 						>
 							TBD
 						</p>

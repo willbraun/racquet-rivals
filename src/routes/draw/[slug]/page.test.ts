@@ -96,7 +96,7 @@ describe('Draw page component', () => {
 		expect(screen.queryByText('Predictions closed:')).not.toBeInTheDocument()
 		expect(screen.getByText('Users:')).toBeInTheDocument()
 		expect(screen.queryByText('Log in to play!')).not.toBeInTheDocument()
-		expect(screen.getByTestId('slot_R8_P1')).toHaveTextContent('TBD')
+		expect(screen.getByTestId('SlotR8P1')).toHaveTextContent('TBD')
 	})
 
 	test('Logged out', () => {
@@ -134,7 +134,7 @@ describe('Draw page component', () => {
 			}
 		})
 
-		expect(screen.getByTestId('slot_R8_P1')).toHaveTextContent('(1) Roger Federer')
+		expect(screen.getByTestId('SlotR8P1')).toHaveTextContent('(1) Roger Federer')
 	})
 
 	test('Correct slots render, 128 draw', () => {
@@ -144,7 +144,7 @@ describe('Draw page component', () => {
 		for (let round = 1; round <= totalRounds; round++) {
 			const positions = 2 ** (totalRounds - round)
 			for (let position = 1; position <= positions; position++) {
-				const testId = `slot_R${round}_P${position}`
+				const testId = `SlotR${round}P${position}`
 				if (round >= 4) {
 					expect(screen.getByTestId(testId)).toBeInTheDocument()
 				} else {
@@ -212,11 +212,75 @@ describe('Draw page component', () => {
 			}
 		})
 
-		screen.debug()
-
 		expect(screen.getByText('Predictions closed:')).toHaveTextContent(
 			'Predictions closed: 1/28/2024 12:32am' // America/New_York
 		)
 		expect(screen.queryByText('Predictions open until:')).not.toBeInTheDocument()
+	})
+
+	test('Points tallied correctly', () => {
+		const newPredictions = {
+			items: [
+				{
+					collectionId: 'collectionId',
+					collectionName: 'view_predictions',
+					draw_id: 'drawId',
+					draw_slot_id: 'drawSlotId',
+					round: 7,
+					position: 1,
+					seed: '(1)',
+					id: 'predictionId',
+					name: 'Roger Federer',
+					points: 4,
+					user_id: 'userId',
+					username: 'will'
+				},
+				{
+					collectionId: 'collectionId',
+					collectionName: 'view_predictions',
+					draw_id: 'drawId',
+					draw_slot_id: 'drawSlotId',
+					round: 7,
+					position: 2,
+					seed: '(2)',
+					id: 'predictionId',
+					name: 'Rafael Nadal',
+					points: 4,
+					user_id: 'userId',
+					username: 'will'
+				},
+				{
+					collectionId: 'collectionId',
+					collectionName: 'view_predictions',
+					draw_id: 'drawId',
+					draw_slot_id: 'drawSlotId',
+					round: 8,
+					position: 1,
+					seed: '(1)',
+					id: 'predictionId',
+					name: 'Roger Federer',
+					points: 8,
+					user_id: 'userId',
+					username: 'will'
+				}
+			],
+			page: 1,
+			perPage: 300,
+			totalItems: 3,
+			totalPages: 1
+		} as PbListResponse<Prediction>
+
+		render(DrawPageSetup, {
+			props: {
+				data: {
+					...data,
+					predictions: newPredictions
+				}
+			}
+		})
+
+		expect(screen.getByTestId('User_will')).toHaveTextContent('will')
+		expect(screen.getByTestId('User_will')).toHaveClass('bg-blue-300')
+		expect(screen.getByTestId('UserPoints_will')).toHaveTextContent('16')
 	})
 })
