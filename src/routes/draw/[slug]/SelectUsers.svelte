@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { SvelteComponent } from 'svelte'
 	import { getModalStore } from '@skeletonlabs/skeleton'
 	import type { DeselectUserResult, SelectUserResult, SelectedUser } from '../../../lib/types'
 	import { applyAction, enhance } from '$app/forms'

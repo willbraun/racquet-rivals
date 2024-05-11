@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { onMount, type SvelteComponent } from 'svelte'
+	import { onMount } from 'svelte'
 	import { getModalStore } from '@skeletonlabs/skeleton'
-	export let parent: SvelteComponent
+	export let parent
 
 	const modalStore = getModalStore()
 

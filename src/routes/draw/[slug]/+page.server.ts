@@ -118,7 +118,6 @@ export const actions: Actions = {
 				error: ''
 			}
 		} catch (e) {
-			console.log(e)
 			const statusCode = (e as ClientResponseError).status
 			if (statusCode === 404) {
 				return fail(statusCode, {

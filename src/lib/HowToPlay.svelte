@@ -2,8 +2,7 @@
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 
 	const modalStore = getModalStore()
-	let modal: ModalSettings
-	modal = {
+	const modal: ModalSettings = {
 		type: 'component',
 		component: 'howToPlayContent',
 		title: 'How to Play',

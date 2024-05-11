@@ -109,6 +109,14 @@ declare global {
 	}
 }
 
+export interface HomePageData {
+	active: PbListResponse<Draw>
+	completed: PbListResponse<Draw>
+	pb_auth_valid: boolean
+	pb_auth_cookie: string
+	pb_auth_username: string
+}
+
 export interface DrawPageData {
 	active: PbListResponse<Draw>
 	completed: PbListResponse<Draw>

@@ -1,4 +1,5 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
+import type { HomePageData } from '$lib/types.js'
 import { errorMessage, fetchDraws } from '$lib/utils'
 import { fail, type Actions } from '@sveltejs/kit'
 import type { ClientResponseError } from 'pocketbase'
@@ -13,7 +14,7 @@ export async function load({ fetch, locals }) {
 		pb_auth_valid: locals.pb.authStore.isValid as boolean,
 		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string,
 		pb_auth_username: (locals.pb.authStore.model?.username ?? '') as string
-	}
+	} as HomePageData
 }
 
 export const actions: Actions = {

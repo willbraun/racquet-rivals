@@ -5,7 +5,7 @@ import type { Draw, DrawPageData, PbListResponse, Prediction, SelectedUser, Slot
 import slotData from '$lib/testing/data/slot_data.json'
 import DrawPageSetup from '$lib/testing/components/DrawPageSetup.svelte'
 
-const data = {
+const data: DrawPageData = {
 	active: {
 		items: [
 			{
@@ -83,7 +83,7 @@ const data = {
 	selectedUsers: [] as SelectedUser[],
 	pb_auth_valid: true,
 	pb_auth_cookie: 'dummy_cookie'
-} as DrawPageData
+}
 
 describe('Draw page component', () => {
 	test('Renders', () => {
@@ -120,7 +120,7 @@ describe('Draw page component', () => {
 			name: 'Roger Federer',
 			seed: '(1)'
 		} as Slot
-		const newSlots = slotData.items.toSpliced(-1, 1, newSlot) as Slot[]
+		const newSlots = slotData.items.with(-1, newSlot) as Slot[]
 
 		render(DrawPageSetup, {
 			props: {
