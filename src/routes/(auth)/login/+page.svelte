@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
 	import PasswordField from '$lib/PasswordField.svelte'
-	import { localStorageStore } from '@skeletonlabs/skeleton'
-	import { get, type Writable } from 'svelte/store'
+	import { persisted } from 'svelte-persisted-store'
+	import { get } from 'svelte/store'
 	import FormError from '$lib/FormError.svelte'
 	import { makeSetType } from '$lib/utils'
 	import { enhance } from '$app/forms'
@@ -16,12 +16,7 @@
 
 	const setType = makeSetType<AuthResult>()
 
-	type RememberLogin = {
-		rememberMe: boolean
-		usernameOrEmail: string
-	}
-
-	const rememberLogin: Writable<RememberLogin> = localStorageStore('rememberLogin', {
+	const rememberLogin = persisted('rememberLogin', {
 		rememberMe: false,
 		usernameOrEmail: ''
 	})
