@@ -104,7 +104,8 @@ export const actions: Actions = {
 			cookies.set(`selectedUsers-${currentUser.id}`, JSON.stringify(selectedUsers), {
 				maxAge: 60 * 60 * 24 * 400,
 				path: '/',
-				httpOnly: false
+				httpOnly: false,
+				sameSite: 'none'
 			})
 			return {
 				user: {
@@ -141,7 +142,8 @@ export const actions: Actions = {
 			cookies.set(`selectedUsers-${currentUser.id}`, JSON.stringify(selectedUsers), {
 				maxAge: 60 * 60 * 24 * 400,
 				path: '/',
-				httpOnly: false
+				httpOnly: false,
+				sameSite: 'none'
 			})
 			return {
 				deletedId: userId,
