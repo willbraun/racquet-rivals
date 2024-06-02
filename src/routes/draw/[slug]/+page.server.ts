@@ -103,7 +103,8 @@ export const actions: Actions = {
 			})
 			cookies.set(`selectedUsers-${currentUser.id}`, JSON.stringify(selectedUsers), {
 				maxAge: 60 * 60 * 24 * 400,
-				path: '/'
+				path: '/',
+				httpOnly: false
 			})
 			return {
 				user: {
@@ -139,7 +140,8 @@ export const actions: Actions = {
 			selectedUsers.splice(index, 1)
 			cookies.set(`selectedUsers-${currentUser.id}`, JSON.stringify(selectedUsers), {
 				maxAge: 60 * 60 * 24 * 400,
-				path: '/'
+				path: '/',
+				httpOnly: false
 			})
 			return {
 				deletedId: userId,
