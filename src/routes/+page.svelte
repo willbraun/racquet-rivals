@@ -72,11 +72,12 @@
 			{/if}
 		</section>
 		<section class="mb-24">
+			<!-- Wimbledon: bg-gradient-to-r from-green-600 to-purple-600 -->
 			<div
-				class="mx-4 mb-12 flex flex-col gap-8 rounded-xl bg-gradient-to-r from-green-600 to-purple-600 p-4 text-center text-2xl font-bold text-white shadow-lg sm:text-4xl"
+				class="mx-4 mb-12 flex flex-col gap-8 rounded-xl bg-gradient-to-r from-blue-700 to-yellow-300 p-4 text-center text-2xl font-bold text-white shadow-lg sm:text-4xl"
 			>
-				<p>Wimbledon</p>
-				<p>July 1, 2024 - July 14, 2024</p>
+				<p>US Open</p>
+				<p>Aug 26, 2024 - Sep 8, 2024</p>
 			</div>
 			<h3 class="mb-8 text-center text-4xl sm:text-6xl">Active Draws</h3>
 			{#if data.active.totalItems > 0}
