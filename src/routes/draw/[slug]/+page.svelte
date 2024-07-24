@@ -5,7 +5,7 @@
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
-	import { isAuth, predictionStore } from '$lib/store'
+	import { isAuth, predictionStore, selectedUsers2 } from '$lib/store'
 	import type { DrawPageData, Prediction, Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
@@ -13,6 +13,7 @@
 	import { fade } from 'svelte/transition'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import HowToPlay from '$lib/HowToPlay.svelte'
+	import { get } from 'svelte/store'
 	export let data: DrawPageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -49,7 +50,8 @@
 	}
 
 	$: predictionStore.set(data.predictions.items)
-	$: users = [data.currentUser, ...data.selectedUsers].filter(Boolean)
+	// $: users = [data.currentUser, ...data.selectedUsers].filter(Boolean)
+	$: users = [data.currentUser, ...$selectedUsers2]
 	$: userIds = users.map((user) => user.id)
 	$: roundLabel = (() => {
 		const filledRounds = allRounds.filter((round) => {
@@ -168,15 +170,15 @@
 			backdropClasses: 'bg-surface-500',
 			meta: {
 				currentUserId: data.currentUser.id,
-				currentUsername: data.currentUser.username,
-				selectedUsers: data.selectedUsers
+				currentUsername: data.currentUser.username
+				// selectedUsers: data.selectedUsers
 			}
 		}
 	}
 </script>
 
-<header class="flex items-center p-4 gap-2 {headerColor}">
-	<a class="hover:bg-primary-200 p-2 rounded" href="/">
+<header class="flex items-center gap-2 p-4 {headerColor}">
+	<a class="rounded p-2 hover:bg-primary-200" href="/">
 		<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 576 512"
 			><!--! Home Icon - Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
 			<path
@@ -185,7 +187,7 @@
 		</svg>
 	</a>
 	<select
-		class="select flex-grow bg-transparent text-lg md:text-3xl font-bold border-none cursor-pointer whitespace-pre-wrap hover:bg-primary-200"
+		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent text-lg font-bold hover:bg-primary-200 md:text-3xl"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
@@ -202,19 +204,19 @@
 		{/each}
 	</select>
 	<div
-		class="w-fit ml-auto flex-none flex flex-col sm:flex-row sm:self-start justify-end items-center gap-2 flex-wrap"
+		class="ml-auto flex w-fit flex-none flex-col flex-wrap items-center justify-end gap-2 sm:flex-row sm:self-start"
 	>
 		<HowToPlay />
 		{#if $isAuth}
 			<Logout />
 		{:else}
 			<a href="/login">
-				<button type="button" class="btn btn-sm md:btn-md bg-black text-white rounded-lg"
+				<button type="button" class="btn btn-sm rounded-lg bg-black text-white md:btn-md"
 					>Login</button
 				>
 			</a>
 			<a href="/create-account">
-				<button type="button" class="btn btn-sm md:btn-md bg-black text-white rounded-lg"
+				<button type="button" class="btn btn-sm rounded-lg bg-black text-white md:btn-md"
 					>Sign up</button
 				>
 			</a>
@@ -222,26 +224,26 @@
 	</div>
 </header>
 <section class="grid grid-cols-3 gap-2 p-4 {headerColor} [&>*]:text-lg">
-	<div class="col-span-3 sm:col-span-1 text-center text-black">
+	<div class="col-span-3 text-center text-black sm:col-span-1">
 		Active Round: <span class="font-bold">{roundLabel}</span>
 	</div>
-	<div class="col-span-3 sm:col-span-1 text-center text-black">
+	<div class="col-span-3 text-center text-black sm:col-span-1">
 		{predictionsAllowed ? 'Predictions open until: ' : 'Predictions closed: '}<span
 			class="font-bold">{predictionClose}</span
 		>
 	</div>
 	{#if $isAuth}
-		<div class="col-span-3 sm:col-span-1 flex flex-wrap gap-2 justify-center">
+		<div class="col-span-3 flex flex-wrap justify-center gap-2 sm:col-span-1">
 			<p>Users:</p>
 			{#each users as user}
 				<div
-					class="relative chip h-6 rounded-full pointer-events-none text-black {user.color} shadow"
+					class="chip pointer-events-none relative h-6 rounded-full text-black {user.color} shadow"
 					data-testid={`User_${user.username}`}
 					transition:fade={{ duration: 100 }}
 				>
 					<p>{user.username}</p>
 					<div
-						class="absolute badge-icon -top-1.5 -right-1.5 rounded-full h-4 w-fit px-1 text-sm bg-green-400 z-10"
+						class="badge-icon absolute -right-1.5 -top-1.5 z-10 h-4 w-fit rounded-full bg-green-400 px-1 text-sm"
 						data-testid={`UserPoints_${user.username}`}
 					>
 						<p>
@@ -254,11 +256,11 @@
 				</div>
 			{/each}
 			<button
-				class="chip h-6 border border-black border-dashed rounded-full flex justify-center hover:bg-primary-100"
+				class="chip flex h-6 justify-center rounded-full border border-dashed border-black hover:bg-primary-100"
 				on:click={() => modalStore.trigger(modal)}
 			>
 				<svg
-					class="fill-black ml-0.5 mb-0.5"
+					class="mb-0.5 ml-0.5 fill-black"
 					xmlns="http://www.w3.org/2000/svg"
 					height="1rem"
 					viewBox="0 0 512 512"
@@ -271,26 +273,26 @@
 			</button>
 		</div>
 	{:else}
-		<p class="italic text-center col-span-3 sm:col-span-1">Log in to play!</p>
+		<p class="col-span-3 text-center italic sm:col-span-1">Log in to play!</p>
 	{/if}
 </section>
 <section
-	class="sticky top-0 z-20 overflow-x-hidden {headerColor} shadow [&>*]:text-lg font-semibold tracking-wide"
+	class="sticky top-0 z-20 overflow-x-hidden {headerColor} font-semibold tracking-wide shadow [&>*]:text-lg"
 	bind:this={roundHeader}
 >
 	<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
 		{#each Object.entries(pointsByRound) as [round, points]}
-			<div class="bg-primary-300 text-center py-2 flex justify-center gap-2">
+			<div class="flex justify-center gap-2 bg-primary-300 py-2 text-center">
 				<p>{round}</p>
 				{#if points > 0}
-					<div class="bg-green-400 rounded-full aspect-square h-full shadow">{points}</div>
+					<div class="aspect-square h-full rounded-full bg-green-400 shadow">{points}</div>
 				{/if}
 			</div>
 		{/each}
 	</div>
 </section>
 <main
-	class="relative grid overflow-x-auto overscroll-x-none pb-12 bg-stone-100"
+	class="relative grid overflow-x-auto overscroll-x-none bg-stone-100 pb-12"
 	style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
 	bind:this={drawGrid}
 >
@@ -298,7 +300,7 @@
 		<div class="column">
 			{#each slots.filter((slot) => slot.round === round) as slot}
 				<div
-					class="relative flex justify-center items-end text-center border-b-2 border-black"
+					class="relative flex items-end justify-center border-b-2 border-black text-center"
 					class:border-r-2={!(slot.position % 2)}
 					style:height={getHeight(index, slot.position)}
 				>
@@ -326,7 +328,7 @@
 						)}
 						{@const players = getPlayerOptions(slot, $predictionStore, index)}
 						<div
-							class="absolute bottom-0 translate-y-full h-20 w-full p-1.5 flex flex-wrap justify-center content-start gap-2 z-10"
+							class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
 						>
 							<AddPrediction
 								{slot}

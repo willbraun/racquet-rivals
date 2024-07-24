@@ -61,13 +61,13 @@ export async function load({ fetch, params, cookies, locals }) {
 }
 
 export const actions: Actions = {
-	selectUser: async ({ request, cookies, locals }) => {
+	selectUser: async ({ request, locals }) => {
 		const form = await request.formData()
 		const username = (form.get('username') ?? '') as string
-		const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
-		const selectedUsers: SelectedUser[] = JSON.parse(
-			cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
-		)
+		// const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
+		// const selectedUsers: SelectedUser[] = JSON.parse(
+		// 	cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
+		// )
 
 		if (username === '') {
 			return fail(400, {
@@ -75,43 +75,43 @@ export const actions: Actions = {
 			})
 		}
 
-		const allUsernames = [currentUser.username, ...selectedUsers.map((user) => user.username)]
+		// const allUsernames = [currentUser.username, ...selectedUsers.map((user) => user.username)]
 
-		if (allUsernames.length >= 6) {
-			return fail(400, {
-				error: 'Exceeds max of 6 total'
-			})
-		}
+		// if (allUsernames.length >= 6) {
+		// 	return fail(400, {
+		// 		error: 'Exceeds max of 6 total'
+		// 	})
+		// }
 
-		if (allUsernames.includes(username)) {
-			return fail(400, {
-				error: `User "${username}" is already selected`
-			})
-		}
+		// if (allUsernames.includes(username)) {
+		// 	return fail(400, {
+		// 		error: `User "${username}" is already selected`
+		// 	})
+		// }
 
-		const usedColors = selectedUsers.map((user) => user.color)
-		const availableColors = selectColors.filter((color) => !usedColors.includes(color))
+		// const usedColors = selectedUsers.map((user) => user.color)
+		// const availableColors = selectColors.filter((color) => !usedColors.includes(color))
 
 		try {
 			const data = await locals.pb
 				.collection('user')
 				.getFirstListItem(`username~"${username}"&&"${username}"~username`) // search for username, case insensitive
-			selectedUsers.push({
-				id: data.id,
-				username: data.username,
-				color: availableColors[0]
-			})
-			cookies.set(`selectedUsers-${currentUser.id}`, JSON.stringify(selectedUsers), {
-				maxAge: 60 * 60 * 24 * 400,
-				path: '/',
-				httpOnly: false,
-				sameSite: 'none'
-			})
+			// selectedUsers.push({
+			// 	id: data.id,
+			// 	username: data.username,
+			// 	color: availableColors[0]
+			// })
+			// cookies.set(`selectedUsers-${currentUser.id}`, JSON.stringify(selectedUsers), {
+			// 	maxAge: 60 * 60 * 24 * 400,
+			// 	path: '/',
+			// 	httpOnly: false,
+			// 	sameSite: 'none'
+			// })
 			return {
 				user: {
 					id: data.id,
 					username: data.username,
-					color: availableColors[0]
+					color: ''
 				} as SelectedUser,
 				error: ''
 			}
@@ -128,34 +128,34 @@ export const actions: Actions = {
 		}
 	},
 
-	deselectUser: async ({ request, cookies }) => {
-		const form = await request.formData()
-		const userId = (form.get('userId') ?? '') as string
-		const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
-		const selectedUsers: SelectedUser[] = JSON.parse(
-			cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
-		)
+	// deselectUser: async ({ request, cookies }) => {
+	// 	const form = await request.formData()
+	// 	const userId = (form.get('userId') ?? '') as string
+	// 	// const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
+	// 	// const selectedUsers: SelectedUser[] = JSON.parse(
+	// 	// 	cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
+	// 	// )
 
-		try {
-			const index = selectedUsers.map((user) => user.id).indexOf(userId)
-			selectedUsers.splice(index, 1)
-			cookies.set(`selectedUsers-${currentUser.id}`, JSON.stringify(selectedUsers), {
-				maxAge: 60 * 60 * 24 * 400,
-				path: '/',
-				httpOnly: false,
-				sameSite: 'none'
-			})
-			return {
-				deletedId: userId,
-				error: ''
-			}
-		} catch (e) {
-			const statusCode = (e as ClientResponseError).status
-			return fail(statusCode, {
-				error: errorMessage(e)
-			})
-		}
-	},
+	// 	try {
+	// 		// const index = selectedUsers.map((user) => user.id).indexOf(userId)
+	// 		// selectedUsers.splice(index, 1)
+	// 		// cookies.set(`selectedUsers-${currentUser.id}`, JSON.stringify(selectedUsers), {
+	// 		// 	maxAge: 60 * 60 * 24 * 400,
+	// 		// 	path: '/',
+	// 		// 	httpOnly: false,
+	// 		// 	sameSite: 'none'
+	// 		// })
+	// 		return {
+	// 			deletedId: userId,
+	// 			error: ''
+	// 		}
+	// 	} catch (e) {
+	// 		const statusCode = (e as ClientResponseError).status
+	// 		return fail(statusCode, {
+	// 			error: errorMessage(e)
+	// 		})
+	// 	}
+	// },
 
 	addPrediction: async ({ request, locals }) => {
 		const form = await request.formData()

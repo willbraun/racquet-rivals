@@ -5,6 +5,8 @@
 	import FormError from '../../../lib/FormError.svelte'
 	import { mainColor, makeSetType } from '../../../lib/utils'
 	import { fade } from 'svelte/transition'
+	import { selectedUsers2 } from '$lib/store'
+	import { get } from 'svelte/store'
 	export let parent
 
 	const modalStore = getModalStore()
@@ -14,7 +16,7 @@
 	let deselectLoading = false
 	let error = ''
 	let deletedUserId = ''
-	let users: SelectedUser[] = $modalStore[0]?.meta?.selectedUsers
+	// let users: SelectedUser[] = $modalStore[0]?.meta?.selectedUsers
 
 	let inputRef: HTMLInputElement
 	const refocus = () => {
@@ -45,7 +47,9 @@
 					await update()
 					const typedResult = setTypeSelect(result)
 					if (result.status === 200) {
-						users = [...users, typedResult.data.user]
+						// users = [...users, typedResult.data.user]
+						const users = get(selectedUsers2)
+						selectedUsers2.set([...users, typedResult.data.user])
 						error = ''
 					} else {
 						error = typedResult.data.error
@@ -65,7 +69,7 @@
 						bind:value
 						bind:this={inputRef}
 					/>
-					<button class="btn btn-md variant-filled-primary rounded-md" disabled={selectLoading}
+					<button class="variant-filled-primary btn btn-md rounded-md" disabled={selectLoading}
 						>Add</button
 					>
 				</div>
@@ -83,8 +87,10 @@
 						await applyAction(result)
 						await update()
 						const typedResult = setTypeDeselect(result)
+						const users = get(selectedUsers2)
 						const index = users.map((user) => user.id).indexOf(typedResult.data.deletedId)
-						users = users.toSpliced(index, 1)
+						// users = users.toSpliced(index, 1)
+						selectedUsers2.set(users.toSpliced(index, 1))
 					}
 					deselectLoading = false
 					refocus()
@@ -93,16 +99,16 @@
 		>
 			{#if $modalStore[0].meta.currentUsername}
 				<div
-					class="chip variant-filled rounded-full pointer-events-none text-black {mainColor} shadow"
+					class="variant-filled chip pointer-events-none rounded-full text-black {mainColor} shadow"
 				>
 					<p>{$modalStore[0].meta.currentUsername}</p>
 				</div>
 			{/if}
 			<input type="hidden" name="userId" bind:value={deletedUserId} />
-			{#each users as user}
+			{#each $selectedUsers2 as user}
 				<button
 					type="submit"
-					class="chip variant-filled rounded-full text-black {user.color} shadow"
+					class="variant-filled chip rounded-full text-black {user.color} shadow"
 					disabled={deletedUserId === user.id && deselectLoading}
 					on:click={() => (deletedUserId = user.id)}
 					transition:fade={{ duration: 100 }}
@@ -118,7 +124,7 @@
 			{/each}
 		</form>
 		<footer class="modal-footer {parent.regionFooter}">
-			<button class="btn rounded-md variant-glass-primary" on:click={parent.onClose}>Close</button>
+			<button class="variant-glass-primary btn rounded-md" on:click={parent.onClose}>Close</button>
 		</footer>
 	</div>
 {/if}
