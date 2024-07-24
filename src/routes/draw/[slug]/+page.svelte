@@ -10,7 +10,7 @@
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
-	import { fade } from 'svelte/transition'
+	import { fade, slide } from 'svelte/transition'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import HowToPlay from '$lib/HowToPlay.svelte'
 	import { get } from 'svelte/store'
@@ -237,9 +237,8 @@
 			<p>Users:</p>
 			{#each users as user}
 				<div
-					class="chip pointer-events-none relative h-6 rounded-full text-black {user.color} shadow"
+					class="chip pointer-events-none relative h-6 rounded-full text-black {user.color} shadow duration-0"
 					data-testid={`User_${user.username}`}
-					transition:fade={{ duration: 100 }}
 				>
 					<p>{user.username}</p>
 					<div

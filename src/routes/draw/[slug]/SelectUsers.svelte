@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { getModalStore } from '@skeletonlabs/skeleton'
-	import type { DeselectUserResult, SelectUserResult, SelectedUser } from '../../../lib/types'
+	import type { DeselectUserResult, SelectUserResult, SelectedUser } from '$lib/types'
 	import { applyAction, enhance } from '$app/forms'
-	import FormError from '../../../lib/FormError.svelte'
-	import { mainColor, makeSetType } from '../../../lib/utils'
+	import FormError from '$lib/FormError.svelte'
+	import { mainColor, makeSetType, selectColors } from '$lib/utils'
 	import { fade } from 'svelte/transition'
 	import { selectedUsers2 } from '$lib/store'
 	import { get } from 'svelte/store'
@@ -23,6 +23,10 @@
 		const index = users.map((user) => user.id).indexOf(userId)
 		if (index === -1) return
 		selectedUsers2.set(users.toSpliced(index, 1))
+	}
+
+	const getNextColor = (users: SelectedUser[]) => {
+		return selectColors.filter((color) => !users.some((user) => user.color === color))[0]
 	}
 
 	let inputRef: HTMLInputElement
@@ -55,7 +59,11 @@
 					const typedResult = setTypeSelect(result)
 					if (result.status === 200) {
 						const users = get(selectedUsers2)
-						selectedUsers2.set([...users, typedResult.data.user])
+						const newUser = {
+							...typedResult.data.user,
+							color: getNextColor(users)
+						}
+						selectedUsers2.set([...users, newUser])
 						error = ''
 					} else {
 						error = typedResult.data.error
