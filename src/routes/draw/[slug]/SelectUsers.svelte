@@ -13,10 +13,17 @@
 
 	let value = ''
 	let selectLoading = false
-	let deselectLoading = false
+	// let deselectLoading = false
 	let error = ''
-	let deletedUserId = ''
+	// let deletedUserId = ''
 	// let users: SelectedUser[] = $modalStore[0]?.meta?.selectedUsers
+
+	const deselect = (userId: string) => {
+		const users = get(selectedUsers2)
+		const index = users.map((user) => user.id).indexOf(userId)
+		if (index === -1) return
+		selectedUsers2.set(users.toSpliced(index, 1))
+	}
 
 	let inputRef: HTMLInputElement
 	const refocus = () => {
@@ -47,7 +54,6 @@
 					await update()
 					const typedResult = setTypeSelect(result)
 					if (result.status === 200) {
-						// users = [...users, typedResult.data.user]
 						const users = get(selectedUsers2)
 						selectedUsers2.set([...users, typedResult.data.user])
 						error = ''
@@ -76,6 +82,32 @@
 			</label>
 			<FormError bind:error />
 		</form>
+
+		<div class="flex flex-wrap gap-2">
+			<div
+				class="variant-filled chip pointer-events-none rounded-full text-black {mainColor} shadow"
+			>
+				<p>{$modalStore[0].meta.currentUsername}</p>
+			</div>
+			{#each $selectedUsers2 as user}
+				<button
+					type="button"
+					class="variant-filled chip rounded-full text-black {user.color} shadow"
+					on:click={() => deselect(user.id)}
+					transition:fade={{ duration: 100 }}
+				>
+					<p>{user.username}</p>
+					<svg xmlns="http://www.w3.org/2000/svg" height="1rem" viewBox="0 0 384 512">
+						<!--! X icon - Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+						<path
+							d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+						/>
+					</svg>
+				</button>
+			{/each}
+		</div>
+
+		<!-- 
 		<form
 			class="flex flex-wrap gap-2"
 			method="POST"
@@ -114,15 +146,15 @@
 					transition:fade={{ duration: 100 }}
 				>
 					<p>{user.username}</p>
-					<svg xmlns="http://www.w3.org/2000/svg" height="1rem" viewBox="0 0 384 512">
-						<!--! X icon - Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-						<path
+					<svg xmlns="http://www.w3.org/2000/svg" height="1rem" viewBox="0 0 384 512"> -->
+		<!--! X icon - Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+		<!-- <path
 							d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
 						/>
 					</svg>
 				</button>
 			{/each}
-		</form>
+		</form> -->
 		<footer class="modal-footer {parent.regionFooter}">
 			<button class="variant-glass-primary btn rounded-md" on:click={parent.onClose}>Close</button>
 		</footer>
