@@ -8,5 +8,8 @@ export default defineConfig({
 	test: {
 		environment: 'jsdom',
 		setupFiles: ['./vitest-setup.js']
+	},
+	server: {
+		host: '0.0.0.0'
 	}
 })
