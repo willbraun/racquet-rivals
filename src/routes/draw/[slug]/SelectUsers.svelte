@@ -17,6 +17,7 @@
 	let error = ''
 	// let deletedUserId = ''
 	// let users: SelectedUser[] = $modalStore[0]?.meta?.selectedUsers
+	let currentUsername = $modalStore[0]?.meta?.currentUsername
 
 	const deselect = (userId: string) => {
 		const users = get(selectedUsers2)
@@ -53,12 +54,34 @@
 			action="?/selectUser"
 			use:enhance={() => {
 				selectLoading = true
-				return async ({ result, update }) => {
+				return async ({ formData, result, update }) => {
+					const username = (formData.get('username') ?? '').toString().trim()
+					if (username === '') {
+						error = 'Please enter a username'
+						selectLoading = false
+						refocus()
+						return
+					}
+					if ($selectedUsers2.length >= 5) {
+						error = 'You can only select up to 5 users'
+						selectLoading = false
+						refocus()
+						return
+					}
+
+					const users = get(selectedUsers2)
+					const takenNames = [currentUsername, ...users.map((user) => user.username)]
+					if (takenNames.some((name) => name === username)) {
+						error = `User "${username}" is already selected`
+						selectLoading = false
+						refocus()
+						return
+					}
+
 					await applyAction(result)
 					await update()
 					const typedResult = setTypeSelect(result)
 					if (result.status === 200) {
-						const users = get(selectedUsers2)
 						const newUser = {
 							...typedResult.data.user,
 							color: getNextColor(users)

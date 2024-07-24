@@ -233,7 +233,7 @@
 		>
 	</div>
 	{#if $isAuth}
-		<div class="col-span-3 flex flex-wrap justify-center gap-2 sm:col-span-1">
+		<div class="col-span-3 flex flex-wrap justify-center gap-2 duration-500 sm:col-span-1">
 			<p>Users:</p>
 			{#each users as user}
 				<div
