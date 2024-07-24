@@ -1,11 +1,11 @@
 import { fail, type Actions } from '@sveltejs/kit'
-import { errorMessage, fetchDraws, selectColors } from '$lib/utils'
+import { errorMessage, fetchDraws } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
 	Draw,
 	DrawPageData,
 	PbListResponse,
-	Prediction,
+	// Prediction,
 	PredictionRecord,
 	SelectedUser,
 	Slot
@@ -34,16 +34,16 @@ export async function load({ fetch, params, cookies, locals }) {
 	)
 	const slotData: PbListResponse<Slot> = await slotRes.json()
 
-	const allUserIds = [currentUser.id, ...selectedUsers.map((user) => user.id)]
-	const userFilter = allUserIds.map((id) => `user_id="${id}"`).join('||')
-	const filter = `(draw_id="${id}" && (${userFilter}))`
-	const encoded = encodeURIComponent(filter)
+	// const allUserIds = [currentUser.id, ...selectedUsers.map((user) => user.id)]
+	// const userFilter = allUserIds.map((id) => `user_id="${id}"`).join('||')
+	// const filter = `(draw_id="${id}" && (${userFilter}))`
+	// const encoded = encodeURIComponent(filter)
 
-	const predictionRes = await fetch(
-		`${url}/api/collections/view_predictions/records?perPage=300&filter=${encoded}`,
-		options
-	)
-	const predictionData: PbListResponse<Prediction> = await predictionRes.json()
+	// const predictionRes = await fetch(
+	// 	`${url}/api/collections/view_predictions/records?perPage=300&filter=${encoded}`,
+	// 	options
+	// )
+	// const predictionData: PbListResponse<Prediction> = await predictionRes.json()
 
 	const [activeData, completedData] = await fetchDraws(fetch, url, locals.pb.authStore.token)
 
@@ -52,7 +52,7 @@ export async function load({ fetch, params, cookies, locals }) {
 		completed: completedData,
 		draw: drawData,
 		slots: slotData,
-		predictions: predictionData,
+		// predictions: predictionData,
 		currentUser: currentUser,
 		selectedUsers: selectedUsers,
 		pb_auth_valid: locals.pb.authStore.isValid as boolean,

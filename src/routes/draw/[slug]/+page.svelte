@@ -14,6 +14,8 @@
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import HowToPlay from '$lib/HowToPlay.svelte'
 	import { get } from 'svelte/store'
+	import { updatePredictions } from '$lib/api'
+	import { browser } from '$app/environment'
 	export let data: DrawPageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -49,9 +51,10 @@
 		predictionsAllowed = true
 	}
 
-	$: predictionStore.set(data.predictions.items)
+	// $: predictionStore.set(data.predictions.items)
 	// $: users = [data.currentUser, ...data.selectedUsers].filter(Boolean)
 	$: users = [data.currentUser, ...$selectedUsers2]
+	$: if (browser) updatePredictions(pb, data.draw.id, users)
 	$: userIds = users.map((user) => user.id)
 	$: roundLabel = (() => {
 		const filledRounds = allRounds.filter((round) => {
@@ -233,7 +236,7 @@
 		>
 	</div>
 	{#if $isAuth}
-		<div class="col-span-3 flex flex-wrap justify-center gap-2 duration-500 sm:col-span-1">
+		<div class="col-span-3 flex flex-wrap justify-center gap-2 sm:col-span-1 md:justify-start">
 			<p>Users:</p>
 			{#each users as user}
 				<div

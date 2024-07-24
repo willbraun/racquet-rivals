@@ -122,7 +122,7 @@ export interface DrawPageData {
 	completed: PbListResponse<Draw>
 	draw: Draw
 	slots: PbListResponse<Slot>
-	predictions: PbListResponse<Prediction>
+	// predictions: PbListResponse<Prediction>
 	currentUser: SelectedUser
 	selectedUsers: SelectedUser[]
 	pb_auth_valid: boolean

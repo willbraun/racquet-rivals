@@ -36,7 +36,7 @@
 	}
 
 	const setTypeSelect = makeSetType<SelectUserResult>()
-	const setTypeDeselect = makeSetType<DeselectUserResult>()
+	// const setTypeDeselect = makeSetType<DeselectUserResult>()
 
 	// Base Classes
 	const cBase = 'card p-4 w-modal shadow-xl space-y-4 bg-white'
