@@ -8,9 +8,6 @@ export async function handle({ event, resolve }) {
 	// load the store data from the request cookie string
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '')
 
-	console.log('here')
-	console.log(event)
-
 	try {
 		// get an up-to-date auth store state by verifying and refreshing the loaded auth model (if any)
 		event.locals.pb.authStore.isValid && (await event.locals.pb.collection('user').authRefresh())
@@ -20,7 +17,6 @@ export async function handle({ event, resolve }) {
 	}
 
 	const response = await resolve(event)
-	console.log(event.locals.pb.authStore.isValid)
 
 	// send back the default 'pb_auth' cookie to the client with the latest store state
 	response.headers.append(
