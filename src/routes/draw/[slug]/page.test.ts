@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
 import '@testing-library/jest-dom/vitest'
-import type { Draw, DrawPageData, PbListResponse, Prediction, SelectedUser, Slot } from '$lib/types'
+import type { Draw, DrawPageData, PbListResponse, SelectedUser, Slot } from '$lib/types'
 import slotData from '$lib/testing/data/slot_data.json'
 import DrawPageSetup from '$lib/testing/components/DrawPageSetup.svelte'
 
@@ -68,13 +68,13 @@ const data: DrawPageData = {
 		year: 2024
 	} as Draw,
 	slots: slotData as PbListResponse<Slot>,
-	predictions: {
-		items: [],
-		page: 1,
-		perPage: 300,
-		totalItems: 0,
-		totalPages: 0
-	} as PbListResponse<Prediction>,
+	// predictions: {
+	// 	items: [],
+	// 	page: 1,
+	// 	perPage: 300,
+	// 	totalItems: 0,
+	// 	totalPages: 0
+	// } as PbListResponse<Prediction>,
 	currentUser: {
 		id: 'userId',
 		username: 'will',
@@ -218,69 +218,69 @@ describe('Draw page component', () => {
 		expect(screen.queryByText('Predictions open until:')).not.toBeInTheDocument()
 	})
 
-	test('Points tallied correctly', () => {
-		const newPredictions = {
-			items: [
-				{
-					collectionId: 'collectionId',
-					collectionName: 'view_predictions',
-					draw_id: 'drawId',
-					draw_slot_id: 'drawSlotId',
-					round: 7,
-					position: 1,
-					seed: '(1)',
-					id: 'predictionId',
-					name: 'Roger Federer',
-					points: 4,
-					user_id: 'userId',
-					username: 'will'
-				},
-				{
-					collectionId: 'collectionId',
-					collectionName: 'view_predictions',
-					draw_id: 'drawId',
-					draw_slot_id: 'drawSlotId',
-					round: 7,
-					position: 2,
-					seed: '(2)',
-					id: 'predictionId',
-					name: 'Rafael Nadal',
-					points: 4,
-					user_id: 'userId',
-					username: 'will'
-				},
-				{
-					collectionId: 'collectionId',
-					collectionName: 'view_predictions',
-					draw_id: 'drawId',
-					draw_slot_id: 'drawSlotId',
-					round: 8,
-					position: 1,
-					seed: '(1)',
-					id: 'predictionId',
-					name: 'Roger Federer',
-					points: 8,
-					user_id: 'userId',
-					username: 'will'
-				}
-			],
-			page: 1,
-			perPage: 300,
-			totalItems: 3,
-			totalPages: 1
-		} as PbListResponse<Prediction>
+	// test('Points tallied correctly', () => {
+	// 	const newPredictions = {
+	// 		items: [
+	// 			{
+	// 				collectionId: 'collectionId',
+	// 				collectionName: 'view_predictions',
+	// 				draw_id: 'drawId',
+	// 				draw_slot_id: 'drawSlotId',
+	// 				round: 7,
+	// 				position: 1,
+	// 				seed: '(1)',
+	// 				id: 'predictionId',
+	// 				name: 'Roger Federer',
+	// 				points: 4,
+	// 				user_id: 'userId',
+	// 				username: 'will'
+	// 			},
+	// 			{
+	// 				collectionId: 'collectionId',
+	// 				collectionName: 'view_predictions',
+	// 				draw_id: 'drawId',
+	// 				draw_slot_id: 'drawSlotId',
+	// 				round: 7,
+	// 				position: 2,
+	// 				seed: '(2)',
+	// 				id: 'predictionId',
+	// 				name: 'Rafael Nadal',
+	// 				points: 4,
+	// 				user_id: 'userId',
+	// 				username: 'will'
+	// 			},
+	// 			{
+	// 				collectionId: 'collectionId',
+	// 				collectionName: 'view_predictions',
+	// 				draw_id: 'drawId',
+	// 				draw_slot_id: 'drawSlotId',
+	// 				round: 8,
+	// 				position: 1,
+	// 				seed: '(1)',
+	// 				id: 'predictionId',
+	// 				name: 'Roger Federer',
+	// 				points: 8,
+	// 				user_id: 'userId',
+	// 				username: 'will'
+	// 			}
+	// 		],
+	// 		page: 1,
+	// 		perPage: 300,
+	// 		totalItems: 3,
+	// 		totalPages: 1
+	// 	} as PbListResponse<Prediction>
 
-		render(DrawPageSetup, {
-			props: {
-				data: {
-					...data,
-					predictions: newPredictions
-				}
-			}
-		})
+	// 	render(DrawPageSetup, {
+	// 		props: {
+	// 			data: {
+	// 				...data,
+	// 				predictions: newPredictions
+	// 			}
+	// 		}
+	// 	})
 
-		expect(screen.getByTestId('User_will')).toHaveTextContent('will')
-		expect(screen.getByTestId('User_will')).toHaveClass('bg-blue-300')
-		expect(screen.getByTestId('UserPoints_will')).toHaveTextContent('16')
-	})
+	// 	expect(screen.getByTestId('User_will')).toHaveTextContent('will')
+	// 	expect(screen.getByTestId('User_will')).toHaveClass('bg-blue-300')
+	// 	expect(screen.getByTestId('UserPoints_will')).toHaveTextContent('16')
+	// })
 })

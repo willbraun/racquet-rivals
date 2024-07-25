@@ -57,7 +57,9 @@
 		data.currentUser,
 		...$selectedUsers2.filter((user) => user.selectorId === data.currentUser.id)
 	]
-	$: if (browser) updatePredictions(pb, data.draw.id, users)
+	$: if (browser) {
+		updatePredictions(pb, data.draw.id, users)
+	}
 	$: userIds = users.map((user) => user.id)
 	$: roundLabel = (() => {
 		const filledRounds = allRounds.filter((round) => {

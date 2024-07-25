@@ -1,5 +1,5 @@
 import { fail, type Actions } from '@sveltejs/kit'
-import { errorMessage, fetchDraws } from '$lib/utils'
+import { errorMessage, fetchDraws, mainColor } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
 	Draw,
@@ -12,10 +12,21 @@ import type {
 } from '$lib/types'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 
-export async function load({ fetch, params, cookies, locals }) {
+const getCurrentUser = (locals: App.Locals): SelectedUser => {
+	return {
+		selectorId: locals.pb.authStore.model?.id ?? '',
+		id: locals.pb.authStore.model?.id ?? '',
+		username: locals.pb.authStore.model?.username ?? '',
+		color: mainColor
+	}
+}
+
+export async function load({ fetch, params, locals }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const url = PUBLIC_POCKETBASE_URL
-	const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
+	const currentUser = getCurrentUser(locals)
+	// const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
+	// const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
 	// const selectedUsers: SelectedUser[] = JSON.parse(
 	// 	cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
 	// )
@@ -61,10 +72,10 @@ export async function load({ fetch, params, cookies, locals }) {
 }
 
 export const actions: Actions = {
-	selectUser: async ({ request, cookies, locals }) => {
+	selectUser: async ({ request, locals }) => {
 		const form = await request.formData()
 		const username = (form.get('username') ?? '') as string
-		const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
+		const currentUser = getCurrentUser(locals)
 		// const selectedUsers: SelectedUser[] = JSON.parse(
 		// 	cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
 		// )

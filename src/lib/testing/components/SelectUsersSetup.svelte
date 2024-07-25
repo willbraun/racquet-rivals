@@ -21,21 +21,7 @@
 		backdropClasses: 'bg-surface-500',
 		meta: {
 			currentUserId: 'userId',
-			currentUsername: 'will',
-			selectedUsers: [
-				{
-					selectorId: 'userId1',
-					id: 'userId2',
-					username: 'john',
-					color: 'bg-red-300'
-				},
-				{
-					selectorId: 'userId1',
-					id: 'userId3',
-					username: 'sally',
-					color: 'bg-yellow-300'
-				}
-			]
+			currentUsername: 'will'
 		}
 	}
 

@@ -1,10 +1,10 @@
 import { fail } from '@sveltejs/kit'
-import { errorMessage, mainColor } from '$lib/utils'
+import { errorMessage } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
-import type { SelectedUser } from '$lib/types.js'
+// import type { SelectedUser } from '$lib/types.js'
 
 export const actions = {
-	default: async ({ request, cookies, locals }) => {
+	default: async ({ request, locals }) => {
 		const form = await request.formData()
 		const username = (form.get('username') ?? '') as string
 		const email = (form.get('email') ?? '') as string
@@ -39,17 +39,18 @@ export const actions = {
 
 		try {
 			await locals.pb.collection('user').create(data)
-			const authResponse = await locals.pb.collection('user').authWithPassword(email, password)
-			cookies.set(
-				'currentUser',
-				JSON.stringify({
-					selectorId: authResponse.record.id,
-					id: authResponse.record.id,
-					username: authResponse.record.username,
-					color: mainColor
-				} as SelectedUser),
-				{ maxAge: 60 * 60 * 24 * 7, path: '/' }
-			)
+			// const authResponse =
+			await locals.pb.collection('user').authWithPassword(email, password)
+			// cookies.set(
+			// 	'currentUser',
+			// 	JSON.stringify({
+			// 		selectorId: authResponse.record.id,
+			// 		id: authResponse.record.id,
+			// 		username: authResponse.record.username,
+			// 		color: mainColor
+			// 	} as SelectedUser),
+			// 	{ maxAge: 60 * 60 * 24 * 7, path: '/' }
+			// )
 			return {
 				error: ''
 			}

@@ -18,10 +18,10 @@ export async function load({ fetch, locals }) {
 }
 
 export const actions: Actions = {
-	logout: async ({ cookies, locals }) => {
+	logout: async ({ locals }) => {
 		try {
 			locals.pb.authStore.clear()
-			cookies.delete('currentUser', { path: '/' })
+			// cookies.delete('currentUser', { path: '/' })
 			return {
 				error: ''
 			}

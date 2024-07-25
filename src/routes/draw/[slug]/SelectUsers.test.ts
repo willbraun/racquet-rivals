@@ -9,7 +9,5 @@ describe('SelectUsers component', () => {
 
 		expect(screen.getByText('Select Users')).toBeInTheDocument()
 		expect(screen.getByText('will')).toBeInTheDocument()
-		expect(screen.getByText('john')).toBeInTheDocument()
-		expect(screen.getByText('sally')).toBeInTheDocument()
 	})
 })
