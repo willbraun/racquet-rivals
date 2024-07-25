@@ -1,9 +1,10 @@
 import { render, screen } from '@testing-library/svelte'
-import { describe, expect, test } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import '@testing-library/jest-dom/vitest'
-import type { Draw, DrawPageData, PbListResponse, SelectedUser, Slot } from '$lib/types'
+import type { Draw, DrawPageData, PbListResponse, Prediction, SelectedUser, Slot } from '$lib/types'
 import slotData from '$lib/testing/data/slot_data.json'
 import DrawPageSetup from '$lib/testing/components/DrawPageSetup.svelte'
+import { predictionStore, selectedUsers2 } from '$lib/store'
 
 const data: DrawPageData = {
 	active: {
@@ -86,6 +87,19 @@ const data: DrawPageData = {
 }
 
 describe('Draw page component', () => {
+	const initialSelections: SelectedUser[] = []
+	const initialPredictions: Prediction[] = []
+
+	beforeEach(() => {
+		selectedUsers2.set(initialSelections)
+		predictionStore.set(initialPredictions)
+	})
+
+	afterEach(() => {
+		selectedUsers2.set(initialSelections)
+		predictionStore.set(initialPredictions)
+	})
+
 	test('Renders', () => {
 		render(DrawPageSetup, { props: { data } })
 
@@ -218,69 +232,88 @@ describe('Draw page component', () => {
 		expect(screen.queryByText('Predictions open until:')).not.toBeInTheDocument()
 	})
 
-	// test('Points tallied correctly', () => {
-	// 	const newPredictions = {
-	// 		items: [
-	// 			{
-	// 				collectionId: 'collectionId',
-	// 				collectionName: 'view_predictions',
-	// 				draw_id: 'drawId',
-	// 				draw_slot_id: 'drawSlotId',
-	// 				round: 7,
-	// 				position: 1,
-	// 				seed: '(1)',
-	// 				id: 'predictionId',
-	// 				name: 'Roger Federer',
-	// 				points: 4,
-	// 				user_id: 'userId',
-	// 				username: 'will'
-	// 			},
-	// 			{
-	// 				collectionId: 'collectionId',
-	// 				collectionName: 'view_predictions',
-	// 				draw_id: 'drawId',
-	// 				draw_slot_id: 'drawSlotId',
-	// 				round: 7,
-	// 				position: 2,
-	// 				seed: '(2)',
-	// 				id: 'predictionId',
-	// 				name: 'Rafael Nadal',
-	// 				points: 4,
-	// 				user_id: 'userId',
-	// 				username: 'will'
-	// 			},
-	// 			{
-	// 				collectionId: 'collectionId',
-	// 				collectionName: 'view_predictions',
-	// 				draw_id: 'drawId',
-	// 				draw_slot_id: 'drawSlotId',
-	// 				round: 8,
-	// 				position: 1,
-	// 				seed: '(1)',
-	// 				id: 'predictionId',
-	// 				name: 'Roger Federer',
-	// 				points: 8,
-	// 				user_id: 'userId',
-	// 				username: 'will'
-	// 			}
-	// 		],
-	// 		page: 1,
-	// 		perPage: 300,
-	// 		totalItems: 3,
-	// 		totalPages: 1
-	// 	} as PbListResponse<Prediction>
+	test('Selected users appear', () => {
+		const selectedUsers: SelectedUser[] = [
+			{
+				selectorId: 'userId',
+				id: 'userId1',
+				username: 'john',
+				color: 'bg-red-300'
+			},
+			{
+				selectorId: 'userId',
+				id: 'userId2',
+				username: 'steve',
+				color: 'bg-yellow-300'
+			},
+			{
+				selectorId: 'userId',
+				id: 'userId3',
+				username: 'sally',
+				color: 'bg-green-300'
+			}
+		]
 
-	// 	render(DrawPageSetup, {
-	// 		props: {
-	// 			data: {
-	// 				...data,
-	// 				predictions: newPredictions
-	// 			}
-	// 		}
-	// 	})
+		selectedUsers2.set(selectedUsers)
 
-	// 	expect(screen.getByTestId('User_will')).toHaveTextContent('will')
-	// 	expect(screen.getByTestId('User_will')).toHaveClass('bg-blue-300')
-	// 	expect(screen.getByTestId('UserPoints_will')).toHaveTextContent('16')
-	// })
+		render(DrawPageSetup, { props: { data } })
+
+		expect(screen.getByText('john')).toBeInTheDocument()
+		expect(screen.getByText('steve')).toBeInTheDocument()
+		expect(screen.getByText('sally')).toBeInTheDocument()
+	})
+	test('Points tallied correctly', () => {
+		const predictions = [
+			{
+				collectionId: 'collectionId',
+				collectionName: 'view_predictions',
+				draw_id: 'drawId',
+				draw_slot_id: 'drawSlotId',
+				round: 7,
+				position: 1,
+				seed: '(1)',
+				id: 'predictionId',
+				name: 'Roger Federer',
+				points: 4,
+				user_id: 'userId',
+				username: 'will'
+			},
+			{
+				collectionId: 'collectionId',
+				collectionName: 'view_predictions',
+				draw_id: 'drawId',
+				draw_slot_id: 'drawSlotId',
+				round: 7,
+				position: 2,
+				seed: '(2)',
+				id: 'predictionId',
+				name: 'Rafael Nadal',
+				points: 4,
+				user_id: 'userId',
+				username: 'will'
+			},
+			{
+				collectionId: 'collectionId',
+				collectionName: 'view_predictions',
+				draw_id: 'drawId',
+				draw_slot_id: 'drawSlotId',
+				round: 8,
+				position: 1,
+				seed: '(1)',
+				id: 'predictionId',
+				name: 'Roger Federer',
+				points: 8,
+				user_id: 'userId',
+				username: 'will'
+			}
+		] as Prediction[]
+
+		predictionStore.set(predictions)
+
+		render(DrawPageSetup, { props: { data } })
+
+		expect(screen.getByTestId('User_will')).toHaveTextContent('will')
+		expect(screen.getByTestId('User_will')).toHaveClass('bg-blue-300')
+		expect(screen.getByTestId('UserPoints_will')).toHaveTextContent('16')
+	})
 })
