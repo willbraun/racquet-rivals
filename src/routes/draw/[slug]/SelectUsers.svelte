@@ -64,12 +64,6 @@
 						refocus()
 						return
 					}
-					if (selections.length >= 5) {
-						error = 'You can only select up to 5 users'
-						selectLoading = false
-						refocus()
-						return
-					}
 
 					const takenNames = [currentUsername, ...selections.map((user) => user.username)]
 					if (takenNames.some((name) => name === username)) {
@@ -107,8 +101,9 @@
 						bind:value
 						bind:this={inputRef}
 					/>
-					<button class="variant-filled-primary btn btn-md rounded-md" disabled={selectLoading}
-						>Add</button
+					<button
+						class="variant-filled-primary btn btn-md rounded-md"
+						disabled={selectLoading || selections.length >= 5}>Add</button
 					>
 				</div>
 			</label>
