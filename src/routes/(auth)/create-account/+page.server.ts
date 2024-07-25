@@ -1,6 +1,7 @@
 import { fail } from '@sveltejs/kit'
 import { errorMessage, mainColor } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
+import type { SelectedUser } from '$lib/types.js'
 
 export const actions = {
 	default: async ({ request, cookies, locals }) => {
@@ -42,10 +43,11 @@ export const actions = {
 			cookies.set(
 				'currentUser',
 				JSON.stringify({
+					selectorId: authResponse.record.id,
 					id: authResponse.record.id,
 					username: authResponse.record.username,
 					color: mainColor
-				}),
+				} as SelectedUser),
 				{ maxAge: 60 * 60 * 24 * 7, path: '/' }
 			)
 			return {

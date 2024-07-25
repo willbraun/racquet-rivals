@@ -63,6 +63,7 @@ export interface PredictionRecord {
 }
 
 export interface SelectedUser {
+	selectorId: string
 	id: string
 	username: string
 	color: string

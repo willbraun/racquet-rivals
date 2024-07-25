@@ -16,9 +16,9 @@ export async function load({ fetch, params, cookies, locals }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const url = PUBLIC_POCKETBASE_URL
 	const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
-	const selectedUsers: SelectedUser[] = JSON.parse(
-		cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
-	)
+	// const selectedUsers: SelectedUser[] = JSON.parse(
+	// 	cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
+	// )
 	const options = {
 		headers: {
 			Authorization: locals.pb.authStore.token
@@ -54,17 +54,17 @@ export async function load({ fetch, params, cookies, locals }) {
 		slots: slotData,
 		// predictions: predictionData,
 		currentUser: currentUser,
-		selectedUsers: selectedUsers,
+		// selectedUsers: selectedUsers,
 		pb_auth_valid: locals.pb.authStore.isValid as boolean,
 		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string
 	} as DrawPageData
 }
 
 export const actions: Actions = {
-	selectUser: async ({ request, locals }) => {
+	selectUser: async ({ request, cookies, locals }) => {
 		const form = await request.formData()
 		const username = (form.get('username') ?? '') as string
-		// const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
+		const currentUser: SelectedUser = JSON.parse(cookies.get('currentUser') ?? '{}')
 		// const selectedUsers: SelectedUser[] = JSON.parse(
 		// 	cookies.get(`selectedUsers-${currentUser.id}`) ?? '[]'
 		// )
@@ -109,6 +109,7 @@ export const actions: Actions = {
 			// })
 			return {
 				user: {
+					selectorId: currentUser.id,
 					id: data.id,
 					username: data.username,
 					color: ''

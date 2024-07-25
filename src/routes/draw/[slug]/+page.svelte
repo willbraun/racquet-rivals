@@ -53,7 +53,10 @@
 
 	// $: predictionStore.set(data.predictions.items)
 	// $: users = [data.currentUser, ...data.selectedUsers].filter(Boolean)
-	$: users = [data.currentUser, ...$selectedUsers2]
+	$: users = [
+		data.currentUser,
+		...$selectedUsers2.filter((user) => user.selectorId === data.currentUser.id)
+	]
 	$: if (browser) updatePredictions(pb, data.draw.id, users)
 	$: userIds = users.map((user) => user.id)
 	$: roundLabel = (() => {

@@ -17,7 +17,9 @@
 	let error = ''
 	// let deletedUserId = ''
 	// let users: SelectedUser[] = $modalStore[0]?.meta?.selectedUsers
+	let currentUserId = $modalStore[0]?.meta?.currentUserId
 	let currentUsername = $modalStore[0]?.meta?.currentUsername
+	$: selections = [...$selectedUsers2.filter((user) => user.selectorId === currentUserId)]
 
 	const deselect = (userId: string) => {
 		const users = get(selectedUsers2)
@@ -62,15 +64,14 @@
 						refocus()
 						return
 					}
-					if ($selectedUsers2.length >= 5) {
+					if (selections.length >= 5) {
 						error = 'You can only select up to 5 users'
 						selectLoading = false
 						refocus()
 						return
 					}
 
-					const users = get(selectedUsers2)
-					const takenNames = [currentUsername, ...users.map((user) => user.username)]
+					const takenNames = [currentUsername, ...selections.map((user) => user.username)]
 					if (takenNames.some((name) => name === username)) {
 						error = `User "${username}" is already selected`
 						selectLoading = false
@@ -84,9 +85,9 @@
 					if (result.status === 200) {
 						const newUser = {
 							...typedResult.data.user,
-							color: getNextColor(users)
+							color: getNextColor(selections)
 						}
-						selectedUsers2.set([...users, newUser])
+						selectedUsers2.set([...selections, newUser])
 						error = ''
 					} else {
 						error = typedResult.data.error
@@ -120,7 +121,7 @@
 			>
 				<p>{$modalStore[0].meta.currentUsername}</p>
 			</div>
-			{#each $selectedUsers2 as user}
+			{#each selections as user}
 				<button
 					type="button"
 					class="variant-filled chip rounded-full text-black {user.color} shadow"
