@@ -21,7 +21,6 @@ export const actions: Actions = {
 	logout: async ({ locals }) => {
 		try {
 			locals.pb.authStore.clear()
-			// cookies.delete('currentUser', { path: '/' })
 			return {
 				error: ''
 			}

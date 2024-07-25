@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/vitest'
 import type { Draw, DrawPageData, PbListResponse, Prediction, SelectedUser, Slot } from '$lib/types'
 import slotData from '$lib/testing/data/slot_data.json'
 import DrawPageSetup from '$lib/testing/components/DrawPageSetup.svelte'
-import { predictionStore, selectedUsers2 } from '$lib/store'
+import { predictionStore, selectedUsers } from '$lib/store'
 
 const data: DrawPageData = {
 	active: {
@@ -69,19 +69,12 @@ const data: DrawPageData = {
 		year: 2024
 	} as Draw,
 	slots: slotData as PbListResponse<Slot>,
-	// predictions: {
-	// 	items: [],
-	// 	page: 1,
-	// 	perPage: 300,
-	// 	totalItems: 0,
-	// 	totalPages: 0
-	// } as PbListResponse<Prediction>,
 	currentUser: {
+		selectorId: 'userId',
 		id: 'userId',
 		username: 'will',
 		color: 'bg-blue-300'
 	} as SelectedUser,
-	selectedUsers: [] as SelectedUser[],
 	pb_auth_valid: true,
 	pb_auth_cookie: 'dummy_cookie'
 }
@@ -91,12 +84,12 @@ describe('Draw page component', () => {
 	const initialPredictions: Prediction[] = []
 
 	beforeEach(() => {
-		selectedUsers2.set(initialSelections)
+		selectedUsers.set(initialSelections)
 		predictionStore.set(initialPredictions)
 	})
 
 	afterEach(() => {
-		selectedUsers2.set(initialSelections)
+		selectedUsers.set(initialSelections)
 		predictionStore.set(initialPredictions)
 	})
 
@@ -233,7 +226,7 @@ describe('Draw page component', () => {
 	})
 
 	test('Selected users appear', () => {
-		const selectedUsers: SelectedUser[] = [
+		const users: SelectedUser[] = [
 			{
 				selectorId: 'userId',
 				id: 'userId1',
@@ -254,7 +247,7 @@ describe('Draw page component', () => {
 			}
 		]
 
-		selectedUsers2.set(selectedUsers)
+		selectedUsers.set(users)
 
 		render(DrawPageSetup, { props: { data } })
 
@@ -262,6 +255,7 @@ describe('Draw page component', () => {
 		expect(screen.getByText('steve')).toBeInTheDocument()
 		expect(screen.getByText('sally')).toBeInTheDocument()
 	})
+
 	test('Points tallied correctly', () => {
 		const predictions = [
 			{

@@ -5,15 +5,13 @@
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
-	import { isAuth, predictionStore, selectedUsers2 } from '$lib/store'
+	import { isAuth, predictionStore, selectedUsers } from '$lib/store'
 	import type { DrawPageData, Prediction, Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
-	import { fade, slide } from 'svelte/transition'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import HowToPlay from '$lib/HowToPlay.svelte'
-	import { get } from 'svelte/store'
 	import { updatePredictions } from '$lib/api'
 	import { browser } from '$app/environment'
 	export let data: DrawPageData
@@ -51,11 +49,9 @@
 		predictionsAllowed = true
 	}
 
-	// $: predictionStore.set(data.predictions.items)
-	// $: users = [data.currentUser, ...data.selectedUsers].filter(Boolean)
 	$: users = [
 		data.currentUser,
-		...$selectedUsers2.filter((user) => user.selectorId === data.currentUser.id)
+		...$selectedUsers.filter((user) => user.selectorId === data.currentUser.id)
 	]
 	$: if (browser) {
 		updatePredictions(pb, data.draw.id, users)
@@ -179,7 +175,6 @@
 			meta: {
 				currentUserId: data.currentUser.id,
 				currentUsername: data.currentUser.username
-				// selectedUsers: data.selectedUsers
 			}
 		}
 	}

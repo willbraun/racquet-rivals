@@ -26,8 +26,8 @@ export async function handle({ event, resolve }) {
 	response.headers.append(
 		'set-cookie',
 		event.locals.pb.authStore.exportToCookie({
-			secure: false, // Set to true if using HTTPS
-			sameSite: false // Adjust as needed
+			secure: true, // set to false if testing on phone
+			sameSite: true // set to false if testing on phone
 		})
 	)
 
