@@ -5,3 +5,4 @@ import { persisted } from 'svelte-persisted-store'
 export const isAuth = writable<boolean>()
 export const predictionStore = writable<Prediction[]>([])
 export const selectedUsers = persisted<SelectedUser[]>('selectedUsers', [])
+export const isLeaderboard = persisted<boolean>('isLeaderboard', false)

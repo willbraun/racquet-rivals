@@ -5,7 +5,7 @@
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
-	import { isAuth, predictionStore, selectedUsers } from '$lib/store'
+	import { isAuth, predictionStore, selectedUsers, isLeaderboard } from '$lib/store'
 	import type { DrawPageData, Prediction, Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
@@ -18,6 +18,7 @@
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 	const now = new Date()
+	const toggleLeaderboard = (value: boolean) => isLeaderboard.set(value)
 
 	isAuth.set(data.pb_auth_valid)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
@@ -226,127 +227,177 @@
 		{/if}
 	</div>
 </header>
-<section class="grid grid-cols-3 gap-2 p-4 {headerColor} [&>*]:text-lg">
-	<div class="col-span-3 text-center text-black sm:col-span-1">
+<section class="grid grid-cols-4 gap-2 p-4 {headerColor} [&>*]:text-lg">
+	<div class="col-span-4 text-center text-black sm:col-span-1">
 		Active Round: <span class="font-bold">{roundLabel}</span>
 	</div>
-	<div class="col-span-3 text-center text-black sm:col-span-1">
+	<div class="col-span-4 text-center text-black sm:col-span-1">
 		{predictionsAllowed ? 'Predictions open until: ' : 'Predictions closed: '}<span
 			class="font-bold">{predictionClose}</span
 		>
 	</div>
 	{#if $isAuth}
-		<div class="col-span-3 flex flex-wrap justify-center gap-2 sm:col-span-1 md:justify-start">
-			<p>Users:</p>
-			{#each users as user}
-				<div
-					class="chip pointer-events-none relative h-6 rounded-full text-black {user.color} shadow duration-0"
-					data-testid={`User_${user.username}`}
-				>
-					<p>{user.username}</p>
+		<div
+			class="col-span-4 flex flex-col items-center justify-center gap-2 sm:col-span-2 sm:flex-row sm:justify-between"
+		>
+			<div class="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+				<p>Users:</p>
+				{#each users as user}
 					<div
-						class="badge-icon absolute -right-1.5 -top-1.5 z-10 h-4 w-fit rounded-full bg-green-400 px-1 text-sm"
-						data-testid={`UserPoints_${user.username}`}
+						class="chip pointer-events-none relative h-6 rounded-full text-black {user.color} shadow duration-0"
+						data-testid={`User_${user.username}`}
 					>
-						<p>
-							{$predictionStore
-								.filter((p) => p.user_id === user.id)
-								.map((p) => p.points)
-								.reduce((a, b) => a + b, 0)}
-						</p>
+						<p>{user.username}</p>
+						<div
+							class="badge-icon absolute -right-1.5 -top-1.5 z-10 h-4 w-fit rounded-full bg-green-400 px-1 text-sm"
+							data-testid={`UserPoints_${user.username}`}
+						>
+							<p>
+								{$predictionStore
+									.filter((p) => p.user_id === user.id)
+									.map((p) => p.points)
+									.reduce((a, b) => a + b, 0)}
+							</p>
+						</div>
 					</div>
-				</div>
-			{/each}
-			<button
-				class="chip flex h-6 justify-center rounded-full border border-dashed border-black hover:bg-primary-100"
-				on:click={() => modalStore.trigger(modal)}
-			>
-				<svg
-					class="mb-0.5 ml-0.5 fill-black"
-					xmlns="http://www.w3.org/2000/svg"
-					height="1rem"
-					viewBox="0 0 512 512"
+				{/each}
+				<button
+					class="chip flex h-6 justify-center rounded-full border border-dashed border-black hover:bg-primary-100"
+					on:click={() => modalStore.trigger(modal)}
 				>
-					<!--! Pencil Icon - Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-					<path
-						d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z"
-					/>
-				</svg>
-			</button>
+					<svg
+						class="mb-0.5 ml-0.5 fill-black"
+						xmlns="http://www.w3.org/2000/svg"
+						height="1rem"
+						viewBox="0 0 512 512"
+					>
+						<!--! Pencil Icon - Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+						<path
+							d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="flex min-w-fit overflow-hidden rounded-md">
+				<button
+					class={`px-3 py-1 text-sm ${$isLeaderboard ? 'bg-primary-300' : 'bg-primary-500 text-white'}`}
+					on:click={() => toggleLeaderboard(false)}>Draw</button
+				>
+				<button
+					class={`px-3 py-1 text-sm ${$isLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300'}`}
+					on:click={() => toggleLeaderboard(true)}>Leaderboard</button
+				>
+			</div>
 		</div>
 	{:else}
-		<p class="col-span-3 text-center italic sm:col-span-1">Log in to play!</p>
+		<p class="col-span-2 text-center italic sm:col-span-1">Log in to play!</p>
 	{/if}
 </section>
-<section
-	class="sticky top-0 z-20 overflow-x-hidden {headerColor} font-semibold tracking-wide shadow [&>*]:text-lg"
-	bind:this={roundHeader}
->
-	<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
-		{#each Object.entries(pointsByRound) as [round, points]}
-			<div class="flex justify-center gap-2 bg-primary-300 py-2 text-center">
-				<p>{round}</p>
-				{#if points > 0}
-					<div class="aspect-square h-full rounded-full bg-green-400 shadow">{points}</div>
-				{/if}
-			</div>
-		{/each}
-	</div>
-</section>
-<main
-	class="relative grid overflow-x-auto overscroll-x-none bg-stone-100 pb-12"
-	style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
-	bind:this={drawGrid}
->
-	{#each ourRounds as round, index}
-		<div class="column">
-			{#each slots.filter((slot) => slot.round === round) as slot}
-				<div
-					class="relative flex items-end justify-center border-b-2 border-black text-center"
-					class:border-r-2={!(slot.position % 2)}
-					style:height={getHeight(index, slot.position)}
-				>
-					{#if slot.name.trim()}
-						<p class="text-lg" data-testid={`SlotR${slot.round}P${slot.position}`}>
-							{`${slot.seed} ${slot.name}`}
-						</p>
+
+{#if $isLeaderboard}
+	<main>
+		<div class="table-container !rounded-none text-center">
+			<table class="table table-compact !rounded-none">
+				<thead>
+					<tr class="bg-primary-300">
+						<th class="!p-2 text-center text-lg">Rank</th>
+						<th class="!p-2 text-center text-lg">Username</th>
+						<th class="!p-2 text-center text-lg">Total Points</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#if data.leaderboard.items.length > 0}
+						{#each data.leaderboard.items as user, index}
+							<tr class="[&>td>*]:text-lg">
+								<td><p>{index + 1}</p></td>
+								<td><p>{user.username}</p></td>
+								<td>
+									<div class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-1.5">
+										{user.total_points}
+									</div></td
+								>
+							</tr>
+						{/each}
 					{:else}
-						<p
-							class="text-lg italic text-surface-800"
-							data-testid={`SlotR${slot.round}P${slot.position}`}
-						>
-							TBD
-						</p>
+						<tr>
+							<td colspan="3" class="text-center">No points awarded yet. Stay tuned!</td>
+						</tr>
 					{/if}
-					{#if $isAuth && index > 0}
-						{@const slotPredictions = $predictionStore
-							.filter((p) => p.draw_slot_id === slot.id)
-							.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))}
-						{@const currentUserPrediction = slotPredictions.find(
-							(p) => p.user_id === data.currentUser.id
-						)}
-						{@const selectedUserPredictions = slotPredictions.filter(
-							(p) => p.user_id !== data.currentUser.id
-						)}
-						{@const players = getPlayerOptions(slot, $predictionStore, index)}
-						<div
-							class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
-						>
-							<AddPrediction
-								{slot}
-								roundIndex={index}
-								{players}
-								prediction={currentUserPrediction}
-								{getColor}
-								{predictionsAllowed}
-							/>
-							{#each selectedUserPredictions as prediction}
-								<ViewPrediction {prediction} {getColor} />
-							{/each}
-						</div>
+				</tbody>
+			</table>
+		</div>
+	</main>
+{:else}
+	<section
+		class="sticky top-0 z-20 overflow-x-hidden {headerColor} font-semibold tracking-wide shadow [&>*]:text-lg"
+		bind:this={roundHeader}
+	>
+		<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
+			{#each Object.entries(pointsByRound) as [round, points]}
+				<div class="flex justify-center gap-2 bg-primary-300 py-2 text-center">
+					<p>{round}</p>
+					{#if points > 0}
+						<div class="aspect-square h-full rounded-full bg-green-400 shadow">{points}</div>
 					{/if}
 				</div>
 			{/each}
 		</div>
-	{/each}
-</main>
+	</section>
+	<main
+		class="relative grid overflow-x-auto overscroll-x-none bg-stone-100 pb-12"
+		style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
+		bind:this={drawGrid}
+	>
+		{#each ourRounds as round, index}
+			<div class="column">
+				{#each slots.filter((slot) => slot.round === round) as slot}
+					<div
+						class="relative flex items-end justify-center border-b-2 border-black text-center"
+						class:border-r-2={!(slot.position % 2)}
+						style:height={getHeight(index, slot.position)}
+					>
+						{#if slot.name.trim()}
+							<p class="text-lg" data-testid={`SlotR${slot.round}P${slot.position}`}>
+								{`${slot.seed} ${slot.name}`}
+							</p>
+						{:else}
+							<p
+								class="text-lg italic text-surface-800"
+								data-testid={`SlotR${slot.round}P${slot.position}`}
+							>
+								TBD
+							</p>
+						{/if}
+						{#if $isAuth && index > 0}
+							{@const slotPredictions = $predictionStore
+								.filter((p) => p.draw_slot_id === slot.id)
+								.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))}
+							{@const currentUserPrediction = slotPredictions.find(
+								(p) => p.user_id === data.currentUser.id
+							)}
+							{@const selectedUserPredictions = slotPredictions.filter(
+								(p) => p.user_id !== data.currentUser.id
+							)}
+							{@const players = getPlayerOptions(slot, $predictionStore, index)}
+							<div
+								class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
+							>
+								<AddPrediction
+									{slot}
+									roundIndex={index}
+									{players}
+									prediction={currentUserPrediction}
+									{getColor}
+									{predictionsAllowed}
+								/>
+								{#each selectedUserPredictions as prediction}
+									<ViewPrediction {prediction} {getColor} />
+								{/each}
+							</div>
+						{/if}
+					</div>
+				{/each}
+			</div>
+		{/each}
+	</main>
+{/if}

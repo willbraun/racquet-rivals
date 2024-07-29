@@ -62,6 +62,16 @@ export interface PredictionRecord {
 	user_id: string
 }
 
+export interface Leaderboard {
+	collectionId: string
+	collectionName: 'draw_leaderboard'
+	draw_id: string
+	id: string
+	total_points: number
+	user_id: string
+	username: string
+}
+
 export interface SelectedUser {
 	selectorId: string
 	id: string
@@ -123,6 +133,7 @@ export interface DrawPageData {
 	completed: PbListResponse<Draw>
 	draw: Draw
 	slots: PbListResponse<Slot>
+	leaderboard: PbListResponse<Leaderboard>
 	currentUser: SelectedUser
 	pb_auth_valid: boolean
 	pb_auth_cookie: string

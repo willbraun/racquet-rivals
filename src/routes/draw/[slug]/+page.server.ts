@@ -4,6 +4,7 @@ import type { ClientResponseError } from 'pocketbase'
 import type {
 	Draw,
 	DrawPageData,
+	Leaderboard,
 	PbListResponse,
 	PredictionRecord,
 	SelectedUser,
@@ -41,11 +42,19 @@ export async function load({ fetch, params, locals }) {
 
 	const [activeData, completedData] = await fetchDraws(fetch, url, locals.pb.authStore.token)
 
+	const leaderboardRes = await fetch(
+		`${url}/api/collections/draw_leaderboard/records?perPage=255&filter=(draw_id="${id}")`,
+		options
+	)
+	const leaderboardData: PbListResponse<Leaderboard> = await leaderboardRes.json()
+	console.log(leaderboardData)
+
 	return {
 		active: activeData,
 		completed: completedData,
 		draw: drawData,
 		slots: slotData,
+		leaderboard: leaderboardData,
 		currentUser: currentUser,
 		pb_auth_valid: locals.pb.authStore.isValid as boolean,
 		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string
