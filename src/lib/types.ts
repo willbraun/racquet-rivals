@@ -121,9 +121,9 @@ export interface HomePageData {
 export interface DrawPageData {
 	active: PbListResponse<Draw>
 	completed: PbListResponse<Draw>
+	currentUser: SelectedUser
 	draw: Draw
 	slots: PbListResponse<Slot>
-	currentUser: SelectedUser
 	pb_auth_valid: boolean
 	pb_auth_cookie: string
 }

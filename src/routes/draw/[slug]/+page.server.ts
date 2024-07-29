@@ -2,40 +2,36 @@ import { fail, type Actions } from '@sveltejs/kit'
 import { errorMessage, getCurrentUser } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
-	Draw,
-	DrawPageData,
-	PbListResponse,
+	// Draw,
+	// DrawPageData,
+	// PbListResponse,
 	PredictionRecord,
-	SelectedUser,
-	Slot
+	SelectedUser
+	// Slot
 } from '$lib/types'
-import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
+// import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 
-export async function load({ fetch, params, locals }) {
-	const id: string = params.slug.split('-').at(-1) ?? ''
-	const url = PUBLIC_POCKETBASE_URL
-	const options = {
-		headers: {
-			Authorization: locals.pb.authStore.token
-		}
-	}
+// export async function load({ fetch, params, locals }) {
+// 	const id: string = params.slug.split('-').at(-1) ?? ''
+// 	const url = PUBLIC_POCKETBASE_URL
+// 	const options = {
+// 		headers: {
+// 			Authorization: locals.pb.authStore.token
+// 		}
+// 	}
 
-	const drawRes = await fetch(`${url}/api/collections/draw/records/${id}`, options)
-	const drawData: Draw = await drawRes.json()
+// 	const slotRes = await fetch(
+// 		`${url}/api/collections/draw_slot/records?perPage=255&filter=(draw_id="${id}")`,
+// 		options
+// 	)
+// 	const slotData: PbListResponse<Slot> = await slotRes.json()
 
-	const slotRes = await fetch(
-		`${url}/api/collections/draw_slot/records?perPage=255&filter=(draw_id="${id}")`,
-		options
-	)
-	const slotData: PbListResponse<Slot> = await slotRes.json()
-
-	return {
-		draw: drawData,
-		slots: slotData,
-		pb_auth_valid: locals.pb.authStore.isValid as boolean,
-		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string
-	} as DrawPageData
-}
+// 	return {
+// 		slots: slotData,
+// 		pb_auth_valid: locals.pb.authStore.isValid as boolean,
+// 		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string
+// 	} as DrawPageData
+// }
 
 export const actions: Actions = {
 	selectUser: async ({ request, locals }) => {

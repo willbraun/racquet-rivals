@@ -16,6 +16,7 @@
 	import { browser } from '$app/environment'
 	import { page } from '$app/stores'
 
+	console.log($page)
 	let data = $page.data as DrawPageData
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 	const now = new Date()
@@ -32,72 +33,72 @@
 		Champion: 8
 	}
 
-	$: fullDrawRounds = Math.log2(data.draw.size) + 1
-	$: allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1) // rounds start at 1
-	$: ourRounds = allRounds.slice(-5)
+	// $: fullDrawRounds = Math.log2(data.draw.size) + 1
+	// $: allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1) // rounds start at 1
+	// $: ourRounds = allRounds.slice(-5)
 	$: slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4)
 
-	let pcDate: Date | undefined
-	let predictionClose: string
-	let predictionsAllowed: boolean
-	$: if (data.draw.prediction_close) {
-		pcDate = new Date(data.draw.prediction_close)
-		predictionClose = format(pcDate, 'M/d/yyyy h:mmaaa')
-		predictionsAllowed = now < pcDate
-	} else {
-		pcDate = undefined
-		predictionClose = '12h after R16 is full'
-		predictionsAllowed = true
-	}
+	// let pcDate: Date | undefined
+	// let predictionClose: string
+	// let predictionsAllowed: boolean
+	// $: if (data.draw.prediction_close) {
+	// 	pcDate = new Date(data.draw.prediction_close)
+	// 	predictionClose = format(pcDate, 'M/d/yyyy h:mmaaa')
+	// 	predictionsAllowed = now < pcDate
+	// } else {
+	// 	pcDate = undefined
+	// 	predictionClose = '12h after R16 is full'
+	// 	predictionsAllowed = true
+	// }
 
-	$: users = [
-		data.currentUser,
-		...$selectedUsers.filter((user) => user.selectorId === data.currentUser.id)
-	]
-	$: if (browser) {
-		updatePredictions(pb, data.draw.id, users)
-	}
+	// $: users = [
+	// 	data.currentUser,
+	// 	...$selectedUsers.filter((user) => user.selectorId === data.currentUser.id)
+	// ]
+	// $: if (browser) {
+	// 	updatePredictions(pb, data.draw.id, users)
+	// }
 	$: userIds = users.map((user) => user.id)
-	$: roundLabel = (() => {
-		const filledRounds = allRounds.filter((round) => {
-			return data.slots.items
-				.filter((slot) => {
-					return slot.round === round
-				})
-				.every((slot) => slot.name.trim() !== '')
-		})
+	// $: roundLabel = (() => {
+	// 	const filledRounds = allRounds.filter((round) => {
+	// 		return data.slots.items
+	// 			.filter((slot) => {
+	// 				return slot.round === round
+	// 			})
+	// 			.every((slot) => slot.name.trim() !== '')
+	// 	})
 
-		if (filledRounds.at(-1) === fullDrawRounds) {
-			return 'Tournament Completed'
-		}
+	// 	if (filledRounds.at(-1) === fullDrawRounds) {
+	// 		return 'Tournament Completed'
+	// 	}
 
-		const activeRound = Math.max(0, ...filledRounds) // round being played
-		const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Final']
-		const index = ourRounds.indexOf(activeRound)
+	// 	const activeRound = Math.max(0, ...filledRounds) // round being played
+	// 	const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Final']
+	// 	const index = ourRounds.indexOf(activeRound)
 
-		if (index !== -1) {
-			return labels[index]
-		} else {
-			const sizeLabel = `(R${2 ** (fullDrawRounds - activeRound)})`
-			const earlyLabels = [
-				'Qualifying Rounds',
-				`1st Round ${sizeLabel}`,
-				`2nd Round ${sizeLabel}`,
-				`3rd Round ${sizeLabel}`
-			]
-			return `${earlyLabels[activeRound]}`
-		}
-	})()
+	// 	if (index !== -1) {
+	// 		return labels[index]
+	// 	} else {
+	// 		const sizeLabel = `(R${2 ** (fullDrawRounds - activeRound)})`
+	// 		const earlyLabels = [
+	// 			'Qualifying Rounds',
+	// 			`1st Round ${sizeLabel}`,
+	// 			`2nd Round ${sizeLabel}`,
+	// 			`3rd Round ${sizeLabel}`
+	// 		]
+	// 		return `${earlyLabels[activeRound]}`
+	// 	}
+	// })()
 
 	const colorMap: Map<string, string> = new Map()
 	$: users.forEach((user) => colorMap.set(user.id, user.color))
 	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
 
-	let drawUrl = ''
-	$: if (drawUrl) {
-		goto(drawUrl, { invalidateAll: true })
-		sessionStorage.setItem('loginGoto', drawUrl)
-	}
+	// let drawUrl = ''
+	// $: if (drawUrl) {
+	// 	goto(drawUrl, { invalidateAll: true })
+	// 	sessionStorage.setItem('loginGoto', drawUrl)
+	// }
 
 	const getHeight = (roundIndex: number, position: number): string => {
 		let rems = 0
@@ -164,69 +165,23 @@
 		}
 	})
 
-	const modalStore = getModalStore()
-	let modal: ModalSettings
-	$: if (isAuth) {
-		modal = {
-			type: 'component',
-			component: 'selectUsers',
-			title: 'Select Users',
-			body: 'Compare predictions with your friends (max of 6 total)',
-			backdropClasses: 'bg-surface-500',
-			meta: {
-				currentUserId: data.currentUser.id,
-				currentUsername: data.currentUser.username
-			}
-		}
-	}
+	// const modalStore = getModalStore()
+	// let modal: ModalSettings
+	// $: if (isAuth) {
+	// 	modal = {
+	// 		type: 'component',
+	// 		component: 'selectUsers',
+	// 		title: 'Select Users',
+	// 		body: 'Compare predictions with your friends (max of 6 total)',
+	// 		backdropClasses: 'bg-surface-500',
+	// 		meta: {
+	// 			currentUserId: data.currentUser.id,
+	// 			currentUsername: data.currentUser.username
+	// 		}
+	// 	}
+	// }
 </script>
 
-<header class="flex items-center gap-2 p-4 {headerColor}">
-	<a class="rounded p-2 hover:bg-primary-200" href="/">
-		<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 576 512"
-			><!--! Home Icon - Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
-			<path
-				d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"
-			/>
-		</svg>
-	</a>
-	<select
-		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent text-lg font-bold hover:bg-primary-200 md:text-3xl"
-		on:change={(e) => (drawUrl = e.currentTarget.value)}
-	>
-		<option disabled>Active Draws</option>
-		{#each data.active.items as draw}
-			<option selected={data.draw.id === draw.id} value={`/draw/${getSlug(draw)}`}
-				>{getTitle(draw)}</option
-			>
-		{/each}
-		<option disabled>Completed Draws</option>
-		{#each data.completed.items as draw}
-			<option selected={data.draw.id === draw.id} value={`/draw/${getSlug(draw)}`}
-				>{getTitle(draw)}</option
-			>
-		{/each}
-	</select>
-	<div
-		class="ml-auto flex w-fit flex-none flex-col flex-wrap items-center justify-end gap-2 sm:flex-row sm:self-start"
-	>
-		<HowToPlay />
-		{#if $isAuth}
-			<Logout />
-		{:else}
-			<a href="/login">
-				<button type="button" class="btn btn-sm rounded-lg bg-black text-white md:btn-md"
-					>Login</button
-				>
-			</a>
-			<a href="/create-account">
-				<button type="button" class="btn btn-sm rounded-lg bg-black text-white md:btn-md"
-					>Sign up</button
-				>
-			</a>
-		{/if}
-	</div>
-</header>
 <section class="grid grid-cols-3 gap-2 p-4 {headerColor} [&>*]:text-lg">
 	<div class="col-span-3 text-center text-black sm:col-span-1">
 		Active Round: <span class="font-bold">{roundLabel}</span>
