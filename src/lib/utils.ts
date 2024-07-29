@@ -1,7 +1,7 @@
 import type Client from 'pocketbase'
 import type { ClientResponseError } from 'pocketbase'
 import { isAuth } from './store'
-import type { Draw, PbListResponse } from './types'
+import type { Draw, PbListResponse, SelectedUser } from './types'
 import { format } from 'date-fns'
 
 type ErrorObjData = {
@@ -90,4 +90,13 @@ export const fetchDraws = async (svelteFetch: SvelteFetch, url: string, token: s
 	const completedData: PbListResponse<Draw> = await completedRes.json()
 
 	return [activeData, completedData]
+}
+
+export const getCurrentUser = (locals: App.Locals): SelectedUser => {
+	return {
+		selectorId: locals.pb.authStore.model?.id ?? '',
+		id: locals.pb.authStore.model?.id ?? '',
+		username: locals.pb.authStore.model?.username ?? '',
+		color: mainColor
+	}
 }

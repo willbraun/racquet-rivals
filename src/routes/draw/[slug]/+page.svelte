@@ -14,8 +14,9 @@
 	import HowToPlay from '$lib/HowToPlay.svelte'
 	import { updatePredictions } from '$lib/api'
 	import { browser } from '$app/environment'
-	export let data: DrawPageData
+	import { page } from '$app/stores'
 
+	let data = $page.data as DrawPageData
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 	const now = new Date()
 

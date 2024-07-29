@@ -1,5 +1,5 @@
 import { fail, type Actions } from '@sveltejs/kit'
-import { errorMessage, fetchDraws, mainColor } from '$lib/utils'
+import { errorMessage, getCurrentUser } from '$lib/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
 	Draw,
@@ -11,19 +11,9 @@ import type {
 } from '$lib/types'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 
-const getCurrentUser = (locals: App.Locals): SelectedUser => {
-	return {
-		selectorId: locals.pb.authStore.model?.id ?? '',
-		id: locals.pb.authStore.model?.id ?? '',
-		username: locals.pb.authStore.model?.username ?? '',
-		color: mainColor
-	}
-}
-
 export async function load({ fetch, params, locals }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const url = PUBLIC_POCKETBASE_URL
-	const currentUser = getCurrentUser(locals)
 	const options = {
 		headers: {
 			Authorization: locals.pb.authStore.token
@@ -39,14 +29,9 @@ export async function load({ fetch, params, locals }) {
 	)
 	const slotData: PbListResponse<Slot> = await slotRes.json()
 
-	const [activeData, completedData] = await fetchDraws(fetch, url, locals.pb.authStore.token)
-
 	return {
-		active: activeData,
-		completed: completedData,
 		draw: drawData,
 		slots: slotData,
-		currentUser: currentUser,
 		pb_auth_valid: locals.pb.authStore.isValid as boolean,
 		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string
 	} as DrawPageData
