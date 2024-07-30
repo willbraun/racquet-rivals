@@ -21,7 +21,7 @@ const getCurrentUser = (locals: App.Locals): SelectedUser => {
 	}
 }
 
-export async function load({ fetch, params, locals }) {
+export async function load({ fetch, params, locals, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const url = PUBLIC_POCKETBASE_URL
 	const currentUser = getCurrentUser(locals)
@@ -30,6 +30,8 @@ export async function load({ fetch, params, locals }) {
 			Authorization: locals.pb.authStore.token
 		}
 	}
+
+	const [activeData, completedData] = await fetchDraws(fetch, url, locals.pb.authStore.token)
 
 	const drawRes = await fetch(`${url}/api/collections/draw/records/${id}`, options)
 	const drawData: Draw = await drawRes.json()
@@ -40,14 +42,11 @@ export async function load({ fetch, params, locals }) {
 	)
 	const slotData: PbListResponse<Slot> = await slotRes.json()
 
-	const [activeData, completedData] = await fetchDraws(fetch, url, locals.pb.authStore.token)
-
 	const leaderboardRes = await fetch(
 		`${url}/api/collections/draw_leaderboard/records?perPage=255&filter=(draw_id="${id}")`,
 		options
 	)
 	const leaderboardData: PbListResponse<Leaderboard> = await leaderboardRes.json()
-	console.log(leaderboardData)
 
 	return {
 		active: activeData,
@@ -57,7 +56,8 @@ export async function load({ fetch, params, locals }) {
 		leaderboard: leaderboardData,
 		currentUser: currentUser,
 		pb_auth_valid: locals.pb.authStore.isValid as boolean,
-		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string
+		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string,
+		isLeaderboard: cookies.get('isLeaderboard')
 	} as DrawPageData
 }
 

@@ -137,4 +137,5 @@ export interface DrawPageData {
 	currentUser: SelectedUser
 	pb_auth_valid: boolean
 	pb_auth_cookie: string
+	isLeaderboard: string
 }

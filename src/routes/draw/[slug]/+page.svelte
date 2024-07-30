@@ -14,14 +14,31 @@
 	import HowToPlay from '$lib/HowToPlay.svelte'
 	import { updatePredictions } from '$lib/api'
 	import { browser } from '$app/environment'
+	import Cookies from 'js-cookie'
 	export let data: DrawPageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 	const now = new Date()
-	const toggleLeaderboard = (value: boolean) => isLeaderboard.set(value)
 
 	isAuth.set(data.pb_auth_valid)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
+
+	let combinedIsLeaderboard = data.isLeaderboard === 'true'
+	isLeaderboard.set(combinedIsLeaderboard)
+	$: combinedIsLeaderboard = $isLeaderboard
+	const toggleLeaderboard = (value: boolean) => {
+		isLeaderboard.set(value)
+		Cookies.set('isLeaderboard', value.toString())
+	}
+
+	$: users = [
+		data.currentUser,
+		...$selectedUsers.filter((user) => user.selectorId === data.currentUser.id)
+	]
+	$: if (browser) {
+		updatePredictions(pb, data.draw.id, users)
+	}
+	$: userIds = users.map((user) => user.id)
 
 	const headerColor = 'bg-primary-50'
 	const pointsByRound = {
@@ -50,14 +67,6 @@
 		predictionsAllowed = true
 	}
 
-	$: users = [
-		data.currentUser,
-		...$selectedUsers.filter((user) => user.selectorId === data.currentUser.id)
-	]
-	$: if (browser) {
-		updatePredictions(pb, data.draw.id, users)
-	}
-	$: userIds = users.map((user) => user.id)
 	$: roundLabel = (() => {
 		const filledRounds = allRounds.filter((round) => {
 			return data.slots.items
@@ -280,11 +289,11 @@
 			</div>
 			<div class="flex min-w-fit overflow-hidden rounded-md">
 				<button
-					class={`px-3 py-1 text-sm ${$isLeaderboard ? 'bg-primary-300' : 'bg-primary-500 text-white'}`}
+					class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-300' : 'bg-primary-500 text-white'}`}
 					on:click={() => toggleLeaderboard(false)}>Draw</button
 				>
 				<button
-					class={`px-3 py-1 text-sm ${$isLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300'}`}
+					class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300'}`}
 					on:click={() => toggleLeaderboard(true)}>Leaderboard</button
 				>
 			</div>
@@ -294,7 +303,7 @@
 	{/if}
 </section>
 
-{#if $isLeaderboard}
+{#if combinedIsLeaderboard}
 	<main>
 		<div class="table-container !rounded-none text-center">
 			<table class="table table-compact !rounded-none">
