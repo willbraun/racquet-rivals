@@ -101,7 +101,7 @@
 				<button
 					type="button"
 					class="variant-filled chip rounded-full text-black {user.color} shadow"
-					on:click={() => removeUser(user)}
+					on:click={() => removeUser(user.id)}
 					transition:fade={{ duration: 100 }}
 				>
 					<p>{user.username}</p>

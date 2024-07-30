@@ -6,7 +6,7 @@
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
 	import { isAuth, predictionStore, selectedUsers, isLeaderboard } from '$lib/store'
-	import type { DrawPageData, Prediction, Slot } from '$lib/types'
+	import { type DrawPageData, type Prediction, type Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { addUser, getSlug, getTitle, removeUser, updatePageAuth } from '$lib/utils'
@@ -25,12 +25,28 @@
 	isAuth.set(data.pb_auth_valid)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
+	let isScrollListenerAdded: boolean = false
+	let roundHeader: HTMLElement
+	let drawGrid: HTMLElement
+
+	const syncScroll = () => {
+		roundHeader.scrollLeft = drawGrid.scrollLeft
+	}
+
+	$: if (!combinedIsLeaderboard && !isScrollListenerAdded && roundHeader && drawGrid) {
+		drawGrid.addEventListener('scroll', syncScroll)
+		isScrollListenerAdded = true
+	}
+
 	let combinedIsLeaderboard = data.isLeaderboard === 'true'
 	isLeaderboard.set(combinedIsLeaderboard)
 	$: combinedIsLeaderboard = $isLeaderboard
 	const toggleLeaderboard = (value: boolean) => {
 		isLeaderboard.set(value)
-		Cookies.set('isLeaderboard', value.toString())
+		Cookies.set('isLeaderboard', value.toString(), { expires: 0.5 })
+		if (value === true) {
+			isScrollListenerAdded = false
+		}
 	}
 
 	$: users = [
@@ -163,18 +179,6 @@
 		return [player1, player2]
 	}
 
-	let roundHeader: HTMLElement
-	let drawGrid: HTMLElement
-	onMount(() => {
-		sessionStorage.setItem('loginGoto', location.pathname)
-
-		if (roundHeader && drawGrid) {
-			drawGrid.addEventListener('scroll', () => {
-				roundHeader.scrollLeft = drawGrid.scrollLeft
-			})
-		}
-	})
-
 	const modalStore = getModalStore()
 	let modal: ModalSettings
 	$: if (isAuth) {
@@ -190,6 +194,10 @@
 			}
 		}
 	}
+
+	onMount(() => {
+		sessionStorage.setItem('loginGoto', location.pathname)
+	})
 </script>
 
 <header class="flex items-center gap-2 p-4 {headerColor}">
@@ -311,10 +319,10 @@
 			<table class="table table-compact !rounded-none">
 				<thead>
 					<tr class="bg-primary-300">
-						<th class="!py-2 text-center sm:text-lg">Rank</th>
-						<th class="!py-2 text-center sm:text-lg">Username</th>
-						<th class="!py-2 text-center sm:text-lg">Total Points</th>
-						<th class="!py-2 text-center sm:text-lg">Action</th>
+						<th class="!py-2 text-center text-lg">Rank</th>
+						<th class="!py-2 text-center text-lg">Username</th>
+						<th class="!py-2 text-center text-lg">Total Points</th>
+						<th class="!py-2 text-center text-lg">Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -323,10 +331,10 @@
 							{@const selectedUser = {
 								selectorId: data.currentUser.id,
 								id: lb.user_id,
-								username: lb.username,
-								color: ''
+								username: lb.username
 							}}
-							<tr class="[&>td>*]:text-lg">
+							{@const isMe = data.currentUser.id === lb.user_id}
+							<tr class={`[&>td>*]:text-lg ${isMe && '[&>td]:bg-blue-300'}`}>
 								<td><p>{index + 1}</p></td>
 								<td><p>{lb.username}</p></td>
 								<td>
@@ -335,10 +343,12 @@
 									</div></td
 								>
 								<td class="w-1/4">
-									{#if $selectedUsers.find((u) => u.id === lb.user_id)}
+									{#if isMe}
+										<p>N/A</p>
+									{:else if $selectedUsers.find((u) => u.id === lb.user_id)}
 										<button
-											on:click={() => removeUser(selectedUser)}
-											class="mx-auto flex items-center justify-center gap-2 rounded bg-red-200 px-2 py-1"
+											on:click={() => removeUser(lb.user_id)}
+											class="mx-auto flex items-center justify-center gap-2 rounded bg-red-300 px-2 py-1 shadow"
 										>
 											<p class="text-sm">Remove</p>
 											<img src={x} alt="plus icon" width="12" />
@@ -346,7 +356,7 @@
 									{:else}
 										<button
 											on:click={() => addUser(selectedUser)}
-											class={`mx-auto flex items-center justify-center gap-2 rounded bg-primary-200 px-2 py-1 ${
+											class={`mx-auto flex items-center justify-center gap-2 rounded bg-green-300 px-2 py-1 shadow ${
 												$selectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
 											}`}
 											disabled={$selectedUsers.length >= 5}
@@ -360,7 +370,7 @@
 						{/each}
 					{:else}
 						<tr>
-							<td colspan="3" class="text-center">No points awarded yet. Stay tuned!</td>
+							<td colspan="4" class="text-center">No points awarded yet. Stay tuned!</td>
 						</tr>
 					{/if}
 				</tbody>

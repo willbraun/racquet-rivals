@@ -72,9 +72,9 @@ export const addUser = (user: SelectedUserNoColor) => {
 	selectedUsers.set([...users, newUser])
 }
 
-export const removeUser = (user: SelectedUser) => {
+export const removeUser = (userId: string) => {
 	const users = get(selectedUsers)
-	selectedUsers.set(users.filter((u) => u.id !== user.id))
+	selectedUsers.set(users.filter((u) => u.id !== userId))
 }
 
 export const mainColor = 'bg-blue-300'
