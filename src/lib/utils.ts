@@ -1,8 +1,9 @@
 import type Client from 'pocketbase'
 import type { ClientResponseError } from 'pocketbase'
-import { isAuth } from './store'
-import type { Draw, PbListResponse } from './types'
+import { isAuth, selectedUsers } from './store'
+import type { Draw, PbListResponse, SelectedUser, SelectedUserNoColor } from './types'
 import { format } from 'date-fns'
+import { get } from 'svelte/store'
 
 type ErrorObjData = {
 	[key: string]: {
@@ -56,6 +57,24 @@ export const getSlug = (draw: Draw): string => {
 
 export const getTitle = (draw: Draw): string => {
 	return `${draw.name} ${draw.event} ${draw.year}`
+}
+
+const getNextColor = (users: SelectedUser[]) => {
+	return selectColors.filter((color) => !users.some((user) => user.color === color))[0]
+}
+
+export const addUser = (user: SelectedUserNoColor) => {
+	const users = get(selectedUsers)
+	const newUser = {
+		...user,
+		color: getNextColor(users)
+	}
+	selectedUsers.set([...users, newUser])
+}
+
+export const removeUser = (user: SelectedUser) => {
+	const users = get(selectedUsers)
+	selectedUsers.set(users.filter((u) => u.id !== user.id))
 }
 
 export const mainColor = 'bg-blue-300'

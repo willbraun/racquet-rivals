@@ -72,10 +72,13 @@ export interface Leaderboard {
 	username: string
 }
 
-export interface SelectedUser {
+export interface SelectedUserNoColor {
 	selectorId: string
 	id: string
 	username: string
+}
+
+export interface SelectedUser extends SelectedUserNoColor {
 	color: string
 }
 
@@ -89,16 +92,7 @@ export interface AuthResult {
 
 export interface SelectUserResult {
 	data: {
-		user: SelectedUser
-		error: string
-	}
-	status: number
-	type: string
-}
-
-export interface DeselectUserResult {
-	data: {
-		deletedId: string
+		user: SelectedUserNoColor
 		error: string
 	}
 	status: number

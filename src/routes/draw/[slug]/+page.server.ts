@@ -8,6 +8,7 @@ import type {
 	PbListResponse,
 	PredictionRecord,
 	SelectedUser,
+	SelectedUserNoColor,
 	Slot
 } from '$lib/types'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
@@ -82,9 +83,8 @@ export const actions: Actions = {
 				user: {
 					selectorId: currentUser.id,
 					id: data.id,
-					username: data.username,
-					color: ''
-				} as SelectedUser,
+					username: data.username
+				} as SelectedUserNoColor,
 				error: ''
 			}
 		} catch (e) {

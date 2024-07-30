@@ -3,7 +3,7 @@
 	import type { SelectUserResult, SelectedUser } from '$lib/types'
 	import { applyAction, enhance } from '$app/forms'
 	import FormError from '$lib/FormError.svelte'
-	import { mainColor, makeSetType, selectColors } from '$lib/utils'
+	import { addUser, mainColor, makeSetType, removeUser, selectColors } from '$lib/utils'
 	import { fade } from 'svelte/transition'
 	import { selectedUsers } from '$lib/store'
 	import { get } from 'svelte/store'
@@ -17,17 +17,6 @@
 	let currentUserId = $modalStore[0]?.meta?.currentUserId
 	let currentUsername = $modalStore[0]?.meta?.currentUsername
 	$: selections = [...$selectedUsers.filter((user) => user.selectorId === currentUserId)]
-
-	const deselect = (userId: string) => {
-		const users = get(selectedUsers)
-		const index = users.map((user) => user.id).indexOf(userId)
-		if (index === -1) return
-		selectedUsers.set(users.toSpliced(index, 1))
-	}
-
-	const getNextColor = (users: SelectedUser[]) => {
-		return selectColors.filter((color) => !users.some((user) => user.color === color))[0]
-	}
 
 	let inputRef: HTMLInputElement
 	const refocus = () => {
@@ -73,11 +62,7 @@
 					await update()
 					const typedResult = setTypeSelect(result)
 					if (result.status === 200) {
-						const newUser = {
-							...typedResult.data.user,
-							color: getNextColor(selections)
-						}
-						selectedUsers.set([...selections, newUser])
+						addUser(typedResult.data.user)
 						error = ''
 					} else {
 						error = typedResult.data.error
@@ -116,7 +101,7 @@
 				<button
 					type="button"
 					class="variant-filled chip rounded-full text-black {user.color} shadow"
-					on:click={() => deselect(user.id)}
+					on:click={() => removeUser(user)}
 					transition:fade={{ duration: 100 }}
 				>
 					<p>{user.username}</p>

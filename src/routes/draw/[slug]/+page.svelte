@@ -9,12 +9,14 @@
 	import type { DrawPageData, Prediction, Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
-	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
+	import { addUser, getSlug, getTitle, removeUser, updatePageAuth } from '$lib/utils'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import HowToPlay from '$lib/HowToPlay.svelte'
 	import { updatePredictions } from '$lib/api'
 	import { browser } from '$app/environment'
 	import Cookies from 'js-cookie'
+	import plus from '$lib/images/icons/plus.svg'
+	import x from '$lib/images/icons/x.svg'
 	export let data: DrawPageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -309,22 +311,51 @@
 			<table class="table table-compact !rounded-none">
 				<thead>
 					<tr class="bg-primary-300">
-						<th class="!p-2 text-center text-lg">Rank</th>
-						<th class="!p-2 text-center text-lg">Username</th>
-						<th class="!p-2 text-center text-lg">Total Points</th>
+						<th class="!py-2 text-center sm:text-lg">Rank</th>
+						<th class="!py-2 text-center sm:text-lg">Username</th>
+						<th class="!py-2 text-center sm:text-lg">Total Points</th>
+						<th class="!py-2 text-center sm:text-lg">Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					{#if data.leaderboard.items.length > 0}
-						{#each data.leaderboard.items as user, index}
+						{#each data.leaderboard.items as lb, index}
+							{@const selectedUser = {
+								selectorId: data.currentUser.id,
+								id: lb.user_id,
+								username: lb.username,
+								color: ''
+							}}
 							<tr class="[&>td>*]:text-lg">
 								<td><p>{index + 1}</p></td>
-								<td><p>{user.username}</p></td>
+								<td><p>{lb.username}</p></td>
 								<td>
 									<div class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-1.5">
-										{user.total_points}
+										{lb.total_points}
 									</div></td
 								>
+								<td class="w-1/4">
+									{#if $selectedUsers.find((u) => u.id === lb.user_id)}
+										<button
+											on:click={() => removeUser(selectedUser)}
+											class="mx-auto flex items-center justify-center gap-2 rounded bg-red-200 px-2 py-1"
+										>
+											<p class="text-sm">Remove</p>
+											<img src={x} alt="plus icon" width="12" />
+										</button>
+									{:else}
+										<button
+											on:click={() => addUser(selectedUser)}
+											class={`mx-auto flex items-center justify-center gap-2 rounded bg-primary-200 px-2 py-1 ${
+												$selectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
+											}`}
+											disabled={$selectedUsers.length >= 5}
+										>
+											<p class="text-sm">Add</p>
+											<img src={plus} alt="plus icon" width="12" />
+										</button>
+									{/if}
+								</td>
 							</tr>
 						{/each}
 					{:else}
