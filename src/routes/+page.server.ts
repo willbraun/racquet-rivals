@@ -18,9 +18,10 @@ export async function load({ fetch, locals }) {
 }
 
 export const actions: Actions = {
-	logout: async ({ locals }) => {
+	logout: async ({ locals, cookies }) => {
 		try {
 			locals.pb.authStore.clear()
+			cookies.delete('isLeaderboard', { path: '/' })
 			return {
 				error: ''
 			}

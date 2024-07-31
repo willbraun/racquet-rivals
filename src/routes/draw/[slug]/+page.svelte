@@ -38,9 +38,10 @@
 		isScrollListenerAdded = true
 	}
 
-	let combinedIsLeaderboard = data.isLeaderboard === 'true'
-	isLeaderboard.set(combinedIsLeaderboard)
-	$: combinedIsLeaderboard = $isLeaderboard
+	let serverIsLeaderboard = data.isLeaderboard === 'true'
+	isLeaderboard.set(serverIsLeaderboard)
+	let combinedIsLeaderboard = serverIsLeaderboard
+	$: combinedIsLeaderboard = $isAuth && $isLeaderboard
 	const toggleLeaderboard = (value: boolean) => {
 		isLeaderboard.set(value)
 		Cookies.set('isLeaderboard', value.toString(), { expires: 0.5 })
@@ -309,7 +310,7 @@
 			</div>
 		</div>
 	{:else}
-		<p class="col-span-2 text-center italic sm:col-span-1">Log in to play!</p>
+		<p class="col-span-4 text-center italic sm:col-span-2">Log in to play!</p>
 	{/if}
 </section>
 
