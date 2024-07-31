@@ -321,29 +321,30 @@
 					<tr class="bg-primary-300">
 						<th class="!py-2 text-center text-lg">Rank</th>
 						<th class="!py-2 text-center text-lg">Username</th>
-						<th class="!py-2 text-center text-lg">Total Points</th>
+						<th class="!py-2 text-center text-lg">Points</th>
 						<th class="!py-2 text-center text-lg">Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					{#if data.leaderboard.items.length > 0}
 						{#each data.leaderboard.items as lb, index}
-							{@const selectedUser = {
-								selectorId: data.currentUser.id,
-								id: lb.user_id,
-								username: lb.username
-							}}
-							{@const isMe = data.currentUser.id === lb.user_id}
-							<tr class={`[&>td>*]:text-lg ${isMe && '[&>td]:bg-blue-300'}`}>
+							{@const selectedUser = users.find((u) => u.id === lb.user_id)}
+							<tr class={'[&>td>*]:text-lg [&>td]:!align-middle'}>
 								<td><p>{index + 1}</p></td>
-								<td><p>{lb.username}</p></td>
+								<td
+									><div
+										class={`chip pointer-events-none rounded-full ${selectedUser ? `shadow ${selectedUser.color}` : ''}`}
+									>
+										{lb.username}
+									</div></td
+								>
 								<td>
-									<div class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-1.5">
+									<div class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-2">
 										{lb.total_points}
 									</div></td
 								>
 								<td class="w-1/4">
-									{#if isMe}
+									{#if selectedUser?.id === data.currentUser.id}
 										<p>N/A</p>
 									{:else if $selectedUsers.find((u) => u.id === lb.user_id)}
 										<button
@@ -354,8 +355,13 @@
 											<img src={x} alt="plus icon" width="12" />
 										</button>
 									{:else}
+										{@const newUser = {
+											selectorId: data.currentUser.id,
+											id: lb.user_id,
+											username: lb.username
+										}}
 										<button
-											on:click={() => addUser(selectedUser)}
+											on:click={() => addUser(newUser)}
 											class={`mx-auto flex items-center justify-center gap-2 rounded bg-green-300 px-2 py-1 shadow ${
 												$selectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
 											}`}
