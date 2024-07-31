@@ -18,6 +18,9 @@ export default {
 			borderWidth: {
 				'1': '1px',
 				'16': '16px'
+			},
+			gridTemplateColumns: {
+				'5': 'repeat(5, 1fr)'
 			}
 		}
 	},

@@ -314,74 +314,64 @@
 </section>
 
 {#if combinedIsLeaderboard}
-	<main>
-		<div class="table-container !rounded-none text-center">
-			<table class="table table-compact !rounded-none">
-				<thead>
-					<tr class="bg-primary-300">
-						<th class="!py-2 text-center text-lg">Rank</th>
-						<th class="!py-2 text-center text-lg">Username</th>
-						<th class="!py-2 text-center text-lg">Points</th>
-						<th class="!py-2 text-center text-lg">Action</th>
-					</tr>
-				</thead>
-				<tbody>
-					{#if data.leaderboard.items.length > 0}
-						{#each data.leaderboard.items as lb, index}
-							{@const selectedUser = users.find((u) => u.id === lb.user_id)}
-							<tr class={'[&>td>*]:text-lg [&>td]:!align-middle'}>
-								<td><p>{index + 1}</p></td>
-								<td
-									><div
-										class={`chip pointer-events-none rounded-full ${selectedUser ? `shadow ${selectedUser.color}` : ''}`}
-									>
-										{lb.username}
-									</div></td
-								>
-								<td>
-									<div class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-2">
-										{lb.total_points}
-									</div></td
-								>
-								<td class="w-1/4">
-									{#if selectedUser?.id === data.currentUser.id}
-										<p>N/A</p>
-									{:else if $selectedUsers.find((u) => u.id === lb.user_id)}
-										<button
-											on:click={() => removeUser(lb.user_id)}
-											class="mx-auto flex items-center justify-center gap-2 rounded bg-red-300 px-2 py-1 shadow"
-										>
-											<p class="text-sm">Remove</p>
-											<img src={x} alt="plus icon" width="12" />
-										</button>
-									{:else}
-										{@const newUser = {
-											selectorId: data.currentUser.id,
-											id: lb.user_id,
-											username: lb.username
-										}}
-										<button
-											on:click={() => addUser(newUser)}
-											class={`mx-auto flex items-center justify-center gap-2 rounded bg-green-300 px-2 py-1 shadow ${
-												$selectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
-											}`}
-											disabled={$selectedUsers.length >= 5}
-										>
-											<p class="text-sm">Add</p>
-											<img src={plus} alt="plus icon" width="12" />
-										</button>
-									{/if}
-								</td>
-							</tr>
-						{/each}
+	<main
+		class="grid grid-cols-5 bg-stone-100 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
+	>
+		<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Rank</div>
+		<div class="sticky top-0 z-20 col-span-2 bg-primary-300 py-2 font-bold">Username</div>
+		<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Points</div>
+		<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Action</div>
+		{#if data.leaderboard.items.length > 0}
+			{#each data.leaderboard.items as lb, index}
+				{@const selectedUser = users.find((u) => u.id === lb.user_id)}
+				<div class="border-primary border-b py-4"><p>{index + 1}</p></div>
+				<div class="border-primary col-span-2 border-b py-4">
+					<div
+						class={`chip pointer-events-none rounded-full text-lg ${selectedUser ? `shadow ${selectedUser.color}` : ''}`}
+					>
+						{lb.username}
+					</div>
+				</div>
+				<div class="border-primary border-b py-4">
+					<div class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-2 text-lg">
+						{lb.total_points}
+					</div>
+				</div>
+				<div class="border-primary border-b py-4">
+					{#if selectedUser?.id === data.currentUser.id}
+						<p>N/A</p>
+					{:else if $selectedUsers.find((u) => u.id === lb.user_id)}
+						<button
+							on:click={() => removeUser(lb.user_id)}
+							class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-300 px-2 py-1 shadow sm:h-fit"
+						>
+							<p class="hidden sm:block">Remove</p>
+							<img src={x} alt="plus icon" width="12" />
+						</button>
 					{:else}
-						<tr>
-							<td colspan="4" class="text-center">No points awarded yet. Stay tuned!</td>
-						</tr>
+						{@const newUser = {
+							selectorId: data.currentUser.id,
+							id: lb.user_id,
+							username: lb.username
+						}}
+						<button
+							on:click={() => addUser(newUser)}
+							class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 shadow sm:h-fit ${
+								$selectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
+							}`}
+							disabled={$selectedUsers.length >= 5}
+						>
+							<p class="hidden sm:block">Add</p>
+							<img src={plus} alt="plus icon" width="12" />
+						</button>
 					{/if}
-				</tbody>
-			</table>
-		</div>
+				</div>
+			{/each}
+		{:else}
+			<tr>
+				<td colspan="4" class="text-center">No points awarded yet. Stay tuned!</td>
+			</tr>
+		{/if}
 	</main>
 {:else}
 	<section
