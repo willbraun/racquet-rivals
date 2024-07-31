@@ -17,6 +17,7 @@
 	import Cookies from 'js-cookie'
 	import plus from '$lib/images/icons/plus.svg'
 	import x from '$lib/images/icons/x.svg'
+	import { fade, fly, slide } from 'svelte/transition'
 	export let data: DrawPageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -313,141 +314,144 @@
 		<p class="col-span-4 text-center italic sm:col-span-2">Log in to play!</p>
 	{/if}
 </section>
-
-{#if combinedIsLeaderboard}
-	<main
-		class="mx-auto grid grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
-	>
-		<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Rank</div>
-		<div class="sticky top-0 z-20 col-span-2 bg-primary-300 py-2 font-bold">Username</div>
-		<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Points</div>
-		<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Action</div>
-		{#if data.leaderboard.items.length > 0}
-			{#each data.leaderboard.items as lb, index}
-				{@const selectedUser = users.find((u) => u.id === lb.user_id)}
-				{@const rowStyle = `py-4 ${index % 2 ? 'bg-stone-200' : 'bg-stone-100'}`}
-				<div class={rowStyle}>
-					<p>{index + 1}</p>
-				</div>
-				<div class={`col-span-2 ${rowStyle}`}>
-					<div
-						class={`chip pointer-events-none rounded-full text-lg ${selectedUser ? `shadow ${selectedUser.color}` : ''}`}
-					>
-						{lb.username}
+<main>
+	{#if combinedIsLeaderboard}
+		<div
+			class="z-10 mx-auto grid grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
+		>
+			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Rank</div>
+			<div class="sticky top-0 z-20 col-span-2 bg-primary-300 py-2 font-bold">Username</div>
+			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Points</div>
+			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Action</div>
+			{#if data.leaderboard.items.length > 0}
+				{#each data.leaderboard.items as lb, index}
+					{@const selectedUser = users.find((u) => u.id === lb.user_id)}
+					{@const rowStyle = `py-4 ${index % 2 ? 'bg-stone-200' : 'bg-stone-100'}`}
+					<div class={rowStyle}>
+						<p>{index + 1}</p>
 					</div>
-				</div>
-				<div class={rowStyle}>
-					<div class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-2 text-lg">
-						{lb.total_points}
+					<div class={`col-span-2 ${rowStyle}`}>
+						<div
+							class={`chip pointer-events-none rounded-full text-lg ${selectedUser ? `shadow ${selectedUser.color}` : ''}`}
+						>
+							{lb.username}
+						</div>
 					</div>
-				</div>
-				<div class={rowStyle}>
-					{#if selectedUser?.id === data.currentUser.id}
-						<p>N/A</p>
-					{:else if $selectedUsers.find((u) => u.id === lb.user_id)}
-						<button
-							on:click={() => removeUser(lb.user_id)}
-							class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 sm:h-fit"
-						>
-							<p class="hidden sm:block">Remove</p>
-							<img src={x} alt="plus icon" width="12" />
-						</button>
-					{:else}
-						{@const newUser = {
-							selectorId: data.currentUser.id,
-							id: lb.user_id,
-							username: lb.username
-						}}
-						<button
-							on:click={() => addUser(newUser)}
-							class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 sm:h-fit ${
-								$selectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
-							}`}
-							disabled={$selectedUsers.length >= 5}
-						>
-							<p class="hidden sm:block">Add</p>
-							<img src={plus} alt="plus icon" width="12" />
-						</button>
-					{/if}
-				</div>
-			{/each}
-		{:else}
-			<tr>
-				<td colspan="4" class="text-center">No points awarded yet. Stay tuned!</td>
-			</tr>
-		{/if}
-	</main>
-{:else}
-	<section
-		class="sticky top-0 z-20 overflow-x-hidden {headerColor} font-semibold tracking-wide shadow [&>*]:text-lg"
-		bind:this={roundHeader}
-	>
-		<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
-			{#each Object.entries(pointsByRound) as [round, points]}
-				<div class="flex justify-center gap-2 bg-primary-300 py-2 text-center">
-					<p>{round}</p>
-					{#if points > 0}
-						<div class="aspect-square h-full rounded-full bg-green-400 shadow">{points}</div>
-					{/if}
-				</div>
-			{/each}
-		</div>
-	</section>
-	<main
-		class="relative grid overflow-x-auto overscroll-x-none bg-stone-100 pb-12"
-		style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
-		bind:this={drawGrid}
-	>
-		{#each ourRounds as round, index}
-			<div class="column">
-				{#each slots.filter((slot) => slot.round === round) as slot}
-					<div
-						class="relative flex items-end justify-center border-b-2 border-black text-center"
-						class:border-r-2={!(slot.position % 2)}
-						style:height={getHeight(index, slot.position)}
-					>
-						{#if slot.name.trim()}
-							<p class="text-lg" data-testid={`SlotR${slot.round}P${slot.position}`}>
-								{`${slot.seed} ${slot.name}`}
-							</p>
+					<div class={rowStyle}>
+						<div class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-2 text-lg">
+							{lb.total_points}
+						</div>
+					</div>
+					<div class={rowStyle}>
+						{#if selectedUser?.id === data.currentUser.id}
+							<p>N/A</p>
+						{:else if $selectedUsers.find((u) => u.id === lb.user_id)}
+							<button
+								on:click={() => removeUser(lb.user_id)}
+								class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 sm:h-fit"
+							>
+								<p class="hidden sm:block">Remove</p>
+								<img src={x} alt="plus icon" width="12" />
+							</button>
 						{:else}
-							<p
-								class="text-lg italic text-surface-800"
-								data-testid={`SlotR${slot.round}P${slot.position}`}
+							{@const newUser = {
+								selectorId: data.currentUser.id,
+								id: lb.user_id,
+								username: lb.username
+							}}
+							<button
+								on:click={() => addUser(newUser)}
+								class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 sm:h-fit ${
+									$selectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
+								}`}
+								disabled={$selectedUsers.length >= 5}
 							>
-								TBD
-							</p>
-						{/if}
-						{#if $isAuth && index > 0}
-							{@const slotPredictions = $predictionStore
-								.filter((p) => p.draw_slot_id === slot.id)
-								.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))}
-							{@const currentUserPrediction = slotPredictions.find(
-								(p) => p.user_id === data.currentUser.id
-							)}
-							{@const selectedUserPredictions = slotPredictions.filter(
-								(p) => p.user_id !== data.currentUser.id
-							)}
-							{@const players = getPlayerOptions(slot, $predictionStore, index)}
-							<div
-								class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
-							>
-								<AddPrediction
-									{slot}
-									roundIndex={index}
-									{players}
-									prediction={currentUserPrediction}
-									{getColor}
-									{predictionsAllowed}
-								/>
-								{#each selectedUserPredictions as prediction}
-									<ViewPrediction {prediction} {getColor} />
-								{/each}
-							</div>
+								<p class="hidden sm:block">Add</p>
+								<img src={plus} alt="plus icon" width="12" />
+							</button>
 						{/if}
 					</div>
 				{/each}
+			{:else}
+				<tr>
+					<td colspan="4" class="text-center">No points awarded yet. Stay tuned!</td>
+				</tr>
+			{/if}
+		</div>
+	{:else}
+		<div>
+			<div
+				class="sticky top-0 z-20 overflow-x-hidden {headerColor} font-semibold tracking-wide shadow [&>*]:text-lg"
+				bind:this={roundHeader}
+			>
+				<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
+					{#each Object.entries(pointsByRound) as [round, points]}
+						<div class="flex justify-center gap-2 bg-primary-300 py-2 text-center">
+							<p>{round}</p>
+							{#if points > 0}
+								<div class="aspect-square h-full rounded-full bg-green-400 shadow">{points}</div>
+							{/if}
+						</div>
+					{/each}
+				</div>
 			</div>
-		{/each}
-	</main>
-{/if}
+			<div
+				class="relative grid overflow-x-auto overscroll-x-none bg-stone-100 pb-12"
+				style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
+				bind:this={drawGrid}
+			>
+				{#each ourRounds as round, index}
+					<div class="column">
+						{#each slots.filter((slot) => slot.round === round) as slot}
+							<div
+								class="relative flex items-end justify-center border-b-2 border-black text-center"
+								class:border-r-2={!(slot.position % 2)}
+								style:height={getHeight(index, slot.position)}
+							>
+								{#if slot.name.trim()}
+									<p class="text-lg" data-testid={`SlotR${slot.round}P${slot.position}`}>
+										{`${slot.seed} ${slot.name}`}
+									</p>
+								{:else}
+									<p
+										class="text-lg italic text-surface-800"
+										data-testid={`SlotR${slot.round}P${slot.position}`}
+									>
+										TBD
+									</p>
+								{/if}
+								{#if $isAuth && index > 0}
+									{@const slotPredictions = $predictionStore
+										.filter((p) => p.draw_slot_id === slot.id)
+										.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))}
+									{@const currentUserPrediction = slotPredictions.find(
+										(p) => p.user_id === data.currentUser.id
+									)}
+									{@const selectedUserPredictions = slotPredictions.filter(
+										(p) => p.user_id !== data.currentUser.id
+									)}
+									{@const players = getPlayerOptions(slot, $predictionStore, index)}
+									<div
+										class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
+									>
+										<AddPrediction
+											{slot}
+											roundIndex={index}
+											{players}
+											prediction={currentUserPrediction}
+											{getColor}
+											{predictionsAllowed}
+										/>
+										{#each selectedUserPredictions as prediction}
+											<ViewPrediction {prediction} {getColor} />
+										{/each}
+									</div>
+								{/if}
+							</div>
+						{/each}
+					</div>
+				{/each}
+			</div>
+		</div>
+	{/if}
+</main>
