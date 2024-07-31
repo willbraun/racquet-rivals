@@ -315,7 +315,7 @@
 
 {#if combinedIsLeaderboard}
 	<main
-		class="grid grid-cols-5 bg-stone-100 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
+		class="mx-auto grid grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
 	>
 		<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Rank</div>
 		<div class="sticky top-0 z-20 col-span-2 bg-primary-300 py-2 font-bold">Username</div>
@@ -324,26 +324,29 @@
 		{#if data.leaderboard.items.length > 0}
 			{#each data.leaderboard.items as lb, index}
 				{@const selectedUser = users.find((u) => u.id === lb.user_id)}
-				<div class="border-primary border-b py-4"><p>{index + 1}</p></div>
-				<div class="border-primary col-span-2 border-b py-4">
+				{@const rowStyle = `py-4 ${index % 2 ? 'bg-stone-200' : 'bg-stone-100'}`}
+				<div class={rowStyle}>
+					<p>{index + 1}</p>
+				</div>
+				<div class={`col-span-2 ${rowStyle}`}>
 					<div
 						class={`chip pointer-events-none rounded-full text-lg ${selectedUser ? `shadow ${selectedUser.color}` : ''}`}
 					>
 						{lb.username}
 					</div>
 				</div>
-				<div class="border-primary border-b py-4">
+				<div class={rowStyle}>
 					<div class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-2 text-lg">
 						{lb.total_points}
 					</div>
 				</div>
-				<div class="border-primary border-b py-4">
+				<div class={rowStyle}>
 					{#if selectedUser?.id === data.currentUser.id}
 						<p>N/A</p>
 					{:else if $selectedUsers.find((u) => u.id === lb.user_id)}
 						<button
 							on:click={() => removeUser(lb.user_id)}
-							class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-300 px-2 py-1 shadow sm:h-fit"
+							class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 sm:h-fit"
 						>
 							<p class="hidden sm:block">Remove</p>
 							<img src={x} alt="plus icon" width="12" />
@@ -356,7 +359,7 @@
 						}}
 						<button
 							on:click={() => addUser(newUser)}
-							class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 shadow sm:h-fit ${
+							class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 sm:h-fit ${
 								$selectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
 							}`}
 							disabled={$selectedUsers.length >= 5}
