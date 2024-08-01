@@ -17,7 +17,9 @@
 	import Cookies from 'js-cookie'
 	import plus from '$lib/images/icons/plus.svg'
 	import x from '$lib/images/icons/x.svg'
-	import { fade, fly, slide } from 'svelte/transition'
+	import goldMedal from '$lib/images/icons/goldmedal.png'
+	import silverMedal from '$lib/images/icons/silvermedal.png'
+	import bronzeMedal from '$lib/images/icons/bronzemedal.png'
 	export let data: DrawPageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -328,7 +330,15 @@
 					{@const selectedUser = users.find((u) => u.id === lb.user_id)}
 					{@const rowStyle = `py-4 ${index % 2 ? 'bg-stone-200' : 'bg-stone-100'}`}
 					<div class={rowStyle}>
-						<p>{index + 1}</p>
+						{#if lb.rank === 1}
+							<img class="rounded-full shadow" src={goldMedal} alt="gold medal" width="40" />
+						{:else if lb.rank === 2}
+							<img class="rounded-full shadow" src={silverMedal} alt="silver medal" width="40" />
+						{:else if lb.rank === 3}
+							<img class="rounded-full shadow" src={bronzeMedal} alt="bronze medal" width="40" />
+						{:else}
+							<p class="text-2xl font-extrabold">{lb.rank}</p>
+						{/if}
 					</div>
 					<div class={`col-span-2 ${rowStyle}`}>
 						<div

@@ -67,6 +67,7 @@ export interface Leaderboard {
 	collectionName: 'draw_leaderboard'
 	draw_id: string
 	id: string
+	rank: number
 	total_points: number
 	user_id: string
 	username: string
