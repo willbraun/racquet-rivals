@@ -1,7 +1,16 @@
-import { render, screen } from '@testing-library/svelte'
+import { render, screen, within } from '@testing-library/svelte'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
+import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/vitest'
-import type { Draw, DrawPageData, PbListResponse, Prediction, SelectedUser, Slot } from '$lib/types'
+import type {
+	Draw,
+	DrawPageData,
+	Leaderboard,
+	PbListResponse,
+	Prediction,
+	SelectedUser,
+	Slot
+} from '$lib/types'
 import slotData from '$lib/testing/data/slot_data.json'
 import DrawPageSetup from '$lib/testing/components/DrawPageSetup.svelte'
 import { predictionStore, selectedUsers } from '$lib/store'
@@ -69,6 +78,54 @@ const data: DrawPageData = {
 		year: 2024
 	} as Draw,
 	slots: slotData as PbListResponse<Slot>,
+	leaderboard: {
+		items: [
+			{
+				collectionId: 'zpjgxcf4d9ojqcd',
+				collectionName: 'draw_leaderboard',
+				draw_id: 'j5mehm6fvdf9105',
+				id: 'j5mehm6fvdf9105',
+				total_points: 16,
+				position: 1,
+				user_id: 'userId',
+				username: 'will'
+			},
+			{
+				collectionId: 'zpjgxcf4d9ojqcd',
+				collectionName: 'draw_leaderboard',
+				draw_id: 'j5mehm6fvdf9105',
+				id: 'j5mehm6fvdf9105',
+				total_points: 12,
+				position: 2,
+				user_id: 'userId',
+				username: 'john'
+			},
+			{
+				collectionId: 'zpjgxcf4d9ojqcd',
+				collectionName: 'draw_leaderboard',
+				draw_id: 'j5mehm6fvdf9105',
+				id: 'j5mehm6fvdf9105',
+				total_points: 8,
+				position: 3,
+				user_id: 'userId',
+				username: 'steve'
+			},
+			{
+				collectionId: 'zpjgxcf4d9ojqcd',
+				collectionName: 'draw_leaderboard',
+				draw_id: 'j5mehm6fvdf9105',
+				id: 'j5mehm6fvdf9105',
+				total_points: 4,
+				position: 4,
+				user_id: 'userId',
+				username: 'sally'
+			}
+		] as Leaderboard[],
+		page: 1,
+		perPage: 30,
+		totalItems: 4,
+		totalPages: 1
+	} as PbListResponse<Leaderboard>,
 	currentUser: {
 		selectorId: 'userId',
 		id: 'userId',
@@ -309,5 +366,29 @@ describe('Draw page component', () => {
 		expect(screen.getByTestId('User_will')).toHaveTextContent('will')
 		expect(screen.getByTestId('User_will')).toHaveClass('bg-blue-300')
 		expect(screen.getByTestId('UserPoints_will')).toHaveTextContent('16')
+	})
+
+	test('Leaderboard toggles in and out', async () => {
+		render(DrawPageSetup, { props: { data } })
+
+		const leaderboardToggle = screen.getByTestId('LeaderboardToggle')
+		const buttons = within(leaderboardToggle).getAllByRole('button')
+
+		expect(buttons[0]).toHaveClass('text-white')
+		expect(buttons[1]).not.toHaveClass('text-white')
+		expect(screen.getByTestId('Draw')).toBeInTheDocument()
+		expect(screen.queryByTestId('Leaderboard')).not.toBeInTheDocument()
+
+		await userEvent.click(buttons[1])
+		expect(buttons[0]).not.toHaveClass('text-white')
+		expect(buttons[1]).toHaveClass('text-white')
+		expect(screen.queryByTestId('Draw')).not.toBeInTheDocument()
+		expect(screen.getByTestId('Leaderboard')).toBeInTheDocument()
+
+		await userEvent.click(buttons[0])
+		expect(buttons[0]).toHaveClass('text-white')
+		expect(buttons[1]).not.toHaveClass('text-white')
+		expect(screen.getByTestId('Draw')).toBeInTheDocument()
+		expect(screen.queryByTestId('Leaderboard')).not.toBeInTheDocument()
 	})
 })

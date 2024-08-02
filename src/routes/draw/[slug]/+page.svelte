@@ -301,7 +301,7 @@
 					</svg>
 				</button>
 			</div>
-			<div class="flex min-w-fit overflow-hidden rounded-md">
+			<div class="flex min-w-fit overflow-hidden rounded-md" data-testid="LeaderboardToggle">
 				<button
 					class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-300' : 'bg-primary-500 text-white'}`}
 					on:click={() => toggleLeaderboard(false)}>Draw</button
@@ -320,6 +320,7 @@
 	{#if combinedIsLeaderboard}
 		<div
 			class="z-10 mx-auto grid grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
+			data-testid="Leaderboard"
 		>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Rank</div>
 			<div class="sticky top-0 z-20 col-span-2 bg-primary-300 py-2 font-bold">Username</div>
@@ -389,7 +390,7 @@
 			{/if}
 		</div>
 	{:else}
-		<div>
+		<div data-testid="Draw">
 			<div
 				class="sticky top-0 z-20 overflow-x-hidden {headerColor} font-semibold tracking-wide shadow [&>*]:text-lg"
 				bind:this={roundHeader}
