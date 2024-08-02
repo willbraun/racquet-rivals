@@ -384,9 +384,7 @@
 					</div>
 				{/each}
 			{:else}
-				<tr>
-					<td colspan="4" class="text-center">No points awarded yet. Stay tuned!</td>
-				</tr>
+				<div class="col-span-5 py-4 text-center">No points awarded yet. Stay tuned!</div>
 			{/if}
 		</div>
 	{:else}
