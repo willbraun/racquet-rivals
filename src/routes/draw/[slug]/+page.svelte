@@ -370,7 +370,7 @@
 					<div class={rowStyle}>
 						{#if selectedUser?.id === data.currentUser.id}
 							<p>N/A</p>
-						{:else if $selectedUsers.find((u) => u.id === lb.user_id)}
+						{:else if combinedSelectedUsers.find((u) => u.id === lb.user_id)}
 							<button
 								on:click={() => removeUser(lb.user_id)}
 								class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 sm:h-fit"
