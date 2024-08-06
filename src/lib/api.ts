@@ -1,13 +1,7 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
-import Pocketbase from 'pocketbase'
 import type { PbListResponse, Prediction, SelectedUser } from './types'
-import { predictionStore } from './store'
 
-export const updatePredictions = async (
-	pb: Pocketbase,
-	drawId: string,
-	allUsers: SelectedUser[]
-) => {
+export const getPredictions = async (drawId: string, allUsers: SelectedUser[], token: string) => {
 	const allUserIds = allUsers.map((user) => user.id)
 	const userFilter = allUserIds.map((id) => `user_id="${id}"`).join('||')
 	const filter = `(draw_id="${drawId}" && (${userFilter}))`
@@ -15,7 +9,7 @@ export const updatePredictions = async (
 
 	const options = {
 		headers: {
-			Authorization: pb.authStore.token
+			Authorization: token
 		}
 	}
 
@@ -24,5 +18,5 @@ export const updatePredictions = async (
 		options
 	)
 	const predictionData: PbListResponse<Prediction> = await predictionRes.json()
-	predictionStore.set(predictionData.items)
+	return predictionData
 }

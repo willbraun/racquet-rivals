@@ -4,6 +4,7 @@ import { isAuth, selectedUsers } from './store'
 import type { Draw, PbListResponse, SelectedUser, SelectedUserNoColor } from './types'
 import { format } from 'date-fns'
 import { get } from 'svelte/store'
+import Cookies from 'js-cookie'
 
 type ErrorObjData = {
 	[key: string]: {
@@ -69,12 +70,16 @@ export const addUser = (user: SelectedUserNoColor) => {
 		...user,
 		color: getNextColor(users)
 	}
-	selectedUsers.set([...users, newUser])
+	const newUsers = [...users, newUser]
+	selectedUsers.set(newUsers)
+	Cookies.set('selectedUsers', JSON.stringify(newUsers))
 }
 
 export const removeUser = (userId: string) => {
 	const users = get(selectedUsers)
-	selectedUsers.set(users.filter((u) => u.id !== userId))
+	const newUsers = users.filter((u) => u.id !== userId)
+	selectedUsers.set(newUsers)
+	Cookies.set('selectedUsers', JSON.stringify(newUsers))
 }
 
 export const mainColor = 'bg-blue-300'

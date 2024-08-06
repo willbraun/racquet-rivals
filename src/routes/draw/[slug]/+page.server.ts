@@ -12,6 +12,7 @@ import type {
 	Slot
 } from '$lib/types'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
+import { getPredictions } from '$lib/api.js'
 
 const getCurrentUser = (locals: App.Locals): SelectedUser => {
 	return {
@@ -43,6 +44,10 @@ export async function load({ fetch, params, locals, cookies }) {
 	)
 	const slotData: PbListResponse<Slot> = await slotRes.json()
 
+	const cookieSelectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
+	const allUsers = [currentUser, ...cookieSelectedUsers]
+	const predictionData = await getPredictions(id, allUsers, locals.pb.authStore.token)
+
 	const leaderboardRes = await fetch(
 		`${url}/api/collections/draw_leaderboard/records?perPage=255&filter=(draw_id="${id}")`,
 		options
@@ -55,7 +60,9 @@ export async function load({ fetch, params, locals, cookies }) {
 		draw: drawData,
 		slots: slotData,
 		leaderboard: leaderboardData,
+		predictions: predictionData,
 		currentUser: currentUser,
+		cookieSelectedUsers: cookieSelectedUsers,
 		pb_auth_valid: locals.pb.authStore.isValid as boolean,
 		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string,
 		isLeaderboard: cookies.get('isLeaderboard')

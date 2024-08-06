@@ -5,14 +5,14 @@
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
-	import { isAuth, predictionStore, selectedUsers, isLeaderboard } from '$lib/store'
-	import { type DrawPageData, type Prediction, type Slot } from '$lib/types'
+	import { isAuth, selectedUsers, isLeaderboard, predictionStore } from '$lib/store'
+	import { type DrawPageData, type Prediction, type SelectedUser, type Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { addUser, getSlug, getTitle, removeUser, updatePageAuth } from '$lib/utils'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import HowToPlay from '$lib/HowToPlay.svelte'
-	import { updatePredictions } from '$lib/api'
+	import { getPredictions } from '$lib/api'
 	import { browser } from '$app/environment'
 	import Cookies from 'js-cookie'
 	import plus from '$lib/images/icons/plus.svg'
@@ -20,6 +20,8 @@
 	import goldMedal from '$lib/images/icons/goldmedal.png'
 	import silverMedal from '$lib/images/icons/silvermedal.png'
 	import bronzeMedal from '$lib/images/icons/bronzemedal.png'
+	import { get } from 'svelte/store'
+	import SelectUsers from './SelectUsers.svelte'
 	export let data: DrawPageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -53,12 +55,24 @@
 		}
 	}
 
+	let combinedSelectedUsers = data.cookieSelectedUsers
+	$: if (browser) {
+		combinedSelectedUsers = $selectedUsers
+	}
 	$: users = [
 		data.currentUser,
-		...$selectedUsers.filter((user) => user.selectorId === data.currentUser.id)
+		...combinedSelectedUsers.filter((user) => user.selectorId === data.currentUser.id)
 	]
+
+	let combinedPredictions = data.predictions.items
+	const updatePredictions = async (allUsers: SelectedUser[]) => {
+		const predictionData = await getPredictions(data.draw.id, allUsers, pb.authStore.token)
+		predictionStore.set(predictionData.items)
+		combinedPredictions = $predictionStore
+	}
+
 	$: if (browser) {
-		updatePredictions(pb, data.draw.id, users)
+		updatePredictions(users)
 	}
 	$: userIds = users.map((user) => user.id)
 
@@ -276,7 +290,7 @@
 							data-testid={`UserPoints_${user.username}`}
 						>
 							<p>
-								{$predictionStore
+								{combinedPredictions
 									.filter((p) => p.user_id === user.id)
 									.map((p) => p.points)
 									.reduce((a, b) => a + b, 0)}
@@ -430,7 +444,7 @@
 									</p>
 								{/if}
 								{#if $isAuth && index > 0}
-									{@const slotPredictions = $predictionStore
+									{@const slotPredictions = combinedPredictions
 										.filter((p) => p.draw_slot_id === slot.id)
 										.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))}
 									{@const currentUserPrediction = slotPredictions.find(
@@ -439,7 +453,7 @@
 									{@const selectedUserPredictions = slotPredictions.filter(
 										(p) => p.user_id !== data.currentUser.id
 									)}
-									{@const players = getPlayerOptions(slot, $predictionStore, index)}
+									{@const players = getPlayerOptions(slot, combinedPredictions, index)}
 									<div
 										class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
 									>

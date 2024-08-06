@@ -129,6 +129,8 @@ export interface DrawPageData {
 	draw: Draw
 	slots: PbListResponse<Slot>
 	leaderboard: PbListResponse<Leaderboard>
+	predictions: PbListResponse<Prediction>
+	cookieSelectedUsers: SelectedUser[]
 	currentUser: SelectedUser
 	pb_auth_valid: boolean
 	pb_auth_cookie: string
