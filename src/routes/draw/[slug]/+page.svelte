@@ -387,9 +387,9 @@
 							<button
 								on:click={() => addUser(newUser)}
 								class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 sm:h-fit ${
-									$selectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
+									combinedSelectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
 								}`}
-								disabled={$selectedUsers.length >= 5}
+								disabled={combinedSelectedUsers.length >= 5}
 							>
 								<p class="hidden sm:block">Add</p>
 								<img src={plus} alt="plus icon" width="12" />

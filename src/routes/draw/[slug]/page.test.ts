@@ -13,7 +13,7 @@ import type {
 } from '$lib/types'
 import slotData from '$lib/testing/data/slot_data.json'
 import DrawPageSetup from '$lib/testing/components/DrawPageSetup.svelte'
-import { predictionStore, selectedUsers } from '$lib/store'
+import { selectedUsers } from '$lib/store'
 
 const data: DrawPageData = {
 	active: {
@@ -86,7 +86,7 @@ const data: DrawPageData = {
 				draw_id: 'j5mehm6fvdf9105',
 				id: 'j5mehm6fvdf9105',
 				total_points: 16,
-				position: 1,
+				rank: 1,
 				user_id: 'userId',
 				username: 'will'
 			},
@@ -96,7 +96,7 @@ const data: DrawPageData = {
 				draw_id: 'j5mehm6fvdf9105',
 				id: 'j5mehm6fvdf9105',
 				total_points: 12,
-				position: 2,
+				rank: 2,
 				user_id: 'userId',
 				username: 'john'
 			},
@@ -106,7 +106,7 @@ const data: DrawPageData = {
 				draw_id: 'j5mehm6fvdf9105',
 				id: 'j5mehm6fvdf9105',
 				total_points: 8,
-				position: 3,
+				rank: 3,
 				user_id: 'userId',
 				username: 'steve'
 			},
@@ -116,7 +116,7 @@ const data: DrawPageData = {
 				draw_id: 'j5mehm6fvdf9105',
 				id: 'j5mehm6fvdf9105',
 				total_points: 4,
-				position: 4,
+				rank: 4,
 				user_id: 'userId',
 				username: 'sally'
 			}
@@ -126,6 +126,76 @@ const data: DrawPageData = {
 		totalItems: 4,
 		totalPages: 1
 	} as PbListResponse<Leaderboard>,
+	predictions: {
+		items: [
+			{
+				collectionId: 'collectionId',
+				collectionName: 'view_predictions',
+				draw_id: 'drawId',
+				draw_slot_id: 'drawSlotId',
+				round: 7,
+				position: 1,
+				seed: '(1)',
+				id: 'predictionId1',
+				name: 'Roger Federer',
+				points: 4,
+				user_id: 'userId',
+				username: 'will'
+			},
+			{
+				collectionId: 'collectionId',
+				collectionName: 'view_predictions',
+				draw_id: 'drawId',
+				draw_slot_id: 'drawSlotId',
+				round: 7,
+				position: 2,
+				seed: '(2)',
+				id: 'predictionId2',
+				name: 'Bad PredictionTest',
+				points: 4,
+				user_id: 'userId',
+				username: 'will'
+			},
+			{
+				collectionId: 'collectionId',
+				collectionName: 'view_predictions',
+				draw_id: 'drawId',
+				draw_slot_id: 'drawSlotId',
+				round: 8,
+				position: 1,
+				seed: '(1)',
+				id: 'predictionId3',
+				name: 'Roger Federer',
+				points: 8,
+				user_id: 'userId',
+				username: 'will'
+			}
+		] as Prediction[],
+		page: 1,
+		perPage: 30,
+		totalItems: 0,
+		totalPages: 1
+	} as PbListResponse<Prediction>,
+	cookieSelectedUsers: [
+		{
+			selectorId: 'userId',
+			id: 'userId1',
+			username: 'john',
+			color: 'bg-red-300'
+		},
+		{
+			selectorId: 'userId',
+			id: 'userId2',
+			username: 'steve',
+			color: 'bg-yellow-300'
+		},
+		{
+			selectorId: 'userId',
+			id: 'userId3',
+			username: 'sally',
+			color: 'bg-green-300'
+		}
+	],
 	currentUser: {
 		selectorId: 'userId',
 		id: 'userId',
@@ -133,21 +203,19 @@ const data: DrawPageData = {
 		color: 'bg-blue-300'
 	} as SelectedUser,
 	pb_auth_valid: true,
-	pb_auth_cookie: 'dummy_cookie'
+	pb_auth_cookie: 'dummy_cookie',
+	isLeaderboard: 'false'
 }
 
 describe('Draw page component', () => {
 	const initialSelections: SelectedUser[] = []
-	const initialPredictions: Prediction[] = []
 
 	beforeEach(() => {
 		selectedUsers.set(initialSelections)
-		predictionStore.set(initialPredictions)
 	})
 
 	afterEach(() => {
 		selectedUsers.set(initialSelections)
-		predictionStore.set(initialPredictions)
 	})
 
 	test('Renders', () => {
@@ -282,29 +350,8 @@ describe('Draw page component', () => {
 		expect(screen.queryByText('Predictions open until:')).not.toBeInTheDocument()
 	})
 
-	test('Selected users appear', () => {
-		const users: SelectedUser[] = [
-			{
-				selectorId: 'userId',
-				id: 'userId1',
-				username: 'john',
-				color: 'bg-red-300'
-			},
-			{
-				selectorId: 'userId',
-				id: 'userId2',
-				username: 'steve',
-				color: 'bg-yellow-300'
-			},
-			{
-				selectorId: 'userId',
-				id: 'userId3',
-				username: 'sally',
-				color: 'bg-green-300'
-			}
-		]
-
-		selectedUsers.set(users)
+	test('Selected users render', () => {
+		selectedUsers.set(data.cookieSelectedUsers)
 
 		render(DrawPageSetup, { props: { data } })
 
@@ -314,53 +361,6 @@ describe('Draw page component', () => {
 	})
 
 	test('Points tallied correctly', () => {
-		const predictions = [
-			{
-				collectionId: 'collectionId',
-				collectionName: 'view_predictions',
-				draw_id: 'drawId',
-				draw_slot_id: 'drawSlotId',
-				round: 7,
-				position: 1,
-				seed: '(1)',
-				id: 'predictionId',
-				name: 'Roger Federer',
-				points: 4,
-				user_id: 'userId',
-				username: 'will'
-			},
-			{
-				collectionId: 'collectionId',
-				collectionName: 'view_predictions',
-				draw_id: 'drawId',
-				draw_slot_id: 'drawSlotId',
-				round: 7,
-				position: 2,
-				seed: '(2)',
-				id: 'predictionId',
-				name: 'Rafael Nadal',
-				points: 4,
-				user_id: 'userId',
-				username: 'will'
-			},
-			{
-				collectionId: 'collectionId',
-				collectionName: 'view_predictions',
-				draw_id: 'drawId',
-				draw_slot_id: 'drawSlotId',
-				round: 8,
-				position: 1,
-				seed: '(1)',
-				id: 'predictionId',
-				name: 'Roger Federer',
-				points: 8,
-				user_id: 'userId',
-				username: 'will'
-			}
-		] as Prediction[]
-
-		predictionStore.set(predictions)
-
 		render(DrawPageSetup, { props: { data } })
 
 		expect(screen.getByTestId('User_will')).toHaveTextContent('will')
