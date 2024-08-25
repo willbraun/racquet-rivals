@@ -6,14 +6,17 @@ export interface PbListResponse<T> {
 	items: T[]
 }
 
+type Event = "Men's Singles" | "Women's Singles"
+export type TournamentName = 'Australian Open' | 'French Open' | 'Wimbledon' | 'US Open'
+
 export interface Draw {
 	collectionId: string
 	collectionName: 'draw'
 	created: string
 	end_date: string
-	event: "Men's Singles" | "Women's Singles"
+	event: Event
 	id: string
-	name: string
+	name: TournamentName
 	prediction_close: string
 	size: number
 	start_date: string
@@ -73,6 +76,17 @@ export interface Leaderboard {
 	username: string
 }
 
+export interface Banner {
+	collectionId: string
+	collectionName: 'banner'
+	created: string
+	id: string
+	next_tournament: TournamentName
+	start_date: string
+	end_date: string
+	updated: string
+}
+
 export interface SelectedUserNoColor {
 	selectorId: string
 	id: string
@@ -118,6 +132,7 @@ declare global {
 export interface HomePageData {
 	active: PbListResponse<Draw>
 	completed: PbListResponse<Draw>
+	banner: Banner
 	pb_auth_valid: boolean
 	pb_auth_cookie: string
 	pb_auth_username: string

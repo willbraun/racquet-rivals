@@ -8,7 +8,8 @@
 	import { onMount } from 'svelte'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import HowToPlay from '$lib/HowToPlay.svelte'
-	import type { HomePageData } from '$lib/types'
+	import type { HomePageData, TournamentName } from '$lib/types'
+	import { format } from 'date-fns'
 	export let data: HomePageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -18,6 +19,21 @@
 
 	const pillStyle =
 		'flex justify-center items-center text-center text-lg sm:text-xl md:text-2xl rounded-full px-6 py-2'
+
+	const bannerStyleMap: { [key in TournamentName]: string } = {
+		'Australian Open': 'bg-gradient-to-r from-indigo-600 to-cyan-300',
+		'French Open': 'bg-gradient-to-r from-orange-600 to-orange-300',
+		Wimbledon: 'bg-gradient-to-r from-green-600 to-purple-600',
+		'US Open': 'bg-gradient-to-r from-blue-700 to-yellow-300'
+	}
+
+	const formatDateRange = (start: string, end: string) => {
+		const startDate = new Date(start)
+		const endDate = new Date(end)
+		return `${format(startDate, 'MMM d, yyyy')} - ${format(endDate, 'MMM d, yyyy')}`
+	}
+
+	const dateRange = formatDateRange(data.banner.start_date, data.banner.end_date)
 
 	onMount(() => {
 		sessionStorage.setItem('loginGoto', '/')
@@ -72,12 +88,13 @@
 			{/if}
 		</section>
 		<section class="mb-24">
-			<!-- Wimbledon: bg-gradient-to-r from-green-600 to-purple-600 -->
 			<div
-				class="mx-4 mb-12 flex flex-col gap-8 rounded-xl bg-gradient-to-r from-blue-700 to-yellow-300 p-4 text-center text-2xl font-bold text-white shadow-lg sm:text-4xl"
+				class="mx-4 mb-12 flex flex-col gap-8 rounded-xl p-4 text-center text-2xl font-bold text-white shadow-lg sm:text-4xl {bannerStyleMap[
+					data.banner.next_tournament
+				]}"
 			>
-				<p>US Open</p>
-				<p>Aug 26, 2024 - Sep 8, 2024</p>
+				<p>{data.banner.next_tournament}</p>
+				<p>{dateRange}</p>
 			</div>
 			<h3 class="mb-8 text-center text-4xl sm:text-6xl">Active Draws</h3>
 			{#if data.active.totalItems > 0}
