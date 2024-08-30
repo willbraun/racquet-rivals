@@ -13,3 +13,9 @@ isAuth.subscribe((value) => {
 export const predictionStore = writable<Prediction[]>([])
 export const selectedUsers = persisted<SelectedUser[]>('selectedUsers', [])
 export const isLeaderboard = writable<boolean>(false)
+
+export const isMobile = writable<boolean>(false)
+if (typeof window !== 'undefined') {
+	const value = 'maxTouchPoints' in navigator && navigator.maxTouchPoints > 0
+	isMobile.set(value)
+}

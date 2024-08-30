@@ -10,7 +10,8 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"types": ["@types/js-cookie"]
+		"types": ["@types/js-cookie"],
+		"lib": ["ESNext", "DOM"]
 	},
 	"exclude": ["/build/**/*"]
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias

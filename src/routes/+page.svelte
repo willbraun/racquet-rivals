@@ -2,14 +2,15 @@
 	import Pocketbase from 'pocketbase'
 	import Logout from '$lib/Logout.svelte'
 	import { afterNavigate } from '$app/navigation'
-	import { isAuth } from '$lib/store.js'
-	import { getSlug, getTitle, updatePageAuth } from '$lib/utils.js'
+	import { isAuth, isMobile } from '$lib/store'
+	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
 	import bracketLeft from '$lib/images/bracket-left.svg'
 	import { onMount } from 'svelte'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import HowToPlay from '$lib/HowToPlay.svelte'
 	import type { HomePageData, TournamentName } from '$lib/types'
 	import { format } from 'date-fns'
+	import ShareViaText from '$lib/ShareViaText.svelte'
 	export let data: HomePageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -41,6 +42,9 @@
 </script>
 
 <header class="absolute right-0 top-0 flex items-center justify-end gap-2 p-4">
+	{#if $isMobile}
+		<ShareViaText currentUser={data.pb_auth_username} />
+	{/if}
 	<HowToPlay />
 	{#if $isAuth}
 		<Logout />

@@ -5,7 +5,7 @@
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
-	import { isAuth, selectedUsers, isLeaderboard, predictionStore } from '$lib/store'
+	import { isAuth, selectedUsers, isLeaderboard, predictionStore, isMobile } from '$lib/store'
 	import { type DrawPageData, type Prediction, type SelectedUser, type Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
@@ -20,8 +20,8 @@
 	import goldMedal from '$lib/images/icons/goldmedal.png'
 	import silverMedal from '$lib/images/icons/silvermedal.png'
 	import bronzeMedal from '$lib/images/icons/bronzemedal.png'
-	import { get } from 'svelte/store'
-	import SelectUsers from './SelectUsers.svelte'
+	import share from '$lib/images/icons/share-from-square-solid.svg'
+	import ShareViaText from '$lib/ShareViaText.svelte'
 	export let data: DrawPageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -247,7 +247,12 @@
 	<div
 		class="ml-auto flex w-fit flex-none flex-col flex-wrap items-center justify-end gap-2 sm:flex-row sm:self-start"
 	>
-		<HowToPlay />
+		<div class="flex justify-center gap-2">
+			{#if $isMobile}
+				<ShareViaText currentUser={data.currentUser.username} />
+			{/if}
+			<HowToPlay />
+		</div>
 		{#if $isAuth}
 			<Logout />
 		{:else}

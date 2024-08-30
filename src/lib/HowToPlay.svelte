@@ -11,6 +11,6 @@
 </script>
 
 <button
-	class="rounded-full w-6 h-6 p-2 mr-0 sm:mr-2 border border-black border-2 flex justify-center items-center font-extrabold"
+	class="mr-0 flex h-6 w-6 items-center justify-center rounded-full border border-2 border-black p-2 font-extrabold sm:mr-2"
 	on:click={() => modalStore.trigger(modal)}>i</button
 >
