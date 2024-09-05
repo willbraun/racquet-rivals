@@ -21,7 +21,7 @@
 	import silverMedal from '$lib/images/icons/silvermedal.png'
 	import bronzeMedal from '$lib/images/icons/bronzemedal.png'
 	import share from '$lib/images/icons/share-from-square-solid.svg'
-	import ShareViaText from '$lib/ShareViaText.svelte'
+	import ShareLink from '$lib/ShareLink.svelte'
 	export let data: DrawPageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -249,7 +249,7 @@
 	>
 		<div class="flex justify-center gap-2">
 			{#if $isMobile}
-				<ShareViaText currentUser={data.currentUser.username} />
+				<ShareLink currentUser={data.currentUser.username} />
 			{/if}
 			<HowToPlay />
 		</div>

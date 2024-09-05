@@ -10,7 +10,7 @@
 	import HowToPlay from '$lib/HowToPlay.svelte'
 	import type { HomePageData, TournamentName } from '$lib/types'
 	import { format } from 'date-fns'
-	import ShareViaText from '$lib/ShareViaText.svelte'
+	import ShareLink from '$lib/ShareLink.svelte'
 	export let data: HomePageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -43,7 +43,7 @@
 
 <header class="absolute right-0 top-0 flex items-center justify-end gap-2 p-4">
 	{#if $isMobile}
-		<ShareViaText currentUser={data.pb_auth_username} />
+		<ShareLink currentUser={data.pb_auth_username} />
 	{/if}
 	<HowToPlay />
 	{#if $isAuth}

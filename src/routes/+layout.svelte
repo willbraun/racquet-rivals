@@ -1,10 +1,17 @@
 <script lang="ts">
 	import '../app.postcss'
-	import { Modal, initializeStores, type ModalComponent } from '@skeletonlabs/skeleton'
+	import {
+		Modal,
+		Drawer,
+		getDrawerStore,
+		initializeStores,
+		type ModalComponent
+	} from '@skeletonlabs/skeleton'
 	import SelectUsers from './draw/[slug]/SelectUsers.svelte'
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
 	import { storePopup } from '@skeletonlabs/skeleton'
 	import HowToPlayContent from '$lib/HowToPlayContent.svelte'
+	import ShareLinkContent from '$lib/ShareLinkContent.svelte'
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
 	const modalRegistry: Record<string, ModalComponent> = {
@@ -13,9 +20,15 @@
 	}
 
 	initializeStores()
+	const drawerStore = getDrawerStore()
 </script>
 
 <Modal components={modalRegistry} />
+<Drawer>
+	{#if $drawerStore.id === 'share-link'}
+		<ShareLinkContent />
+	{/if}
+</Drawer>
 
 <div class="flex min-h-screen flex-col">
 	<div class="grow">
