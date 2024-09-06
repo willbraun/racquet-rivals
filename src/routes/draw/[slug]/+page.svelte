@@ -5,7 +5,14 @@
 	import Logout from '$lib/Logout.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
-	import { isAuth, selectedUsers, isLeaderboard, predictionStore, isMobile } from '$lib/store'
+	import {
+		isAuth,
+		currentUsername,
+		selectedUsers,
+		isLeaderboard,
+		predictionStore,
+		isMobile
+	} from '$lib/store'
 	import { type DrawPageData, type Prediction, type SelectedUser, type Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
@@ -20,7 +27,6 @@
 	import goldMedal from '$lib/images/icons/goldmedal.png'
 	import silverMedal from '$lib/images/icons/silvermedal.png'
 	import bronzeMedal from '$lib/images/icons/bronzemedal.png'
-	import share from '$lib/images/icons/share-from-square-solid.svg'
 	import ShareLink from '$lib/ShareLink.svelte'
 	export let data: DrawPageData
 
@@ -28,6 +34,7 @@
 	const now = new Date()
 
 	isAuth.set(data.pb_auth_valid)
+	currentUsername.set(data.pb_auth_valid ? data.currentUser.username : '')
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
 	let isScrollListenerAdded: boolean = false
@@ -248,9 +255,7 @@
 		class="ml-auto flex w-fit flex-none flex-col flex-wrap items-center justify-end gap-2 sm:flex-row sm:self-start"
 	>
 		<div class="flex justify-center gap-2">
-			{#if $isMobile}
-				<ShareLink currentUser={data.currentUser.username} />
-			{/if}
+			<ShareLink />
 			<HowToPlay />
 		</div>
 		{#if $isAuth}

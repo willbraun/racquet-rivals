@@ -7,9 +7,11 @@ export const isAuth = writable<boolean>()
 isAuth.subscribe((value) => {
 	if (value === false) {
 		Cookies.remove('isLeaderboard')
+		currentUsername.set('')
 	}
 })
 
+export const currentUsername = writable<string>('')
 export const predictionStore = writable<Prediction[]>([])
 export const selectedUsers = persisted<SelectedUser[]>('selectedUsers', [])
 export const isLeaderboard = writable<boolean>(false)

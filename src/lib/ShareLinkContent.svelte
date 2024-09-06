@@ -1,10 +1,17 @@
 <script lang="ts">
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
+	import { currentUsername } from '$lib/store'
 	import x from '$lib/images/icons/x.svg'
 	import clone from '$lib/images/icons/clone-regular.svg'
 	import sms from '$lib/images/icons/comment-sms-solid.svg'
 	import check from '$lib/images/icons/check-solid.svg'
 	import { onMount } from 'svelte'
+
+	const message = $currentUsername
+		? `Join me (${$currentUsername}) on Racquet Rivals! Click here to play - https://racquetrivals.com`
+		: 'Check out Racquet Rivals! Click here to play - https://racquetrivals.com'
+	const encoded = encodeURIComponent(message)
+
 	const drawerStore = getDrawerStore()
 
 	let showCheck = false
@@ -19,7 +26,7 @@
 
 <div class="flex h-full w-full flex-col items-center gap-8 bg-green-100">
 	<div class="relative w-full bg-green-300 p-2 text-center">
-		<p class="text-3xl">Share</p>
+		<p class="text-3xl font-bold">Share</p>
 		<button
 			on:click={() => drawerStore.close()}
 			class="absolute right-4 top-0 top-1/2 -translate-y-1/2"
@@ -27,7 +34,7 @@
 			<img src={x} alt="close" width="24" />
 		</button>
 	</div>
-	<a href={`sms:?body=${$drawerStore.meta.encoded}`} class="flex items-center gap-4">
+	<a href={`sms:?body=${encoded}`} class="flex items-center gap-4">
 		<img src={sms} alt="sms text message" width="42" />
 		<p class="text-xl">Text Message</p>
 	</a>

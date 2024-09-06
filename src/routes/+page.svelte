@@ -2,7 +2,7 @@
 	import Pocketbase from 'pocketbase'
 	import Logout from '$lib/Logout.svelte'
 	import { afterNavigate } from '$app/navigation'
-	import { isAuth, isMobile } from '$lib/store'
+	import { isAuth, currentUsername, isMobile } from '$lib/store'
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
 	import bracketLeft from '$lib/images/bracket-left.svg'
 	import { onMount } from 'svelte'
@@ -16,6 +16,7 @@
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 
 	isAuth.set(data.pb_auth_valid)
+	currentUsername.set(data.pb_auth_username)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
 	const pillStyle =
@@ -42,9 +43,7 @@
 </script>
 
 <header class="absolute right-0 top-0 flex items-center justify-end gap-2 p-4">
-	{#if $isMobile}
-		<ShareLink currentUser={data.pb_auth_username} />
-	{/if}
+	<ShareLink />
 	<HowToPlay />
 	{#if $isAuth}
 		<Logout />
@@ -64,7 +63,7 @@
 			</div>
 			{#if $isAuth}
 				<div class="{pillStyle} col-start-1 col-end-2 mx-auto w-fit bg-blue-300 shadow-lg">
-					Welcome {data.pb_auth_username}!
+					Welcome {$currentUsername}!
 				</div>
 			{:else}
 				<div class="grid grid-cols-2 grid-rows-4 gap-4">
