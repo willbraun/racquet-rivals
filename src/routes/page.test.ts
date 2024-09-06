@@ -53,7 +53,17 @@ const data: HomePageData = {
 	} as PbListResponse<Draw>,
 	pb_auth_valid: true,
 	pb_auth_cookie: 'dummy_cookie',
-	pb_auth_username: 'will'
+	pb_auth_username: 'will',
+	banner: {
+		collectionId: 'asvzq3z4d9ojqcd',
+		collectionName: 'banner',
+		created: '2024-05-02 15:42:20.397Z',
+		id: 'j5mehm6fvdf9105',
+		next_tournament: 'French Open',
+		start_date: '2024-05-26 12:00:00.000Z',
+		end_date: '2024-06-09 23:00:00.000Z',
+		updated: '2024-05-02 15:44:08.159Z'
+	}
 }
 
 describe('Home page component', () => {

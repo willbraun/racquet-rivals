@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/svelte'
-import { afterEach, beforeEach, describe, expect, test } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/vitest'
 import type {
@@ -206,6 +206,12 @@ const data: DrawPageData = {
 	pb_auth_cookie: 'dummy_cookie',
 	isLeaderboard: 'false'
 }
+
+const mockGetPredictions = vi.fn().mockResolvedValue(data.predictions)
+
+vi.mock('$lib/api', () => ({
+	getPredictions: () => mockGetPredictions()
+}))
 
 describe('Draw page component', () => {
 	const initialSelections: SelectedUser[] = []

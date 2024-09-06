@@ -12,7 +12,7 @@
 </script>
 
 {#if $isMobile}
-	<button on:click={() => drawerStore.open(drawerSettings)}>
+	<button on:click={() => drawerStore.open(drawerSettings)} data-testid="share-link-icon">
 		<img src={share} alt="share via text" width="24" class="mr-auto" />
 	</button>
 {/if}
