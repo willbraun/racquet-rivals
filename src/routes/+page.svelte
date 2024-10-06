@@ -49,7 +49,7 @@
 		<Logout />
 	{/if}
 </header>
-<main class="h-max w-full bg-stone-100 p-4">
+<main class="h-max w-full bg-stone-100 px-2 py-4 sm:px-4">
 	<div class="mx-auto h-full max-w-5xl">
 		<section class="mb-16">
 			<div class="my-16 grid grid-cols-4 items-center">
