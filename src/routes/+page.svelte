@@ -20,7 +20,7 @@
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
 	const pillStyle =
-		'flex justify-center items-center text-center text-lg sm:text-xl md:text-2xl rounded-full px-6 py-2'
+		'flex justify-center items-center text-center text-lg sm:text-xl md:text-2xl rounded-full px-4 py-2'
 
 	const bannerStyleMap: { [key in TournamentName]: string } = {
 		'Australian Open': 'bg-gradient-to-r from-indigo-600 to-cyan-300',
@@ -104,7 +104,7 @@
 				{#each data.active.items as draw}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class="{pillStyle} mx-auto mb-4 w-fit bg-green-300 p-4 shadow-lg duration-100 hover:scale-105"
+						class="{pillStyle} mx-auto mb-4 w-fit bg-green-300 shadow-lg duration-100 hover:scale-105"
 					>
 						<button type="button">
 							{getTitle(draw)}
@@ -119,7 +119,7 @@
 				{#each data.completed.items as draw}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class="{pillStyle} mx-auto mb-4 w-fit bg-slate-300 p-4 shadow-lg duration-100 hover:scale-105"
+						class="{pillStyle} mx-auto mb-4 w-fit bg-slate-300 shadow-lg duration-100 hover:scale-105"
 					>
 						<button type="button">
 							{getTitle(draw)}
