@@ -28,10 +28,8 @@ export async function load({ fetch, params, locals }) {
 		fetch(`${url}/api/collections/correct_predictions/records/${user.id}_cp`, options)
 	])
 
-	const [averagePoints, correctPredictions] = await Promise.all([
-		averagePointsRes.json(),
-		correctPredictionsRes.json()
-	])
+	const [averagePoints, correctPredictions]: [AveragePoints, CorrectPredictions] =
+		await Promise.all([averagePointsRes.json(), correctPredictionsRes.json()])
 
 	return {
 		username: user.username,
