@@ -4,8 +4,8 @@
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
 	import type { DrawerSettings } from '@skeletonlabs/skeleton'
 	import { isAuth } from './store'
+	import { page } from '$app/stores'
 	import LogoutForm from './LogoutForm.svelte'
-	import LogoutButton from './LogoutButton.svelte'
 
 	const drawerStore = getDrawerStore()
 	const drawerSettings: DrawerSettings = {
@@ -22,19 +22,21 @@
 >
 	<img src={hamburger} alt="hamburger menu icon" width="24" />
 </button>
-<div class="hidden sm:block">
+<nav class="hidden sm:block">
 	{#if $isAuth}
 		<div class="flex items-center gap-4">
 			<a href="/profile/will">
 				<img src={user} alt="user" width="18" />
 			</a>
 			<LogoutForm>
-				<LogoutButton />
+				<button type="submit" class="btn btn-sm rounded-lg bg-black text-white md:btn-md">
+					Logout
+				</button>
 			</LogoutForm>
 		</div>
-	{:else}
+	{:else if $page.url.pathname !== '/'}
 		<a href="/login">
-			<button type="button" class="btn btn-sm rounded-lg bg-black text-white md:btn-md"
+			<button type="button" class="btn btn-sm mr-2 rounded-lg bg-black text-white md:btn-md"
 				>Login</button
 			>
 		</a>
@@ -44,4 +46,4 @@
 			>
 		</a>
 	{/if}
-</div>
+</nav>

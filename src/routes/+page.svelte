@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Pocketbase from 'pocketbase'
-	import Logout from '$lib/LogoutForm.svelte'
 	import { afterNavigate } from '$app/navigation'
 	import { isAuth, currentUsername, isMobile } from '$lib/store'
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
@@ -10,9 +9,6 @@
 	import HowToPlay from '$lib/HowToPlay.svelte'
 	import type { HomePageData, TournamentName } from '$lib/types'
 	import { format } from 'date-fns'
-	import ShareLink from '$lib/ShareLink.svelte'
-	import LogoutForm from '$lib/LogoutForm.svelte'
-	import LogoutButton from '$lib/LogoutButton.svelte'
 	import NavMenu from '$lib/NavMenu.svelte'
 	export let data: HomePageData
 

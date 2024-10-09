@@ -2,7 +2,6 @@
 	import Pocketbase from 'pocketbase'
 	import AddPrediction from './AddPrediction.svelte'
 	import ViewPrediction from './ViewPrediction.svelte'
-	import Logout from '$lib/LogoutForm.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
 	import {
@@ -26,9 +25,6 @@
 	import goldMedal from '$lib/images/icons/goldmedal.png'
 	import silverMedal from '$lib/images/icons/silvermedal.png'
 	import bronzeMedal from '$lib/images/icons/bronzemedal.png'
-	import ShareLink from '$lib/ShareLink.svelte'
-	import LogoutForm from '$lib/LogoutForm.svelte'
-	import LogoutButton from '$lib/LogoutButton.svelte'
 	import NavMenu from '$lib/NavMenu.svelte'
 	export let data: DrawPageData
 
@@ -254,7 +250,7 @@
 		{/each}
 	</select>
 	<div
-		class="ml-auto flex w-fit flex-none flex-col flex-wrap items-center justify-end gap-2 pl-2 sm:flex-row-reverse sm:self-start"
+		class="ml-auto flex w-fit flex-none flex-col flex-wrap items-center justify-end gap-4 pl-2 sm:flex-row-reverse sm:self-start"
 	>
 		<NavMenu />
 		<HowToPlay />

@@ -14,7 +14,7 @@
 	}
 </script>
 
-<div class="flex h-full w-full flex-col items-start gap-8 p-8">
+<nav class="flex h-full w-full flex-col items-start gap-8 p-8">
 	{#if $isAuth}
 		<a href="/profile/will" class="flex w-full items-center gap-4" on:click={closeDrawer}>
 			<img src={user} alt="user" width="18" />
@@ -37,4 +37,4 @@
 			<p class="text-xl">Sign up</p>
 		</a>
 	{/if}
-</div>
+</nav>
