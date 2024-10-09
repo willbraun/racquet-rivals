@@ -6,9 +6,14 @@ import type {
 	ProfilePageData,
 	User
 } from '$lib/types.js'
+import { redirect } from '@sveltejs/kit'
 
 export async function load({ fetch, params, locals }) {
-	const username = params.username
+	if (!locals.pb.authStore.token) {
+		redirect(307, '/login')
+	}
+
+	const username = params.username.trim()
 	const url = PUBLIC_POCKETBASE_URL
 	const options = {
 		headers: {

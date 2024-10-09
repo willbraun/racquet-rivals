@@ -10,12 +10,12 @@ type Event = "Men's Singles" | "Women's Singles"
 export type TournamentName = 'Australian Open' | 'French Open' | 'Wimbledon' | 'US Open'
 
 export interface User {
-	collectionId: string
+	collectionId: '_pb_users_auth_'
 	collectionName: 'user'
+	avatar: string
 	id: string
 	username: string
-	email: string
-	avatar: unknown
+	emailVisibility: boolean
 	created: string
 	updated: string
 }
