@@ -10,8 +10,7 @@
 		currentUsername,
 		selectedUsers,
 		isLeaderboard,
-		predictionStore,
-		isMobile
+		predictionStore
 	} from '$lib/store'
 	import { type DrawPageData, type Prediction, type SelectedUser, type Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'

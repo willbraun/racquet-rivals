@@ -9,6 +9,17 @@ export interface PbListResponse<T> {
 type Event = "Men's Singles" | "Women's Singles"
 export type TournamentName = 'Australian Open' | 'French Open' | 'Wimbledon' | 'US Open'
 
+export interface User {
+	collectionId: string
+	collectionName: 'user'
+	id: string
+	username: string
+	email: string
+	avatar: unknown
+	created: string
+	updated: string
+}
+
 export interface Draw {
 	collectionId: string
 	collectionName: 'draw'
@@ -74,6 +85,31 @@ export interface Leaderboard {
 	total_points: number
 	user_id: string
 	username: string
+}
+
+export interface AveragePoints {
+	collectionId: string
+	collectionName: 'average_points'
+	id: string
+	user_id: string
+	username: string
+	avg_points_per_draw: number
+	rank: number
+	percentile: number
+	draws_played: number
+}
+
+export interface CorrectPredictions {
+	collectionId: string
+	collectionName: 'correct_predictions'
+	id: string
+	user_id: string
+	username: string
+	correct: number
+	total: number
+	percent_correct: number
+	rank: number
+	percentile: number
 }
 
 export interface Banner {
@@ -150,4 +186,11 @@ export interface DrawPageData {
 	pb_auth_valid: boolean
 	pb_auth_cookie: string
 	isLeaderboard: string
+}
+
+export interface ProfilePageData {
+	username: string
+	created: string
+	averagePoints: AveragePoints
+	correctPredictions: CorrectPredictions
 }
