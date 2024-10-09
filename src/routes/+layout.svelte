@@ -12,6 +12,7 @@
 	import { storePopup } from '@skeletonlabs/skeleton'
 	import HowToPlayContent from '$lib/HowToPlayContent.svelte'
 	import ShareLinkContent from '$lib/ShareLinkContent.svelte'
+	import NavMenuContent from '$lib/NavMenuContent.svelte'
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
 	const modalRegistry: Record<string, ModalComponent> = {
@@ -27,6 +28,8 @@
 <Drawer>
 	{#if $drawerStore.id === 'share-link'}
 		<ShareLinkContent />
+	{:else if $drawerStore.id === 'nav-menu'}
+		<NavMenuContent />
 	{/if}
 </Drawer>
 

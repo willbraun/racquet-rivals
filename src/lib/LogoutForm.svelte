@@ -16,7 +16,7 @@
 	}}
 >
 	<a href="#top">
-		<button type="submit" class="btn btn-sm md:btn-md bg-black text-white rounded-lg">Logout</button
-		>
+		<!-- slot must have a button of type="submit" -->
+		<slot />
 	</a>
 </form>

@@ -2,7 +2,7 @@
 	import Pocketbase from 'pocketbase'
 	import AddPrediction from './AddPrediction.svelte'
 	import ViewPrediction from './ViewPrediction.svelte'
-	import Logout from '$lib/Logout.svelte'
+	import Logout from '$lib/LogoutForm.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
 	import {
@@ -27,6 +27,9 @@
 	import silverMedal from '$lib/images/icons/silvermedal.png'
 	import bronzeMedal from '$lib/images/icons/bronzemedal.png'
 	import ShareLink from '$lib/ShareLink.svelte'
+	import LogoutForm from '$lib/LogoutForm.svelte'
+	import LogoutButton from '$lib/LogoutButton.svelte'
+	import NavMenu from '$lib/NavMenu.svelte'
 	export let data: DrawPageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -251,26 +254,10 @@
 		{/each}
 	</select>
 	<div
-		class="ml-auto flex w-fit flex-none flex-col flex-wrap items-center justify-end gap-2 sm:flex-row sm:self-start"
+		class="ml-auto flex w-fit flex-none flex-col flex-wrap items-center justify-end gap-2 pl-2 sm:flex-row-reverse sm:self-start"
 	>
-		<div class="flex justify-center gap-2">
-			<ShareLink />
-			<HowToPlay />
-		</div>
-		{#if $isAuth}
-			<Logout />
-		{:else}
-			<a href="/login">
-				<button type="button" class="btn btn-sm rounded-lg bg-black text-white md:btn-md"
-					>Login</button
-				>
-			</a>
-			<a href="/create-account">
-				<button type="button" class="btn btn-sm rounded-lg bg-black text-white md:btn-md"
-					>Sign up</button
-				>
-			</a>
-		{/if}
+		<NavMenu />
+		<HowToPlay />
 	</div>
 </header>
 <section class="grid grid-cols-4 gap-2 p-4 {headerColor} [&>*]:text-lg">

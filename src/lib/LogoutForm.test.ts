@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
 import '@testing-library/jest-dom/vitest'
-import Logout from './Logout.svelte'
+import LogoutForm from './LogoutForm.svelte'
 
 describe('Logout component', () => {
 	test('Renders', () => {
-		render(Logout)
+		render(LogoutForm)
 
 		const button = screen.getByRole('button')
 		const text = screen.queryByText(/Logout/u)

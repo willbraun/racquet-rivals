@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Pocketbase from 'pocketbase'
-	import Logout from '$lib/Logout.svelte'
+	import Logout from '$lib/LogoutForm.svelte'
 	import { afterNavigate } from '$app/navigation'
 	import { isAuth, currentUsername, isMobile } from '$lib/store'
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
@@ -11,6 +11,9 @@
 	import type { HomePageData, TournamentName } from '$lib/types'
 	import { format } from 'date-fns'
 	import ShareLink from '$lib/ShareLink.svelte'
+	import LogoutForm from '$lib/LogoutForm.svelte'
+	import LogoutButton from '$lib/LogoutButton.svelte'
+	import NavMenu from '$lib/NavMenu.svelte'
 	export let data: HomePageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -42,12 +45,9 @@
 	})
 </script>
 
-<header class="absolute right-0 top-0 flex items-center justify-end gap-2 p-4">
-	<ShareLink />
+<header class="absolute right-0 top-0 flex items-center justify-end gap-4 p-4">
 	<HowToPlay />
-	{#if $isAuth}
-		<Logout />
-	{/if}
+	<NavMenu />
 </header>
 <main class="h-max w-full bg-stone-100 px-2 py-4 sm:px-4">
 	<div class="mx-auto h-full max-w-5xl">

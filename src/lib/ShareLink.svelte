@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { isMobile } from './store'
+	import { page } from '$app/stores'
 	import share from '$lib/images/icons/share-from-square-solid.svg'
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
 	import type { DrawerSettings } from '@skeletonlabs/skeleton'
@@ -12,7 +13,15 @@
 </script>
 
 {#if $isMobile}
-	<button on:click={() => drawerStore.open(drawerSettings)} data-testid="share-link-icon">
-		<img src={share} alt="share via text" width="24" class="mr-auto" />
+	<button
+		on:click={() => {
+			drawerStore.close()
+			setTimeout(() => drawerStore.open(drawerSettings), 250)
+		}}
+		class="flex w-full gap-4"
+		data-testid="share-link-icon"
+	>
+		<img src={share} alt="share" width="24" />
+		<p class="text-xl">Share</p>
 	</button>
 {/if}
