@@ -333,7 +333,7 @@
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Rank</div>
 			<div class="sticky top-0 z-20 col-span-2 bg-primary-300 py-2 font-bold">User</div>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Points</div>
-			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Action</div>
+			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Select</div>
 			{#if data.leaderboard.items.length > 0}
 				{#each data.leaderboard.items as lb, index}
 					{@const selectedUser = users.find((u) => u.id === lb.user_id)}
