@@ -270,7 +270,7 @@
 			class="col-span-4 flex flex-col items-center justify-center gap-2 sm:col-span-2 sm:flex-row sm:justify-between"
 		>
 			<div class="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-				<p>Players:</p>
+				<p>Users:</p>
 				{#each users as user}
 					<button
 						type="button"
@@ -331,7 +331,7 @@
 			data-testid="Leaderboard"
 		>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Rank</div>
-			<div class="sticky top-0 z-20 col-span-2 bg-primary-300 py-2 font-bold">Player</div>
+			<div class="sticky top-0 z-20 col-span-2 bg-primary-300 py-2 font-bold">User</div>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Points</div>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Action</div>
 			{#if data.leaderboard.items.length > 0}
