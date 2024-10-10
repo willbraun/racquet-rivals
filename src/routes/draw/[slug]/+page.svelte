@@ -223,7 +223,7 @@
 	})
 </script>
 
-<header class="flex items-center gap-2 p-4 {headerColor}">
+<header class="flex items-center gap-2 p-4 sm:gap-4 {headerColor}">
 	<a class="rounded p-2 hover:bg-primary-200" href="/">
 		<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 576 512"
 			><!--! Home Icon - Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
@@ -233,7 +233,7 @@
 		</svg>
 	</a>
 	<select
-		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent p-1 text-lg font-bold hover:bg-primary-200 md:text-3xl"
+		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 text-lg font-bold hover:bg-primary-200 md:text-3xl"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
@@ -250,7 +250,7 @@
 		{/each}
 	</select>
 	<div
-		class="ml-auto flex w-fit flex-none flex-col flex-wrap items-center justify-end gap-4 pl-2 sm:flex-row-reverse sm:self-start"
+		class="ml-auto flex w-fit flex-none flex-col flex-wrap items-center justify-end gap-4 pl-2 sm:flex-row-reverse"
 	>
 		<NavMenu />
 		<HowToPlay />

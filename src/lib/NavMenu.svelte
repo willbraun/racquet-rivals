@@ -30,21 +30,15 @@
 				<img src={user} alt="user" width="18" />
 			</a>
 			<LogoutForm>
-				<button type="submit" class="btn btn-sm rounded-lg bg-black text-white md:btn-md">
-					Logout
-				</button>
+				<button type="submit" class="btn btn-sm rounded-lg bg-black text-white"> Logout </button>
 			</LogoutForm>
 		</div>
 	{:else if $page.url.pathname !== '/'}
 		<a href="/login">
-			<button type="button" class="btn btn-sm mr-2 rounded-lg bg-black text-white md:btn-md"
-				>Login</button
-			>
+			<button type="button" class="btn btn-sm mr-2 rounded-lg bg-black text-white">Login</button>
 		</a>
 		<a href="/create-account">
-			<button type="button" class="btn btn-sm rounded-lg bg-black text-white md:btn-md"
-				>Sign up</button
-			>
+			<button type="button" class="btn btn-sm rounded-lg bg-black text-white">Sign up</button>
 		</a>
 	{/if}
 </nav>

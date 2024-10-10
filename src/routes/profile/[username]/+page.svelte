@@ -2,12 +2,13 @@
 	import type { ProfilePageData } from '$lib/types'
 	import NavMenu from '$lib/NavMenu.svelte'
 	import { format } from 'date-fns'
+	import HowToPlay from '$lib/HowToPlay.svelte'
 
 	export let data: ProfilePageData
 </script>
 
-<header class="flex items-center gap-4 px-4 py-5">
-	<a class="rounded p-2 hover:bg-primary-200" href="/">
+<header class="flex items-center gap-4 p-4">
+	<a class="px-2" href="/">
 		<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 576 512"
 			><!--! Home Icon - Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
 			<path
@@ -15,7 +16,8 @@
 			/>
 		</svg>
 	</a>
-	<h1 class="mr-auto text-3xl font-bold">{data.username}</h1>
+	<p class="mr-auto text-3xl font-bold">{data.username}</p>
+	<HowToPlay />
 	<NavMenu />
 </header>
 <main>

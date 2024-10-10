@@ -41,7 +41,7 @@
 	})
 </script>
 
-<header class="absolute right-0 top-0 flex items-center justify-end gap-4 p-4">
+<header class="absolute right-0 top-0 flex items-center justify-end gap-4 pr-4 pt-[18px]">
 	<HowToPlay />
 	<NavMenu />
 </header>
@@ -100,7 +100,7 @@
 				{#each data.active.items as draw}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class="{pillStyle} mx-auto mb-4 w-fit bg-green-300 shadow-lg duration-100 hover:scale-105"
+						class="{pillStyle} mx-auto mb-4 w-fit bg-green-300 shadow-lg"
 					>
 						<button type="button">
 							{getTitle(draw)}
@@ -115,7 +115,7 @@
 				{#each data.completed.items as draw}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class="{pillStyle} mx-auto mb-4 w-fit bg-slate-300 shadow-lg duration-100 hover:scale-105"
+						class="{pillStyle} mx-auto mb-4 w-fit bg-slate-300 shadow-lg"
 					>
 						<button type="button">
 							{getTitle(draw)}
