@@ -6,6 +6,7 @@
 	import { isAuth } from './store'
 	import { page } from '$app/stores'
 	import LogoutForm from './LogoutForm.svelte'
+	import { currentUsername } from '$lib/store'
 
 	const drawerStore = getDrawerStore()
 	const drawerSettings: DrawerSettings = {
@@ -25,7 +26,7 @@
 <nav class="hidden sm:block">
 	{#if $isAuth}
 		<div class="flex items-center gap-4">
-			<a href="/profile/will">
+			<a href={`/profile/${$currentUsername}`}>
 				<img src={user} alt="user" width="18" />
 			</a>
 			<LogoutForm>

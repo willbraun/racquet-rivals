@@ -233,7 +233,7 @@
 		</svg>
 	</a>
 	<select
-		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent text-lg font-bold hover:bg-primary-200 md:text-3xl"
+		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent p-1 text-lg font-bold hover:bg-primary-200 md:text-3xl"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
@@ -270,10 +270,12 @@
 			class="col-span-4 flex flex-col items-center justify-center gap-2 sm:col-span-2 sm:flex-row sm:justify-between"
 		>
 			<div class="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-				<p>Users:</p>
+				<p>Players:</p>
 				{#each users as user}
-					<div
-						class="chip pointer-events-none relative h-6 rounded-full text-black {user.color} shadow duration-0"
+					<button
+						type="button"
+						class="chip relative h-6 rounded-full text-black {user.color} shadow"
+						on:click={() => goto(`/profile/${user.username}`)}
 						data-testid={`User_${user.username}`}
 					>
 						<p>{user.username}</p>
@@ -288,7 +290,7 @@
 									.reduce((a, b) => a + b, 0)}
 							</p>
 						</div>
-					</div>
+					</button>
 				{/each}
 				<button
 					class="chip flex h-6 justify-center rounded-full border border-dashed border-black hover:bg-primary-100"
@@ -329,7 +331,7 @@
 			data-testid="Leaderboard"
 		>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Rank</div>
-			<div class="sticky top-0 z-20 col-span-2 bg-primary-300 py-2 font-bold">Username</div>
+			<div class="sticky top-0 z-20 col-span-2 bg-primary-300 py-2 font-bold">Player</div>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Points</div>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Action</div>
 			{#if data.leaderboard.items.length > 0}
@@ -348,11 +350,13 @@
 						{/if}
 					</div>
 					<div class={`col-span-2 ${rowStyle}`}>
-						<div
-							class={`chip pointer-events-none rounded-full text-lg ${selectedUser ? `shadow ${selectedUser.color}` : ''}`}
+						<button
+							type="button"
+							class={`chip rounded-full text-lg ${selectedUser ? `shadow ${selectedUser.color}` : 'hover:underline'}`}
+							on:click={() => goto(`/profile/${lb.username}`)}
 						>
 							{lb.username}
-						</div>
+						</button>
 					</div>
 					<div class={rowStyle}>
 						<div class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-2 text-lg">
