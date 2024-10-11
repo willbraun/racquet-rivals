@@ -112,6 +112,16 @@ export interface CorrectPredictions {
 	percentile: number
 }
 
+export interface OverallRank {
+	collectionId: string
+	collectionName: 'overall_leaderboard'
+	id: string
+	user_id: string
+	username: string
+	total_points: number
+	rank: number
+}
+
 export interface Banner {
 	collectionId: string
 	collectionName: 'banner'
