@@ -8,7 +8,7 @@
 </script>
 
 <header class="flex items-center gap-4 p-4">
-	<a class="px-2" href="/">
+	<a class="mr-auto px-2" href="/">
 		<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 576 512"
 			><!--! Home Icon - Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
 			<path
@@ -16,11 +16,43 @@
 			/>
 		</svg>
 	</a>
-	<p class="mr-auto text-3xl font-bold">{data.username}</p>
 	<HowToPlay />
 	<NavMenu />
 </header>
 <main>
-	<p class="">Joined {format(new Date(data.created), 'MMM dd, yyyy')}</p>
-	<p>{JSON.stringify(data)}</p>
+	<div class="mx-auto max-w-screen-lg px-4 [&>section]:mb-8 md:[&>section]:mb-24">
+		<section>
+			<h1 class="mb-4 text-4xl font-bold md:text-7xl">{data.username}</h1>
+			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM dd, yyyy')}</p>
+		</section>
+		<section class="grid grid-cols-2 items-center gap-4">
+			<h2 class="text-lg font-bold md:text-3xl">Overall Ranking</h2>
+			<p class="self-end md:text-2xl">Ranking Points</p>
+			<p class="text-2xl font-semibold md:text-7xl">#{data.overallRank.rank}</p>
+			<p class="self-end text-2xl md:text-6xl">{data.overallRank.total_points}</p>
+		</section>
+		<section class="grid grid-cols-4 items-center gap-4">
+			<h2 class="col-span-2 text-lg font-bold md:text-3xl">Average Points per Tournament</h2>
+			<p class="self-end md:text-2xl">Ranking</p>
+			<p class="self-end md:text-2xl">Percentile</p>
+			<p class="col-span-2 text-2xl font-semibold md:text-7xl">
+				{data.averagePoints.avg_points_per_draw}
+			</p>
+			<p class="self-end text-2xl md:text-6xl">#{data.averagePoints.rank}</p>
+			<p class="self-end text-2xl md:text-6xl">{data.averagePoints.percentile.toFixed(1)}%</p>
+		</section>
+		<section class="grid grid-cols-4 items-center gap-4">
+			<h2 class="col-span-2 text-lg font-bold md:text-3xl">Prediction Accuracy</h2>
+			<p class="self-end md:text-2xl">Ranking</p>
+			<p class="self-end md:text-2xl">Percentile</p>
+			<p class="col-span-2 text-2xl font-semibold md:text-7xl">
+				{data.predictionAccuracy.percent_correct.toFixed(1)}%
+			</p>
+			<p class="self-end text-2xl md:text-6xl">#{data.predictionAccuracy.rank}</p>
+			<p class="self-end text-2xl md:text-6xl">{data.predictionAccuracy.percentile.toFixed(1)}%</p>
+			<p class="text-gray-500">
+				{`(${data.predictionAccuracy.correct}/${data.predictionAccuracy.total})`}
+			</p>
+		</section>
+	</div>
 </main>

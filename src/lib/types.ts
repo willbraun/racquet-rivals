@@ -99,9 +99,9 @@ export interface AveragePoints {
 	draws_played: number
 }
 
-export interface CorrectPredictions {
+export interface PredictionAccuracy {
 	collectionId: string
-	collectionName: 'correct_predictions'
+	collectionName: 'prediction_accuracy'
 	id: string
 	user_id: string
 	username: string
@@ -202,5 +202,6 @@ export interface ProfilePageData {
 	username: string
 	created: string
 	averagePoints: AveragePoints
-	correctPredictions: CorrectPredictions
+	predictionAccuracy: PredictionAccuracy
+	overallRank: OverallRank
 }

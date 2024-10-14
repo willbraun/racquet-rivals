@@ -1,9 +1,9 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import type {
 	AveragePoints,
-	CorrectPredictions,
 	OverallRank,
 	PbListResponse,
+	PredictionAccuracy,
 	ProfilePageData,
 	User
 } from '$lib/types.js'
@@ -29,19 +29,19 @@ export async function load({ fetch, params, locals }) {
 	const userData: PbListResponse<User> = await userRes.json()
 	const user = userData.items[0]
 
-	const [averagePointsRes, correctPredictionsRes, overallRankRes] = await Promise.all([
+	const [averagePointsRes, predictionAccuracyRes, overallRankRes] = await Promise.all([
 		fetch(`${url}/api/collections/average_points/records/${user.id}_avg`, options),
-		fetch(`${url}/api/collections/correct_predictions/records/${user.id}_cp`, options),
+		fetch(`${url}/api/collections/prediction_accuracy/records/${user.id}_acc`, options),
 		fetch(`${url}/api/collections/overall_leaderboard/records/${user.id}_rank`, options)
 	])
 
-	const [averagePoints, correctPredictions, overallRank]: [
+	const [averagePoints, predictionAccuracy, overallRank]: [
 		AveragePoints,
-		CorrectPredictions,
+		PredictionAccuracy,
 		OverallRank
 	] = await Promise.all([
 		averagePointsRes.json(),
-		correctPredictionsRes.json(),
+		predictionAccuracyRes.json(),
 		overallRankRes.json()
 	])
 
@@ -49,7 +49,7 @@ export async function load({ fetch, params, locals }) {
 		username: user.username,
 		created: user.created,
 		averagePoints,
-		correctPredictions,
+		predictionAccuracy,
 		overallRank
 	} as ProfilePageData
 }
