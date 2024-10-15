@@ -5,6 +5,26 @@
 	import HowToPlay from '$lib/HowToPlay.svelte'
 
 	export let data: ProfilePageData
+
+	const formatAvg = (num: number) => {
+		const rounded = Math.round(num * 100) / 100
+		if (Number.isInteger(rounded)) {
+			return rounded
+		} else if (Number.isInteger(rounded * 10)) {
+			return rounded.toFixed(1)
+		} else {
+			return rounded.toFixed(2)
+		}
+	}
+
+	const formatPercent = (num: number) => {
+		const rounded = Math.round(num * 100) / 100
+		if (Number.isInteger(rounded)) {
+			return rounded
+		} else {
+			return rounded.toFixed(1)
+		}
+	}
 </script>
 
 <header class="flex items-center gap-4 p-4">
@@ -36,23 +56,44 @@
 			<p class="self-end md:text-2xl">Ranking</p>
 			<p class="self-end md:text-2xl">Percentile</p>
 			<p class="col-span-2 text-2xl font-semibold md:text-7xl">
-				{data.averagePoints.avg_points_per_draw}
+				{formatAvg(data.averagePoints.avg_points_per_draw)}
 			</p>
 			<p class="self-end text-2xl md:text-6xl">#{data.averagePoints.rank}</p>
-			<p class="self-end text-2xl md:text-6xl">{data.averagePoints.percentile.toFixed(1)}%</p>
+			<p class="self-end text-2xl md:text-6xl">{formatPercent(data.averagePoints.percentile)}%</p>
 		</section>
 		<section class="grid grid-cols-4 items-center gap-4">
 			<h2 class="col-span-2 text-lg font-bold md:text-3xl">Prediction Accuracy</h2>
 			<p class="self-end md:text-2xl">Ranking</p>
 			<p class="self-end md:text-2xl">Percentile</p>
 			<p class="col-span-2 text-2xl font-semibold md:text-7xl">
-				{data.predictionAccuracy.percent_correct.toFixed(1)}%
+				{formatPercent(data.predictionAccuracy.percent_correct)}%
 			</p>
 			<p class="self-end text-2xl md:text-6xl">#{data.predictionAccuracy.rank}</p>
-			<p class="self-end text-2xl md:text-6xl">{data.predictionAccuracy.percentile.toFixed(1)}%</p>
+			<p class="self-end text-2xl md:text-6xl">
+				{formatPercent(data.predictionAccuracy.percentile)}%
+			</p>
 			<p class="text-gray-500">
 				{`(${data.predictionAccuracy.correct}/${data.predictionAccuracy.total})`}
 			</p>
+		</section>
+		<section>
+			<div class="mb-4 grid grid-cols-8">
+				<h2 class="col-span-7 text-lg font-bold md:text-3xl">Results</h2>
+				<p class="self-end md:text-2xl">Points</p>
+			</div>
+			<ul class="flex flex-col gap-4">
+				{#each data.drawResults.items as result}
+					<!-- TODO fix link -->
+					<a href={`/`}>
+						<li class="grid w-full grid-cols-8 items-center gap-4">
+							<p class="col-span-7 md:text-4xl">
+								{`${result.draw_name} ${result.draw_event} ${result.draw_year}`}
+							</p>
+							<p class="text-xl font-bold md:text-4xl">{result.total_points}</p>
+						</li>
+					</a>
+				{/each}
+			</ul>
 		</section>
 	</div>
 </main>

@@ -79,8 +79,13 @@ export interface PredictionRecord {
 export interface DrawResult {
 	collectionId: string
 	collectionName: 'draw_results'
-	draw_id: string
 	id: string
+	draw_id: string
+	draw_name: string
+	draw_event: Event
+	draw_year: number
+	draw_start_date: string
+	draw_end_date: string
 	user_id: string
 	username: string
 	total_points: number
@@ -205,4 +210,5 @@ export interface ProfilePageData {
 	averagePoints: AveragePoints
 	predictionAccuracy: PredictionAccuracy
 	overallRank: OverallRank
+	drawResults: PbListResponse<DrawResult>
 }

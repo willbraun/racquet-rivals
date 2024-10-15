@@ -1,6 +1,7 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import type {
 	AveragePoints,
+	DrawResult,
 	OverallRank,
 	PbListResponse,
 	PredictionAccuracy,
@@ -29,20 +30,27 @@ export async function load({ fetch, params, locals }) {
 	const userData: PbListResponse<User> = await userRes.json()
 	const user = userData.items[0]
 
-	const [averagePointsRes, predictionAccuracyRes, overallRankRes] = await Promise.all([
-		fetch(`${url}/api/collections/average_points/records/${user.id}_avg`, options),
-		fetch(`${url}/api/collections/prediction_accuracy/records/${user.id}_acc`, options),
-		fetch(`${url}/api/collections/overall_leaderboard/records/${user.id}_rank`, options)
-	])
+	const [averagePointsRes, predictionAccuracyRes, overallRankRes, drawResultRes] =
+		await Promise.all([
+			fetch(`${url}/api/collections/average_points/records/${user.id}_avg`, options),
+			fetch(`${url}/api/collections/prediction_accuracy/records/${user.id}_acc`, options),
+			fetch(`${url}/api/collections/overall_leaderboard/records/${user.id}_rank`, options),
+			fetch(
+				`${url}/api/collections/draw_results/records?perPage=255&filter=(user_id="${user.id}")&sort=-draw_end_date,draw_event`,
+				options
+			)
+		])
 
-	const [averagePoints, predictionAccuracy, overallRank]: [
+	const [averagePoints, predictionAccuracy, overallRank, drawResults]: [
 		AveragePoints,
 		PredictionAccuracy,
-		OverallRank
+		OverallRank,
+		PbListResponse<DrawResult>
 	] = await Promise.all([
 		averagePointsRes.json(),
 		predictionAccuracyRes.json(),
-		overallRankRes.json()
+		overallRankRes.json(),
+		drawResultRes.json()
 	])
 
 	return {
@@ -50,6 +58,7 @@ export async function load({ fetch, params, locals }) {
 		created: user.created,
 		averagePoints,
 		predictionAccuracy,
-		overallRank
+		overallRank,
+		drawResults
 	} as ProfilePageData
 }

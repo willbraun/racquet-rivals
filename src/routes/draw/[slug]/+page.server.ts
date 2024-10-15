@@ -54,7 +54,6 @@ export async function load({ fetch, params, locals, cookies }) {
 		`${url}/api/collections/draw_results/records?perPage=255&filter=${encoded}`,
 		options
 	)
-
 	const drawResultData: PbListResponse<DrawResult> = await drawResultRes.json()
 
 	return {
