@@ -334,41 +334,41 @@
 			<div class="sticky top-0 z-20 col-span-2 bg-primary-300 py-2 font-bold">User</div>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Points</div>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Select</div>
-			{#if data.leaderboard.items.length > 0}
-				{#each data.leaderboard.items as lb, index}
-					{@const selectedUser = users.find((u) => u.id === lb.user_id)}
+			{#if data.drawResults.items.length > 0}
+				{#each data.drawResults.items as result, index}
+					{@const selectedUser = users.find((u) => u.id === result.user_id)}
 					{@const rowStyle = `py-4 ${index % 2 ? 'bg-stone-200' : 'bg-stone-100'}`}
 					<div class={rowStyle}>
-						{#if lb.rank === 1}
+						{#if result.rank === 1}
 							<img class="rounded-full shadow" src={goldMedal} alt="gold medal" width="40" />
-						{:else if lb.rank === 2}
+						{:else if result.rank === 2}
 							<img class="rounded-full shadow" src={silverMedal} alt="silver medal" width="40" />
-						{:else if lb.rank === 3}
+						{:else if result.rank === 3}
 							<img class="rounded-full shadow" src={bronzeMedal} alt="bronze medal" width="40" />
 						{:else}
-							<p class="text-2xl font-extrabold">{lb.rank}</p>
+							<p class="text-2xl font-extrabold">{result.rank}</p>
 						{/if}
 					</div>
 					<div class={`col-span-2 ${rowStyle}`}>
 						<button
 							type="button"
 							class={`chip rounded-full text-lg ${selectedUser ? `shadow ${selectedUser.color}` : 'hover:underline'}`}
-							on:click={() => goto(`/profile/${lb.username}`)}
+							on:click={() => goto(`/profile/${result.username}`)}
 						>
-							{lb.username}
+							{result.username}
 						</button>
 					</div>
 					<div class={rowStyle}>
 						<div class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-2 text-lg">
-							{lb.total_points}
+							{result.total_points}
 						</div>
 					</div>
 					<div class={rowStyle}>
 						{#if selectedUser?.id === data.currentUser.id}
 							<p>N/A</p>
-						{:else if combinedSelectedUsers.find((u) => u.id === lb.user_id)}
+						{:else if combinedSelectedUsers.find((u) => u.id === result.user_id)}
 							<button
-								on:click={() => removeUser(lb.user_id)}
+								on:click={() => removeUser(result.user_id)}
 								class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 sm:h-fit"
 							>
 								<p class="hidden sm:block">Remove</p>
@@ -377,8 +377,8 @@
 						{:else}
 							{@const newUser = {
 								selectorId: data.currentUser.id,
-								id: lb.user_id,
-								username: lb.username
+								id: result.user_id,
+								username: result.username
 							}}
 							<button
 								on:click={() => addUser(newUser)}

@@ -76,15 +76,16 @@ export interface PredictionRecord {
 	user_id: string
 }
 
-export interface Leaderboard {
+export interface DrawResult {
 	collectionId: string
-	collectionName: 'draw_leaderboard'
+	collectionName: 'draw_results'
 	draw_id: string
 	id: string
-	rank: number
-	total_points: number
 	user_id: string
 	username: string
+	total_points: number
+	rank: number
+	prediction_count: number
 }
 
 export interface AveragePoints {
@@ -189,7 +190,7 @@ export interface DrawPageData {
 	completed: PbListResponse<Draw>
 	draw: Draw
 	slots: PbListResponse<Slot>
-	leaderboard: PbListResponse<Leaderboard>
+	drawResults: PbListResponse<DrawResult>
 	predictions: PbListResponse<Prediction>
 	cookieSelectedUsers: SelectedUser[]
 	currentUser: SelectedUser
