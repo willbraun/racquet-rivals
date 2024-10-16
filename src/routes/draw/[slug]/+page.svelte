@@ -22,9 +22,7 @@
 	import Cookies from 'js-cookie'
 	import plus from '$lib/images/icons/plus.svg'
 	import x from '$lib/images/icons/x.svg'
-	import goldMedal from '$lib/images/icons/goldmedal.png'
-	import silverMedal from '$lib/images/icons/silvermedal.png'
-	import bronzeMedal from '$lib/images/icons/bronzemedal.png'
+	import Rank from '$lib/Rank.svelte'
 	import NavMenu from '$lib/NavMenu.svelte'
 	export let data: DrawPageData
 
@@ -339,15 +337,7 @@
 					{@const selectedUser = users.find((u) => u.id === result.user_id)}
 					{@const rowStyle = `py-4 ${index % 2 ? 'bg-stone-200' : 'bg-stone-100'}`}
 					<div class={rowStyle}>
-						{#if result.rank === 1}
-							<img class="rounded-full shadow" src={goldMedal} alt="gold medal" width="40" />
-						{:else if result.rank === 2}
-							<img class="rounded-full shadow" src={silverMedal} alt="silver medal" width="40" />
-						{:else if result.rank === 3}
-							<img class="rounded-full shadow" src={bronzeMedal} alt="bronze medal" width="40" />
-						{:else}
-							<p class="text-2xl font-extrabold">{result.rank}</p>
-						{/if}
+						<Rank rank={result.rank} textStyle="text-2xl font-extrabold" medalWidth={40} />
 					</div>
 					<div class={`col-span-2 ${rowStyle}`}>
 						<button

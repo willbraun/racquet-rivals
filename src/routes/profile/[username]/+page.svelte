@@ -3,6 +3,8 @@
 	import NavMenu from '$lib/NavMenu.svelte'
 	import { format } from 'date-fns'
 	import HowToPlay from '$lib/HowToPlay.svelte'
+	import { getSlug, getTitle } from '$lib/utils'
+	import Rank from '$lib/Rank.svelte'
 
 	export let data: ProfilePageData
 
@@ -40,20 +42,24 @@
 	<NavMenu />
 </header>
 <main>
-	<div class="mx-auto max-w-screen-lg px-4 [&>section]:mb-8 md:[&>section]:mb-24">
-		<section>
+	<div class="mx-auto max-w-screen-lg px-4">
+		<section class="mb-8">
 			<h1 class="mb-4 text-4xl font-bold md:text-7xl">{data.username}</h1>
 			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM dd, yyyy')}</p>
 		</section>
-		<section class="grid grid-cols-2 items-center gap-4">
-			<h2 class="text-lg font-bold md:text-3xl">Overall Ranking</h2>
+		<section
+			class="mb-4 grid grid-cols-2 items-center gap-4 rounded-xl bg-stone-200 p-4 shadow md:mb-8 md:p-8"
+		>
+			<h2 class="text-lg font-bold md:text-3xl">Overall Rank</h2>
 			<p class="self-end md:text-2xl">Ranking Points</p>
 			<p class="text-2xl font-semibold md:text-7xl">#{data.overallRank.rank}</p>
 			<p class="self-end text-2xl md:text-6xl">{data.overallRank.total_points}</p>
 		</section>
-		<section class="grid grid-cols-4 items-center gap-4">
+		<section
+			class="mb-4 grid grid-cols-4 items-center gap-4 rounded-xl bg-stone-200 p-4 shadow md:mb-8 md:p-8"
+		>
 			<h2 class="col-span-2 text-lg font-bold md:text-3xl">Average Points per Tournament</h2>
-			<p class="self-end md:text-2xl">Ranking</p>
+			<p class="self-end md:text-2xl">Rank</p>
 			<p class="self-end md:text-2xl">Percentile</p>
 			<p class="col-span-2 text-2xl font-semibold md:text-7xl">
 				{formatAvg(data.averagePoints.avg_points_per_draw)}
@@ -61,9 +67,11 @@
 			<p class="self-end text-2xl md:text-6xl">#{data.averagePoints.rank}</p>
 			<p class="self-end text-2xl md:text-6xl">{formatPercent(data.averagePoints.percentile)}%</p>
 		</section>
-		<section class="grid grid-cols-4 items-center gap-4">
+		<section
+			class="mb-4 grid grid-cols-4 items-center gap-4 rounded-xl bg-stone-200 p-4 shadow md:mb-8 md:p-8"
+		>
 			<h2 class="col-span-2 text-lg font-bold md:text-3xl">Prediction Accuracy</h2>
-			<p class="self-end md:text-2xl">Ranking</p>
+			<p class="self-end md:text-2xl">Rank</p>
 			<p class="self-end md:text-2xl">Percentile</p>
 			<p class="col-span-2 text-2xl font-semibold md:text-7xl">
 				{formatPercent(data.predictionAccuracy.percent_correct)}%
@@ -72,28 +80,47 @@
 			<p class="self-end text-2xl md:text-6xl">
 				{formatPercent(data.predictionAccuracy.percentile)}%
 			</p>
-			<p class="text-gray-500">
+			<p class="text-xs text-gray-500 md:text-lg">
 				{`(${data.predictionAccuracy.correct}/${data.predictionAccuracy.total})`}
 			</p>
 		</section>
-		<section>
+		<section class="my-16">
 			<div class="mb-4 grid grid-cols-8">
-				<h2 class="col-span-7 text-lg font-bold md:text-3xl">Results</h2>
-				<p class="self-end md:text-2xl">Points</p>
+				<h2 class="col-span-6 text-lg font-bold md:text-3xl">Results</h2>
+				<p class="mx-auto self-end text-sm md:text-2xl">Points</p>
+				<p class="mx-auto self-end text-sm md:text-2xl">Rank</p>
 			</div>
-			<ul class="flex flex-col gap-4">
-				{#each data.drawResults.items as result}
-					<!-- TODO fix link -->
-					<a href={`/`}>
-						<li class="grid w-full grid-cols-8 items-center gap-4">
-							<p class="col-span-7 md:text-4xl">
-								{`${result.draw_name} ${result.draw_event} ${result.draw_year}`}
-							</p>
-							<p class="text-xl font-bold md:text-4xl">{result.total_points}</p>
-						</li>
-					</a>
-				{/each}
-			</ul>
+			{#if data.drawResults.items.length === 0}
+				<p class="text-center md:text-2xl">No results yet</p>
+			{:else}
+				<ul class="flex flex-col overflow-hidden rounded shadow md:rounded-2xl">
+					{#each data.drawResults.items as drawResult, index}
+						<a href={`/draw/${getSlug(drawResult)}`}>
+							<li
+								class={`grid w-full grid-cols-8 items-center gap-4 p-2 md:p-4 md:hover:brightness-105 ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'}`}
+							>
+								<p class="col-span-6 flex md:text-4xl">
+									{getTitle(drawResult)}
+								</p>
+								<div
+									class={`badge-icon mx-auto w-fit rounded-full px-2 text-lg md:h-10 md:min-w-10 md:text-3xl ${
+										drawResult.prediction_count > 0 ? 'bg-green-400' : 'bg-red-300'
+									}`}
+								>
+									{drawResult.total_points}
+								</div>
+								<div class="mx-auto">
+									<Rank
+										rank={drawResult.rank}
+										textStyle="text-lg md:text-3xl font-extrabold"
+										medalWidth={40}
+									/>
+								</div>
+							</li>
+						</a>
+					{/each}
+				</ul>
+			{/if}
 		</section>
 	</div>
 </main>

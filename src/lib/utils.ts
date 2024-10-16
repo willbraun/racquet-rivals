@@ -1,7 +1,7 @@
 import type Client from 'pocketbase'
 import type { ClientResponseError } from 'pocketbase'
 import { isAuth, selectedUsers } from './store'
-import type { Draw, PbListResponse, SelectedUser, SelectedUserNoColor } from './types'
+import type { Draw, DrawResult, PbListResponse, SelectedUser, SelectedUserNoColor } from './types'
 import { format } from 'date-fns'
 import { get } from 'svelte/store'
 import Cookies from 'js-cookie'
@@ -51,13 +51,34 @@ export const makeSetType = <T>() => {
 	}
 }
 
-export const getSlug = (draw: Draw): string => {
-	const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-').replaceAll("'", '')
-	return `${slugify(draw.name)}-${slugify(draw.event)}-${draw.year}-${draw.id}`
+const isDraw = (draw: Draw | DrawResult): draw is Draw => {
+	return draw.collectionName === 'draw'
 }
 
-export const getTitle = (draw: Draw): string => {
-	return `${draw.name} ${draw.event} ${draw.year}`
+const isDrawResult = (draw: Draw | DrawResult): draw is DrawResult => {
+	return draw.collectionName === 'draw_results'
+}
+
+export const getSlug = (draw: Draw | DrawResult): string => {
+	const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-').replaceAll("'", '')
+
+	if (isDraw(draw)) {
+		return `${slugify(draw.name)}-${slugify(draw.event)}-${draw.year}-${draw.id}`
+	} else if (isDrawResult(draw)) {
+		return `${slugify(draw.draw_name)}-${slugify(draw.draw_event)}-${draw.draw_year}-${draw.draw_id}`
+	} else {
+		return ''
+	}
+}
+
+export const getTitle = (draw: Draw | DrawResult): string => {
+	if (isDraw(draw)) {
+		return `${draw.name} ${draw.event} ${draw.year}`
+	} else if (isDrawResult(draw)) {
+		return `${draw.draw_name} ${draw.draw_event} ${draw.draw_year}`
+	} else {
+		return ''
+	}
 }
 
 const getNextColor = (users: SelectedUser[]) => {
