@@ -8,7 +8,7 @@ import type {
 	ProfilePageData,
 	User
 } from '$lib/types.js'
-import { redirect } from '@sveltejs/kit'
+import { redirect, error } from '@sveltejs/kit'
 
 export async function load({ fetch, params, locals }) {
 	if (!locals.pb.authStore.token) {
@@ -29,6 +29,10 @@ export async function load({ fetch, params, locals }) {
 	)
 	const userData: PbListResponse<User> = await userRes.json()
 	const user = userData.items[0]
+
+	if (!user || username === 'script_user') {
+		throw error(404, 'User not found')
+	}
 
 	const [averagePointsRes, predictionAccuracyRes, overallRankRes, drawResultRes] =
 		await Promise.all([
