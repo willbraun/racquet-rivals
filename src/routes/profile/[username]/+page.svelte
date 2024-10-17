@@ -8,24 +8,46 @@
 
 	export let data: ProfilePageData
 
-	const formatAvg = (num: number) => {
-		const rounded = Math.round(num * 100) / 100
-		if (Number.isInteger(rounded)) {
-			return rounded
-		} else if (Number.isInteger(rounded * 10)) {
-			return rounded.toFixed(1)
-		} else {
-			return rounded.toFixed(2)
+	const formatRank = (num: number | null): string => {
+		if (num === null) {
+			return 'N/A'
 		}
+
+		return `#${num}`
 	}
 
-	const formatPercent = (num: number) => {
+	const formatAvg = (num: number | null): string => {
+		if (num === null) {
+			return 'N/A'
+		}
+
+		let result: string
 		const rounded = Math.round(num * 100) / 100
 		if (Number.isInteger(rounded)) {
-			return rounded
+			result = rounded.toString()
+		} else if (Number.isInteger(rounded * 10)) {
+			result = rounded.toFixed(1)
 		} else {
-			return rounded.toFixed(1)
+			result = rounded.toFixed(2)
 		}
+
+		return result
+	}
+
+	const formatPercent = (num: number | null): string => {
+		if (num === null) {
+			return 'N/A'
+		}
+
+		let result: string
+		const rounded = Math.round(num * 100) / 100
+		if (!Number.isInteger(rounded)) {
+			result = rounded.toString()
+		} else {
+			result = rounded.toFixed(1)
+		}
+
+		return `${result}%`
 	}
 </script>
 
@@ -52,20 +74,23 @@
 		>
 			<h2 class="text-lg font-bold md:text-3xl">Overall Rank</h2>
 			<p class="self-end md:text-2xl">Ranking Points</p>
-			<p class="text-2xl font-semibold md:text-7xl">#{data.overallRank.rank}</p>
+			<p class="text-2xl font-semibold md:text-7xl">{formatRank(data.overallRank.rank)}</p>
 			<p class="self-end text-2xl md:text-6xl">{data.overallRank.total_points}</p>
 		</section>
 		<section
 			class="mb-4 grid grid-cols-4 items-center gap-4 rounded-xl bg-stone-200 p-4 shadow md:mb-8 md:p-8"
 		>
-			<h2 class="col-span-2 text-lg font-bold md:text-3xl">Average Points per Tournament</h2>
+			<h2 class="col-span-2 text-lg font-bold md:text-3xl">Average Points</h2>
 			<p class="self-end md:text-2xl">Rank</p>
 			<p class="self-end md:text-2xl">Percentile</p>
 			<p class="col-span-2 text-2xl font-semibold md:text-7xl">
 				{formatAvg(data.averagePoints.avg_points_per_draw)}
 			</p>
-			<p class="self-end text-2xl md:text-6xl">#{data.averagePoints.rank}</p>
-			<p class="self-end text-2xl md:text-6xl">{formatPercent(data.averagePoints.percentile)}%</p>
+			<p class="self-end text-2xl md:text-6xl">{formatRank(data.averagePoints.rank)}</p>
+			<p class="self-end text-2xl md:text-6xl">{formatPercent(data.averagePoints.percentile)}</p>
+			<p class="text-xs text-gray-500 md:text-lg">
+				{`(${data.averagePoints.draws_played} draw${data.averagePoints.draws_played !== 1 && 's'} played)`}
+			</p>
 		</section>
 		<section
 			class="mb-4 grid grid-cols-4 items-center gap-4 rounded-xl bg-stone-200 p-4 shadow md:mb-8 md:p-8"
@@ -74,11 +99,11 @@
 			<p class="self-end md:text-2xl">Rank</p>
 			<p class="self-end md:text-2xl">Percentile</p>
 			<p class="col-span-2 text-2xl font-semibold md:text-7xl">
-				{formatPercent(data.predictionAccuracy.percent_correct)}%
+				{formatPercent(data.predictionAccuracy.percent_correct)}
 			</p>
-			<p class="self-end text-2xl md:text-6xl">#{data.predictionAccuracy.rank}</p>
+			<p class="self-end text-2xl md:text-6xl">{formatRank(data.predictionAccuracy.rank)}</p>
 			<p class="self-end text-2xl md:text-6xl">
-				{formatPercent(data.predictionAccuracy.percentile)}%
+				{formatPercent(data.predictionAccuracy.percentile)}
 			</p>
 			<p class="text-xs text-gray-500 md:text-lg">
 				{`(${data.predictionAccuracy.correct}/${data.predictionAccuracy.total})`}
@@ -102,20 +127,27 @@
 								<p class="col-span-6 flex md:text-4xl">
 									{getTitle(drawResult)}
 								</p>
-								<div
-									class={`badge-icon mx-auto w-fit rounded-full px-2 text-lg md:h-10 md:min-w-10 md:text-3xl ${
-										drawResult.prediction_count > 0 ? 'bg-green-400' : 'bg-red-300'
-									}`}
-								>
-									{drawResult.total_points}
-								</div>
-								<div class="mx-auto">
-									<Rank
-										rank={drawResult.rank}
-										textStyle="text-lg md:text-3xl font-extrabold"
-										medalWidth={40}
-									/>
-								</div>
+								{#if drawResult.prediction_count > 0}
+									<div
+										class={`badge-icon mx-auto w-fit rounded-full bg-green-400 px-2 text-lg md:h-10 md:min-w-10 md:text-3xl`}
+									>
+										{drawResult.total_points}
+									</div>
+									<div class="mx-auto">
+										<Rank
+											rank={drawResult.rank}
+											textStyle="text-lg md:text-3xl font-extrabold"
+											medalWidth={40}
+										/>
+									</div>
+								{:else}
+									<div
+										class="col-span-2 mx-auto rounded bg-primary-600 px-2 text-center text-xs font-bold text-white md:text-2xl"
+									>
+										<p class="hidden sm:block">DID NOT PLAY</p>
+										<p class="block sm:hidden">DNP</p>
+									</div>
+								{/if}
 							</li>
 						</a>
 					{/each}
