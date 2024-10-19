@@ -180,7 +180,7 @@
 									</div>
 								{/if}
 							</li>
-							{#if index === 7}
+							{#if index === 7 && data.drawResults.items.length > 8}
 								<div
 									class="bg-pure-red absolute left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded px-2 text-xs font-bold text-white"
 								>
