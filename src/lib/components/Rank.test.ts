@@ -32,7 +32,7 @@ describe('Rank component', () => {
 
 		expect(screen.getByTestId('bronze-medal')).toBeInTheDocument()
 	})
-	test('Renders', () => {
+	test('Renders outside top 3', () => {
 		render(Rank, {
 			rank: 4,
 			containerStyle: '',
