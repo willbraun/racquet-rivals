@@ -21,6 +21,15 @@ export default {
 			},
 			gridTemplateColumns: {
 				'5': 'repeat(5, 1fr)'
+			},
+			keyframes: {
+				'pulse-green': {
+					'0%, 100%': {},
+					'50%': { backgroundColor: '#a7f3d0' }
+				}
+			},
+			animation: {
+				'pulse-green': 'pulse-green 3s infinite'
 			}
 		}
 	},

@@ -110,6 +110,20 @@ export const removeUser = (userId: string) => {
 	Cookies.set('selectedUsers', JSON.stringify(newUsers))
 }
 
+export const getDrawStatus = (startDate: string, endDate: string): DrawStatus => {
+	const now = new Date()
+	const start = new Date(startDate)
+	const end = new Date(endDate)
+
+	if (now < start) {
+		return DrawStatus.UPCOMING
+	} else if (now > end) {
+		return DrawStatus.COMPLETED
+	} else {
+		return DrawStatus.ACTIVE
+	}
+}
+
 export const mainColor = 'bg-blue-300'
 
 export const selectColors = [

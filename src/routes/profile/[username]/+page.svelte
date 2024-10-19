@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { ProfilePageData } from '$lib/types'
+	import { DrawStatus, type ProfilePageData } from '$lib/types'
 	import NavMenu from '$lib/NavMenu.svelte'
 	import { format } from 'date-fns'
 	import HowToPlay from '$lib/HowToPlay.svelte'
-	import { getSlug, getTitle } from '$lib/utils'
+	import { getDrawStatus, getSlug, getTitle } from '$lib/utils'
 	import Rank from '$lib/Rank.svelte'
 
 	export let data: ProfilePageData
@@ -120,14 +120,17 @@
 			{:else}
 				<ul class="flex flex-col overflow-hidden rounded shadow md:rounded-2xl">
 					{#each data.drawResults.items as drawResult, index}
+						{@const status = getDrawStatus(drawResult.draw_start_date, drawResult.draw_end_date)}
 						<a href={`/draw/${getSlug(drawResult)}`}>
 							<li
-								class={`grid w-full grid-cols-8 items-center gap-4 p-2 md:p-4 md:hover:brightness-105 ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'}`}
+								class={`grid w-full grid-cols-8 items-center gap-4 p-2 md:p-4 md:hover:brightness-105 ${
+									index % 2 ? 'bg-primary-50' : 'bg-primary-200'
+								} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'}`}
 							>
 								<p class="col-span-6 flex md:text-4xl">
 									{getTitle(drawResult)}
 								</p>
-								{#if drawResult.prediction_count > 0}
+								{#if drawResult.prediction_count > 0 || status === DrawStatus.ACTIVE}
 									<div
 										class={`badge-icon mx-auto w-fit rounded-full bg-green-400 px-2 text-lg md:h-10 md:min-w-10 md:text-3xl`}
 									>
