@@ -42,11 +42,15 @@
 		}
 
 		let result: string
-		const rounded = Math.round(num * 100) / 100
-		if (!Number.isInteger(rounded)) {
-			result = rounded.toString()
+		if (Number.isInteger(num)) {
+			result = num.toString()
 		} else {
-			result = rounded.toFixed(1)
+			const rounded = Math.round(num * 100) / 100
+			if (Number.isInteger(rounded)) {
+				result = rounded.toString()
+			} else {
+				result = rounded.toFixed(1)
+			}
 		}
 
 		return `${result}%`
