@@ -28,7 +28,7 @@
 		<LogoutForm>
 			<button type="submit" class="flex w-full items-center gap-4" on:click={closeDrawer}>
 				<img src={logout} alt="logout" width="24" />
-				<p class="text-xl">Log out</p>
+				<p class="text-xl">Logout</p>
 			</button>
 		</LogoutForm>
 	{:else}

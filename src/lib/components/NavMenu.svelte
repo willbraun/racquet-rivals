@@ -20,7 +20,7 @@
 	class="block sm:hidden"
 	data-testid="user-menu-icon"
 >
-	<img src={hamburger} alt="hamburger menu icon" width="24" />
+	<img src={hamburger} alt="hamburger menu icon" width="24" data-testid="hamburger-icon" />
 </button>
 <nav class="hidden sm:block">
 	{#if $isAuth}

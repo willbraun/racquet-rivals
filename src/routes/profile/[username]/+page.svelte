@@ -41,8 +41,6 @@
 			return 'N/A'
 		}
 
-		console.log(num)
-
 		let result: string
 		const rounded = Math.round(num * 100) / 100
 		if (!Number.isInteger(rounded)) {
