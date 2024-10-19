@@ -4,16 +4,18 @@
 	import bronzeMedal from '$lib/images/icons/bronzemedal.png'
 
 	export let rank: number
+	export let containerStyle: string
 	export let textStyle: string
-	export let medalWidth: number
 </script>
 
-{#if rank === 1}
-	<img class="rounded-full shadow" src={goldMedal} alt="gold medal" width={medalWidth} />
-{:else if rank === 2}
-	<img class="rounded-full shadow" src={silverMedal} alt="silver medal" width={medalWidth} />
-{:else if rank === 3}
-	<img class="rounded-full shadow" src={bronzeMedal} alt="bronze medal" width={medalWidth} />
-{:else}
-	<p class={textStyle}>{rank}</p>
-{/if}
+<div class={containerStyle}>
+	{#if rank === 1}
+		<img class="w-full rounded-full shadow" src={goldMedal} alt="gold medal" />
+	{:else if rank === 2}
+		<img class="w-full rounded-full shadow" src={silverMedal} alt="silver medal" />
+	{:else if rank === 3}
+		<img class="w-full rounded-full shadow" src={bronzeMedal} alt="bronze medal" />
+	{:else}
+		<p class={`text-center ${textStyle}`}>{rank}</p>
+	{/if}
+</div>

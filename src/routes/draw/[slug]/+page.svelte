@@ -337,7 +337,7 @@
 					{@const selectedUser = users.find((u) => u.id === result.user_id)}
 					{@const rowStyle = `py-4 ${index % 2 ? 'bg-stone-200' : 'bg-stone-100'}`}
 					<div class={rowStyle}>
-						<Rank rank={result.rank} textStyle="text-2xl font-extrabold" medalWidth={40} />
+						<Rank rank={result.rank} containerStyle="w-10" textStyle="text-2xl font-extrabold" />
 					</div>
 					<div class={`col-span-2 ${rowStyle}`}>
 						<button

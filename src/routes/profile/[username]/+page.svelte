@@ -136,16 +136,14 @@
 									>
 										{drawResult.total_points}
 									</div>
-									<div class="mx-auto">
-										<Rank
-											rank={drawResult.rank}
-											textStyle="text-lg md:text-3xl font-extrabold"
-											medalWidth={40}
-										/>
-									</div>
+									<Rank
+										rank={drawResult.rank}
+										containerStyle="mx-auto w-6 md:w-10"
+										textStyle="text-lg md:text-3xl font-extrabold"
+									/>
 								{:else}
 									<div
-										class="col-span-2 mx-auto rounded bg-primary-600 px-2 text-center text-xs font-bold text-white md:text-2xl"
+										class="col-span-2 mx-auto w-5/6 rounded bg-primary-600 px-2 text-center text-xs font-bold text-white md:text-2xl"
 									>
 										<p class="hidden sm:block">DID NOT PLAY</p>
 										<p class="block sm:hidden">DNP</p>
