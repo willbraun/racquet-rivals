@@ -1,10 +1,12 @@
 <script lang="ts">
+	import { format } from 'date-fns'
+	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton'
 	import { DrawStatus, type ProfilePageData } from '$lib/types'
 	import NavMenu from '$lib/NavMenu.svelte'
-	import { format } from 'date-fns'
 	import HowToPlay from '$lib/HowToPlay.svelte'
 	import { getDrawStatus, getSlug, getTitle } from '$lib/utils'
 	import Rank from '$lib/Rank.svelte'
+	import InfoIcon from './InfoIcon.svelte'
 
 	export let data: ProfilePageData
 
@@ -39,6 +41,8 @@
 			return 'N/A'
 		}
 
+		console.log(num)
+
 		let result: string
 		const rounded = Math.round(num * 100) / 100
 		if (!Number.isInteger(rounded)) {
@@ -69,45 +73,73 @@
 			<h1 class="mb-4 text-4xl font-bold md:text-7xl">{data.username}</h1>
 			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM dd, yyyy')}</p>
 		</section>
-		<section
-			class="mb-4 grid grid-cols-2 items-center gap-4 rounded-xl bg-stone-200 p-4 shadow md:mb-8 md:p-8"
-		>
-			<h2 class="text-lg font-bold md:text-3xl">Overall Rank</h2>
-			<p class="self-end md:text-2xl">Ranking Points</p>
-			<p class="text-2xl font-semibold md:text-7xl">{formatRank(data.overallRank.rank)}</p>
-			<p class="self-end text-2xl md:text-6xl">{data.overallRank.total_points}</p>
+		<section class="mb-4 rounded-xl bg-stone-200 shadow md:mb-8 md:p-8">
+			<Accordion hover="none">
+				<AccordionItem>
+					<div slot="summary" class="grid grid-cols-2 items-center gap-4">
+						<h2 class="text-lg font-bold md:text-3xl">Overall Rank</h2>
+						<p class="self-end md:text-2xl">Ranking Points</p>
+						<p class="text-2xl font-semibold md:text-7xl">{formatRank(data.overallRank.rank)}</p>
+						<p class="self-end text-2xl md:text-6xl">{data.overallRank.total_points}</p>
+					</div>
+					<svelte:fragment slot="content"
+						>Based on the last year of play (8 major tournaments, men's and women's singles). This
+						is how professional player rankings work. Points earned in a tournament apply to your
+						ranking for one year.
+					</svelte:fragment>
+					<svelte:fragment slot="iconOpen"><InfoIcon /></svelte:fragment>
+					<svelte:fragment slot="iconClosed"><InfoIcon /></svelte:fragment>
+				</AccordionItem>
+			</Accordion>
 		</section>
-		<section
-			class="mb-4 grid grid-cols-4 items-center gap-4 rounded-xl bg-stone-200 p-4 shadow md:mb-8 md:p-8"
-		>
-			<h2 class="col-span-2 text-lg font-bold md:text-3xl">Average Points</h2>
-			<p class="self-end md:text-2xl">Rank</p>
-			<p class="self-end md:text-2xl">Percentile</p>
-			<p class="col-span-2 text-2xl font-semibold md:text-7xl">
-				{formatAvg(data.averagePoints.avg_points_per_draw)}
-			</p>
-			<p class="self-end text-2xl md:text-6xl">{formatRank(data.averagePoints.rank)}</p>
-			<p class="self-end text-2xl md:text-6xl">{formatPercent(data.averagePoints.percentile)}</p>
-			<p class="text-xs text-gray-500 md:text-lg">
-				{`(${data.averagePoints.draws_played} draw${data.averagePoints.draws_played !== 1 && 's'} played)`}
-			</p>
+		<section class="mb-4 rounded-xl bg-stone-200 shadow md:mb-8 md:p-8">
+			<Accordion hover="none">
+				<AccordionItem>
+					<div slot="summary" class="grid grid-cols-4 items-center items-center gap-4 gap-4">
+						<h2 class="col-span-2 text-lg font-bold md:text-3xl">Average Points</h2>
+						<p class="self-end md:text-2xl">Rank</p>
+						<p class="self-end md:text-2xl">Percentile</p>
+						<p class="col-span-2 text-2xl font-semibold md:text-7xl">
+							{data.averagePoints.avg_points_per_draw}
+						</p>
+						<p class="self-end text-2xl md:text-6xl">{formatRank(data.averagePoints.rank)}</p>
+						<p class="self-end text-2xl md:text-6xl">
+							{formatPercent(data.averagePoints.percentile)}
+						</p>
+					</div>
+					<svelte:fragment slot="content"
+						>Your average score across all tournaments you've played.
+					</svelte:fragment>
+					<svelte:fragment slot="iconOpen"><InfoIcon /></svelte:fragment>
+					<svelte:fragment slot="iconClosed"><InfoIcon /></svelte:fragment>
+				</AccordionItem>
+			</Accordion>
 		</section>
-		<section
-			class="mb-4 grid grid-cols-4 items-center gap-4 rounded-xl bg-stone-200 p-4 shadow md:mb-8 md:p-8"
-		>
-			<h2 class="col-span-2 text-lg font-bold md:text-3xl">Prediction Accuracy</h2>
-			<p class="self-end md:text-2xl">Rank</p>
-			<p class="self-end md:text-2xl">Percentile</p>
-			<p class="col-span-2 text-2xl font-semibold md:text-7xl">
-				{formatPercent(data.predictionAccuracy.percent_correct)}
-			</p>
-			<p class="self-end text-2xl md:text-6xl">{formatRank(data.predictionAccuracy.rank)}</p>
-			<p class="self-end text-2xl md:text-6xl">
-				{formatPercent(data.predictionAccuracy.percentile)}
-			</p>
-			<p class="text-xs text-gray-500 md:text-lg">
-				{`(${data.predictionAccuracy.correct}/${data.predictionAccuracy.total})`}
-			</p>
+		<section class="mb-4 rounded-xl bg-stone-200 shadow md:mb-8 md:p-8">
+			<Accordion hover="none">
+				<AccordionItem>
+					<div slot="summary" class=" grid grid-cols-4 items-center items-center gap-4 gap-4">
+						<h2 class="col-span-2 text-lg font-bold md:text-3xl">Prediction Accuracy</h2>
+						<p class="self-end md:text-2xl">Rank</p>
+						<p class="self-end md:text-2xl">Percentile</p>
+						<p class="col-span-2 text-2xl font-semibold md:text-7xl">
+							{formatPercent(data.predictionAccuracy.percent_correct)}
+						</p>
+						<p class="self-end text-2xl md:text-6xl">{formatRank(data.predictionAccuracy.rank)}</p>
+						<p class="self-end text-2xl md:text-6xl">
+							{formatPercent(data.predictionAccuracy.percentile)}
+						</p>
+						<p class="text-xs text-gray-500 md:text-base">
+							{`(${data.predictionAccuracy.correct}/${data.predictionAccuracy.total})`}
+						</p>
+					</div>
+					<svelte:fragment slot="content"
+						>How often you choose correctly across all tournaments you've played.</svelte:fragment
+					>
+					<svelte:fragment slot="iconOpen"><InfoIcon /></svelte:fragment>
+					<svelte:fragment slot="iconClosed"><InfoIcon /></svelte:fragment>
+				</AccordionItem>
+			</Accordion>
 		</section>
 		<section class="my-16">
 			<div class="mb-4 grid grid-cols-8">
@@ -121,11 +153,11 @@
 				<ul class="flex flex-col overflow-hidden rounded shadow md:rounded-2xl">
 					{#each data.drawResults.items as drawResult, index}
 						{@const status = getDrawStatus(drawResult.draw_start_date, drawResult.draw_end_date)}
-						<a href={`/draw/${getSlug(drawResult)}`}>
+						<a href={`/draw/${getSlug(drawResult)}`} class="relative">
 							<li
 								class={`grid w-full grid-cols-8 items-center gap-4 p-2 md:p-4 md:hover:brightness-105 ${
 									index % 2 ? 'bg-primary-50' : 'bg-primary-200'
-								} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'}`}
+								} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${index === 7 ? 'border-pure-red border-b-2' : ''}`}
 							>
 								<p class="col-span-6 flex md:text-4xl">
 									{getTitle(drawResult)}
@@ -150,6 +182,13 @@
 									</div>
 								{/if}
 							</li>
+							{#if index === 7}
+								<div
+									class="bg-pure-red absolute left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded px-2 text-xs font-bold text-white"
+								>
+									OVERALL RANK CUTOFF
+								</div>
+							{/if}
 						</a>
 					{/each}
 				</ul>

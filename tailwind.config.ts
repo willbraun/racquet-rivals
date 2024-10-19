@@ -15,6 +15,9 @@ export default {
 	safelist: [mainColor, ...selectColors],
 	theme: {
 		extend: {
+			colors: {
+				'pure-red': '#ff0000'
+			},
 			borderWidth: {
 				'1': '1px',
 				'16': '16px'
