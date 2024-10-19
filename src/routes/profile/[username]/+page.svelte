@@ -151,11 +151,12 @@
 				<ul class="flex flex-col overflow-hidden rounded shadow md:rounded-2xl">
 					{#each data.drawResults.items as drawResult, index}
 						{@const status = getDrawStatus(drawResult.draw_start_date, drawResult.draw_end_date)}
+						{@const showCutoff = index === 7 && data.drawResults.items.length > 8}
 						<a href={`/draw/${getSlug(drawResult)}`} class="relative">
 							<li
 								class={`grid w-full grid-cols-8 items-center gap-4 p-2 md:p-4 md:hover:brightness-105 ${
 									index % 2 ? 'bg-primary-50' : 'bg-primary-200'
-								} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${index === 7 ? 'border-pure-red border-b-2' : ''}`}
+								} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${showCutoff ? 'border-pure-red border-b-2' : ''}`}
 							>
 								<p class="col-span-6 flex md:text-4xl">
 									{getTitle(drawResult)}
@@ -180,7 +181,7 @@
 									</div>
 								{/if}
 							</li>
-							{#if index === 7 && data.drawResults.items.length > 8}
+							{#if showCutoff}
 								<div
 									class="bg-pure-red absolute left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded px-2 text-xs font-bold text-white"
 								>
