@@ -100,7 +100,7 @@
 						<p class="self-end md:text-2xl">Rank</p>
 						<p class="self-end md:text-2xl">Percentile</p>
 						<p class="col-span-2 text-2xl font-semibold md:text-7xl">
-							{data.averagePoints.avg_points_per_draw}
+							{formatAvg(data.averagePoints.avg_points_per_draw)}
 						</p>
 						<p class="self-end text-2xl md:text-6xl">{formatRank(data.averagePoints.rank)}</p>
 						<p class="self-end text-2xl md:text-6xl">

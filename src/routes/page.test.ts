@@ -2,7 +2,8 @@ import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import type { Draw, HomePageData, PbListResponse } from '$lib/types'
-import HomePageTest from './page.test.svelte'
+import PageSetup from '$lib/components/PageSetup.test.svelte'
+import Page from './+page.svelte'
 
 const data: HomePageData = {
 	active: {
@@ -68,7 +69,12 @@ const data: HomePageData = {
 
 describe('Home page component', () => {
 	test('Logged in', () => {
-		render(HomePageTest, { props: { data } })
+		render(PageSetup, {
+			props: {
+				component: Page,
+				data
+			}
+		})
 
 		expect(screen.getByText('Racquet Rivals')).toBeInTheDocument()
 		expect(screen.getByText('Welcome will!')).toBeInTheDocument()
@@ -76,9 +82,10 @@ describe('Home page component', () => {
 		expect(screen.getByText("Australian Open Men's Singles 2024")).toBeInTheDocument()
 	})
 
-	test('Logged in', () => {
-		render(HomePageTest, {
+	test('Logged out', () => {
+		render(PageSetup, {
 			props: {
+				component: Page,
 				data: {
 					...data,
 					pb_auth_valid: false
