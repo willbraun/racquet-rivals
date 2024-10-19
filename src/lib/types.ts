@@ -1,3 +1,27 @@
+// Constants
+export const Events = {
+	MENS_SINGLES: "Men's Singles",
+	WOMENS_SINGLES: "Women's Singles"
+} as const
+export type Event = (typeof Events)[keyof typeof Events]
+
+export const TournamentName = {
+	AUSTRALIAN_OPEN: 'Australian Open',
+	FRENCH_OPEN: 'French Open',
+	WIMBLEDON: 'Wimbledon',
+	US_OPEN: 'US Open'
+} as const
+
+export type TournamentName = (typeof TournamentName)[keyof typeof TournamentName]
+
+export const DrawStatus = {
+	UPCOMING: 'upcoming',
+	ACTIVE: 'active',
+	COMPLETED: 'completed'
+} as const
+export type DrawStatus = (typeof DrawStatus)[keyof typeof DrawStatus]
+
+// Pocketbase API types
 export interface PbListResponse<T> {
 	page: number
 	perPage: number
@@ -5,9 +29,6 @@ export interface PbListResponse<T> {
 	totalPages: number
 	items: T[]
 }
-
-type Event = "Men's Singles" | "Women's Singles"
-export type TournamentName = 'Australian Open' | 'French Open' | 'Wimbledon' | 'US Open'
 
 export interface User {
 	collectionId: '_pb_users_auth_'
@@ -139,16 +160,6 @@ export interface Banner {
 	updated: string
 }
 
-export interface SelectedUserNoColor {
-	selectorId: string
-	id: string
-	username: string
-}
-
-export interface SelectedUser extends SelectedUserNoColor {
-	color: string
-}
-
 export interface AuthResult {
 	data: {
 		error: string
@@ -173,6 +184,17 @@ export interface AddPredictionResult {
 	}
 	status: number
 	type: string
+}
+
+// Custom types
+export interface SelectedUserNoColor {
+	selectorId: string
+	id: string
+	username: string
+}
+
+export interface SelectedUser extends SelectedUserNoColor {
+	color: string
 }
 
 declare global {

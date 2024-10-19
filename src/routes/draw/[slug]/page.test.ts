@@ -5,7 +5,7 @@ import '@testing-library/jest-dom/vitest'
 import type {
 	Draw,
 	DrawPageData,
-	Leaderboard,
+	DrawResult,
 	PbListResponse,
 	Prediction,
 	SelectedUser,
@@ -78,11 +78,11 @@ const data: DrawPageData = {
 		year: 2024
 	} as Draw,
 	slots: slotData as PbListResponse<Slot>,
-	leaderboard: {
+	drawResults: {
 		items: [
 			{
 				collectionId: 'zpjgxcf4d9ojqcd',
-				collectionName: 'draw_leaderboard',
+				collectionName: 'draw_results',
 				draw_id: 'j5mehm6fvdf9105',
 				id: 'j5mehm6fvdf9105',
 				total_points: 16,
@@ -92,7 +92,7 @@ const data: DrawPageData = {
 			},
 			{
 				collectionId: 'zpjgxcf4d9ojqcd',
-				collectionName: 'draw_leaderboard',
+				collectionName: 'draw_results',
 				draw_id: 'j5mehm6fvdf9105',
 				id: 'j5mehm6fvdf9105',
 				total_points: 12,
@@ -102,7 +102,7 @@ const data: DrawPageData = {
 			},
 			{
 				collectionId: 'zpjgxcf4d9ojqcd',
-				collectionName: 'draw_leaderboard',
+				collectionName: 'draw_results',
 				draw_id: 'j5mehm6fvdf9105',
 				id: 'j5mehm6fvdf9105',
 				total_points: 8,
@@ -112,7 +112,7 @@ const data: DrawPageData = {
 			},
 			{
 				collectionId: 'zpjgxcf4d9ojqcd',
-				collectionName: 'draw_leaderboard',
+				collectionName: 'draw_results',
 				draw_id: 'j5mehm6fvdf9105',
 				id: 'j5mehm6fvdf9105',
 				total_points: 4,
@@ -120,12 +120,12 @@ const data: DrawPageData = {
 				user_id: 'userId',
 				username: 'sally'
 			}
-		] as Leaderboard[],
+		] as DrawResult[],
 		page: 1,
 		perPage: 30,
 		totalItems: 4,
 		totalPages: 1
-	} as PbListResponse<Leaderboard>,
+	} as PbListResponse<DrawResult>,
 	predictions: {
 		items: [
 			{

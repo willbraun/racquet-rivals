@@ -1,7 +1,14 @@
 import type Client from 'pocketbase'
 import type { ClientResponseError } from 'pocketbase'
 import { isAuth, selectedUsers } from './store'
-import type { Draw, DrawResult, PbListResponse, SelectedUser, SelectedUserNoColor } from './types'
+import {
+	DrawStatus,
+	type Draw,
+	type DrawResult,
+	type PbListResponse,
+	type SelectedUser,
+	type SelectedUserNoColor
+} from './types'
 import { format } from 'date-fns'
 import { get } from 'svelte/store'
 import Cookies from 'js-cookie'
