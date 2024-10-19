@@ -41,5 +41,6 @@
 			<img src={signup} alt="sign up" width="24" />
 			<p class="text-xl">Sign up</p>
 		</a>
+		<ShareLink />
 	{/if}
 </nav>

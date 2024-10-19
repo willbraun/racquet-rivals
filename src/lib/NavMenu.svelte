@@ -18,7 +18,7 @@
 
 <button
 	on:click={() => drawerStore.open(drawerSettings)}
-	class="sm:hidden"
+	class="block sm:hidden"
 	data-testid="user-menu-icon"
 >
 	<img src={hamburger} alt="hamburger menu icon" width="24" />

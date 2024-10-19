@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Pocketbase from 'pocketbase'
 	import { afterNavigate } from '$app/navigation'
-	import { isAuth, currentUsername, isMobile } from '$lib/store'
+	import { isAuth, currentUsername } from '$lib/store'
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
 	import bracketLeft from '$lib/images/bracket-left.svg'
 	import { onMount } from 'svelte'
