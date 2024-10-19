@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Pocketbase from 'pocketbase'
-	import EmailField from '$lib/EmailField.svelte'
-	import FormError from '$lib/FormError.svelte'
+	import EmailField from '$lib/components/EmailField.svelte'
+	import FormError from '$lib/components/FormError.svelte'
 	import { makeSetType } from '$lib/utils.js'
 	import { enhance } from '$app/forms'
 	import type { AuthResult } from '$lib/types'
@@ -25,9 +25,9 @@
 	const setType = makeSetType<AuthResult>()
 </script>
 
-<main class="w-full h-screen bg-white">
-	<div class="pt-24 px-4 max-w-md mx-auto">
-		<h1 class="text-4xl mb-4">Reset Password</h1>
+<main class="h-screen w-full bg-white">
+	<div class="mx-auto max-w-md px-4 pt-24">
+		<h1 class="mb-4 text-4xl">Reset Password</h1>
 		<p class="mb-4">Enter your email and we'll send you a link to reset your password</p>
 		<form
 			method="POST"
@@ -51,7 +51,7 @@
 			<div class="flex justify-center">
 				<button
 					type="submit"
-					class="btn variant-filled-primary w-2/3 my-4 mx-auto rounded-xl text-xl font-semibold"
+					class="variant-filled-primary btn mx-auto my-4 w-2/3 rounded-xl text-xl font-semibold"
 					{disabled}
 					bind:this={buttonRef}
 				>

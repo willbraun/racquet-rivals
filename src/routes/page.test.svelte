@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { initializeStores, storePopup } from '@skeletonlabs/skeleton'
-	import Page from '../../../routes/draw/[slug]/+page.svelte'
+	import Page from './+page.svelte'
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
-	import type { DrawPageData } from '$lib/types'
-	export let data: DrawPageData
+	import type { HomePageData } from '$lib/types'
+	export let data: HomePageData
 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 

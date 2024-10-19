@@ -3,10 +3,9 @@
 	import user from '$lib/images/icons/user-solid.svg'
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
 	import type { DrawerSettings } from '@skeletonlabs/skeleton'
-	import { isAuth } from './store'
 	import { page } from '$app/stores'
 	import LogoutForm from './LogoutForm.svelte'
-	import { currentUsername } from '$lib/store'
+	import { isAuth, currentUsername } from '$lib/store'
 
 	const drawerStore = getDrawerStore()
 	const drawerSettings: DrawerSettings = {

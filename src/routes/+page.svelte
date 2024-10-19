@@ -6,10 +6,10 @@
 	import bracketLeft from '$lib/images/bracket-left.svg'
 	import { onMount } from 'svelte'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
-	import HowToPlay from '$lib/HowToPlay.svelte'
+	import HowToPlay from '$lib/components/HowToPlay.svelte'
+	import NavMenu from '$lib/components/NavMenu.svelte'
 	import { type HomePageData, TournamentName } from '$lib/types'
 	import { format } from 'date-fns'
-	import NavMenu from '$lib/NavMenu.svelte'
 	export let data: HomePageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)

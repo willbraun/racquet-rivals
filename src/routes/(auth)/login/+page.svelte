@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
-	import PasswordField from '$lib/PasswordField.svelte'
+	import PasswordField from '$lib/components/PasswordField.svelte'
 	import { persisted } from 'svelte-persisted-store'
 	import { get } from 'svelte/store'
-	import FormError from '$lib/FormError.svelte'
+	import FormError from '$lib/components/FormError.svelte'
 	import { makeSetType } from '$lib/utils'
 	import { enhance } from '$app/forms'
 	import type { AuthResult } from '$lib/types'
@@ -28,9 +28,9 @@
 	}
 </script>
 
-<main class="w-full h-screen bg-white">
-	<div class="pt-24 px-4 max-w-md mx-auto">
-		<h1 class="text-4xl mb-4">Login</h1>
+<main class="h-screen w-full bg-white">
+	<div class="mx-auto max-w-md px-4 pt-24">
+		<h1 class="mb-4 text-4xl">Login</h1>
 		<form
 			method="POST"
 			class="[&>*]:mb-4"
@@ -69,12 +69,12 @@
 					<input class="checkbox" type="checkbox" bind:checked={rememberMe} />
 					<p>Remember me</p>
 				</label>
-				<a class="text-sm text-gray-500 -translate-y-4" href="/reset-password">Forgot password?</a>
+				<a class="-translate-y-4 text-sm text-gray-500" href="/reset-password">Forgot password?</a>
 			</div>
 			<div class="flex justify-center">
 				<button
 					type="submit"
-					class="btn variant-filled-primary w-1/2 mt-4 mx-auto rounded-xl text-xl font-semibold"
+					class="variant-filled-primary btn mx-auto mt-4 w-1/2 rounded-xl text-xl font-semibold"
 					disabled={loading}
 				>
 					{loading ? 'Logging in...' : 'Log in'}

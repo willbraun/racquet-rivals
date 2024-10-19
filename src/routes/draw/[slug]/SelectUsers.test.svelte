@@ -5,8 +5,8 @@
 		storePopup,
 		type ModalSettings
 	} from '@skeletonlabs/skeleton'
-	import TestModal from './TestModal.svelte'
-	import SelectUsers from '../../../routes/draw/[slug]/SelectUsers.svelte'
+	import TestModal from '$lib/components/Modal.test.svelte'
+	import SelectUsers from './SelectUsers.svelte'
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })

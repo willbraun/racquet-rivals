@@ -10,9 +10,9 @@
 	import SelectUsers from './draw/[slug]/SelectUsers.svelte'
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
 	import { storePopup } from '@skeletonlabs/skeleton'
-	import HowToPlayContent from '$lib/HowToPlayContent.svelte'
-	import ShareLinkContent from '$lib/ShareLinkContent.svelte'
-	import NavMenuContent from '$lib/NavMenuContent.svelte'
+	import HowToPlayContent from '$lib/components/HowToPlayContent.svelte'
+	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
+	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
 	const modalRegistry: Record<string, ModalComponent> = {

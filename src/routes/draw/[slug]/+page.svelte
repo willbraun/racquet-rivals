@@ -16,14 +16,14 @@
 	import { format } from 'date-fns'
 	import { addUser, getSlug, getTitle, removeUser, updatePageAuth } from '$lib/utils'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
-	import HowToPlay from '$lib/HowToPlay.svelte'
+	import HowToPlay from '$lib/components/HowToPlay.svelte'
 	import { getPredictions } from '$lib/api'
 	import { browser } from '$app/environment'
 	import Cookies from 'js-cookie'
 	import plus from '$lib/images/icons/plus.svg'
 	import x from '$lib/images/icons/x.svg'
-	import Rank from '$lib/Rank.svelte'
-	import NavMenu from '$lib/NavMenu.svelte'
+	import Rank from '$lib/components/Rank.svelte'
+	import NavMenu from '$lib/components/NavMenu.svelte'
 	export let data: DrawPageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)

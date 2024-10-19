@@ -5,9 +5,9 @@
 		storePopup,
 		type ModalSettings
 	} from '@skeletonlabs/skeleton'
-	import TestModal from './TestModal.svelte'
+	import TestModal from './Modal.test.svelte'
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
-	import HowToPlayContent from '$lib/HowToPlayContent.svelte'
+	import HowToPlayContent from './HowToPlayContent.svelte'
 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 

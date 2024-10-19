@@ -2,10 +2,10 @@
 	import { format } from 'date-fns'
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton'
 	import { DrawStatus, type ProfilePageData } from '$lib/types'
-	import NavMenu from '$lib/NavMenu.svelte'
-	import HowToPlay from '$lib/HowToPlay.svelte'
+	import NavMenu from '$lib/components/NavMenu.svelte'
+	import HowToPlay from '$lib/components/HowToPlay.svelte'
+	import Rank from '$lib/components/Rank.svelte'
 	import { getDrawStatus, getSlug, getTitle } from '$lib/utils'
-	import Rank from '$lib/Rank.svelte'
 	import InfoIcon from './InfoIcon.svelte'
 
 	export let data: ProfilePageData

@@ -1,6 +1,6 @@
 <script>
 	import { enhance } from '$app/forms'
-	import { isAuth } from './store'
+	import { isAuth } from '$lib/store'
 </script>
 
 <form

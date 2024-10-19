@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
-	import EmailField from '$lib/EmailField.svelte'
-	import PasswordField from '$lib/PasswordField.svelte'
-	import FormError from '$lib/FormError.svelte'
+	import EmailField from '$lib/components/EmailField.svelte'
+	import PasswordField from '$lib/components/PasswordField.svelte'
+	import FormError from '$lib/components/FormError.svelte'
 	import { makeSetType } from '$lib/utils.js'
 	import { enhance } from '$app/forms'
 	import type { AuthResult } from '$lib/types'
@@ -19,9 +19,9 @@
 	const setType = makeSetType<AuthResult>()
 </script>
 
-<main class="w-full h-screen bg-white">
-	<div class="pt-24 px-4 max-w-md mx-auto">
-		<h1 class="text-4xl mb-4">Create Account</h1>
+<main class="h-screen w-full bg-white">
+	<div class="mx-auto max-w-md px-4 pt-24">
+		<h1 class="mb-4 text-4xl">Create Account</h1>
 		<form
 			method="POST"
 			use:enhance={() => {
@@ -56,7 +56,7 @@
 			<div class="flex justify-center">
 				<button
 					type="submit"
-					class="btn variant-filled-primary w-1/2 mt-4 mx-auto rounded-xl text-xl font-semibold"
+					class="variant-filled-primary btn mx-auto mt-4 w-1/2 rounded-xl text-xl font-semibold"
 					{disabled}
 				>
 					{loading ? 'Creating Account...' : 'Create Account'}

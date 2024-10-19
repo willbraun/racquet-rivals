@@ -4,7 +4,7 @@
 	import ViewPrediction from './ViewPrediction.svelte'
 	import type { Prediction, Slot, AddPredictionResult } from '$lib/types'
 	import { makeSetType } from '$lib/utils'
-	import FormError from '$lib/FormError.svelte'
+	import FormError from '$lib/components/FormError.svelte'
 	import { predictionStore } from '$lib/store'
 	import { enhance } from '$app/forms'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
@@ -41,11 +41,7 @@
 
 <button
 	type="button"
-	class={`${!prediction && 'chip rounded-full h-6 bg-blue-200 '}
-		${!prediction && predictionsAllowed && 'border border-black border-dashed '}
-		${predictionsAllowed && 'hover:brightness-110 '}
-		${!predictionsAllowed && 'pointer-events-none '}
-		${loading && 'brightness-90'}`}
+	class={`${!prediction && 'chip h-6 rounded-full bg-blue-200 '}${!prediction && predictionsAllowed && 'border border-dashed border-black '}${predictionsAllowed && 'hover:brightness-110 '}${!predictionsAllowed && 'pointer-events-none '}${loading && 'brightness-90'}`}
 	disabled={!predictionsAllowed}
 	use:popup={{
 		event: 'click',
@@ -70,7 +66,7 @@
 </button>
 
 <!-- Popup form -->
-<div class="card shadow-lg w-fit" data-popup="popupCombobox-{slot.id}">
+<div class="card w-fit shadow-lg" data-popup="popupCombobox-{slot.id}">
 	<form
 		method="POST"
 		action="?/addPrediction"
@@ -108,10 +104,10 @@
 		<input type="hidden" name="slotId" bind:value={slot.id} />
 		<input type="hidden" name="currentPredictionId" value={prediction?.id ?? ''} />
 		<input type="hidden" name="predictionValue" bind:value={predictionValue} />
-		<div class="flex flex-col rounded overflow-hidden">
+		<div class="flex flex-col overflow-hidden rounded">
 			<button
 				type="submit"
-				class="hover:bg-surface-400 whitespace-nowrap px-4 py-2 border-b-1 border-surface-500 {!player1 &&
+				class="whitespace-nowrap border-b-1 border-surface-500 px-4 py-2 hover:bg-surface-400 {!player1 &&
 					'pointer-events-none italic'}"
 				disabled={!player1 || !predictionsAllowed || loading}
 				on:click={() => (predictionValue = player1)}
@@ -122,7 +118,7 @@
 			</button>
 			<button
 				type="submit"
-				class="hover:bg-surface-400 whitespace-nowrap px-4 py-2 {!player2 &&
+				class="whitespace-nowrap px-4 py-2 hover:bg-surface-400 {!player2 &&
 					'pointer-events-none italic'}"
 				disabled={!player2 || !predictionsAllowed || loading}
 				on:click={() => (predictionValue = player2)}

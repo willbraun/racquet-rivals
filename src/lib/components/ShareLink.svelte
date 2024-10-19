@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isMobile } from './store'
+	import { isMobile } from '$lib/store'
 	import share from '$lib/images/icons/share-from-square-solid.svg'
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
 	import type { DrawerSettings } from '@skeletonlabs/skeleton'

@@ -4,10 +4,9 @@
 	import login from '$lib/images/icons/arrow-right-to-bracket-solid.svg'
 	import logout from '$lib/images/icons/arrow-right-from-bracket-solid.svg'
 	import signup from '$lib/images/icons/user-plus-solid.svg'
-	import { isAuth } from './store'
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
 	import ShareLink from './ShareLink.svelte'
-	import { currentUsername } from './store'
+	import { isAuth, currentUsername } from '$lib/store'
 
 	const drawerStore = getDrawerStore()
 	const closeDrawer = () => {

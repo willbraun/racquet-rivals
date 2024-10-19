@@ -11,8 +11,8 @@ import type {
 	SelectedUser,
 	Slot
 } from '$lib/types'
-import slotData from '$lib/testing/data/slot_data.json'
-import DrawPageSetup from '$lib/testing/components/DrawPageSetup.svelte'
+import slotData from '$lib/data/slot_data.json'
+import DrawPageTest from './page.test.svelte'
 import { selectedUsers } from '$lib/store'
 
 const data: DrawPageData = {
@@ -225,7 +225,7 @@ describe('Draw page component', () => {
 	})
 
 	test('Renders', () => {
-		render(DrawPageSetup, { props: { data } })
+		render(DrawPageTest, { props: { data } })
 
 		expect(screen.getByText('Active Round:')).toHaveTextContent('Active Round: Qualifying Rounds')
 		expect(screen.getByText('Predictions open until:')).toHaveTextContent(
@@ -238,7 +238,7 @@ describe('Draw page component', () => {
 	})
 
 	test('Logged out', () => {
-		render(DrawPageSetup, {
+		render(DrawPageTest, {
 			props: {
 				data: {
 					...data,
@@ -260,7 +260,7 @@ describe('Draw page component', () => {
 		} as Slot
 		const newSlots = slotData.items.with(-1, newSlot) as Slot[]
 
-		render(DrawPageSetup, {
+		render(DrawPageTest, {
 			props: {
 				data: {
 					...data,
@@ -276,7 +276,7 @@ describe('Draw page component', () => {
 	})
 
 	test('Correct slots render, 128 draw', () => {
-		render(DrawPageSetup, { props: { data } })
+		render(DrawPageTest, { props: { data } })
 
 		const totalRounds = 8
 		for (let round = 1; round <= totalRounds; round++) {
@@ -297,7 +297,7 @@ describe('Draw page component', () => {
 			return slot.round <= activeRound ? { ...slot, name: 'Some Player' } : slot
 		}) as Slot[]
 
-		render(DrawPageSetup, {
+		render(DrawPageTest, {
 			props: {
 				data: {
 					...data,
@@ -338,7 +338,7 @@ describe('Draw page component', () => {
 	})
 
 	test('Predictions closed', () => {
-		render(DrawPageSetup, {
+		render(DrawPageTest, {
 			props: {
 				data: {
 					...data,
@@ -359,7 +359,7 @@ describe('Draw page component', () => {
 	test('Selected users render', () => {
 		selectedUsers.set(data.cookieSelectedUsers)
 
-		render(DrawPageSetup, { props: { data } })
+		render(DrawPageTest, { props: { data } })
 
 		expect(screen.getByText('john')).toBeInTheDocument()
 		expect(screen.getByText('steve')).toBeInTheDocument()
@@ -367,7 +367,7 @@ describe('Draw page component', () => {
 	})
 
 	test('Points tallied correctly', () => {
-		render(DrawPageSetup, { props: { data } })
+		render(DrawPageTest, { props: { data } })
 
 		expect(screen.getByTestId('User_will')).toHaveTextContent('will')
 		expect(screen.getByTestId('User_will')).toHaveClass('bg-blue-300')
@@ -375,7 +375,7 @@ describe('Draw page component', () => {
 	})
 
 	test('Leaderboard toggles in and out', async () => {
-		render(DrawPageSetup, { props: { data } })
+		render(DrawPageTest, { props: { data } })
 
 		const leaderboardToggle = screen.getByTestId('LeaderboardToggle')
 		const buttons = within(leaderboardToggle).getAllByRole('button')
