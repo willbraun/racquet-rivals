@@ -28,9 +28,9 @@
 	}
 </script>
 
-<main class="h-screen w-full bg-white">
-	<div class="mx-auto max-w-md px-4 pt-24">
-		<h1 class="mb-4 text-4xl">Login</h1>
+<main class="absolute top-0 h-screen w-full bg-white md:bg-stone-100">
+	<div class="mx-auto mt-24 max-w-md rounded-xl p-4 md:bg-white md:p-8 md:shadow-xl">
+		<h1 class="mb-4 text-4xl font-semibold">Login</h1>
 		<form
 			method="POST"
 			class="[&>*]:mb-4"

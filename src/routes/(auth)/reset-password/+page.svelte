@@ -25,9 +25,9 @@
 	const setType = makeSetType<AuthResult>()
 </script>
 
-<main class="h-screen w-full bg-white">
-	<div class="mx-auto max-w-md px-4 pt-24">
-		<h1 class="mb-4 text-4xl">Reset Password</h1>
+<main class="absolute top-0 h-screen w-full bg-white md:bg-stone-100">
+	<div class="mx-auto mt-24 max-w-md rounded-xl p-4 md:bg-white md:p-8 md:shadow-xl">
+		<h1 class="mb-4 text-4xl font-semibold">Reset Password</h1>
 		<p class="mb-4">Enter your email and we'll send you a link to reset your password</p>
 		<form
 			method="POST"
@@ -51,7 +51,7 @@
 			<div class="flex justify-center">
 				<button
 					type="submit"
-					class="variant-filled-primary btn mx-auto my-4 w-2/3 rounded-xl text-xl font-semibold"
+					class="variant-filled-primary btn mx-auto my-4 rounded-xl text-xl font-semibold"
 					{disabled}
 					bind:this={buttonRef}
 				>
