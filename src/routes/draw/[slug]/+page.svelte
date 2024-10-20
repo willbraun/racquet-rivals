@@ -296,11 +296,11 @@
 			</div>
 			<div class="flex min-w-fit overflow-hidden rounded-md" data-testid="LeaderboardToggle">
 				<button
-					class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-300' : 'bg-primary-500 text-white'}`}
+					class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-300 md:hover:brightness-105' : 'bg-primary-500 text-white'}`}
 					on:click={() => toggleLeaderboard(false)}>Draw</button
 				>
 				<button
-					class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300'}`}
+					class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300 md:hover:brightness-105'}`}
 					on:click={() => toggleLeaderboard(true)}>Leaderboard</button
 				>
 			</div>

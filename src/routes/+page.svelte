@@ -21,6 +21,8 @@
 	const pillStyle =
 		'flex justify-center items-center text-center text-lg sm:text-xl md:text-2xl rounded-full px-4 py-2'
 
+	const clickablePillStyle = `${pillStyle} cursor-pointer md:hover:brightness-105`
+
 	const bannerStyleMap: { [key in TournamentName]: string } = {
 		[TournamentName.AUSTRALIAN_OPEN]: 'bg-gradient-to-r from-indigo-600 to-cyan-300',
 		[TournamentName.FRENCH_OPEN]: 'bg-gradient-to-r from-orange-600 to-orange-300',
@@ -100,7 +102,7 @@
 				{#each data.active.items as draw}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class="{pillStyle} mx-auto mb-4 w-fit bg-green-300 shadow-lg"
+						class="{clickablePillStyle} mx-auto mb-4 w-fit bg-green-300 shadow-lg"
 					>
 						<button type="button">
 							{getTitle(draw)}
@@ -115,7 +117,7 @@
 				{#each data.completed.items as draw}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class="{pillStyle} mx-auto mb-4 w-fit bg-slate-300 shadow-lg"
+						class="{clickablePillStyle} mx-auto mb-4 w-fit bg-slate-300 shadow-lg"
 					>
 						<button type="button">
 							{getTitle(draw)}
