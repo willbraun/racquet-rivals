@@ -1,15 +1,36 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
-import type { Banner, HomePageData, PbListResponse } from '$lib/types.js'
-import { errorMessage, fetchDraws } from '$lib/utils'
+import type { Banner, Draw, HomePageData, PbListResponse } from '$lib/types.js'
+import { errorMessage } from '$lib/utils'
 import { fail, type Actions } from '@sveltejs/kit'
+import { format } from 'date-fns'
 import type { ClientResponseError } from 'pocketbase'
 
 export async function load({ fetch, locals }) {
 	const url = PUBLIC_POCKETBASE_URL
-	const [activeData, completedData] = await fetchDraws(fetch, url, locals.pb.authStore.token)
+	const today = format(new Date(), 'yyyy-MM-dd')
+	const options = {
+		headers: {
+			Authorization: locals.pb.authStore.token
+		}
+	}
 
-	const bannerRes = await fetch(`${url}/api/collections/banner/records?perPage=1`)
-	const bannerData: PbListResponse<Banner> = await bannerRes.json()
+	const [activeRes, completedRes, bannerRes] = await Promise.all([
+		fetch(
+			`${url}/api/collections/draw/records?filter=(end_date>="${today}")&sort=-start_date,event`,
+			options
+		),
+		fetch(
+			`${url}/api/collections/draw/records?filter=(end_date<"${today}")&sort=-start_date,event`,
+			options
+		),
+		fetch(`${url}/api/collections/banner/records?perPage=1`)
+	])
+
+	const [activeData, completedData, bannerData]: [
+		PbListResponse<Draw>,
+		PbListResponse<Draw>,
+		PbListResponse<Banner>
+	] = await Promise.all([activeRes.json(), completedRes.json(), bannerRes.json()])
 
 	return {
 		active: activeData,

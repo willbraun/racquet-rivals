@@ -133,27 +133,3 @@ export const selectColors = [
 	'bg-purple-300',
 	'bg-orange-300'
 ]
-
-// server utils
-export const fetchDraws = async (svelteFetch: SvelteFetch, url: string, token: string) => {
-	const today = format(new Date(), 'yyyy-MM-dd')
-	const options = {
-		headers: {
-			Authorization: token
-		}
-	}
-
-	const activeRes = await svelteFetch(
-		`${url}/api/collections/draw/records?filter=(end_date>="${today}")&sort=-start_date,event`,
-		options
-	)
-	const activeData: PbListResponse<Draw> = await activeRes.json()
-
-	const completedRes = await svelteFetch(
-		`${url}/api/collections/draw/records?filter=(end_date<"${today}")&sort=-start_date,event`,
-		options
-	)
-	const completedData: PbListResponse<Draw> = await completedRes.json()
-
-	return [activeData, completedData]
-}
