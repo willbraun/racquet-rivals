@@ -1,3 +1,7 @@
+import { errorMessage } from '$lib/utils'
+import { fail } from '@sveltejs/kit'
+import type { ClientResponseError } from 'pocketbase'
+
 export const fetchJson = async (url: string, token: string, svelteFetch: SvelteFetch) => {
 	const options = {
 		headers: {
@@ -5,15 +9,15 @@ export const fetchJson = async (url: string, token: string, svelteFetch: SvelteF
 		}
 	}
 
-	const response = await svelteFetch(url, options)
-	if (!response.ok) {
-		throw new Error(`Error fetching data: ${response.status} - ${response.statusText}`)
-	}
+	try {
+		const response = await svelteFetch(url, options)
+		const data = await response.json()
 
-	const data = await response.json()
-	if (data.code && data.code !== 200) {
-		throw new Error(`Error: ${data.status} - ${data.message}`)
+		return data
+	} catch (e) {
+		const statusCode = (e as ClientResponseError).status
+		return fail(statusCode, {
+			error: errorMessage(e)
+		})
 	}
-
-	return data
 }

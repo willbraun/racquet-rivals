@@ -20,10 +20,10 @@ type ErrorObjData = {
 
 export const errorMessage = (error: unknown) => {
 	const errorObj = error as ClientResponseError
-	const data = errorObj.data.data as ErrorObjData
+	const data = errorObj?.data?.data as ErrorObjData
 	let dataMessage = ''
 
-	if (Object.keys(data).length > 0) {
+	if (data && Object.keys(data).length > 0) {
 		dataMessage = Object.entries(data)
 			.map(([key, value]) => `• ${capitalize(key)}: ${value.message}`)
 			.join('\n')
