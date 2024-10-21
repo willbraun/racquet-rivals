@@ -1,5 +1,6 @@
 import { fail, type Actions } from '@sveltejs/kit'
 import { errorMessage, mainColor } from '$lib/utils'
+import { fetchJson } from '$lib/server/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
 	Draw,
@@ -29,43 +30,38 @@ export async function load({ fetch, params, locals, cookies }) {
 	const url = PUBLIC_POCKETBASE_URL
 	const currentUser = getCurrentUser(locals)
 	const today = format(new Date(), 'yyyy-MM-dd')
-	const options = {
-		headers: {
-			Authorization: locals.pb.authStore.token
-		}
-	}
+	const token = locals.pb.authStore.token
 
-	const [activeRes, completedRes, drawRes, slotRes, drawResultRes] = await Promise.all([
-		fetch(
-			`${url}/api/collections/draw/records?filter=(end_date>="${today}")&sort=-start_date,event`,
-			options
-		),
-		fetch(
-			`${url}/api/collections/draw/records?filter=(end_date<"${today}")&sort=-start_date,event`,
-			options
-		),
-		fetch(`${url}/api/collections/draw/records/${id}`, options),
-		fetch(`${url}/api/collections/draw_slot/records?perPage=255&filter=(draw_id="${id}")`, options),
-		fetch(
-			`${url}/api/collections/draw_results/records?perPage=255&filter=${encodeURIComponent(
-				`(draw_id="${id}" && prediction_count > 0)`
-			)}`,
-			options
-		)
-	])
-
-	const [activeData, completedData, drawData, slotData, drawResultData]: [
+	const [active, completed, draw, slots, drawResults]: [
 		PbListResponse<Draw>,
 		PbListResponse<Draw>,
 		Draw,
 		PbListResponse<Slot>,
 		PbListResponse<DrawResult>
 	] = await Promise.all([
-		activeRes.json(),
-		completedRes.json(),
-		drawRes.json(),
-		slotRes.json(),
-		drawResultRes.json()
+		fetchJson(
+			`${url}/api/collections/draw/records?filter=(end_date>="${today}")&sort=-start_date,event`,
+			token,
+			fetch
+		),
+		fetchJson(
+			`${url}/api/collections/draw/records?filter=(end_date<"${today}")&sort=-start_date,event`,
+			token,
+			fetch
+		),
+		fetchJson(`${url}/api/collections/draw/records/${id}`, token, fetch),
+		fetchJson(
+			`${url}/api/collections/draw_slot/records?perPage=255&filter=(draw_id="${id}")`,
+			token,
+			fetch
+		),
+		fetchJson(
+			`${url}/api/collections/draw_results/records?perPage=255&filter=${encodeURIComponent(
+				`(draw_id="${id}" && prediction_count > 0)`
+			)}`,
+			token,
+			fetch
+		)
 	])
 
 	const cookieSelectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
@@ -73,11 +69,11 @@ export async function load({ fetch, params, locals, cookies }) {
 	const predictionData = await getPredictions(id, allUsers, locals.pb.authStore.token)
 
 	return {
-		active: activeData,
-		completed: completedData,
-		draw: drawData,
-		slots: slotData,
-		drawResults: drawResultData,
+		active,
+		completed,
+		draw,
+		slots,
+		drawResults,
 		predictions: predictionData,
 		currentUser: currentUser,
 		cookieSelectedUsers: cookieSelectedUsers,
