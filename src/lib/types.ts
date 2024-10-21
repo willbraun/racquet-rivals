@@ -234,3 +234,9 @@ export interface ProfilePageData {
 	overallRank: OverallRank
 	drawResults: PbListResponse<DrawResult>
 }
+
+export interface RankingsPageData {
+	overallRank: PbListResponse<OverallRank>
+	averagePoints: PbListResponse<AveragePoints>
+	predictionAccuracy: PbListResponse<PredictionAccuracy>
+}
