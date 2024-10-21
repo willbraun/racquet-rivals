@@ -68,7 +68,7 @@
 
 <header class="flex items-center gap-4 px-4 py-[18px]">
 	<a class="flex items-center justify-center px-2" href="/">
-		<img src={home} alt="home" />
+		<img src={home} alt="home" width="24" />
 	</a>
 	<a href="/" on:click|preventDefault={goBack} class="mr-auto">
 		<img src={arrowLeft} alt="back" width="24" />
