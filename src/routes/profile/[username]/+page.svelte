@@ -93,7 +93,7 @@
 									>Overall Rank <img
 										src={trophy}
 										alt="trophy"
-										class="ml-2 inline w-4 md:w-8"
+										class="inline w-4 md:ml-2 md:w-8"
 									/></span
 								>
 							</h2>
@@ -115,16 +115,13 @@
 		<section class="mb-4 rounded-xl bg-stone-200 shadow md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
-					<div slot="summary" class="grid grid-cols-4 items-center items-center gap-4 gap-4">
+					<div slot="summary" class="grid grid-cols-4 items-center gap-4">
 						<a href="/rankings/average-points" class="col-span-2">
 							<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
 								<span
-									>Average Points <img
-										src={trophy}
-										alt="trophy"
-										class="ml-2 inline w-4 md:w-8"
-									/></span
-								>
+									>Average Points
+									<img src={trophy} alt="trophy" class="inline w-4 md:ml-2 md:w-8" />
+								</span>
 							</h2>
 						</a>
 						<p class="self-end md:text-2xl">Rank</p>
@@ -155,7 +152,7 @@
 									>Prediction Accuracy <img
 										src={trophy}
 										alt="trophy"
-										class="ml-2 inline w-4 md:w-8"
+										class="inline w-4 md:ml-2 md:w-8"
 									/></span
 								>
 							</h2>
