@@ -17,10 +17,10 @@
 			drawerStore.close()
 			setTimeout(() => drawerStore.open(drawerSettings), 250)
 		}}
-		class="flex w-full gap-4"
+		class="grid w-full grid-cols-4 items-center gap-4"
 		data-testid="share-link-icon"
 	>
-		<img src={share} alt="share" width="24" />
+		<img src={share} alt="share" width="24" class="justify-self-center" />
 		<p class="text-xl">Share</p>
 	</button>
 {/if}

@@ -2,15 +2,12 @@ import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { fetchJson } from '$lib/server/utils.js'
 import type {
 	AveragePoints,
-	DrawResult,
 	OverallRank,
 	PbListResponse,
 	PredictionAccuracy,
-	ProfilePageData,
-	RankingsPageData,
-	User
+	RankingsPageData
 } from '$lib/types.js'
-import { redirect, error } from '@sveltejs/kit'
+import { redirect } from '@sveltejs/kit'
 
 export async function load({ fetch, locals }) {
 	const token = locals.pb.authStore.token

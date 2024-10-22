@@ -1,6 +1,7 @@
 <script lang="ts">
 	import hamburger from '$lib/images/icons/hamburger-menu.svg'
 	import user from '$lib/images/icons/user-solid.svg'
+	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
 	import type { DrawerSettings } from '@skeletonlabs/skeleton'
 	import { page } from '$app/stores'
@@ -26,7 +27,10 @@
 	{#if $isAuth}
 		<div class="flex items-center gap-4">
 			<a href={`/profile/${$currentUsername}`}>
-				<img src={user} alt="user" width="18" />
+				<img src={user} alt="profile" width="18" />
+			</a>
+			<a href={`/rankings`}>
+				<img src={trophy} alt="rankings" width="24" />
 			</a>
 			<LogoutForm>
 				<button type="submit" class="btn btn-sm rounded-lg bg-black text-white"> Logout </button>

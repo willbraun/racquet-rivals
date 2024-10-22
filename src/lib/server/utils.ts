@@ -1,5 +1,5 @@
 import { errorMessage } from '$lib/utils'
-import { fail } from '@sveltejs/kit'
+import { error } from '@sveltejs/kit'
 import type { ClientResponseError } from 'pocketbase'
 
 export const fetchJson = async (url: string, token: string, svelteFetch: SvelteFetch) => {
@@ -16,8 +16,6 @@ export const fetchJson = async (url: string, token: string, svelteFetch: SvelteF
 		return data
 	} catch (e) {
 		const statusCode = (e as ClientResponseError).status
-		return fail(statusCode, {
-			error: errorMessage(e)
-		})
+		return error(statusCode, errorMessage(statusCode))
 	}
 }
