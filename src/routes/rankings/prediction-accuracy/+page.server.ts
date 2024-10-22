@@ -1,6 +1,6 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { fetchJson } from '$lib/server/utils.js'
-import type { OverallRank, PbListResponse } from '$lib/types.js'
+import type { PbListResponse, PredictionAccuracy } from '$lib/types.js'
 import { redirect } from '@sveltejs/kit'
 
 export async function load({ fetch, locals }) {
@@ -11,11 +11,11 @@ export async function load({ fetch, locals }) {
 
 	const url = PUBLIC_POCKETBASE_URL
 
-	const overallRank: PbListResponse<OverallRank> = await fetchJson(
-		`${url}/api/collections/overall_leaderboard/records`,
+	const predictionAccuracy: PbListResponse<PredictionAccuracy> = await fetchJson(
+		`${url}/api/collections/prediction_accuracy/records`,
 		token,
 		fetch
 	)
 
-	return overallRank
+	return predictionAccuracy
 }

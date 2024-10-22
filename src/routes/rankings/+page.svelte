@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { RankingsPageData } from '$lib/types'
+	import type { PbListResponse, OverallRank } from '$lib/types'
 
-	export let data: RankingsPageData
+	export let data: PbListResponse<OverallRank>
 </script>
 
 <p>{JSON.stringify(data)}</p>
