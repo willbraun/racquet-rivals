@@ -9,23 +9,22 @@
 		currentUsername,
 		selectedUsers,
 		isLeaderboard,
-		predictionStore
+		predictionStore,
+		drawNavUrl
 	} from '$lib/store'
 	import { type DrawPageData, type Prediction, type SelectedUser, type Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { addUser, getSlug, getTitle, removeUser, updatePageAuth } from '$lib/utils'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
-	import HowToPlay from '$lib/components/HowToPlay.svelte'
 	import { getPredictions } from '$lib/api'
 	import { browser } from '$app/environment'
 	import Cookies from 'js-cookie'
-	import home from '$lib/images/icons/home.svg'
 	import plus from '$lib/images/icons/plus.svg'
 	import edit from '$lib/images/icons/pen-to-square.svg'
 	import x from '$lib/images/icons/x.svg'
 	import Rank from '$lib/components/Rank.svelte'
-	import NavMenu from '$lib/components/NavMenu.svelte'
+	import Header from '$lib/components/Header.svelte'
 	export let data: DrawPageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -34,6 +33,8 @@
 	isAuth.set(data.pb_auth_valid)
 	currentUsername.set(data.pb_auth_valid ? data.currentUser.username : '')
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
+
+	drawNavUrl.set(`/draw/${getSlug(data.draw)}`)
 
 	let isScrollListenerAdded: boolean = false
 	let roundHeader: HTMLElement
@@ -147,6 +148,7 @@
 	$: if (drawUrl) {
 		goto(drawUrl, { invalidateAll: true })
 		sessionStorage.setItem('loginGoto', drawUrl)
+		drawNavUrl.set(drawUrl)
 	}
 
 	const getHeight = (roundIndex: number, position: number): string => {
@@ -223,12 +225,9 @@
 	})
 </script>
 
-<header class="flex items-center gap-2 p-4 sm:gap-4 {headerColor}">
-	<a class="flex-shrink-0 px-2" href="/">
-		<img src={home} alt="home" width="24" />
-	</a>
+<Header color="bg-primary-50">
 	<select
-		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 text-lg font-bold hover:bg-primary-200 md:text-3xl"
+		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 text-lg font-bold hover:bg-primary-200 md:text-2xl"
 		on:change={(e) => (drawUrl = e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
@@ -244,14 +243,8 @@
 			>
 		{/each}
 	</select>
-	<div
-		class="ml-auto flex w-fit flex-none flex-col flex-wrap items-center justify-end gap-4 pl-2 sm:flex-row-reverse"
-	>
-		<NavMenu />
-		<HowToPlay />
-	</div>
-</header>
-<section class="grid grid-cols-4 gap-2 p-4 {headerColor} [&>*]:text-lg">
+</Header>
+<section class="grid grid-cols-4 gap-2 px-4 pb-4 {headerColor} [&>*]:text-lg">
 	<div class="col-span-4 text-center text-black sm:col-span-1">
 		Active Round: <span class="font-bold">{roundLabel}</span>
 	</div>

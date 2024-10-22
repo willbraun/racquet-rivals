@@ -15,6 +15,7 @@ export const currentUsername = writable<string>('')
 export const predictionStore = writable<Prediction[]>([])
 export const selectedUsers = persisted<SelectedUser[]>('selectedUsers', [])
 export const isLeaderboard = writable<boolean>(false)
+export const drawNavUrl = writable<string>('')
 
 export const isMobile = writable<boolean>(false)
 if (typeof window !== 'undefined') {

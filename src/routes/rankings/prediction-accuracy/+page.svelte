@@ -4,4 +4,4 @@
 	export let data: PbListResponse<PredictionAccuracy>
 </script>
 
-<p>{JSON.stringify(data)}</p>
+<main class="bg-stone-100">{JSON.stringify(data)}</main>

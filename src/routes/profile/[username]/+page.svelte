@@ -2,23 +2,12 @@
 	import { format } from 'date-fns'
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton'
 	import { DrawStatus, type ProfilePageData } from '$lib/types'
-	import arrowLeft from '$lib/images/icons/arrow-left-solid.svg'
-	import home from '$lib/images/icons/home.svg'
 	import trophy from '$lib/images/icons/trophy-solid.svg'
-	import NavMenu from '$lib/components/NavMenu.svelte'
-	import HowToPlay from '$lib/components/HowToPlay.svelte'
 	import Rank from '$lib/components/Rank.svelte'
 	import { getDrawStatus, getSlug, getTitle } from '$lib/utils'
 	import InfoIcon from './InfoIcon.svelte'
+	import Header from '$lib/components/Header.svelte'
 	export let data: ProfilePageData
-
-	const goBack = () => {
-		if (window.history.length > 1) {
-			window.history.back()
-		} else {
-			window.location.href = '/'
-		}
-	}
 
 	const formatRank = (num: number | null): string => {
 		if (num === null) {
@@ -67,23 +56,14 @@
 	}
 </script>
 
-<header class="flex items-center gap-4 px-4 py-[18px]">
-	<a class="flex items-center justify-center px-2" href="/">
-		<img src={home} alt="home" width="24" />
-	</a>
-	<a href="/" on:click|preventDefault={goBack} class="mr-auto">
-		<img src={arrowLeft} alt="back" width="24" />
-	</a>
-	<HowToPlay />
-	<NavMenu />
-</header>
-<main>
+<Header />
+<main class="bg-stone-100">
 	<div class="mx-auto max-w-screen-lg px-4">
 		<section class="mb-8">
 			<h1 class="mb-4 text-4xl font-bold md:text-7xl">{data.username}</h1>
 			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM dd, yyyy')}</p>
 		</section>
-		<section class="mb-4 rounded-xl bg-stone-200 shadow md:mb-8 md:p-8">
+		<section class="bg-stone-250 mb-4 rounded-xl shadow md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
 					<div slot="summary" class="grid grid-cols-2 items-center gap-4">
@@ -112,7 +92,7 @@
 				</AccordionItem>
 			</Accordion>
 		</section>
-		<section class="mb-4 rounded-xl bg-stone-200 shadow md:mb-8 md:p-8">
+		<section class="bg-stone-250 mb-4 rounded-xl shadow md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
 					<div slot="summary" class="grid grid-cols-4 items-center gap-4">
@@ -142,7 +122,7 @@
 				</AccordionItem>
 			</Accordion>
 		</section>
-		<section class="mb-4 rounded-xl bg-stone-200 shadow md:mb-8 md:p-8">
+		<section class="bg-stone-250 mb-4 rounded-xl shadow md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
 					<div slot="summary" class=" grid grid-cols-4 items-center items-center gap-4">
@@ -178,7 +158,7 @@
 				</AccordionItem>
 			</Accordion>
 		</section>
-		<section class="my-16">
+		<section class="py-16">
 			<div class="mb-4 grid grid-cols-8">
 				<h2 class="col-span-6 text-lg font-bold md:text-3xl">Results</h2>
 				<p class="mx-auto self-end text-sm md:text-2xl">Points</p>

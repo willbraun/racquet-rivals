@@ -16,8 +16,8 @@
 </script>
 
 {#if $modalStore[0]}
-	<div class="card p-4 w-modal shadow-xl space-y-4 bg-white scroll-smooth">
-		<header class="text-2xl font-bold">{$modalStore[0].title ?? '(title missing)'}</header>
+	<div class="card w-modal space-y-4 scroll-smooth bg-white p-4 shadow-xl">
+		<h2 class="text-2xl font-bold">{$modalStore[0].title ?? '(title missing)'}</h2>
 		<article>
 			<p class="mb-4">Welcome to Racquet Rivals! Follow these steps to join the fun.</p>
 			<ol class="list-decimal px-8">
@@ -33,7 +33,7 @@
 					for any that are available in the Round of 16.
 				</li>
 				<li>As matches are completed, you'll win points if your predictions are correct.</li>
-				<ul class="list-disc ml-8 mb-4">
+				<ul class="mb-4 ml-8 list-disc">
 					<li>Quarterfinals: <span class={scoreFormatting}>1</span></li>
 					<li>Semifinals: <span class={scoreFormatting}>2</span></li>
 					<li>Final: <span class={scoreFormatting}>4</span></li>
@@ -46,7 +46,7 @@
 		</article>
 		<footer class="modal-footer {parent.regionFooter}">
 			<button
-				class="btn rounded-md variant-glass-primary"
+				class="variant-glass-primary btn rounded-md"
 				bind:this={buttonRef}
 				on:click={parent.onClose}>Close</button
 			>

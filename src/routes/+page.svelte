@@ -1,15 +1,14 @@
 <script lang="ts">
 	import Pocketbase from 'pocketbase'
 	import { afterNavigate } from '$app/navigation'
-	import { isAuth, currentUsername } from '$lib/store'
+	import { isAuth, currentUsername, drawNavUrl } from '$lib/store'
 	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
-	import bracketLeft from '$lib/images/bracket-left.svg'
+	import bracketLeft from '$lib/images/icons/bracket-left.svg'
 	import { onMount } from 'svelte'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
-	import HowToPlay from '$lib/components/HowToPlay.svelte'
-	import NavMenu from '$lib/components/NavMenu.svelte'
 	import { type HomePageData, TournamentName } from '$lib/types'
 	import { format } from 'date-fns'
+	import Header from '$lib/components/Header.svelte'
 	export let data: HomePageData
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -17,6 +16,11 @@
 	isAuth.set(data.pb_auth_valid)
 	currentUsername.set(data.pb_auth_username)
 	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
+
+	const defaultDraw = data.active.items[0] || data.completed.items[0]
+	if ($drawNavUrl === '') {
+		drawNavUrl.set(`/draw/${getSlug(defaultDraw)}`)
+	}
 
 	const pillStyle =
 		'flex justify-center items-center text-center text-lg sm:text-xl md:text-2xl rounded-full px-4 py-2'
@@ -43,11 +47,8 @@
 	})
 </script>
 
-<header class="absolute right-0 top-0 flex items-center justify-end gap-4 pr-4 pt-[18px]">
-	<HowToPlay />
-	<NavMenu />
-</header>
-<main class="h-max w-full bg-stone-100 px-2 py-4 sm:px-4">
+<Header />
+<main class="w-full bg-stone-100 px-2 py-4 sm:px-4">
 	<div class="mx-auto h-full max-w-5xl">
 		<section class="mb-16">
 			<div class="my-16 grid grid-cols-4 items-center">

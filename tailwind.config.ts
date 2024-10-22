@@ -16,7 +16,8 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				'pure-red': '#ff0000'
+				'pure-red': '#ff0000',
+				'stone-250': '#dedcda'
 			},
 			borderWidth: {
 				'1': '1px',
