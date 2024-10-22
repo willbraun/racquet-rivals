@@ -41,9 +41,9 @@
 			<LogoutForm>
 				<button type="submit" class="btn btn-sm rounded-lg bg-black text-white"> Logout </button>
 			</LogoutForm>
-		{:else if $page.url.pathname !== '/'}
+		{:else}
 			<a href="/login">
-				<button type="button" class="btn btn-sm mr-2 rounded-lg bg-black text-white">Login</button>
+				<button type="button" class="btn btn-sm rounded-lg bg-black text-white">Login</button>
 			</a>
 			<a href="/create-account">
 				<button type="button" class="btn btn-sm rounded-lg bg-black text-white">Sign up</button>
