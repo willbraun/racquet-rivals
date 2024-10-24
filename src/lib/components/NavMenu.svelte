@@ -5,7 +5,6 @@
 	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
 	import type { DrawerSettings } from '@skeletonlabs/skeleton'
-	import { page } from '$app/stores'
 	import LogoutForm from './LogoutForm.svelte'
 	import { isAuth, currentUsername, drawNavUrl } from '$lib/store'
 	import HowToPlay from './HowToPlay.svelte'

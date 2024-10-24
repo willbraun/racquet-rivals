@@ -4,8 +4,8 @@
 	import bronzeMedal from '$lib/images/icons/bronzemedal.png'
 
 	export let rank: number
-	export let containerStyle: string
-	export let textStyle: string
+	export let containerStyle: string = ''
+	export let textStyle: string = ''
 </script>
 
 <div class={containerStyle}>
@@ -30,6 +30,8 @@
 			alt="bronze medal"
 			data-testid="bronze-medal"
 		/>
+	{:else if rank === null}
+		<p class={`text-center ${textStyle}`}>N/A</p>
 	{:else}
 		<p class={`text-center ${textStyle}`}>{rank}</p>
 	{/if}

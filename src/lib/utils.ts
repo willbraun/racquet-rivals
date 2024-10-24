@@ -122,6 +122,44 @@ export const getDrawStatus = (startDate: string, endDate: string): DrawStatus =>
 	}
 }
 
+export const formatAvg = (num: number | null): string => {
+	if (num === null) {
+		return 'N/A'
+	}
+
+	let result: string
+	const rounded = Math.round(num * 100) / 100
+	if (Number.isInteger(rounded)) {
+		result = rounded.toString()
+	} else if (Number.isInteger(rounded * 10)) {
+		result = rounded.toFixed(1)
+	} else {
+		result = rounded.toFixed(2)
+	}
+
+	return result
+}
+
+export const formatPercent = (num: number | null): string => {
+	if (num === null) {
+		return 'N/A'
+	}
+
+	let result: string
+	if (Number.isInteger(num)) {
+		result = num.toString()
+	} else {
+		const rounded = Math.round(num * 100) / 100
+		if (Number.isInteger(rounded)) {
+			result = rounded.toString()
+		} else {
+			result = rounded.toFixed(1)
+		}
+	}
+
+	return `${result}%`
+}
+
 export const mainColor = 'bg-blue-300'
 
 export const selectColors = [

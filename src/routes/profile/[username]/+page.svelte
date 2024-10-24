@@ -4,7 +4,7 @@
 	import { DrawStatus, type ProfilePageData } from '$lib/types'
 	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import Rank from '$lib/components/Rank.svelte'
-	import { getDrawStatus, getSlug, getTitle } from '$lib/utils'
+	import { getDrawStatus, getSlug, getTitle, formatAvg, formatPercent } from '$lib/utils'
 	import InfoIcon from './InfoIcon.svelte'
 	import Header from '$lib/components/Header.svelte'
 	export let data: ProfilePageData
@@ -16,44 +16,6 @@
 
 		return `#${num}`
 	}
-
-	const formatAvg = (num: number | null): string => {
-		if (num === null) {
-			return 'N/A'
-		}
-
-		let result: string
-		const rounded = Math.round(num * 100) / 100
-		if (Number.isInteger(rounded)) {
-			result = rounded.toString()
-		} else if (Number.isInteger(rounded * 10)) {
-			result = rounded.toFixed(1)
-		} else {
-			result = rounded.toFixed(2)
-		}
-
-		return result
-	}
-
-	const formatPercent = (num: number | null): string => {
-		if (num === null) {
-			return 'N/A'
-		}
-
-		let result: string
-		if (Number.isInteger(num)) {
-			result = num.toString()
-		} else {
-			const rounded = Math.round(num * 100) / 100
-			if (Number.isInteger(rounded)) {
-				result = rounded.toString()
-			} else {
-				result = rounded.toFixed(1)
-			}
-		}
-
-		return `${result}%`
-	}
 </script>
 
 <Header />
@@ -63,7 +25,7 @@
 			<h1 class="mb-4 text-4xl font-bold md:text-7xl">{data.username}</h1>
 			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM dd, yyyy')}</p>
 		</section>
-		<section class="bg-stone-250 mb-4 rounded-xl shadow md:mb-8 md:p-8">
+		<section class="mb-4 rounded-xl bg-stone-250 shadow md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
 					<div slot="summary" class="grid grid-cols-2 items-center gap-4">
@@ -92,7 +54,7 @@
 				</AccordionItem>
 			</Accordion>
 		</section>
-		<section class="bg-stone-250 mb-4 rounded-xl shadow md:mb-8 md:p-8">
+		<section class="mb-4 rounded-xl bg-stone-250 shadow md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
 					<div slot="summary" class="grid grid-cols-4 items-center gap-4">
@@ -122,7 +84,7 @@
 				</AccordionItem>
 			</Accordion>
 		</section>
-		<section class="bg-stone-250 mb-4 rounded-xl shadow md:mb-8 md:p-8">
+		<section class="mb-4 rounded-xl bg-stone-250 shadow md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
 					<div slot="summary" class=" grid grid-cols-4 items-center items-center gap-4">
