@@ -4,4 +4,4 @@
 	export let data: PbListResponse<AveragePoints>
 </script>
 
-<main class="bg-stone-100">{JSON.stringify(data)}</main>
+<div class="bg-stone-100">{JSON.stringify(data)}</div>

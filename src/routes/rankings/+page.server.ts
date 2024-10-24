@@ -12,7 +12,7 @@ export async function load({ fetch, locals }) {
 	const url = PUBLIC_POCKETBASE_URL
 
 	const overallRank: PbListResponse<OverallRank> = await fetchJson(
-		`${url}/api/collections/overall_leaderboard/records`,
+		`${url}/api/collections/overall_leaderboard/records?perPage=100`,
 		token,
 		fetch
 	)

@@ -12,7 +12,7 @@ export async function load({ fetch, locals }) {
 	const url = PUBLIC_POCKETBASE_URL
 
 	const predictionAccuracy: PbListResponse<PredictionAccuracy> = await fetchJson(
-		`${url}/api/collections/prediction_accuracy/records`,
+		`${url}/api/collections/prediction_accuracy/records?perPage=100`,
 		token,
 		fetch
 	)
