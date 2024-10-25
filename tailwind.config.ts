@@ -4,7 +4,7 @@ import forms from '@tailwindcss/forms'
 import typography from '@tailwindcss/typography'
 import { skeleton } from '@skeletonlabs/tw-plugin'
 import { myCustomTheme } from './src/myCustomTheme.ts'
-import { mainColor, selectColors } from './src/lib/utils'
+import { mainColor, selectColors } from './src/lib/data'
 
 export default {
 	darkMode: 'class',

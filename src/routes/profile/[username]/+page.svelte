@@ -2,6 +2,7 @@
 	import { format } from 'date-fns'
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton'
 	import { DrawStatus, type ProfilePageData } from '$lib/types'
+	import { rankingDescriptions } from '$lib/data'
 	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import Rank from '$lib/components/Rank.svelte'
 	import { getDrawStatus, getSlug, getTitle, formatAvg, formatPercent } from '$lib/utils'
@@ -44,11 +45,7 @@
 						<p class="text-2xl font-semibold md:text-7xl">{formatRank(data.overallRank.rank)}</p>
 						<p class="self-end text-2xl md:text-6xl">{data.overallRank.total_points}</p>
 					</div>
-					<svelte:fragment slot="content"
-						>Based on the last year of play (8 major tournaments, men's and women's singles). This
-						is how professional player rankings work. Points earned in a tournament apply to your
-						ranking for one year.
-					</svelte:fragment>
+					<svelte:fragment slot="content">{rankingDescriptions.overall}</svelte:fragment>
 					<svelte:fragment slot="iconOpen"><InfoIcon /></svelte:fragment>
 					<svelte:fragment slot="iconClosed"><InfoIcon /></svelte:fragment>
 				</AccordionItem>
@@ -76,9 +73,7 @@
 							{formatPercent(data.averagePoints.percentile)}
 						</p>
 					</div>
-					<svelte:fragment slot="content"
-						>Your average score across all tournaments you've played.
-					</svelte:fragment>
+					<svelte:fragment slot="content">{rankingDescriptions.averagePoints}</svelte:fragment>
 					<svelte:fragment slot="iconOpen"><InfoIcon /></svelte:fragment>
 					<svelte:fragment slot="iconClosed"><InfoIcon /></svelte:fragment>
 				</AccordionItem>
@@ -112,9 +107,7 @@
 							{`(${data.predictionAccuracy.correct}/${data.predictionAccuracy.total})`}
 						</p>
 					</div>
-					<svelte:fragment slot="content"
-						>How often you choose correctly across all tournaments you've played.</svelte:fragment
-					>
+					<svelte:fragment slot="content">{rankingDescriptions.predictionAccuracy}</svelte:fragment>
 					<svelte:fragment slot="iconOpen"><InfoIcon /></svelte:fragment>
 					<svelte:fragment slot="iconClosed"><InfoIcon /></svelte:fragment>
 				</AccordionItem>

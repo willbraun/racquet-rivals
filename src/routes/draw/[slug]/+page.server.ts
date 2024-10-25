@@ -1,5 +1,6 @@
 import { fail, type Actions } from '@sveltejs/kit'
-import { errorMessage, mainColor } from '$lib/utils'
+import { errorMessage } from '$lib/utils'
+import { mainColor } from '$lib/data'
 import { fetchJson } from '$lib/server/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {

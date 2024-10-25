@@ -10,6 +10,7 @@ import {
 } from './types'
 import { get } from 'svelte/store'
 import Cookies from 'js-cookie'
+import { selectColors } from './data'
 
 type ErrorObjData = {
 	[key: string]: {
@@ -159,13 +160,3 @@ export const formatPercent = (num: number | null): string => {
 
 	return `${result}%`
 }
-
-export const mainColor = 'bg-blue-300'
-
-export const selectColors = [
-	'bg-red-300',
-	'bg-yellow-300',
-	'bg-green-300',
-	'bg-purple-300',
-	'bg-orange-300'
-]

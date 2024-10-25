@@ -3,8 +3,6 @@
 	import Header from '$lib/components/Header.svelte'
 	import { page } from '$app/stores'
 
-	console.log($page.route.id)
-
 	const navigateToPage = (event: Event) => {
 		const select = event.target as HTMLSelectElement
 		const value = select.value

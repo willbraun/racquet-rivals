@@ -1,11 +1,15 @@
 <script lang="ts">
 	import Rank from '$lib/components/Rank.svelte'
+	import { rankingDescriptions } from '$lib/data'
 	import type { PbListResponse, AveragePoints } from '$lib/types'
 	import { formatAvg } from '$lib/utils'
 
 	export let data: PbListResponse<AveragePoints>
 </script>
 
+<p class="pb-8 sm:text-xl">
+	{rankingDescriptions.averagePoints}
+</p>
 <table class="w-full overflow-hidden rounded-xl shadow">
 	<thead class="bg-primary-700 text-xl text-white md:text-3xl">
 		<tr class="grid grid-cols-4 gap-2 p-2 md:py-4">

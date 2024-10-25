@@ -1,16 +1,20 @@
 <script lang="ts">
 	import Rank from '$lib/components/Rank.svelte'
 	import type { PbListResponse, OverallRank } from '$lib/types'
+	import { rankingDescriptions } from '$lib/data'
 
 	export let data: PbListResponse<OverallRank>
 </script>
 
+<p class="pb-8 sm:text-xl">
+	{rankingDescriptions.overall}
+</p>
 <table class="w-full overflow-hidden rounded-xl shadow">
 	<thead class="bg-primary-700 text-xl text-white md:text-3xl">
 		<tr class="grid grid-cols-4 gap-2 p-2 md:py-4">
 			<th>Rank</th>
 			<th class="col-span-2 text-start">User</th>
-			<th>Total Points</th>
+			<th>Points</th>
 		</tr>
 	</thead>
 	<tbody>
