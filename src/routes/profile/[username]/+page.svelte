@@ -113,59 +113,72 @@
 				</AccordionItem>
 			</Accordion>
 		</section>
-		<section class="py-16">
-			<div class="mb-4 grid grid-cols-8">
-				<h2 class="col-span-6 text-lg font-bold md:text-3xl">Results</h2>
-				<p class="mx-auto self-end text-sm md:text-2xl">Points</p>
-				<p class="mx-auto self-end text-sm md:text-2xl">Rank</p>
-			</div>
-			{#if data.drawResults.items.length === 0}
-				<p class="text-center md:text-2xl">No results yet</p>
-			{:else}
-				<ul class="flex flex-col overflow-hidden rounded shadow md:rounded-2xl">
-					{#each data.drawResults.items as drawResult, index}
-						{@const status = getDrawStatus(drawResult.draw_start_date, drawResult.draw_end_date)}
+		<section class="pb-16 pt-8">
+			<h2 class="mb-4 text-3xl font-bold md:text-5xl">Results</h2>
+			<table class="w-full overflow-hidden rounded-xl shadow">
+				<thead class="bg-primary-700 text-white md:text-3xl">
+					<tr class="grid grid-cols-8 gap-4 p-2 md:p-4">
+						<th class="col-span-6 text-start">Draw</th>
+						<th class="sm:hidden">Pts</th>
+						<th class="hidden sm:block">Points</th>
+						<th class="hidden sm:block">Rank</th>
+						<th class="flex items-center justify-center invert sm:hidden">
+							<img src={trophy} alt="rankings" width="18" />
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each data.drawResults.items as item, index}
+						{@const status = getDrawStatus(item.draw_start_date, item.draw_end_date)}
 						{@const showCutoff = index === 7 && data.drawResults.items.length > 8}
-						<a href={`/draw/${getSlug(drawResult)}`} class="relative">
-							<li
+						<a href={`/draw/${getSlug(item)}`}>
+							<tr
 								class={`grid w-full grid-cols-8 items-center gap-4 p-2 md:p-4 md:hover:brightness-105 ${
 									index % 2 ? 'bg-primary-50' : 'bg-primary-200'
 								} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${showCutoff ? 'border-b-2 border-pure-red' : ''}`}
 							>
-								<p class="col-span-6 flex md:text-4xl">
-									{getTitle(drawResult)}
-								</p>
-								{#if drawResult.prediction_count > 0 || status === DrawStatus.ACTIVE}
-									<div
-										class={`badge-icon mx-auto w-fit rounded-full bg-green-400 px-2 text-lg md:h-10 md:min-w-10 md:text-3xl`}
-									>
-										{drawResult.total_points}
-									</div>
-									<Rank
-										rank={drawResult.rank}
-										containerStyle="mx-auto w-6 md:w-10"
-										textStyle="text-lg md:text-3xl font-extrabold"
-									/>
+								<td class="col-span-6 md:text-3xl">
+									<p class="text-wrap break-words">{getTitle(item)}</p>
+								</td>
+								{#if item.prediction_count > 0 || status === DrawStatus.ACTIVE}
+									<td>
+										<div
+											class={`badge-icon mx-auto w-fit rounded-full bg-green-400 px-2 text-lg md:h-10 md:min-w-10 md:text-3xl`}
+										>
+											{item.total_points}
+										</div>
+									</td>
+									<td>
+										<Rank
+											rank={item.rank}
+											containerStyle="mx-auto w-6 md:w-10"
+											textStyle="text-lg md:text-3xl font-extrabold"
+										/>
+									</td>
 								{:else}
-									<div
-										class="col-span-2 mx-auto w-5/6 rounded bg-primary-600 px-2 text-center text-xs font-bold text-white md:text-2xl"
-									>
-										<p class="hidden sm:block">DID NOT PLAY</p>
-										<p class="block sm:hidden">DNP</p>
-									</div>
+									<td class="col-span-2">
+										<div
+											class="mx-auto w-5/6 rounded bg-primary-600 px-2 text-center text-xs font-bold text-white md:text-2xl"
+										>
+											<p class="hidden sm:block">DID NOT PLAY</p>
+											<p class="block sm:hidden">DNP</p>
+										</div>
+									</td>
 								{/if}
-							</li>
-							{#if showCutoff}
-								<div
+							</tr>
+						</a>
+						{#if showCutoff}
+							<tr>
+								<td
 									class="absolute left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded bg-pure-red px-2 text-xs font-bold text-white"
 								>
 									OVERALL RANK CUTOFF
-								</div>
-							{/if}
-						</a>
+								</td>
+							</tr>
+						{/if}
 					{/each}
-				</ul>
-			{/if}
+				</tbody>
+			</table>
 		</section>
 	</div>
 </main>
