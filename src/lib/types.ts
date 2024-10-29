@@ -120,9 +120,9 @@ export interface AveragePoints {
 	id: string
 	user_id: string
 	username: string
-	avg_points_per_draw: number
-	rank: number
-	percentile: number
+	avg_points_per_draw: number | null
+	rank: number | null
+	percentile: number | null
 	draws_played: number
 }
 
@@ -134,9 +134,9 @@ export interface PredictionAccuracy {
 	username: string
 	correct: number
 	total: number
-	percent_correct: number
-	rank: number
-	percentile: number
+	percent_correct: number | null
+	rank: number | null
+	percentile: number | null
 }
 
 export interface OverallRank {
