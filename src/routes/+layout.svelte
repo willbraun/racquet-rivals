@@ -9,10 +9,18 @@
 	} from '@skeletonlabs/skeleton'
 	import SelectUsers from './draw/[slug]/SelectUsers.svelte'
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
+	import Pocketbase from 'pocketbase'
 	import { storePopup } from '@skeletonlabs/skeleton'
+	import { afterNavigate } from '$app/navigation'
+	import { isAuth, currentUsername } from '$lib/store'
+	import { updatePageAuth } from '$lib/utils'
 	import HowToPlayContent from '$lib/components/HowToPlayContent.svelte'
 	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
+	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
+	import type { RootLayoutData } from '$lib/types'
+	export let data: RootLayoutData
+
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
 	const modalRegistry: Record<string, ModalComponent> = {
@@ -22,6 +30,11 @@
 
 	initializeStores()
 	const drawerStore = getDrawerStore()
+
+	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
+	isAuth.set(data.pb_auth_valid)
+	currentUsername.set(data.pb_auth_username)
+	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 </script>
 
 <Modal components={modalRegistry} />

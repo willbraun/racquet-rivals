@@ -14,7 +14,7 @@ import { redirect, error } from '@sveltejs/kit'
 export async function load({ fetch, params, locals }) {
 	const token = locals.pb.authStore.token
 	if (!token) {
-		redirect(307, '/login')
+		redirect(307, '/')
 	}
 
 	const username = params.username.trim()

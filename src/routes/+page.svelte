@@ -1,21 +1,12 @@
 <script lang="ts">
-	import Pocketbase from 'pocketbase'
-	import { afterNavigate } from '$app/navigation'
 	import { isAuth, currentUsername, drawNavUrl } from '$lib/store'
-	import { getSlug, getTitle, updatePageAuth } from '$lib/utils'
+	import { getSlug, getTitle } from '$lib/utils'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
 	import { onMount } from 'svelte'
-	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import { type HomePageData, TournamentName } from '$lib/types'
 	import { format } from 'date-fns'
 	import Header from '$lib/components/Header.svelte'
 	export let data: HomePageData
-
-	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
-
-	isAuth.set(data.pb_auth_valid)
-	currentUsername.set(data.pb_auth_username)
-	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
 
 	const defaultDraw = data.active.items[0] || data.completed.items[0]
 	if ($drawNavUrl === '') {

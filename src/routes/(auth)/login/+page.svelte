@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation'
 	import PasswordField from '$lib/components/PasswordField.svelte'
 	import { persisted } from 'svelte-persisted-store'
 	import { get } from 'svelte/store'
@@ -45,7 +44,7 @@
 							rememberMe,
 							usernameOrEmail
 						})
-						goto(sessionStorage.getItem('loginGoto') || '/')
+						window.location.href = sessionStorage.getItem('loginGoto') || '/'
 					} else {
 						error = typedResult.data.error
 					}

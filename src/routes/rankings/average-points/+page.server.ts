@@ -6,7 +6,7 @@ import { redirect } from '@sveltejs/kit'
 export async function load({ fetch, locals }) {
 	const token = locals.pb.authStore.token
 	if (!token) {
-		redirect(307, '/login')
+		redirect(307, '/')
 	}
 
 	const url = PUBLIC_POCKETBASE_URL

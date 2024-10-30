@@ -203,6 +203,12 @@ declare global {
 	}
 }
 
+export interface RootLayoutData {
+	pb_auth_valid: boolean
+	pb_auth_cookie: string
+	pb_auth_username: string
+}
+
 export interface HomePageData {
 	active: PbListResponse<Draw>
 	completed: PbListResponse<Draw>
