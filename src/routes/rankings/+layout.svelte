@@ -3,10 +3,10 @@
 	import Header from '$lib/components/Header.svelte'
 	import { page } from '$app/stores'
 	interface Props {
-		children?: import('svelte').Snippet;
+		children?: import('svelte').Snippet
 	}
 
-	let { children }: Props = $props();
+	let { children }: Props = $props()
 
 	const navigateToPage = (event: Event) => {
 		const select = event.target as HTMLSelectElement

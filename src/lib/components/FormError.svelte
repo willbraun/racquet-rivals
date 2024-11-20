@@ -1,9 +1,9 @@
 <script lang="ts">
 	interface Props {
-		error?: string;
+		error?: string
 	}
 
-	let { error = '' }: Props = $props();
+	let { error = '' }: Props = $props()
 </script>
 
-<p class="text-md text-red-500 whitespace-pre-line">{error}</p>
+<p class="text-md whitespace-pre-line text-red-500">{error}</p>

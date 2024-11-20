@@ -1,22 +1,18 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { run } from 'svelte/legacy'
 
-	import Pocketbase from 'pocketbase'
 	import EmailField from '$lib/components/EmailField.svelte'
 	import FormError from '$lib/components/FormError.svelte'
 	import { makeSetType } from '$lib/utils.js'
 	import { enhance } from '$app/forms'
 	import type { AuthResult } from '$lib/types'
-	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
-
-	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 
 	let email = $state('')
 	let showEmailValidation = $state(false)
 	let error = $state('')
 	let loading = $state(false)
 	let success = $state(false)
-	let buttonRef: HTMLButtonElement = $state()
+	let buttonRef: HTMLButtonElement | undefined = $state()
 
 	let disabled = $derived(loading || showEmailValidation)
 	run(() => {
@@ -24,7 +20,7 @@
 			buttonRef.disabled = false
 			buttonRef.focus()
 		}
-	});
+	})
 
 	const setType = makeSetType<AuthResult>()
 </script>
@@ -70,7 +66,7 @@
 			</p>
 		{/if}
 		<div class="mt-2">
-			<FormError bind:error />
+			<FormError {error} />
 		</div>
 		<div class="mt-6">
 			<p><a class="underline" href="/login">Back to Login</a></p>

@@ -8,7 +8,7 @@
 	import { fade } from 'svelte/transition'
 	import { selectedUsers } from '$lib/store'
 	import x from '$lib/images/icons/x.svg'
-	let { parent } = $props();
+	let { parent } = $props()
 
 	const modalStore = getModalStore()
 

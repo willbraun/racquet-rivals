@@ -4,10 +4,10 @@
 	import { rankingDescriptions } from '$lib/data'
 
 	interface Props {
-		data: PbListResponse<OverallRank>;
+		data: PbListResponse<OverallRank>
 	}
 
-	let { data }: Props = $props();
+	let { data }: Props = $props()
 </script>
 
 <p class="pb-8 sm:text-xl">

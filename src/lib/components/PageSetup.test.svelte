@@ -2,11 +2,11 @@
 	import { initializeStores, storePopup } from '@skeletonlabs/skeleton'
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
 	interface Props {
-		component: ConstructorOfATypedSvelteComponent;
-		data?: object;
+		component: ConstructorOfATypedSvelteComponent
+		data?: object
 	}
 
-	let { component, data = {} }: Props = $props();
+	let { component, data = {} }: Props = $props()
 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 

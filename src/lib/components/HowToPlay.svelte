@@ -2,10 +2,10 @@
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 
 	interface Props {
-		showName?: boolean;
+		showName?: boolean
 	}
 
-	let { showName = false }: Props = $props();
+	let { showName = false }: Props = $props()
 
 	const modalStore = getModalStore()
 	const modal: ModalSettings = {

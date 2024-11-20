@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { getModalStore } from '@skeletonlabs/skeleton'
-	let { parent } = $props();
+	let { parent } = $props()
 
 	const modalStore = getModalStore()
 

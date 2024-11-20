@@ -10,12 +10,12 @@
 	import { enhance } from '$app/forms'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	interface Props {
-		slot: Slot;
-		roundIndex: number;
-		players: [string, string];
-		prediction: Prediction | undefined;
-		predictionsAllowed: boolean;
-		getColor: (userId: string | undefined) => string;
+		slot: Slot
+		roundIndex: number
+		players: [string, string]
+		prediction: Prediction | undefined
+		predictionsAllowed: boolean
+		getColor: (userId: string | undefined) => string
 	}
 
 	let {
@@ -25,7 +25,7 @@
 		prediction = $bindable(),
 		predictionsAllowed,
 		getColor
-	}: Props = $props();
+	}: Props = $props()
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 

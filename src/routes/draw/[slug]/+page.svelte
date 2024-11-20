@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { run } from 'svelte/legacy'
 
 	import Pocketbase from 'pocketbase'
 	import AddPrediction from './AddPrediction.svelte'
@@ -21,10 +21,10 @@
 	import Rank from '$lib/components/Rank.svelte'
 	import Header from '$lib/components/Header.svelte'
 	interface Props {
-		data: DrawPageData;
+		data: DrawPageData
 	}
 
-	let { data }: Props = $props();
+	let { data }: Props = $props()
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 	const now = new Date()
@@ -32,13 +32,14 @@
 	drawNavUrl.set(`/draw/${getSlug(data.draw)}`)
 
 	let isScrollListenerAdded: boolean = $state(false)
-	let roundHeader: HTMLElement = $state()
-	let drawGrid: HTMLElement = $state()
+	let roundHeader: HTMLElement | undefined = $state()
+	let drawGrid: HTMLElement | undefined = $state()
 
 	const syncScroll = () => {
-		roundHeader.scrollLeft = drawGrid.scrollLeft
+		if (roundHeader && drawGrid) {
+			roundHeader.scrollLeft = drawGrid.scrollLeft
+		}
 	}
-
 
 	let serverIsLeaderboard = data.isLeaderboard === 'true'
 	isLeaderboard.set(serverIsLeaderboard)
@@ -60,7 +61,6 @@
 		combinedPredictions = $predictionStore
 	}
 
-
 	const headerColor = 'bg-primary-50'
 	const pointsByRound = {
 		'Round of 16': 0,
@@ -69,12 +69,11 @@
 		Final: 4,
 		Champion: 8
 	}
- // rounds start at 1
+	// rounds start at 1
 
 	let pcDate: Date | undefined = $state()
-	let predictionClose: string = $state()
-	let predictionsAllowed: boolean = $state()
-
+	let predictionClose: string = $state('')
+	let predictionsAllowed: boolean = $state(false)
 
 	const colorMap: Map<string, string> = new Map()
 	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
@@ -135,25 +134,25 @@
 	}
 
 	const modalStore = getModalStore()
-	let modal: ModalSettings = $state()
+	let modal: ModalSettings = $state({} as ModalSettings)
 
 	onMount(() => {
 		sessionStorage.setItem('loginGoto', location.pathname)
 	})
 	run(() => {
 		combinedIsLeaderboard = $isAuth && $isLeaderboard
-	});
+	})
 	run(() => {
 		if (!combinedIsLeaderboard && !isScrollListenerAdded && roundHeader && drawGrid) {
 			drawGrid.addEventListener('scroll', syncScroll)
 			isScrollListenerAdded = true
 		}
-	});
+	})
 	run(() => {
 		if (browser) {
 			combinedSelectedUsers = $selectedUsers
 		}
-	});
+	})
 	let users = $derived([
 		data.currentUser,
 		...combinedSelectedUsers.filter((user) => user.selectorId === data.currentUser.id)
@@ -162,7 +161,7 @@
 		if (browser) {
 			updatePredictions(users)
 		}
-	});
+	})
 	let userIds = $derived(users.map((user) => user.id))
 	let fullDrawRounds = $derived(Math.log2(data.draw.size) + 1)
 	let allRounds = $derived([...Array(fullDrawRounds).keys()].map((x) => x + 1))
@@ -178,47 +177,49 @@
 			predictionClose = '12h after R16 is full'
 			predictionsAllowed = true
 		}
-	});
-	let roundLabel = $derived((() => {
-		const filledRounds = allRounds.filter((round) => {
-			return data.slots.items
-				.filter((slot) => {
-					return slot.round === round
-				})
-				.every((slot) => slot.name.trim() !== '')
-		})
+	})
+	let roundLabel = $derived(
+		(() => {
+			const filledRounds = allRounds.filter((round) => {
+				return data.slots.items
+					.filter((slot) => {
+						return slot.round === round
+					})
+					.every((slot) => slot.name.trim() !== '')
+			})
 
-		if (filledRounds.at(-1) === fullDrawRounds) {
-			return 'Tournament Completed'
-		}
+			if (filledRounds.at(-1) === fullDrawRounds) {
+				return 'Tournament Completed'
+			}
 
-		const activeRound = Math.max(0, ...filledRounds) // round being played
-		const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Final']
-		const index = ourRounds.indexOf(activeRound)
+			const activeRound = Math.max(0, ...filledRounds) // round being played
+			const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Final']
+			const index = ourRounds.indexOf(activeRound)
 
-		if (index !== -1) {
-			return labels[index]
-		} else {
-			const sizeLabel = `(R${2 ** (fullDrawRounds - activeRound)})`
-			const earlyLabels = [
-				'Qualifying Rounds',
-				`1st Round ${sizeLabel}`,
-				`2nd Round ${sizeLabel}`,
-				`3rd Round ${sizeLabel}`
-			]
-			return `${earlyLabels[activeRound]}`
-		}
-	})())
+			if (index !== -1) {
+				return labels[index]
+			} else {
+				const sizeLabel = `(R${2 ** (fullDrawRounds - activeRound)})`
+				const earlyLabels = [
+					'Qualifying Rounds',
+					`1st Round ${sizeLabel}`,
+					`2nd Round ${sizeLabel}`,
+					`3rd Round ${sizeLabel}`
+				]
+				return `${earlyLabels[activeRound]}`
+			}
+		})()
+	)
 	run(() => {
 		users.forEach((user) => colorMap.set(user.id, user.color))
-	});
+	})
 	run(() => {
 		if (drawUrl) {
 			goto(drawUrl, { invalidateAll: true })
 			sessionStorage.setItem('loginGoto', drawUrl)
 			drawNavUrl.set(drawUrl)
 		}
-	});
+	})
 	run(() => {
 		if (isAuth) {
 			modal = {
@@ -233,7 +234,7 @@
 				}
 			}
 		}
-	});
+	})
 </script>
 
 <Header color="bg-primary-50">

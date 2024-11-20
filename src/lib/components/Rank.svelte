@@ -4,12 +4,12 @@
 	import bronzeMedal from '$lib/images/icons/bronzemedal.png'
 
 	interface Props {
-		rank: number | null;
-		containerStyle?: string;
-		textStyle?: string;
+		rank: number | null
+		containerStyle?: string
+		textStyle?: string
 	}
 
-	let { rank, containerStyle = '', textStyle = '' }: Props = $props();
+	let { rank, containerStyle = '', textStyle = '' }: Props = $props()
 </script>
 
 <div class={containerStyle}>

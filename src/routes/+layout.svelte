@@ -20,11 +20,11 @@
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import type { RootLayoutData } from '$lib/types'
 	interface Props {
-		data: RootLayoutData;
-		children?: import('svelte').Snippet;
+		data: RootLayoutData
+		children?: import('svelte').Snippet
 	}
 
-	let { data, children }: Props = $props();
+	let { data, children }: Props = $props()
 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 

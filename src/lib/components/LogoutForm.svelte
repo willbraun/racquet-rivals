@@ -2,10 +2,10 @@
 	import { enhance } from '$app/forms'
 	import { isAuth } from '$lib/store'
 	interface Props {
-		children?: import('svelte').Snippet;
+		children?: import('svelte').Snippet
 	}
 
-	let { children }: Props = $props();
+	let { children }: Props = $props()
 </script>
 
 <form

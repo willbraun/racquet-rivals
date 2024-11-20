@@ -81,7 +81,7 @@
 			</div>
 		</form>
 
-		<FormError bind:error />
+		<FormError {error} />
 
 		<div class="mt-6">
 			<p>Don't have an account? Create one <a class="underline" href="/create-account">here</a></p>

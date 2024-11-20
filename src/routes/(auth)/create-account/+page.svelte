@@ -14,7 +14,9 @@
 	let error = $state('')
 	let loading = $state(false)
 
-	let disabled = $derived(!username || !email || password.length < 8 || loading || showEmailValidation)
+	let disabled = $derived(
+		!username || !email || password.length < 8 || loading || showEmailValidation
+	)
 
 	const setType = makeSetType<AuthResult>()
 </script>
@@ -64,7 +66,7 @@
 			</div>
 		</form>
 		<div class="mt-2">
-			<FormError bind:error />
+			<FormError {error} />
 		</div>
 		<div class="mt-6">
 			<p>Already have an account? Login <a class="underline" href="/login">here</a></p>

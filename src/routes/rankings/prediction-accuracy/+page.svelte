@@ -5,10 +5,10 @@
 	import { formatPercent } from '$lib/utils'
 
 	interface Props {
-		data: PbListResponse<PredictionAccuracy>;
+		data: PbListResponse<PredictionAccuracy>
 	}
 
-	let { data }: Props = $props();
+	let { data }: Props = $props()
 </script>
 
 <p class="pb-8 sm:text-xl">

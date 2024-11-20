@@ -9,10 +9,10 @@
 	import InfoIcon from './InfoIcon.svelte'
 	import Header from '$lib/components/Header.svelte'
 	interface Props {
-		data: ProfilePageData;
+		data: ProfilePageData
 	}
 
-	let { data }: Props = $props();
+	let { data }: Props = $props()
 
 	const formatRank = (num: number | null): string => {
 		if (num === null) {
@@ -34,7 +34,7 @@
 			<Accordion hover="none">
 				<AccordionItem>
 					{#snippet summary()}
-										<div  class="grid grid-cols-2 items-center gap-4">
+						<div class="grid grid-cols-2 items-center gap-4">
 							<a href="/rankings">
 								<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
 									<span
@@ -50,16 +50,16 @@
 							<p class="text-2xl font-semibold md:text-7xl">{formatRank(data.overallRank.rank)}</p>
 							<p class="self-end text-2xl md:text-6xl">{data.overallRank.total_points}</p>
 						</div>
-									{/snippet}
+					{/snippet}
 					{#snippet content()}
-										{rankingDescriptions.overall}
-									{/snippet}
+						{rankingDescriptions.overall}
+					{/snippet}
 					{#snippet iconOpen()}
-										<InfoIcon />
-									{/snippet}
+						<InfoIcon />
+					{/snippet}
 					{#snippet iconClosed()}
-										<InfoIcon />
-									{/snippet}
+						<InfoIcon />
+					{/snippet}
 				</AccordionItem>
 			</Accordion>
 		</section>
@@ -67,7 +67,7 @@
 			<Accordion hover="none">
 				<AccordionItem>
 					{#snippet summary()}
-										<div  class="grid grid-cols-4 items-center gap-4">
+						<div class="grid grid-cols-4 items-center gap-4">
 							<a href="/rankings/average-points" class="col-span-2">
 								<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
 									<span
@@ -86,16 +86,16 @@
 								{formatPercent(data.averagePoints.percentile)}
 							</p>
 						</div>
-									{/snippet}
+					{/snippet}
 					{#snippet content()}
-										{rankingDescriptions.averagePoints}
-									{/snippet}
+						{rankingDescriptions.averagePoints}
+					{/snippet}
 					{#snippet iconOpen()}
-										<InfoIcon />
-									{/snippet}
+						<InfoIcon />
+					{/snippet}
 					{#snippet iconClosed()}
-										<InfoIcon />
-									{/snippet}
+						<InfoIcon />
+					{/snippet}
 				</AccordionItem>
 			</Accordion>
 		</section>
@@ -103,7 +103,7 @@
 			<Accordion hover="none">
 				<AccordionItem>
 					{#snippet summary()}
-										<div  class=" grid grid-cols-4 items-center items-center gap-4">
+						<div class=" grid grid-cols-4 items-center items-center gap-4">
 							<a href="/rankings/prediction-accuracy" class="col-span-2">
 								<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
 									<span
@@ -120,7 +120,9 @@
 							<p class="col-span-2 text-2xl font-semibold md:text-7xl">
 								{formatPercent(data.predictionAccuracy.percent_correct)}
 							</p>
-							<p class="self-end text-2xl md:text-6xl">{formatRank(data.predictionAccuracy.rank)}</p>
+							<p class="self-end text-2xl md:text-6xl">
+								{formatRank(data.predictionAccuracy.rank)}
+							</p>
 							<p class="self-end text-2xl md:text-6xl">
 								{formatPercent(data.predictionAccuracy.percentile)}
 							</p>
@@ -128,16 +130,16 @@
 								{`(${data.predictionAccuracy.correct}/${data.predictionAccuracy.total})`}
 							</p>
 						</div>
-									{/snippet}
+					{/snippet}
 					{#snippet content()}
-										{rankingDescriptions.predictionAccuracy}
-									{/snippet}
+						{rankingDescriptions.predictionAccuracy}
+					{/snippet}
 					{#snippet iconOpen()}
-										<InfoIcon />
-									{/snippet}
+						<InfoIcon />
+					{/snippet}
 					{#snippet iconClosed()}
-										<InfoIcon />
-									{/snippet}
+						<InfoIcon />
+					{/snippet}
 				</AccordionItem>
 			</Accordion>
 		</section>

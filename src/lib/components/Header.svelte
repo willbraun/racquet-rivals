@@ -3,11 +3,11 @@
 	import NavMenu from '$lib/components/NavMenu.svelte'
 
 	interface Props {
-		color?: string;
-		children?: import('svelte').Snippet;
+		color?: string
+		children?: import('svelte').Snippet
 	}
 
-	let { color = 'bg-stone-100', children }: Props = $props();
+	let { color = 'bg-stone-100', children }: Props = $props()
 </script>
 
 <header class="flex items-start gap-4 {color} px-4 py-4">
