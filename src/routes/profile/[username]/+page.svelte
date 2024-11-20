@@ -131,42 +131,42 @@
 					{#each data.drawResults.items as item, index}
 						{@const status = getDrawStatus(item.draw_start_date, item.draw_end_date)}
 						{@const showCutoff = index === 7 && data.drawResults.items.length > 8}
-						<a href={`/draw/${getSlug(item)}`}>
-							<tr
-								class={`grid w-full grid-cols-8 items-center gap-4 p-2 md:p-4 md:hover:brightness-105 ${
-									index % 2 ? 'bg-primary-50' : 'bg-primary-200'
-								} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${showCutoff ? 'border-b-2 border-pure-red' : ''}`}
-							>
-								<td class="col-span-6 md:text-3xl">
+						<tr
+							class={`grid w-full grid-cols-8 items-center gap-4 p-2 md:p-4 md:hover:brightness-105 ${
+								index % 2 ? 'bg-primary-50' : 'bg-primary-200'
+							} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${showCutoff ? 'border-b-2 border-pure-red' : ''}`}
+						>
+							<td class="col-span-6 md:text-3xl">
+								<a href={`/draw/${getSlug(item)}`}>
 									<p class="text-wrap break-words">{getTitle(item)}</p>
+								</a>
+							</td>
+							{#if item.prediction_count > 0 || status === DrawStatus.ACTIVE}
+								<td>
+									<div
+										class={`badge-icon mx-auto w-fit rounded-full bg-green-400 px-2 text-lg md:h-10 md:min-w-10 md:text-3xl`}
+									>
+										{item.total_points}
+									</div>
 								</td>
-								{#if item.prediction_count > 0 || status === DrawStatus.ACTIVE}
-									<td>
-										<div
-											class={`badge-icon mx-auto w-fit rounded-full bg-green-400 px-2 text-lg md:h-10 md:min-w-10 md:text-3xl`}
-										>
-											{item.total_points}
-										</div>
-									</td>
-									<td>
-										<Rank
-											rank={item.rank}
-											containerStyle="mx-auto w-6 md:w-10"
-											textStyle="text-lg md:text-3xl font-extrabold"
-										/>
-									</td>
-								{:else}
-									<td class="col-span-2">
-										<div
-											class="mx-auto w-5/6 rounded bg-primary-600 px-2 text-center text-xs font-bold text-white md:text-2xl"
-										>
-											<p class="hidden sm:block">DID NOT PLAY</p>
-											<p class="block sm:hidden">DNP</p>
-										</div>
-									</td>
-								{/if}
-							</tr>
-						</a>
+								<td>
+									<Rank
+										rank={item.rank}
+										containerStyle="mx-auto w-6 md:w-10"
+										textStyle="text-lg md:text-3xl font-extrabold"
+									/>
+								</td>
+							{:else}
+								<td class="col-span-2">
+									<div
+										class="mx-auto w-5/6 rounded bg-primary-600 px-2 text-center text-xs font-bold text-white md:text-2xl"
+									>
+										<p class="hidden sm:block">DID NOT PLAY</p>
+										<p class="block sm:hidden">DNP</p>
+									</div>
+								</td>
+							{/if}
+						</tr>
 						{#if showCutoff}
 							<tr>
 								<td

@@ -19,29 +19,25 @@
 	</thead>
 	<tbody>
 		{#each data.items as item, index}
-			<a href={`/profile/${item.username}`}>
-				<tr
-					class={`grid h-16 grid-cols-4 items-center gap-2 px-2 text-start text-xl md:h-20 md:text-3xl md:hover:brightness-105 ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'}`}
+			<tr
+				class={`grid h-16 grid-cols-4 items-center gap-2 px-2 text-start text-xl md:h-20 md:text-3xl md:hover:brightness-105 ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'}`}
+			>
+				<td
+					><Rank rank={item.rank} containerStyle="w-10 md:w-12 mx-auto" textStyle="font-bold" /></td
 				>
-					<td
-						><Rank
-							rank={item.rank}
-							containerStyle="w-10 md:w-12 mx-auto"
-							textStyle="font-bold"
-						/></td
-					>
-					<td class="col-span-2">
+				<td class="col-span-2">
+					<a href={`/profile/${item.username}`}>
 						<p class="text-wrap break-words">{item.username}</p>
-					</td>
-					<td>
-						<div
-							class={`badge-icon mx-auto h-7 w-fit rounded-full bg-green-400 px-2 text-xl md:h-10 md:min-w-10 md:text-3xl`}
-						>
-							{item.total_points}
-						</div>
-					</td>
-				</tr>
-			</a>
+					</a>
+				</td>
+				<td>
+					<div
+						class={`badge-icon mx-auto h-7 w-fit rounded-full bg-green-400 px-2 text-xl md:h-10 md:min-w-10 md:text-3xl`}
+					>
+						{item.total_points}
+					</div>
+				</td>
+			</tr>
 		{/each}
 	</tbody>
 </table>
