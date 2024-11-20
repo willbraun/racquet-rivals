@@ -14,8 +14,8 @@
 
 	const drawerStore = getDrawerStore()
 
-	let showCheck = false
-	let copyEmail: Function
+	let showCheck = $state(false)
+	let copyEmail: Function = $state()
 	onMount(() => {
 		copyEmail = (): void => {
 			navigator.clipboard.writeText('https://racquetrivals.com')
@@ -28,7 +28,7 @@
 	<div class="relative w-full bg-green-300 p-2 text-center">
 		<p class="text-3xl font-bold">Share</p>
 		<button
-			on:click={() => drawerStore.close()}
+			onclick={() => drawerStore.close()}
 			class="absolute right-4 top-0 top-1/2 -translate-y-1/2"
 		>
 			<img src={x} alt="close" width="24" />
@@ -38,7 +38,7 @@
 		<img src={sms} alt="sms text message" width="42" />
 		<p class="text-xl">Text Message</p>
 	</a>
-	<button class="relative flex items-center gap-4" on:click={() => copyEmail()}>
+	<button class="relative flex items-center gap-4" onclick={() => copyEmail()}>
 		<img src={clone} alt="copy to clipboard" width="42" />
 		<p class="w-32 text-xl">{showCheck ? 'Copied!' : 'Copy Link'}</p>
 		<div class="absolute -right-10 {showCheck ? 'block' : 'hidden'}">

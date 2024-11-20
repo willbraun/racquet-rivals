@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { getModalStore } from '@skeletonlabs/skeleton'
-	export let parent
+	let { parent } = $props();
 
 	const modalStore = getModalStore()
 
 	const scoreFormatting = 'font-bold bg-green-300 rounded-full px-1.5 shadow'
 
-	let buttonRef: HTMLButtonElement
+	let buttonRef: HTMLButtonElement = $state()
 	onMount(() => {
 		if (buttonRef) {
 			buttonRef.blur()
@@ -48,7 +48,7 @@
 			<button
 				class="variant-glass-primary btn rounded-md"
 				bind:this={buttonRef}
-				on:click={parent.onClose}>Close</button
+				onclick={parent.onClose}>Close</button
 			>
 		</footer>
 	</div>

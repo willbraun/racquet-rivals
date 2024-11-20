@@ -7,14 +7,14 @@
 	import { enhance } from '$app/forms'
 	import type { AuthResult } from '$lib/types'
 
-	let username = ''
-	let email = ''
-	let showEmailValidation = false
-	let password = ''
-	let error = ''
-	let loading = false
+	let username = $state('')
+	let email = $state('')
+	let showEmailValidation = $state(false)
+	let password = $state('')
+	let error = $state('')
+	let loading = $state(false)
 
-	$: disabled = !username || !email || password.length < 8 || loading || showEmailValidation
+	let disabled = $derived(!username || !email || password.length < 8 || loading || showEmailValidation)
 
 	const setType = makeSetType<AuthResult>()
 </script>

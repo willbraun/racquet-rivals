@@ -4,7 +4,11 @@
 	import type { PbListResponse, PredictionAccuracy } from '$lib/types'
 	import { formatPercent } from '$lib/utils'
 
-	export let data: PbListResponse<PredictionAccuracy>
+	interface Props {
+		data: PbListResponse<PredictionAccuracy>;
+	}
+
+	let { data }: Props = $props();
 </script>
 
 <p class="pb-8 sm:text-xl">

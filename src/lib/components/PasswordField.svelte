@@ -1,9 +1,13 @@
 <script lang="ts">
-	let show = false
+	let show = $state(false)
 
 	const toggleShow = () => (show = !show)
 
-	export let password = ''
+	interface Props {
+		password?: string;
+	}
+
+	let { password = $bindable('') }: Props = $props();
 </script>
 
 <label for="password">
@@ -15,12 +19,12 @@
 			type={show ? 'text' : 'password'}
 			name="password"
 			data-testid="PasswordField"
-			on:input={(e) => (password = e.currentTarget.value)}
+			oninput={(e) => (password = e.currentTarget.value)}
 		/>
 		<button
 			type="button"
 			class="btn btn-sm rounded-md variant-glass-primary w-14 absolute right-1.5 top-1/2 -translate-y-1/2"
-			on:click={toggleShow}
+			onclick={toggleShow}
 		>
 			{show ? 'Hide' : 'Show'}
 		</button>

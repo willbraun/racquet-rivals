@@ -6,7 +6,11 @@
 	import { type HomePageData, TournamentName } from '$lib/types'
 	import { format } from 'date-fns'
 	import Header from '$lib/components/Header.svelte'
-	export let data: HomePageData
+	interface Props {
+		data: HomePageData
+	}
+
+	let { data }: Props = $props()
 
 	const defaultDraw = data.active.items[0] || data.completed.items[0]
 	if ($drawNavUrl === '') {

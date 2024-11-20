@@ -4,7 +4,11 @@
 	import type { PbListResponse, AveragePoints } from '$lib/types'
 	import { formatAvg } from '$lib/utils'
 
-	export let data: PbListResponse<AveragePoints>
+	interface Props {
+		data: PbListResponse<AveragePoints>
+	}
+
+	let { data }: Props = $props()
 </script>
 
 <p class="pb-8 sm:text-xl">

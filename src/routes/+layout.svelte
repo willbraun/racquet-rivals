@@ -19,7 +19,12 @@
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import type { RootLayoutData } from '$lib/types'
-	export let data: RootLayoutData
+	interface Props {
+		data: RootLayoutData;
+		children?: import('svelte').Snippet;
+	}
+
+	let { data, children }: Props = $props();
 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
@@ -48,7 +53,7 @@
 
 <div class="flex min-h-screen flex-col">
 	<div class="grow">
-		<slot />
+		{@render children?.()}
 	</div>
 	<footer class="text-md bg-black px-16 py-8 text-stone-100">
 		<div class="w-full text-center">
@@ -61,7 +66,7 @@
 				>
 					<button
 						class="variant-filled h-[50px] rounded-[10px] bg-stone-100 px-8 text-lg text-gray-800"
-						>Send feedback <span class="ml-2" /></button
+						>Send feedback <span class="ml-2"></span></button
 					>
 				</a>
 				<a href="https://www.buymeacoffee.com/willbraun" target="_blank"

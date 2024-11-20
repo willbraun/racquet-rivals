@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 
-	export let showName = false
+	interface Props {
+		showName?: boolean;
+	}
+
+	let { showName = false }: Props = $props();
 
 	const modalStore = getModalStore()
 	const modal: ModalSettings = {
@@ -14,7 +18,7 @@
 
 <button
 	class={`${showName && 'grid grid-cols-4 items-center gap-4'}`}
-	on:click={() => modalStore.trigger(modal)}
+	onclick={() => modalStore.trigger(modal)}
 >
 	<p
 		class="flex h-6 w-6 items-center justify-center rounded-full border border-2 border-black p-2 font-extrabold"

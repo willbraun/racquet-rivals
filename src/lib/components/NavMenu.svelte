@@ -18,7 +18,7 @@
 </script>
 
 <button
-	on:click={() => drawerStore.open(drawerSettings)}
+	onclick={() => drawerStore.open(drawerSettings)}
 	class="block flex-shrink-0 sm:hidden"
 	data-testid="user-menu-icon"
 >

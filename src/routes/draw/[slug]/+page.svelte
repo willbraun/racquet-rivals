@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Pocketbase from 'pocketbase'
 	import AddPrediction from './AddPrediction.svelte'
 	import ViewPrediction from './ViewPrediction.svelte'
@@ -18,30 +20,29 @@
 	import x from '$lib/images/icons/x.svg'
 	import Rank from '$lib/components/Rank.svelte'
 	import Header from '$lib/components/Header.svelte'
-	export let data: DrawPageData
+	interface Props {
+		data: DrawPageData;
+	}
+
+	let { data }: Props = $props();
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 	const now = new Date()
 
 	drawNavUrl.set(`/draw/${getSlug(data.draw)}`)
 
-	let isScrollListenerAdded: boolean = false
-	let roundHeader: HTMLElement
-	let drawGrid: HTMLElement
+	let isScrollListenerAdded: boolean = $state(false)
+	let roundHeader: HTMLElement = $state()
+	let drawGrid: HTMLElement = $state()
 
 	const syncScroll = () => {
 		roundHeader.scrollLeft = drawGrid.scrollLeft
 	}
 
-	$: if (!combinedIsLeaderboard && !isScrollListenerAdded && roundHeader && drawGrid) {
-		drawGrid.addEventListener('scroll', syncScroll)
-		isScrollListenerAdded = true
-	}
 
 	let serverIsLeaderboard = data.isLeaderboard === 'true'
 	isLeaderboard.set(serverIsLeaderboard)
-	let combinedIsLeaderboard = serverIsLeaderboard
-	$: combinedIsLeaderboard = $isAuth && $isLeaderboard
+	let combinedIsLeaderboard = $state(serverIsLeaderboard)
 	const toggleLeaderboard = (value: boolean) => {
 		isLeaderboard.set(value)
 		Cookies.set('isLeaderboard', value.toString(), { expires: 0.5 })
@@ -50,26 +51,15 @@
 		}
 	}
 
-	let combinedSelectedUsers = data.cookieSelectedUsers
-	$: if (browser) {
-		combinedSelectedUsers = $selectedUsers
-	}
-	$: users = [
-		data.currentUser,
-		...combinedSelectedUsers.filter((user) => user.selectorId === data.currentUser.id)
-	]
+	let combinedSelectedUsers = $state(data.cookieSelectedUsers)
 
-	let combinedPredictions = data.predictions.items
+	let combinedPredictions = $state(data.predictions.items)
 	const updatePredictions = async (allUsers: SelectedUser[]) => {
 		const predictionData = await getPredictions(data.draw.id, allUsers, pb.authStore.token)
 		predictionStore.set(predictionData.items)
 		combinedPredictions = $predictionStore
 	}
 
-	$: if (browser) {
-		updatePredictions(users)
-	}
-	$: userIds = users.map((user) => user.id)
 
 	const headerColor = 'bg-primary-50'
 	const pointsByRound = {
@@ -79,66 +69,17 @@
 		Final: 4,
 		Champion: 8
 	}
+ // rounds start at 1
 
-	$: fullDrawRounds = Math.log2(data.draw.size) + 1
-	$: allRounds = [...Array(fullDrawRounds).keys()].map((x) => x + 1) // rounds start at 1
-	$: ourRounds = allRounds.slice(-5)
-	$: slots = data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4)
+	let pcDate: Date | undefined = $state()
+	let predictionClose: string = $state()
+	let predictionsAllowed: boolean = $state()
 
-	let pcDate: Date | undefined
-	let predictionClose: string
-	let predictionsAllowed: boolean
-	$: if (data.draw.prediction_close) {
-		pcDate = new Date(data.draw.prediction_close)
-		predictionClose = format(pcDate, 'M/d/yyyy h:mmaaa')
-		predictionsAllowed = now < pcDate
-	} else {
-		pcDate = undefined
-		predictionClose = '12h after R16 is full'
-		predictionsAllowed = true
-	}
-
-	$: roundLabel = (() => {
-		const filledRounds = allRounds.filter((round) => {
-			return data.slots.items
-				.filter((slot) => {
-					return slot.round === round
-				})
-				.every((slot) => slot.name.trim() !== '')
-		})
-
-		if (filledRounds.at(-1) === fullDrawRounds) {
-			return 'Tournament Completed'
-		}
-
-		const activeRound = Math.max(0, ...filledRounds) // round being played
-		const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Final']
-		const index = ourRounds.indexOf(activeRound)
-
-		if (index !== -1) {
-			return labels[index]
-		} else {
-			const sizeLabel = `(R${2 ** (fullDrawRounds - activeRound)})`
-			const earlyLabels = [
-				'Qualifying Rounds',
-				`1st Round ${sizeLabel}`,
-				`2nd Round ${sizeLabel}`,
-				`3rd Round ${sizeLabel}`
-			]
-			return `${earlyLabels[activeRound]}`
-		}
-	})()
 
 	const colorMap: Map<string, string> = new Map()
-	$: users.forEach((user) => colorMap.set(user.id, user.color))
 	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
 
-	let drawUrl = ''
-	$: if (drawUrl) {
-		goto(drawUrl, { invalidateAll: true })
-		sessionStorage.setItem('loginGoto', drawUrl)
-		drawNavUrl.set(drawUrl)
-	}
+	let drawUrl = $state('')
 
 	const getHeight = (roundIndex: number, position: number): string => {
 		let rems = 0
@@ -194,30 +135,111 @@
 	}
 
 	const modalStore = getModalStore()
-	let modal: ModalSettings
-	$: if (isAuth) {
-		modal = {
-			type: 'component',
-			component: 'selectUsers',
-			title: 'Select Users',
-			body: 'Compare predictions with your friends (max of 6 total)',
-			backdropClasses: 'bg-surface-500',
-			meta: {
-				currentUserId: data.currentUser.id,
-				currentUsername: data.currentUser.username
-			}
-		}
-	}
+	let modal: ModalSettings = $state()
 
 	onMount(() => {
 		sessionStorage.setItem('loginGoto', location.pathname)
 	})
+	run(() => {
+		combinedIsLeaderboard = $isAuth && $isLeaderboard
+	});
+	run(() => {
+		if (!combinedIsLeaderboard && !isScrollListenerAdded && roundHeader && drawGrid) {
+			drawGrid.addEventListener('scroll', syncScroll)
+			isScrollListenerAdded = true
+		}
+	});
+	run(() => {
+		if (browser) {
+			combinedSelectedUsers = $selectedUsers
+		}
+	});
+	let users = $derived([
+		data.currentUser,
+		...combinedSelectedUsers.filter((user) => user.selectorId === data.currentUser.id)
+	])
+	run(() => {
+		if (browser) {
+			updatePredictions(users)
+		}
+	});
+	let userIds = $derived(users.map((user) => user.id))
+	let fullDrawRounds = $derived(Math.log2(data.draw.size) + 1)
+	let allRounds = $derived([...Array(fullDrawRounds).keys()].map((x) => x + 1))
+	let ourRounds = $derived(allRounds.slice(-5))
+	let slots = $derived(data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4))
+	run(() => {
+		if (data.draw.prediction_close) {
+			pcDate = new Date(data.draw.prediction_close)
+			predictionClose = format(pcDate, 'M/d/yyyy h:mmaaa')
+			predictionsAllowed = now < pcDate
+		} else {
+			pcDate = undefined
+			predictionClose = '12h after R16 is full'
+			predictionsAllowed = true
+		}
+	});
+	let roundLabel = $derived((() => {
+		const filledRounds = allRounds.filter((round) => {
+			return data.slots.items
+				.filter((slot) => {
+					return slot.round === round
+				})
+				.every((slot) => slot.name.trim() !== '')
+		})
+
+		if (filledRounds.at(-1) === fullDrawRounds) {
+			return 'Tournament Completed'
+		}
+
+		const activeRound = Math.max(0, ...filledRounds) // round being played
+		const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Final']
+		const index = ourRounds.indexOf(activeRound)
+
+		if (index !== -1) {
+			return labels[index]
+		} else {
+			const sizeLabel = `(R${2 ** (fullDrawRounds - activeRound)})`
+			const earlyLabels = [
+				'Qualifying Rounds',
+				`1st Round ${sizeLabel}`,
+				`2nd Round ${sizeLabel}`,
+				`3rd Round ${sizeLabel}`
+			]
+			return `${earlyLabels[activeRound]}`
+		}
+	})())
+	run(() => {
+		users.forEach((user) => colorMap.set(user.id, user.color))
+	});
+	run(() => {
+		if (drawUrl) {
+			goto(drawUrl, { invalidateAll: true })
+			sessionStorage.setItem('loginGoto', drawUrl)
+			drawNavUrl.set(drawUrl)
+		}
+	});
+	run(() => {
+		if (isAuth) {
+			modal = {
+				type: 'component',
+				component: 'selectUsers',
+				title: 'Select Users',
+				body: 'Compare predictions with your friends (max of 6 total)',
+				backdropClasses: 'bg-surface-500',
+				meta: {
+					currentUserId: data.currentUser.id,
+					currentUsername: data.currentUser.username
+				}
+			}
+		}
+	});
 </script>
 
 <Header color="bg-primary-50">
 	<select
 		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 text-lg font-bold hover:bg-primary-200 md:text-2xl"
-		on:change={(e) => (drawUrl = e.currentTarget.value)}
+		onchange={(e) => (drawUrl = e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
 		{#each data.active.items as draw}
@@ -252,7 +274,7 @@
 					<button
 						type="button"
 						class="chip relative h-6 rounded-full text-black {user.color} shadow"
-						on:click={() => goto(`/profile/${user.username}`)}
+						onclick={() => goto(`/profile/${user.username}`)}
 						data-testid={`User_${user.username}`}
 					>
 						<p>{user.username}</p>
@@ -271,7 +293,7 @@
 				{/each}
 				<button
 					class="chip flex h-6 justify-center rounded-full border border-dashed border-black hover:bg-primary-100"
-					on:click={() => modalStore.trigger(modal)}
+					onclick={() => modalStore.trigger(modal)}
 				>
 					<img src={edit} alt="edit icon" width="16" class="mb-0.5 ml-0.5" />
 				</button>
@@ -279,11 +301,11 @@
 			<div class="flex min-w-fit overflow-hidden rounded-md" data-testid="LeaderboardToggle">
 				<button
 					class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-300 md:hover:brightness-105' : 'bg-primary-500 text-white'}`}
-					on:click={() => toggleLeaderboard(false)}>Draw</button
+					onclick={() => toggleLeaderboard(false)}>Draw</button
 				>
 				<button
 					class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300 md:hover:brightness-105'}`}
-					on:click={() => toggleLeaderboard(true)}>Leaderboard</button
+					onclick={() => toggleLeaderboard(true)}>Leaderboard</button
 				>
 			</div>
 		</div>
@@ -312,7 +334,7 @@
 						<button
 							type="button"
 							class={`chip rounded-full text-lg ${selectedUser ? `shadow ${selectedUser.color}` : 'hover:underline'}`}
-							on:click={() => goto(`/profile/${result.username}`)}
+							onclick={() => goto(`/profile/${result.username}`)}
 						>
 							{result.username}
 						</button>
@@ -327,7 +349,7 @@
 							<p>N/A</p>
 						{:else if combinedSelectedUsers.find((u) => u.id === result.user_id)}
 							<button
-								on:click={() => removeUser(result.user_id)}
+								onclick={() => removeUser(result.user_id)}
 								class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 sm:h-fit"
 							>
 								<p class="hidden sm:block">Remove</p>
@@ -340,7 +362,7 @@
 								username: result.username
 							}}
 							<button
-								on:click={() => addUser(newUser)}
+								onclick={() => addUser(newUser)}
 								class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 sm:h-fit ${
 									combinedSelectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
 								}`}

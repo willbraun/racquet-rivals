@@ -1,6 +1,11 @@
-<script>
+<script lang="ts">
 	import { enhance } from '$app/forms'
 	import { isAuth } from '$lib/store'
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 </script>
 
 <form
@@ -17,6 +22,6 @@
 >
 	<a href="#top">
 		<!-- slot must have a button of type="submit" -->
-		<slot />
+		{@render children?.()}
 	</a>
 </form>

@@ -1,11 +1,15 @@
 <script lang="ts">
 	import type { Prediction } from '$lib/types'
 
-	export let prediction: Prediction
-	export let getColor: (userId: string | undefined) => string
+	interface Props {
+		prediction: Prediction;
+		getColor: (userId: string | undefined) => string;
+	}
 
-	$: color = getColor(prediction.user_id)
-	$: display = prediction.name.replace(') ', '').split(' ').slice(1).join(' ')
+	let { prediction, getColor }: Props = $props();
+
+	let color = $derived(getColor(prediction.user_id))
+	let display = $derived(prediction.name.replace(') ', '').split(' ').slice(1).join(' '))
 </script>
 
 <div

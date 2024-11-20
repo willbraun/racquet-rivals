@@ -2,6 +2,11 @@
 	import { goto } from '$app/navigation'
 	import Header from '$lib/components/Header.svelte'
 	import { page } from '$app/stores'
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 
 	const navigateToPage = (event: Event) => {
 		const select = event.target as HTMLSelectElement
@@ -17,7 +22,7 @@
 			<h1 class="flex-grow text-4xl font-bold md:text-7xl">Rankings</h1>
 			<select
 				class="select h-11 w-[230px] cursor-pointer border-none bg-stone-200 text-xl md:h-14 md:w-[320px] md:text-3xl"
-				on:change={navigateToPage}
+				onchange={navigateToPage}
 			>
 				<option value="" selected={$page.route?.id === '/rankings'}>Overall</option>
 				<option value="average-points" selected={$page.route?.id === '/rankings/average-points'}
@@ -29,6 +34,6 @@
 				>
 			</select>
 		</div>
-		<slot />
+		{@render children?.()}
 	</div>
 </main>

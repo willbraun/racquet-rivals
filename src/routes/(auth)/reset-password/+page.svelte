@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Pocketbase from 'pocketbase'
 	import EmailField from '$lib/components/EmailField.svelte'
 	import FormError from '$lib/components/FormError.svelte'
@@ -9,18 +11,20 @@
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 
-	let email = ''
-	let showEmailValidation = false
-	let error = ''
-	let loading = false
-	let success = false
-	let buttonRef: HTMLButtonElement
+	let email = $state('')
+	let showEmailValidation = $state(false)
+	let error = $state('')
+	let loading = $state(false)
+	let success = $state(false)
+	let buttonRef: HTMLButtonElement = $state()
 
-	$: disabled = loading || showEmailValidation
-	$: if (buttonRef && !showEmailValidation) {
-		buttonRef.disabled = false
-		buttonRef.focus()
-	}
+	let disabled = $derived(loading || showEmailValidation)
+	run(() => {
+		if (buttonRef && !showEmailValidation) {
+			buttonRef.disabled = false
+			buttonRef.focus()
+		}
+	});
 
 	const setType = makeSetType<AuthResult>()
 </script>

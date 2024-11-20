@@ -8,18 +8,18 @@
 	import { fade } from 'svelte/transition'
 	import { selectedUsers } from '$lib/store'
 	import x from '$lib/images/icons/x.svg'
-	export let parent
+	let { parent } = $props();
 
 	const modalStore = getModalStore()
 
-	let value = ''
-	let selectLoading = false
-	let error = ''
+	let value = $state('')
+	let selectLoading = $state(false)
+	let error = $state('')
 	let currentUserId = $modalStore[0]?.meta?.currentUserId
 	let currentUsername = $modalStore[0]?.meta?.currentUsername
-	$: selections = [...$selectedUsers.filter((user) => user.selectorId === currentUserId)]
+	let selections = $derived([...$selectedUsers.filter((user) => user.selectorId === currentUserId)])
 
-	let inputRef: HTMLInputElement
+	let inputRef: HTMLInputElement = $state()
 	const refocus = () => {
 		inputRef.focus()
 	}
@@ -102,7 +102,7 @@
 				<button
 					type="button"
 					class="variant-filled chip rounded-full text-black {user.color} shadow"
-					on:click={() => removeUser(user.id)}
+					onclick={() => removeUser(user.id)}
 					transition:fade={{ duration: 100 }}
 				>
 					<p>{user.username}</p>
@@ -111,7 +111,7 @@
 			{/each}
 		</div>
 		<footer class="modal-footer {parent.regionFooter}">
-			<button class="variant-glass-primary btn rounded-md" on:click={parent.onClose}>Close</button>
+			<button class="variant-glass-primary btn rounded-md" onclick={parent.onClose}>Close</button>
 		</footer>
 	</div>
 {/if}

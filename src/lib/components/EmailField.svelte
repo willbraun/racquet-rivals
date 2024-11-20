@@ -1,6 +1,10 @@
 <script lang="ts">
-	export let email = ''
-	export let showValidation = false
+	interface Props {
+		email?: string;
+		showValidation?: boolean;
+	}
+
+	let { email = $bindable(''), showValidation = $bindable(false) }: Props = $props();
 
 	const isValidEmail = (value: string) => {
 		return !!value.match(
@@ -26,7 +30,7 @@
 		data-testid="EmailField"
 		class:input-error={showValidation}
 		bind:value={email}
-		on:change={handleEmailValidation}
+		onchange={handleEmailValidation}
 	/>
 	<p
 		class="text-red-500 text-xs my-0"

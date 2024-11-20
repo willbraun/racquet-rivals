@@ -3,9 +3,13 @@
 	import silverMedal from '$lib/images/icons/silvermedal.png'
 	import bronzeMedal from '$lib/images/icons/bronzemedal.png'
 
-	export let rank: number | null
-	export let containerStyle: string = ''
-	export let textStyle: string = ''
+	interface Props {
+		rank: number | null;
+		containerStyle?: string;
+		textStyle?: string;
+	}
+
+	let { rank, containerStyle = '', textStyle = '' }: Props = $props();
 </script>
 
 <div class={containerStyle}>

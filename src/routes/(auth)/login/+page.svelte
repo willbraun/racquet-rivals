@@ -7,11 +7,11 @@
 	import { enhance } from '$app/forms'
 	import type { AuthResult } from '$lib/types'
 
-	let usernameOrEmail = ''
-	let password = ''
-	let error = ''
-	let loading = false
-	let rememberMe = false
+	let usernameOrEmail = $state('')
+	let password = $state('')
+	let error = $state('')
+	let loading = $state(false)
+	let rememberMe = $state(false)
 
 	const setType = makeSetType<AuthResult>()
 

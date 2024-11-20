@@ -3,7 +3,11 @@
 	import type { PbListResponse, OverallRank } from '$lib/types'
 	import { rankingDescriptions } from '$lib/data'
 
-	export let data: PbListResponse<OverallRank>
+	interface Props {
+		data: PbListResponse<OverallRank>;
+	}
+
+	let { data }: Props = $props();
 </script>
 
 <p class="pb-8 sm:text-xl">

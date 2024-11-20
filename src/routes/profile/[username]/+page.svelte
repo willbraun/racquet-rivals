@@ -8,7 +8,11 @@
 	import { getDrawStatus, getSlug, getTitle, formatAvg, formatPercent } from '$lib/utils'
 	import InfoIcon from './InfoIcon.svelte'
 	import Header from '$lib/components/Header.svelte'
-	export let data: ProfilePageData
+	interface Props {
+		data: ProfilePageData;
+	}
+
+	let { data }: Props = $props();
 
 	const formatRank = (num: number | null): string => {
 		if (num === null) {
@@ -29,87 +33,111 @@
 		<section class="mb-4 rounded-xl bg-stone-250 shadow md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
-					<div slot="summary" class="grid grid-cols-2 items-center gap-4">
-						<a href="/rankings">
-							<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
-								<span
-									>Overall Rank <img
-										src={trophy}
-										alt="trophy"
-										class="inline w-4 md:ml-2 md:w-8"
-									/></span
-								>
-							</h2>
-						</a>
-						<p class="self-end md:text-2xl">Ranking Points</p>
-						<p class="text-2xl font-semibold md:text-7xl">{formatRank(data.overallRank.rank)}</p>
-						<p class="self-end text-2xl md:text-6xl">{data.overallRank.total_points}</p>
-					</div>
-					<svelte:fragment slot="content">{rankingDescriptions.overall}</svelte:fragment>
-					<svelte:fragment slot="iconOpen"><InfoIcon /></svelte:fragment>
-					<svelte:fragment slot="iconClosed"><InfoIcon /></svelte:fragment>
+					{#snippet summary()}
+										<div  class="grid grid-cols-2 items-center gap-4">
+							<a href="/rankings">
+								<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
+									<span
+										>Overall Rank <img
+											src={trophy}
+											alt="trophy"
+											class="inline w-4 md:ml-2 md:w-8"
+										/></span
+									>
+								</h2>
+							</a>
+							<p class="self-end md:text-2xl">Ranking Points</p>
+							<p class="text-2xl font-semibold md:text-7xl">{formatRank(data.overallRank.rank)}</p>
+							<p class="self-end text-2xl md:text-6xl">{data.overallRank.total_points}</p>
+						</div>
+									{/snippet}
+					{#snippet content()}
+										{rankingDescriptions.overall}
+									{/snippet}
+					{#snippet iconOpen()}
+										<InfoIcon />
+									{/snippet}
+					{#snippet iconClosed()}
+										<InfoIcon />
+									{/snippet}
 				</AccordionItem>
 			</Accordion>
 		</section>
 		<section class="mb-4 rounded-xl bg-stone-250 shadow md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
-					<div slot="summary" class="grid grid-cols-4 items-center gap-4">
-						<a href="/rankings/average-points" class="col-span-2">
-							<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
-								<span
-									>Average Points
-									<img src={trophy} alt="trophy" class="inline w-4 md:ml-2 md:w-8" />
-								</span>
-							</h2>
-						</a>
-						<p class="self-end md:text-2xl">Rank</p>
-						<p class="self-end md:text-2xl">Percentile</p>
-						<p class="col-span-2 text-2xl font-semibold md:text-7xl">
-							{formatAvg(data.averagePoints.avg_points_per_draw)}
-						</p>
-						<p class="self-end text-2xl md:text-6xl">{formatRank(data.averagePoints.rank)}</p>
-						<p class="self-end text-2xl md:text-6xl">
-							{formatPercent(data.averagePoints.percentile)}
-						</p>
-					</div>
-					<svelte:fragment slot="content">{rankingDescriptions.averagePoints}</svelte:fragment>
-					<svelte:fragment slot="iconOpen"><InfoIcon /></svelte:fragment>
-					<svelte:fragment slot="iconClosed"><InfoIcon /></svelte:fragment>
+					{#snippet summary()}
+										<div  class="grid grid-cols-4 items-center gap-4">
+							<a href="/rankings/average-points" class="col-span-2">
+								<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
+									<span
+										>Average Points
+										<img src={trophy} alt="trophy" class="inline w-4 md:ml-2 md:w-8" />
+									</span>
+								</h2>
+							</a>
+							<p class="self-end md:text-2xl">Rank</p>
+							<p class="self-end md:text-2xl">Percentile</p>
+							<p class="col-span-2 text-2xl font-semibold md:text-7xl">
+								{formatAvg(data.averagePoints.avg_points_per_draw)}
+							</p>
+							<p class="self-end text-2xl md:text-6xl">{formatRank(data.averagePoints.rank)}</p>
+							<p class="self-end text-2xl md:text-6xl">
+								{formatPercent(data.averagePoints.percentile)}
+							</p>
+						</div>
+									{/snippet}
+					{#snippet content()}
+										{rankingDescriptions.averagePoints}
+									{/snippet}
+					{#snippet iconOpen()}
+										<InfoIcon />
+									{/snippet}
+					{#snippet iconClosed()}
+										<InfoIcon />
+									{/snippet}
 				</AccordionItem>
 			</Accordion>
 		</section>
 		<section class="mb-4 rounded-xl bg-stone-250 shadow md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
-					<div slot="summary" class=" grid grid-cols-4 items-center items-center gap-4">
-						<a href="/rankings/prediction-accuracy" class="col-span-2">
-							<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
-								<span
-									>Prediction Accuracy <img
-										src={trophy}
-										alt="trophy"
-										class="inline w-4 md:ml-2 md:w-8"
-									/></span
-								>
-							</h2>
-						</a>
-						<p class="self-end md:text-2xl">Rank</p>
-						<p class="self-end md:text-2xl">Percentile</p>
-						<p class="col-span-2 text-2xl font-semibold md:text-7xl">
-							{formatPercent(data.predictionAccuracy.percent_correct)}
-						</p>
-						<p class="self-end text-2xl md:text-6xl">{formatRank(data.predictionAccuracy.rank)}</p>
-						<p class="self-end text-2xl md:text-6xl">
-							{formatPercent(data.predictionAccuracy.percentile)}
-						</p>
-						<p class="text-xs text-gray-500 md:text-base">
-							{`(${data.predictionAccuracy.correct}/${data.predictionAccuracy.total})`}
-						</p>
-					</div>
-					<svelte:fragment slot="content">{rankingDescriptions.predictionAccuracy}</svelte:fragment>
-					<svelte:fragment slot="iconOpen"><InfoIcon /></svelte:fragment>
-					<svelte:fragment slot="iconClosed"><InfoIcon /></svelte:fragment>
+					{#snippet summary()}
+										<div  class=" grid grid-cols-4 items-center items-center gap-4">
+							<a href="/rankings/prediction-accuracy" class="col-span-2">
+								<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
+									<span
+										>Prediction Accuracy <img
+											src={trophy}
+											alt="trophy"
+											class="inline w-4 md:ml-2 md:w-8"
+										/></span
+									>
+								</h2>
+							</a>
+							<p class="self-end md:text-2xl">Rank</p>
+							<p class="self-end md:text-2xl">Percentile</p>
+							<p class="col-span-2 text-2xl font-semibold md:text-7xl">
+								{formatPercent(data.predictionAccuracy.percent_correct)}
+							</p>
+							<p class="self-end text-2xl md:text-6xl">{formatRank(data.predictionAccuracy.rank)}</p>
+							<p class="self-end text-2xl md:text-6xl">
+								{formatPercent(data.predictionAccuracy.percentile)}
+							</p>
+							<p class="text-xs text-gray-500 md:text-base">
+								{`(${data.predictionAccuracy.correct}/${data.predictionAccuracy.total})`}
+							</p>
+						</div>
+									{/snippet}
+					{#snippet content()}
+										{rankingDescriptions.predictionAccuracy}
+									{/snippet}
+					{#snippet iconOpen()}
+										<InfoIcon />
+									{/snippet}
+					{#snippet iconClosed()}
+										<InfoIcon />
+									{/snippet}
 				</AccordionItem>
 			</Accordion>
 		</section>

@@ -13,7 +13,7 @@
 
 {#if $isMobile}
 	<button
-		on:click={() => {
+		onclick={() => {
 			drawerStore.close()
 			setTimeout(() => drawerStore.open(drawerSettings), 250)
 		}}
