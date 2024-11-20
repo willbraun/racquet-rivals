@@ -28,8 +28,14 @@
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 	const now = new Date()
-
-	drawNavUrl.set(`/draw/${getSlug(data.draw)}`)
+	const headerColor = 'bg-primary-50'
+	const pointsByRound = {
+		'Round of 16': 0,
+		Quarterfinals: 1,
+		Semifinals: 2,
+		Final: 4,
+		Champion: 8
+	}
 
 	let isScrollListenerAdded: boolean = $state(false)
 	let roundHeader: HTMLElement | undefined = $state()
@@ -43,7 +49,7 @@
 
 	let serverIsLeaderboard = data.isLeaderboard === 'true'
 	isLeaderboard.set(serverIsLeaderboard)
-	let combinedIsLeaderboard = $state(serverIsLeaderboard)
+	let combinedIsLeaderboard = $derived(browser ? $isAuth && $isLeaderboard : serverIsLeaderboard)
 	const toggleLeaderboard = (value: boolean) => {
 		isLeaderboard.set(value)
 		Cookies.set('isLeaderboard', value.toString(), { expires: 0.5 })
@@ -52,7 +58,7 @@
 		}
 	}
 
-	let combinedSelectedUsers = $state(data.cookieSelectedUsers)
+	let combinedSelectedUsers = $derived(browser ? $selectedUsers : data.cookieSelectedUsers)
 
 	let combinedPredictions = $state(data.predictions.items)
 	const updatePredictions = async (allUsers: SelectedUser[]) => {
@@ -60,25 +66,6 @@
 		predictionStore.set(predictionData.items)
 		combinedPredictions = $predictionStore
 	}
-
-	const headerColor = 'bg-primary-50'
-	const pointsByRound = {
-		'Round of 16': 0,
-		Quarterfinals: 1,
-		Semifinals: 2,
-		Final: 4,
-		Champion: 8
-	}
-	// rounds start at 1
-
-	let pcDate: Date | undefined = $state()
-	let predictionClose: string = $state('')
-	let predictionsAllowed: boolean = $state(false)
-
-	const colorMap: Map<string, string> = new Map()
-	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
-
-	let drawUrl = $state('')
 
 	const getHeight = (roundIndex: number, position: number): string => {
 		let rems = 0
@@ -133,51 +120,28 @@
 		return [player1, player2]
 	}
 
-	const modalStore = getModalStore()
-	let modal: ModalSettings = $state({} as ModalSettings)
-
-	onMount(() => {
-		sessionStorage.setItem('loginGoto', location.pathname)
-	})
-	run(() => {
-		combinedIsLeaderboard = $isAuth && $isLeaderboard
-	})
-	run(() => {
-		if (!combinedIsLeaderboard && !isScrollListenerAdded && roundHeader && drawGrid) {
-			drawGrid.addEventListener('scroll', syncScroll)
-			isScrollListenerAdded = true
-		}
-	})
-	run(() => {
-		if (browser) {
-			combinedSelectedUsers = $selectedUsers
-		}
-	})
 	let users = $derived([
 		data.currentUser,
 		...combinedSelectedUsers.filter((user) => user.selectorId === data.currentUser.id)
 	])
-	run(() => {
-		if (browser) {
-			updatePredictions(users)
-		}
-	})
+	const colorMap: Map<string, string> = $derived(
+		new Map(users.map((user) => [user.id, user.color]))
+	)
+	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
+
 	let userIds = $derived(users.map((user) => user.id))
 	let fullDrawRounds = $derived(Math.log2(data.draw.size) + 1)
 	let allRounds = $derived([...Array(fullDrawRounds).keys()].map((x) => x + 1))
 	let ourRounds = $derived(allRounds.slice(-5))
 	let slots = $derived(data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4))
-	run(() => {
-		if (data.draw.prediction_close) {
-			pcDate = new Date(data.draw.prediction_close)
-			predictionClose = format(pcDate, 'M/d/yyyy h:mmaaa')
-			predictionsAllowed = now < pcDate
-		} else {
-			pcDate = undefined
-			predictionClose = '12h after R16 is full'
-			predictionsAllowed = true
-		}
-	})
+	let pcDate: Date = $derived(
+		data.draw.prediction_close ? new Date(data.draw.prediction_close) : new Date()
+	)
+	let predictionClose: string = $derived(
+		data.draw.prediction_close ? format(pcDate, 'M/d/yyyy h:mmaaa') : '12h after R16 is full'
+	)
+	let predictionsAllowed: boolean = $derived(data.draw.prediction_close ? now < pcDate : true)
+
 	let roundLabel = $derived(
 		(() => {
 			const filledRounds = allRounds.filter((round) => {
@@ -210,37 +174,46 @@
 			}
 		})()
 	)
-	run(() => {
-		users.forEach((user) => colorMap.set(user.id, user.color))
-	})
-	run(() => {
-		if (drawUrl) {
-			goto(drawUrl, { invalidateAll: true })
-			sessionStorage.setItem('loginGoto', drawUrl)
-			drawNavUrl.set(drawUrl)
-		}
-	})
-	run(() => {
-		if (isAuth) {
-			modal = {
-				type: 'component',
-				component: 'selectUsers',
-				title: 'Select Users',
-				body: 'Compare predictions with your friends (max of 6 total)',
-				backdropClasses: 'bg-surface-500',
-				meta: {
-					currentUserId: data.currentUser.id,
-					currentUsername: data.currentUser.username
+
+	const modalStore = getModalStore()
+	let modal: ModalSettings = $derived(
+		$isAuth
+			? {
+					type: 'component',
+					component: 'selectUsers',
+					title: 'Select Users',
+					body: 'Compare predictions with your friends (max of 6 total)',
+					backdropClasses: 'bg-surface-500',
+					meta: {
+						currentUserId: data.currentUser.id,
+						currentUsername: data.currentUser.username
+					}
 				}
-			}
+			: ({} as ModalSettings)
+	)
+
+	$effect(() => {
+		updatePredictions(users)
+	})
+
+	$effect(() => {
+		if (!combinedIsLeaderboard && !isScrollListenerAdded && roundHeader && drawGrid) {
+			drawGrid.addEventListener('scroll', syncScroll)
+			isScrollListenerAdded = true
 		}
+	})
+
+	drawNavUrl.set(`/draw/${getSlug(data.draw)}`)
+	$effect(() => {
+		goto($drawNavUrl, { invalidateAll: true })
+		sessionStorage.setItem('loginGoto', $drawNavUrl)
 	})
 </script>
 
 <Header color="bg-primary-50">
 	<select
 		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 text-lg font-bold hover:bg-primary-200 md:text-2xl"
-		onchange={(e) => (drawUrl = e.currentTarget.value)}
+		onchange={(e) => drawNavUrl.set(e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
 		{#each data.active.items as draw}

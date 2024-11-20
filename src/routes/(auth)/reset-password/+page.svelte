@@ -15,7 +15,7 @@
 	let buttonRef: HTMLButtonElement | undefined = $state()
 
 	let disabled = $derived(loading || showEmailValidation)
-	run(() => {
+	$effect(() => {
 		if (buttonRef && !showEmailValidation) {
 			buttonRef.disabled = false
 			buttonRef.focus()

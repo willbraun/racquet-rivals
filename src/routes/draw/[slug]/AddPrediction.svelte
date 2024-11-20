@@ -108,9 +108,9 @@
 			}
 		}}
 	>
-		<input type="hidden" name="slotId" bind:value={slot.id} />
+		<input type="hidden" name="slotId" value={slot.id} />
 		<input type="hidden" name="currentPredictionId" value={prediction?.id ?? ''} />
-		<input type="hidden" name="predictionValue" bind:value={predictionValue} />
+		<input type="hidden" name="predictionValue" value={predictionValue} />
 		<div class="flex flex-col overflow-hidden rounded">
 			<button
 				type="submit"
