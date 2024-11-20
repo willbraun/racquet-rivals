@@ -203,17 +203,17 @@
 		}
 	})
 
-	drawNavUrl.set(`/draw/${getSlug(data.draw)}`)
+	let url = $derived(`/draw/${getSlug(data.draw)}`)
 	$effect(() => {
-		goto($drawNavUrl, { invalidateAll: true })
-		sessionStorage.setItem('loginGoto', $drawNavUrl)
+		drawNavUrl.set(url)
+		sessionStorage.setItem('loginGoto', url)
 	})
 </script>
 
 <Header color="bg-primary-50">
 	<select
 		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 text-lg font-bold hover:bg-primary-200 md:text-2xl"
-		onchange={(e) => drawNavUrl.set(e.currentTarget.value)}
+		onchange={(e) => goto(e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
 		{#each data.active.items as draw}

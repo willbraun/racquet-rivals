@@ -6,6 +6,7 @@
 	import { makeSetType } from '$lib/utils'
 	import { enhance } from '$app/forms'
 	import type { AuthResult } from '$lib/types'
+	import { goto } from '$app/navigation'
 
 	let usernameOrEmail = $state('')
 	let password = $state('')
@@ -44,7 +45,7 @@
 							rememberMe,
 							usernameOrEmail
 						})
-						window.location.href = sessionStorage.getItem('loginGoto') || '/'
+						goto(sessionStorage.getItem('loginGoto') || '/')
 					} else {
 						error = typedResult.data.error
 					}

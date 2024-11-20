@@ -3,6 +3,7 @@
 	import { rankingDescriptions } from '$lib/data'
 	import type { PbListResponse, PredictionAccuracy } from '$lib/types'
 	import { formatPercent } from '$lib/utils'
+	import { goto } from '$app/navigation'
 
 	interface Props {
 		data: PbListResponse<PredictionAccuracy>
@@ -27,15 +28,14 @@
 	<tbody>
 		{#each data.items as item, index}
 			<tr
-				class={`grid h-16 grid-cols-5 items-center gap-2 px-2 text-start text-xl md:h-20 md:text-3xl md:hover:brightness-105 ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'}`}
+				class={`grid h-16 grid-cols-5 items-center gap-2 px-2 text-start text-xl md:h-20 md:text-3xl md:hover:cursor-pointer md:hover:brightness-105 ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'}`}
+				onclick={() => goto(`/profile/${item.username}`)}
 			>
 				<td
 					><Rank rank={item.rank} containerStyle="w-10 md:w-12 mx-auto" textStyle="font-bold" /></td
 				>
 				<td class="col-span-2">
-					<a href={`/profile/${item.username}`}>
-						<p class="text-wrap break-words">{item.username}</p>
-					</a>
+					<p class="text-wrap break-words">{item.username}</p>
 				</td>
 				<td>
 					<p class={'text-center font-bold md:text-3xl'}>

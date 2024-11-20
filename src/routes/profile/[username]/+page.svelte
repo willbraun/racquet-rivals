@@ -8,6 +8,8 @@
 	import { getDrawStatus, getSlug, getTitle, formatAvg, formatPercent } from '$lib/utils'
 	import InfoIcon from './InfoIcon.svelte'
 	import Header from '$lib/components/Header.svelte'
+	import { goto } from '$app/navigation'
+
 	interface Props {
 		data: ProfilePageData
 	}
@@ -162,14 +164,13 @@
 						{@const status = getDrawStatus(item.draw_start_date, item.draw_end_date)}
 						{@const showCutoff = index === 7 && data.drawResults.items.length > 8}
 						<tr
-							class={`grid w-full grid-cols-8 items-center gap-4 p-2 md:p-4 md:hover:brightness-105 ${
+							class={`grid w-full grid-cols-8 items-center gap-4 p-2 md:p-4 md:hover:cursor-pointer md:hover:brightness-105 ${
 								index % 2 ? 'bg-primary-50' : 'bg-primary-200'
 							} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${showCutoff ? 'border-b-2 border-pure-red' : ''}`}
+							onclick={() => goto(`/draw/${getSlug(item)}`)}
 						>
 							<td class="col-span-6 md:text-3xl">
-								<a href={`/draw/${getSlug(item)}`}>
-									<p class="text-wrap break-words">{getTitle(item)}</p>
-								</a>
+								<p class="text-wrap break-words">{getTitle(item)}</p>
 							</td>
 							{#if item.prediction_count > 0 || status === DrawStatus.ACTIVE}
 								<td>
