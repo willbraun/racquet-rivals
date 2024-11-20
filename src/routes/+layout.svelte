@@ -55,7 +55,7 @@
 	<div class="grow">
 		{@render children?.()}
 	</div>
-	<footer class="text-md bg-black px-16 py-8 text-stone-100">
+	<footer class="text-md bg-black px-16 py-8 text-stone-100" data-testid="Footer">
 		<div class="w-full text-center">
 			<div class="mb-8 flex flex-col items-center gap-8 sm:flex-row sm:justify-evenly">
 				<a

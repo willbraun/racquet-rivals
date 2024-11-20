@@ -1,8 +1,10 @@
 <script lang="ts">
+	import type { Component } from 'svelte'
 	import { initializeStores, storePopup } from '@skeletonlabs/skeleton'
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
+	import { isAuth } from '$lib/store'
 	interface Props {
-		component: ConstructorOfATypedSvelteComponent
+		component: Component<any, any, any>
 		data?: object
 	}
 

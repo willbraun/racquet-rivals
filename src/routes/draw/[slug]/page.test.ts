@@ -14,7 +14,7 @@ import type {
 import slotData from '$lib/data/slot_data.json'
 import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
-import { selectedUsers } from '$lib/store'
+import { isAuth, selectedUsers } from '$lib/store'
 
 const data: DrawPageData = {
 	active: {
@@ -203,8 +203,6 @@ const data: DrawPageData = {
 		username: 'will',
 		color: 'bg-blue-300'
 	} as SelectedUser,
-	pb_auth_valid: true,
-	pb_auth_cookie: 'dummy_cookie',
 	isLeaderboard: 'false'
 }
 
@@ -218,6 +216,7 @@ describe('Draw page component', () => {
 	const initialSelections: SelectedUser[] = []
 
 	beforeEach(() => {
+		isAuth.set(true)
 		selectedUsers.set(initialSelections)
 	})
 
@@ -244,13 +243,11 @@ describe('Draw page component', () => {
 	})
 
 	test('Logged out', () => {
+		isAuth.set(false)
 		render(PageSetup, {
 			props: {
 				component: Page,
-				data: {
-					...data,
-					pb_auth_valid: false
-				}
+				data
 			}
 		})
 

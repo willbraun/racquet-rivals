@@ -19,9 +19,9 @@
 	let currentUsername = $modalStore[0]?.meta?.currentUsername
 	let selections = $derived([...$selectedUsers.filter((user) => user.selectorId === currentUserId)])
 
-	let inputRef: HTMLInputElement = $state()
+	let inputRef: HTMLInputElement | undefined = $state()
 	const refocus = () => {
-		inputRef.focus()
+		inputRef?.focus()
 	}
 
 	const setTypeSelect = makeSetType<SelectUserResult>()
@@ -89,7 +89,7 @@
 					>
 				</div>
 			</label>
-			<FormError bind:error />
+			<FormError {error} />
 		</form>
 
 		<div class="flex flex-wrap gap-2">

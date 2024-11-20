@@ -78,8 +78,6 @@ export async function load({ fetch, params, locals, cookies }) {
 		predictions: predictionData,
 		currentUser: currentUser,
 		cookieSelectedUsers: cookieSelectedUsers,
-		pb_auth_valid: locals.pb.authStore.isValid as boolean,
-		pb_auth_cookie: locals.pb.authStore.exportToCookie() as string,
 		isLeaderboard: cookies.get('isLeaderboard')
 	} as DrawPageData
 }

@@ -135,6 +135,6 @@
 				</span>
 			</button>
 		</div>
-		<FormError bind:error />
+		<FormError {error} />
 	</form>
 </div>

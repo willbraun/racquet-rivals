@@ -213,9 +213,6 @@ export interface HomePageData {
 	active: PbListResponse<Draw>
 	completed: PbListResponse<Draw>
 	banner: Banner
-	pb_auth_valid: boolean
-	pb_auth_cookie: string
-	pb_auth_username: string
 }
 
 export interface DrawPageData {
@@ -227,8 +224,6 @@ export interface DrawPageData {
 	predictions: PbListResponse<Prediction>
 	cookieSelectedUsers: SelectedUser[]
 	currentUser: SelectedUser
-	pb_auth_valid: boolean
-	pb_auth_cookie: string
 	isLeaderboard: string
 }
 

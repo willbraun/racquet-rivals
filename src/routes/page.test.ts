@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/vitest'
 import type { Draw, HomePageData, PbListResponse } from '$lib/types'
 import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
+import { currentUsername, isAuth } from '$lib/store'
 
 const data: HomePageData = {
 	active: {
@@ -52,9 +53,6 @@ const data: HomePageData = {
 		totalItems: 1,
 		totalPages: 1
 	} as PbListResponse<Draw>,
-	pb_auth_valid: true,
-	pb_auth_cookie: 'dummy_cookie',
-	pb_auth_username: 'will',
 	banner: {
 		collectionId: 'asvzq3z4d9ojqcd',
 		collectionName: 'banner',
@@ -69,6 +67,8 @@ const data: HomePageData = {
 
 describe('Home page component', () => {
 	test('Logged in', () => {
+		isAuth.set(true)
+		currentUsername.set('will')
 		render(PageSetup, {
 			props: {
 				component: Page,
@@ -83,13 +83,11 @@ describe('Home page component', () => {
 	})
 
 	test('Logged out', () => {
+		isAuth.set(false)
 		render(PageSetup, {
 			props: {
 				component: Page,
-				data: {
-					...data,
-					pb_auth_valid: false
-				}
+				data
 			}
 		})
 

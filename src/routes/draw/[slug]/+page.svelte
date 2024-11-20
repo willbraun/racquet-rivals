@@ -10,7 +10,7 @@
 	import { type DrawPageData, type Prediction, type SelectedUser, type Slot } from '$lib/types'
 	import { goto } from '$app/navigation'
 	import { format } from 'date-fns'
-	import { addUser, getSlug, getTitle, removeUser, updatePageAuth } from '$lib/utils'
+	import { addUser, getSlug, getTitle, removeUser } from '$lib/utils'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import { getPredictions } from '$lib/api'
 	import { browser } from '$app/environment'
