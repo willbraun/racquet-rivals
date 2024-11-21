@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy'
-
 	import Pocketbase from 'pocketbase'
 	import AddPrediction from './AddPrediction.svelte'
 	import ViewPrediction from './ViewPrediction.svelte'
@@ -20,6 +18,7 @@
 	import x from '$lib/images/icons/x.svg'
 	import Rank from '$lib/components/Rank.svelte'
 	import Header from '$lib/components/Header.svelte'
+
 	interface Props {
 		data: DrawPageData
 	}
