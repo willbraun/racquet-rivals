@@ -3,7 +3,6 @@
 	import AddPrediction from './AddPrediction.svelte'
 	import ViewPrediction from './ViewPrediction.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
-	import { onMount } from 'svelte'
 	import { isAuth, selectedUsers, isLeaderboard, predictionStore, drawNavUrl } from '$lib/store'
 	import { type DrawPageData, type Prediction, type SelectedUser, type Slot } from '$lib/types'
 	import { goto } from '$app/navigation'
@@ -37,8 +36,8 @@
 	}
 
 	let isScrollListenerAdded: boolean = $state(false)
-	let roundHeader: HTMLElement | undefined = $state()
-	let drawGrid: HTMLElement | undefined = $state()
+	let roundHeader: HTMLElement | null = $state(null)
+	let drawGrid: HTMLElement | null = $state(null)
 
 	const syncScroll = () => {
 		if (roundHeader && drawGrid) {

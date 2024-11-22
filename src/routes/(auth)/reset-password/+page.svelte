@@ -10,7 +10,7 @@
 	let error = $state('')
 	let loading = $state(false)
 	let success = $state(false)
-	let buttonRef: HTMLButtonElement | undefined = $state()
+	let buttonRef: HTMLButtonElement | null = $state(null)
 
 	let disabled = $derived(loading || showEmailValidation)
 	$effect(() => {

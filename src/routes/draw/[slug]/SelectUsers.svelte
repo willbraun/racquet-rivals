@@ -19,7 +19,7 @@
 	let currentUsername = $modalStore[0]?.meta?.currentUsername
 	let selections = $derived([...$selectedUsers.filter((user) => user.selectorId === currentUserId)])
 
-	let inputRef: HTMLInputElement | undefined = $state()
+	let inputRef: HTMLInputElement | null = $state(null)
 	const refocus = () => {
 		inputRef?.focus()
 	}

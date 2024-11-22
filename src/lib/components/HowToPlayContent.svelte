@@ -7,7 +7,7 @@
 
 	const scoreFormatting = 'font-bold bg-green-300 rounded-full px-1.5 shadow'
 
-	let buttonRef: HTMLButtonElement = $state()
+	let buttonRef: HTMLButtonElement | null = $state(null)
 	onMount(() => {
 		if (buttonRef) {
 			buttonRef.blur()

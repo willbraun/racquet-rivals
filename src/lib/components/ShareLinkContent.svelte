@@ -15,7 +15,7 @@
 	const drawerStore = getDrawerStore()
 
 	let showCheck = $state(false)
-	let copyEmail: Function = $state()
+	let copyEmail: Function | null = $state(null)
 	onMount(() => {
 		copyEmail = (): void => {
 			navigator.clipboard.writeText('https://racquetrivals.com')
@@ -38,7 +38,7 @@
 		<img src={sms} alt="sms text message" width="42" />
 		<p class="text-xl">Text Message</p>
 	</a>
-	<button class="relative flex items-center gap-4" onclick={() => copyEmail()}>
+	<button class="relative flex items-center gap-4" onclick={() => copyEmail?.()}>
 		<img src={clone} alt="copy to clipboard" width="42" />
 		<p class="w-32 text-xl">{showCheck ? 'Copied!' : 'Copy Link'}</p>
 		<div class="absolute -right-10 {showCheck ? 'block' : 'hidden'}">
