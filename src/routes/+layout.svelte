@@ -19,9 +19,11 @@
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import type { RootLayoutData } from '$lib/types'
+	import type { Snippet } from 'svelte'
+
 	interface Props {
 		data: RootLayoutData
-		children?: import('svelte').Snippet
+		children?: Snippet
 	}
 
 	let { data, children }: Props = $props()
