@@ -12,7 +12,6 @@
 	import Pocketbase from 'pocketbase'
 	import { storePopup } from '@skeletonlabs/skeleton'
 	import { afterNavigate } from '$app/navigation'
-	import { isAuth, currentUsername } from '$lib/store'
 	import { updatePageAuth } from '$lib/utils'
 	import HowToPlayContent from '$lib/components/HowToPlayContent.svelte'
 	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
@@ -39,9 +38,8 @@
 	const drawerStore = getDrawerStore()
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
-	isAuth.set(data.pb_auth_valid)
-	currentUsername.set(data.pb_auth_username)
-	afterNavigate(() => updatePageAuth(pb, data.pb_auth_valid, data.pb_auth_cookie))
+
+	afterNavigate(() => updatePageAuth(pb, data))
 </script>
 
 <Modal components={modalRegistry} />

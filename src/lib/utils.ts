@@ -1,10 +1,11 @@
 import type Client from 'pocketbase'
 import type { ClientResponseError } from 'pocketbase'
-import { isAuth, selectedUsers } from './store'
+import { currentUsername, isAuth, selectedUsers } from './store'
 import {
 	DrawStatus,
 	type Draw,
 	type DrawResult,
+	type RootLayoutData,
 	type SelectedUser,
 	type SelectedUserNoColor
 } from './types'
@@ -42,13 +43,14 @@ const capitalize = (str: string) => {
 	return str[0].toUpperCase() + str.slice(1).toLowerCase()
 }
 
-export const updatePageAuth = (pb: Client, serverPbValid: boolean, serverPbCookie: string) => {
-	if (serverPbValid) {
-		pb.authStore.loadFromCookie(serverPbCookie)
+export const updatePageAuth = (pb: Client, data: RootLayoutData) => {
+	if (data.pb_auth_valid) {
+		pb.authStore.loadFromCookie(data.pb_auth_cookie)
 	} else {
 		pb.authStore.clear()
 	}
 	isAuth.set(pb.authStore.isValid)
+	currentUsername.set(data.pb_auth_username)
 }
 
 export const makeSetType = <T>() => {
