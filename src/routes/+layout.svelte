@@ -12,7 +12,7 @@
 	import Pocketbase from 'pocketbase'
 	import { storePopup } from '@skeletonlabs/skeleton'
 	import { afterNavigate } from '$app/navigation'
-	import { updatePageAuth } from '$lib/utils'
+	import { updateStores } from '$lib/utils'
 	import HowToPlayContent from '$lib/components/HowToPlayContent.svelte'
 	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
@@ -39,7 +39,7 @@
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 
-	afterNavigate(() => updatePageAuth(pb, data))
+	afterNavigate(() => updateStores(pb, data))
 </script>
 
 <Modal components={modalRegistry} />

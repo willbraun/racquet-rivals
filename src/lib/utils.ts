@@ -1,6 +1,6 @@
 import type Client from 'pocketbase'
 import type { ClientResponseError } from 'pocketbase'
-import { currentUsername, isAuth, selectedUsers } from './store'
+import { currentUsername, drawNavUrl, isAuth, selectedUsers } from './store'
 import {
 	DrawStatus,
 	type Draw,
@@ -43,7 +43,7 @@ const capitalize = (str: string) => {
 	return str[0].toUpperCase() + str.slice(1).toLowerCase()
 }
 
-export const updatePageAuth = (pb: Client, data: RootLayoutData) => {
+export const updateStores = (pb: Client, data: RootLayoutData) => {
 	if (data.pb_auth_valid) {
 		pb.authStore.loadFromCookie(data.pb_auth_cookie)
 	} else {
@@ -51,6 +51,12 @@ export const updatePageAuth = (pb: Client, data: RootLayoutData) => {
 	}
 	isAuth.set(pb.authStore.isValid)
 	currentUsername.set(data.pb_auth_username)
+
+	if (get(drawNavUrl) === '') {
+		const url = `/draw/${getSlug(data.defaultDraw)}`
+		console.log('setting', url)
+		drawNavUrl.set(url)
+	}
 }
 
 export const makeSetType = <T>() => {
