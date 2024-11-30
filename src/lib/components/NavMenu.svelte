@@ -22,30 +22,36 @@
 	class="block flex-shrink-0 sm:hidden"
 	data-testid="user-menu-icon"
 >
-	<img src={hamburger} alt="hamburger menu icon" width="24" data-testid="hamburger-icon" />
+	<img
+		src={hamburger}
+		alt="hamburger menu icon"
+		width="24"
+		data-testid="hamburger-icon"
+		class="invert"
+	/>
 </button>
 <nav class="hidden flex-shrink-0 sm:block">
 	<div class="flex items-center gap-4">
 		<HowToPlay />
 		{#if $isAuth}
 			<a href={$drawNavUrl}>
-				<img src={bracketLeft} alt="draws" width="24" />
+				<img src={bracketLeft} alt="draws" width="24" class="invert" />
 			</a>
 			<a href={`/profile/${$currentUsername}`}>
-				<img src={user} alt="profile" width="18" />
+				<img src={user} alt="profile" width="18" class="invert" />
 			</a>
 			<a href={`/rankings`}>
-				<img src={trophy} alt="rankings" width="24" />
+				<img src={trophy} alt="rankings" width="24" class="invert" />
 			</a>
 			<LogoutForm>
-				<button type="submit" class="btn btn-sm rounded-lg bg-black text-white"> Logout </button>
+				<button type="submit" class="btn btn-sm rounded-lg bg-white"> Logout </button>
 			</LogoutForm>
 		{:else}
 			<a href="/login">
-				<button type="button" class="btn btn-sm rounded-lg bg-black text-white">Login</button>
+				<button type="button" class="btn btn-sm rounded-lg bg-white">Login</button>
 			</a>
 			<a href="/create-account">
-				<button type="button" class="btn btn-sm rounded-lg bg-black text-white">Sign up</button>
+				<button type="button" class="btn btn-sm rounded-lg bg-white">Sign up</button>
 			</a>
 		{/if}
 	</div>

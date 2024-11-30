@@ -4,16 +4,17 @@
 	import type { Snippet } from 'svelte'
 
 	interface Props {
+		twClass?: string
 		color?: string
 		children?: Snippet
 	}
 
-	let { color = 'bg-stone-100', children }: Props = $props()
+	let { twClass, color = 'bg-stone-100', children }: Props = $props()
 </script>
 
-<header class="flex items-start gap-4 {color} px-4 py-4">
+<header class="flex items-start gap-4 {twClass} {color} w-full px-4 py-4">
 	<a class="mr-auto flex flex-shrink-0 items-center justify-center px-2 py-1" href="/">
-		<img src={home} alt="home" width="24" data-testid="home-icon" />
+		<img src={home} alt="home" width="24" data-testid="home-icon" class="invert" />
 	</a>
 	{@render children?.()}
 	<NavMenu />
