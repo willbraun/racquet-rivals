@@ -15,10 +15,10 @@
 	let { data }: Props = $props()
 
 	const bannerStyleMap: { [key in TournamentName]: string } = {
-		[TournamentName.AUSTRALIAN_OPEN]: 'bg-gradient-to-r from-indigo-600 to-cyan-300',
-		[TournamentName.FRENCH_OPEN]: 'bg-gradient-to-r from-orange-600 to-orange-300',
-		[TournamentName.WIMBLEDON]: 'bg-gradient-to-r from-green-600 to-purple-600',
-		[TournamentName.US_OPEN]: 'bg-gradient-to-r from-blue-700 to-yellow-300'
+		[TournamentName.AUSTRALIAN_OPEN]: 'bg-gradient-to-r from-indigo-800 via-blue-500 to-cyan-300',
+		[TournamentName.FRENCH_OPEN]: 'bg-gradient-to-r from-red-700 via-orange-500 to-amber-300',
+		[TournamentName.WIMBLEDON]: 'bg-gradient-to-r from-green-600 via-blue-400 to-purple-600',
+		[TournamentName.US_OPEN]: 'bg-gradient-to-r from-blue-700 via-orange-500 to-yellow-300'
 	}
 
 	const formatDateRange = (start: string, end: string) => {
@@ -42,7 +42,7 @@
 			alt="Wimbledon"
 			class="absolute inset-0 h-full w-full object-cover object-bottom"
 		/>
-		<div class="absolute inset-0 bg-gradient-to-b from-primary-500/45 to-stone-900"></div>
+		<div class="absolute inset-0 bg-gradient-to-b from-primary-500/40 to-stone-900"></div>
 		<div class="absolute flex h-full w-full items-center justify-center">
 			<img src={bracketLeft} alt="left bracket" class="block h-24 invert sm:h-32 md:h-48" />
 			<h1
@@ -84,7 +84,7 @@
 		</div>
 	</section>
 	<section
-		class="mx-auto mb-8 flex flex-col gap-8 p-16 text-center font-bold text-white sm:mb-16 {bannerStyleMap[
+		class="mx-auto mb-8 flex flex-col gap-8 py-24 text-center font-bold text-white sm:mb-16 {bannerStyleMap[
 			data.banner.next_tournament
 		]}"
 	>
