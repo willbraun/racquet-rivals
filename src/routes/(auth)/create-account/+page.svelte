@@ -6,6 +6,7 @@
 	import { makeSetType } from '$lib/utils.js'
 	import { enhance } from '$app/forms'
 	import type { AuthResult } from '$lib/types'
+	import { onMount } from 'svelte'
 
 	let username = $state('')
 	let email = $state('')
@@ -19,6 +20,13 @@
 	)
 
 	const setType = makeSetType<AuthResult>()
+
+	let usernameRef: HTMLInputElement | null = $state(null)
+	onMount(() => {
+		if (usernameRef) {
+			usernameRef.focus()
+		}
+	})
 </script>
 
 <main class="absolute top-0 h-screen w-full bg-white md:bg-stone-100">
@@ -49,6 +57,7 @@
 					name="username"
 					data-testid="UsernameField"
 					bind:value={username}
+					bind:this={usernameRef}
 				/>
 			</label>
 			<EmailField bind:email bind:showValidation={showEmailValidation} />

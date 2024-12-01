@@ -4,15 +4,17 @@
 	import { makeSetType } from '$lib/utils.js'
 	import { enhance } from '$app/forms'
 	import type { AuthResult } from '$lib/types'
+	import { onMount } from 'svelte'
 
 	let email = $state('')
 	let showEmailValidation = $state(false)
 	let error = $state('')
 	let loading = $state(false)
 	let success = $state(false)
-	let buttonRef: HTMLButtonElement | null = $state(null)
-
 	let disabled = $derived(loading || showEmailValidation)
+
+	// focus on the button after correcting email format and tabbing
+	let buttonRef: HTMLButtonElement | null = $state(null)
 	$effect(() => {
 		if (buttonRef && !showEmailValidation) {
 			buttonRef.disabled = false
@@ -21,6 +23,13 @@
 	})
 
 	const setType = makeSetType<AuthResult>()
+
+	let emailRef: HTMLInputElement | null = $state(null)
+	onMount(() => {
+		if (emailRef) {
+			emailRef.focus()
+		}
+	})
 </script>
 
 <main class="absolute top-0 h-screen w-full bg-white md:bg-stone-100">
@@ -45,7 +54,7 @@
 				}
 			}}
 		>
-			<EmailField bind:email bind:showValidation={showEmailValidation} />
+			<EmailField bind:email bind:showValidation={showEmailValidation} bind:ref={emailRef} />
 			<div class="flex justify-center">
 				<button
 					type="submit"

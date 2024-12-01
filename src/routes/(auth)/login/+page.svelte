@@ -7,6 +7,7 @@
 	import { enhance } from '$app/forms'
 	import type { AuthResult } from '$lib/types'
 	import { goto } from '$app/navigation'
+	import { onMount } from 'svelte'
 
 	let usernameOrEmail = $state('')
 	let password = $state('')
@@ -26,6 +27,13 @@
 		usernameOrEmail = saved.usernameOrEmail
 		rememberMe = true
 	}
+
+	let usernameOrEmailRef: HTMLInputElement | null = $state(null)
+	onMount(() => {
+		if (usernameOrEmailRef) {
+			usernameOrEmailRef.focus()
+		}
+	})
 </script>
 
 <main class="absolute top-0 h-screen w-full bg-white md:bg-stone-100">
@@ -61,6 +69,7 @@
 					name="usernameOrEmail"
 					data-testid="UsernameOrEmailField"
 					bind:value={usernameOrEmail}
+					bind:this={usernameOrEmailRef}
 				/>
 			</label>
 			<PasswordField bind:password />

@@ -2,9 +2,14 @@
 	interface Props {
 		email?: string
 		showValidation?: boolean
+		ref?: HTMLInputElement | null
 	}
 
-	let { email = $bindable(''), showValidation = $bindable(false) }: Props = $props()
+	let {
+		email = $bindable(''),
+		showValidation = $bindable(false),
+		ref = $bindable(null)
+	}: Props = $props()
 
 	const isValidEmail = (value: string) => {
 		return !!value.match(
@@ -30,6 +35,7 @@
 		data-testid="EmailField"
 		class:input-error={showValidation}
 		bind:value={email}
+		bind:this={ref}
 		onchange={handleEmailValidation}
 	/>
 	<p
