@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isAuth, currentUsername, drawNavUrl } from '$lib/store'
+	import { isAuth, currentUsername, loginGoto } from '$lib/store'
 	import { getSlug, getTitle } from '$lib/utils'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
 	import { onMount } from 'svelte'
@@ -30,7 +30,7 @@
 	const dateRange = formatDateRange(data.banner.start_date, data.banner.end_date)
 
 	onMount(() => {
-		sessionStorage.setItem('loginGoto', '/')
+		loginGoto.set('/')
 	})
 </script>
 

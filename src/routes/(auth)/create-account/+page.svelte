@@ -7,6 +7,7 @@
 	import { enhance } from '$app/forms'
 	import type { AuthResult } from '$lib/types'
 	import { onMount } from 'svelte'
+	import { loginGoto } from '$lib/store'
 
 	let username = $state('')
 	let email = $state('')
@@ -41,7 +42,7 @@
 					await update()
 					const typedResult = setType(result)
 					if (result.status === 200) {
-						goto(sessionStorage.getItem('loginGoto') || '/')
+						goto($loginGoto)
 					} else {
 						error = typedResult.data.error
 					}

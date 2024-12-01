@@ -3,7 +3,14 @@
 	import AddPrediction from './AddPrediction.svelte'
 	import ViewPrediction from './ViewPrediction.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
-	import { isAuth, selectedUsers, isLeaderboard, predictionStore, drawNavUrl } from '$lib/store'
+	import {
+		isAuth,
+		selectedUsers,
+		isLeaderboard,
+		predictionStore,
+		drawNavUrl,
+		loginGoto
+	} from '$lib/store'
 	import { type DrawPageData, type Prediction, type SelectedUser, type Slot } from '$lib/types'
 	import { goto } from '$app/navigation'
 	import { format } from 'date-fns'
@@ -204,7 +211,7 @@
 	let url = $derived(`/draw/${getSlug(data.draw)}`)
 	$effect(() => {
 		drawNavUrl.set(url)
-		sessionStorage.setItem('loginGoto', url)
+		loginGoto.set(url)
 	})
 </script>
 

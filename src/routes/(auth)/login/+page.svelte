@@ -8,6 +8,7 @@
 	import type { AuthResult } from '$lib/types'
 	import { goto } from '$app/navigation'
 	import { onMount } from 'svelte'
+	import { loginGoto } from '$lib/store'
 
 	let usernameOrEmail = $state('')
 	let password = $state('')
@@ -53,7 +54,7 @@
 							rememberMe,
 							usernameOrEmail
 						})
-						goto(sessionStorage.getItem('loginGoto') || '/')
+						goto($loginGoto)
 					} else {
 						error = typedResult.data.error
 					}
