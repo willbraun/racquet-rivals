@@ -15,6 +15,14 @@
 		position: 'right',
 		width: 'w-52'
 	}
+
+	interface Props {
+		isInverted: boolean
+	}
+
+	let { isInverted }: Props = $props()
+
+	const buttonStyle = `btn btn-sm rounded-lg ${isInverted ? 'bg-white text-black' : 'bg-black text-white'}`
 </script>
 
 <button
@@ -27,7 +35,7 @@
 		alt="hamburger menu icon"
 		width="24"
 		data-testid="hamburger-icon"
-		class="invert"
+		class:invert={isInverted}
 	/>
 </button>
 <nav class="hidden flex-shrink-0 sm:block">
@@ -35,23 +43,23 @@
 		<HowToPlay />
 		{#if $isAuth}
 			<a href={$drawNavUrl}>
-				<img src={bracketLeft} alt="draws" width="24" class="invert" />
+				<img src={bracketLeft} alt="draws" width="24" class:invert={isInverted} />
 			</a>
 			<a href={`/profile/${$currentUsername}`}>
-				<img src={user} alt="profile" width="18" class="invert" />
+				<img src={user} alt="profile" width="18" class:invert={isInverted} />
 			</a>
 			<a href={`/rankings`}>
-				<img src={trophy} alt="rankings" width="24" class="invert" />
+				<img src={trophy} alt="rankings" width="24" class:invert={isInverted} />
 			</a>
 			<LogoutForm>
-				<button type="submit" class="btn btn-sm rounded-lg bg-white"> Logout </button>
+				<button type="submit" class={buttonStyle}> Logout </button>
 			</LogoutForm>
 		{:else}
 			<a href="/login">
-				<button type="button" class="btn btn-sm rounded-lg bg-white">Login</button>
+				<button type="button" class={buttonStyle}>Login</button>
 			</a>
 			<a href="/create-account">
-				<button type="button" class="btn btn-sm rounded-lg bg-white">Sign up</button>
+				<button type="button" class={buttonStyle}>Sign up</button>
 			</a>
 		{/if}
 	</div>
