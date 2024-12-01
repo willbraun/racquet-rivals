@@ -9,13 +9,20 @@
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
 	import ShareLink from './ShareLink.svelte'
 	import { isAuth, currentUsername, drawNavUrl } from '$lib/store'
-	import HowToPlay from './HowToPlay.svelte'
+	import infoIcon from '$lib/images/icons/circle-info-solid.svg'
 
 	const drawerStore = getDrawerStore()
 	const closeDrawer = () => {
 		drawerStore.close()
 	}
 </script>
+
+{#snippet about()}
+	<a href="/about" class="grid w-full grid-cols-4 items-center gap-4" onclick={closeDrawer}>
+		<img src={infoIcon} alt="info" width="24" class="justify-self-center" />
+		<p class="col-span-3 text-xl">About</p>
+	</a>
+{/snippet}
 
 <nav class="flex h-full w-full flex-col items-start gap-8 p-8">
 	{#if $isAuth}
@@ -35,8 +42,8 @@
 			<img src={trophy} alt="rankings" width="24" class="justify-self-center" />
 			<p class="col-span-3 text-xl">Rankings</p>
 		</a>
-		<HowToPlay showName />
 		<ShareLink />
+		{@render about()}
 		<LogoutForm>
 			<button
 				type="submit"
@@ -61,5 +68,6 @@
 			<p class="col-span-3 text-xl">Sign up</p>
 		</a>
 		<ShareLink />
+		{@render about()}
 	{/if}
 </nav>

@@ -7,7 +7,7 @@
 	import type { DrawerSettings } from '@skeletonlabs/skeleton'
 	import LogoutForm from './LogoutForm.svelte'
 	import { isAuth, currentUsername, drawNavUrl } from '$lib/store'
-	import HowToPlay from './HowToPlay.svelte'
+	import infoIcon from '$lib/images/icons/circle-info-solid.svg'
 
 	const drawerStore = getDrawerStore()
 	const drawerSettings: DrawerSettings = {
@@ -40,7 +40,9 @@
 </button>
 <nav class="hidden flex-shrink-0 sm:block">
 	<div class="flex items-center gap-4">
-		<HowToPlay />
+		<a href="/about">
+			<img src={infoIcon} alt="draws" width="24" class:invert={isInverted} />
+		</a>
 		{#if $isAuth}
 			<a href={$drawNavUrl}>
 				<img src={bracketLeft} alt="draws" width="24" class:invert={isInverted} />

@@ -16,7 +16,7 @@
 	const isInverted = $page.url.pathname === '/'
 </script>
 
-<header class="flex items-start gap-4 {twClass} {color} w-full px-4 py-4">
+<header class="flex items-start gap-4 {twClass} {color} w-full p-4">
 	<a class="mr-auto flex flex-shrink-0 items-center justify-center px-2 py-1" href="/">
 		<img src={home} alt="home" width="24" data-testid="home-icon" class:invert={isInverted} />
 	</a>

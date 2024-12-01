@@ -6,7 +6,7 @@
 	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import Rank from '$lib/components/Rank.svelte'
 	import { getDrawStatus, getSlug, getTitle, formatAvg, formatPercent } from '$lib/utils'
-	import InfoIcon from './InfoIcon.svelte'
+	import info from '$lib/images/icons/circle-info-solid.svg'
 	import Header from '$lib/components/Header.svelte'
 	import { goto } from '$app/navigation'
 
@@ -24,6 +24,12 @@
 		return `#${num}`
 	}
 </script>
+
+{#snippet infoIcon()}
+	<div class="w-4 sm:w-6">
+		<img src={info} alt="info" />
+	</div>
+{/snippet}
 
 <Header />
 <main class="bg-stone-100">
@@ -57,10 +63,10 @@
 						{rankingDescriptions.overall}
 					{/snippet}
 					{#snippet iconOpen()}
-						<InfoIcon />
+						{@render infoIcon()}
 					{/snippet}
 					{#snippet iconClosed()}
-						<InfoIcon />
+						{@render infoIcon()}
 					{/snippet}
 				</AccordionItem>
 			</Accordion>
@@ -93,10 +99,10 @@
 						{rankingDescriptions.averagePoints}
 					{/snippet}
 					{#snippet iconOpen()}
-						<InfoIcon />
+						{@render infoIcon()}
 					{/snippet}
 					{#snippet iconClosed()}
-						<InfoIcon />
+						{@render infoIcon()}
 					{/snippet}
 				</AccordionItem>
 			</Accordion>
@@ -137,10 +143,10 @@
 						{rankingDescriptions.predictionAccuracy}
 					{/snippet}
 					{#snippet iconOpen()}
-						<InfoIcon />
+						{@render infoIcon()}
 					{/snippet}
 					{#snippet iconClosed()}
-						<InfoIcon />
+						{@render infoIcon()}
 					{/snippet}
 				</AccordionItem>
 			</Accordion>
