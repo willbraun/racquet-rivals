@@ -6,17 +6,13 @@
 	import { type HomePageData, TournamentName } from '$lib/types'
 	import { format } from 'date-fns'
 	import Header from '$lib/components/Header.svelte'
+	import arrow from '$lib/images/icons/arrow-down-solid.svg'
 
 	interface Props {
 		data: HomePageData
 	}
 
 	let { data }: Props = $props()
-
-	const pillStyle =
-		'flex justify-center items-center text-center text-lg sm:text-xl md:text-2xl px-4 py-2'
-
-	const clickablePillStyle = `${pillStyle} cursor-pointer md:hover:brightness-105`
 
 	const bannerStyleMap: { [key in TournamentName]: string } = {
 		[TournamentName.AUSTRALIAN_OPEN]: 'bg-gradient-to-r from-indigo-600 to-cyan-300',
@@ -46,45 +42,55 @@
 			alt="Wimbledon"
 			class="absolute inset-0 h-full w-full object-cover object-bottom"
 		/>
-		<div class="absolute inset-0 flex items-center justify-center bg-primary-500 bg-opacity-50">
-			<img src={bracketLeft} alt="left bracket" class="block h-24 invert sm:h-48 md:h-64" />
-			<h1 class="text-center text-5xl font-bold tracking-tight text-white md:text-8xl lg:text-9xl">
+		<div class="absolute inset-0 bg-gradient-to-b from-primary-500/45 to-stone-900"></div>
+		<div class="absolute flex h-full w-full items-center justify-center">
+			<img src={bracketLeft} alt="left bracket" class="block h-24 invert sm:h-32 md:h-48" />
+			<h1
+				class="w-fit text-center text-5xl font-bold tracking-tight text-white md:text-8xl lg:text-9xl"
+			>
 				Racquet Rivals
 			</h1>
 			<img
 				src={bracketLeft}
 				alt="right bracket"
-				class="block h-24 rotate-180 invert sm:h-48 md:h-64"
+				class="block h-24 rotate-180 invert sm:h-32 md:h-48"
 			/>
 		</div>
-	</section>
-	<section class="my-8 px-4 sm:my-16">
-		<p class="mb-8 text-center text-2xl sm:mb-16 sm:text-4xl">
-			Predict outcomes of tennis matches, and compete with fellow fans!
-		</p>
-		<div class="mx-auto mb-8 flex max-w-screen-sm gap-4">
-			<a
-				href="/login"
-				class="block w-1/2 rounded bg-primary-300 p-4 text-center text-2xl font-semibold shadow duration-100 hover:scale-105 sm:col-end-2"
-			>
-				<button type="button">Login</button>
-			</a>
-			<a
-				href="/create-account"
-				class="block w-1/2 rounded bg-primary-300 p-4 text-center text-2xl font-semibold shadow duration-100 hover:scale-105 sm:col-start-2"
-			>
-				<button type="button">Sign up</button>
-			</a>
+		<img src={arrow} alt="arrow" class="absolute bottom-4 left-1/2 w-6 -translate-x-1/2 invert" />
+		<div class="absolute bottom-16 left-1/2 w-full -translate-x-1/2 px-4">
+			{#if $isAuth}
+				<p class="mb-8 text-center text-3xl font-semibold text-white sm:text-4xl">
+					Welcome {$currentUsername}!
+				</p>
+			{:else}
+				<p class="mb-8 text-center text-xl font-semibold text-white sm:text-3xl">
+					Predict outcomes of tennis matches, and compete with fellow fans!
+				</p>
+				<div class="mx-auto flex max-w-screen-sm gap-4">
+					<a
+						href="/login"
+						class="block w-1/2 rounded border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
+					>
+						<button type="button">Login</button>
+					</a>
+					<a
+						href="/create-account"
+						class="block w-1/2 rounded border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
+					>
+						<button type="button">Sign up</button>
+					</a>
+				</div>
+			{/if}
 		</div>
 	</section>
-	<div
+	<section
 		class="mx-auto mb-8 flex flex-col gap-8 p-16 text-center font-bold text-white sm:mb-16 {bannerStyleMap[
 			data.banner.next_tournament
 		]}"
 	>
 		<p class="text-4xl sm:text-7xl">{data.banner.next_tournament}</p>
 		<p class="text-2xl sm:text-4xl">{dateRange}</p>
-	</div>
+	</section>
 	<section class="mx-auto max-w-screen-sm px-4 sm:px-0">
 		<div class="mb-8 flex flex-col overflow-hidden rounded-xl shadow sm:mb-16">
 			<h3 class="bg-primary-700 px-4 py-2 text-2xl font-bold text-white sm:py-4 sm:text-4xl">
@@ -94,7 +100,7 @@
 				{#each data.active.items as draw, index}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 sm:p-4 sm:text-3xl`}
+						class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 sm:p-4 sm:text-3xl md:hover:brightness-105`}
 					>
 						<button type="button">
 							{getTitle(draw)}
@@ -112,7 +118,7 @@
 			{#each data.completed.items as draw, index}
 				<a
 					href={`/draw/${getSlug(draw)}`}
-					class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 sm:p-4 sm:text-3xl`}
+					class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 sm:p-4 sm:text-3xl md:hover:brightness-105`}
 				>
 					<button type="button">
 						{getTitle(draw)}
