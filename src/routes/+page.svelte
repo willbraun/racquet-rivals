@@ -42,7 +42,7 @@
 			alt="Wimbledon"
 			class="absolute inset-0 h-full w-full object-cover object-bottom"
 		/>
-		<div class="absolute inset-0 bg-gradient-to-b from-primary-500/40 to-stone-900"></div>
+		<div class="absolute inset-0 bg-gradient-to-b from-primary-500/40 to-black"></div>
 		<div class="absolute flex h-full w-full items-center justify-center">
 			<img src={bracketLeft} alt="left bracket" class="block h-24 invert sm:h-32 md:h-48" />
 			<h1
@@ -71,7 +71,7 @@
 						href="/login"
 						class="block w-1/2 rounded border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
 					>
-						<button type="button">Login</button>
+						<button type="button">Log in</button>
 					</a>
 					<a
 						href="/create-account"

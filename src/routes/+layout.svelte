@@ -13,7 +13,6 @@
 	import { storePopup } from '@skeletonlabs/skeleton'
 	import { afterNavigate } from '$app/navigation'
 	import { updateStores } from '$lib/utils'
-	import HowToPlayContent from '$lib/components/HowToPlayContent.svelte'
 	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
@@ -30,7 +29,6 @@
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
 	const modalRegistry: Record<string, ModalComponent> = {
-		howToPlayContent: { ref: HowToPlayContent },
 		selectUsers: { ref: SelectUsers }
 	}
 

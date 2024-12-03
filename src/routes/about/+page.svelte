@@ -1,15 +1,16 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte'
-	import { drawNavUrl } from '$lib/store'
+	import { currentUsername, drawNavUrl, isAuth } from '$lib/store'
+	import { rankingDescriptions } from '$lib/data'
 
 	const scoreFormatting = 'font-bold bg-green-400 rounded-full w-8 mx-auto shadow'
 </script>
 
 <Header />
 <main class="bg-stone-100">
-	<div class="mx-auto flex max-w-screen-lg flex-col gap-8 px-4">
+	<div class="mx-auto flex max-w-screen-lg flex-col gap-8 px-4 pb-8">
 		<section>
-			<h1 class="mb-4 text-4xl font-bold md:text-7xl">About Racquet Rivals</h1>
+			<h1 class="mb-4 text-5xl font-bold md:text-7xl">About Racquet Rivals</h1>
 		</section>
 		<section>
 			<p class="text-2xl">
@@ -23,7 +24,6 @@
 		</section>
 		<section>
 			<h2 class="mb-4 text-4xl font-bold">How To Play</h2>
-			<p class="text-2xl"></p>
 			<ol class="flex list-decimal flex-col gap-8 px-8 text-2xl">
 				<li>
 					Create an account. Choose a username, as well as an email address to receive
@@ -38,7 +38,7 @@
 				</li>
 				<li>
 					There will be a link to the draw in your email. Open the draw and make your predictions.
-					See other draws <a href={$drawNavUrl} class="underline">here</a>.
+					See other draws <a href={$drawNavUrl} class="text-blue-500 underline">here</a>.
 				</li>
 				<li>As matches are completed, you'll win points if your predictions are correct.</li>
 				<table class="mx-auto w-full max-w-screen-sm overflow-hidden rounded-xl text-center">
@@ -49,19 +49,19 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="h-12 bg-primary-50 font-semibold">
+						<tr class="h-12 bg-primary-200 font-semibold">
 							<td>Quarterfinals</td>
 							<td><div class={scoreFormatting}>1</div></td>
 						</tr>
-						<tr class="h-12 bg-primary-200 font-semibold">
+						<tr class="h-12 bg-primary-50 font-semibold">
 							<td>Semifinals</td>
 							<td><div class={scoreFormatting}>2</div></td>
 						</tr>
-						<tr class="h-12 bg-primary-50 font-semibold">
+						<tr class="h-12 bg-primary-200 font-semibold">
 							<td>Final</td>
 							<td><div class={scoreFormatting}>4</div></td>
 						</tr>
-						<tr class="h-12 bg-primary-200 font-semibold">
+						<tr class="h-12 bg-primary-50 font-semibold">
 							<td>Champion</td>
 							<td><div class={scoreFormatting}>8</div></td>
 						</tr>
@@ -75,11 +75,46 @@
 				<li>Good luck! 💪</li>
 			</ol>
 		</section>
-		<section>
-			<h2 class="mb-4 text-4xl font-bold">Stats</h2>
-		</section>
-		<section>
-			<h2 class="mb-4 text-4xl font-bold">Rankings</h2>
+		<section class="flex flex-col gap-4">
+			<h2 class="text-4xl font-bold">Your Profile</h2>
+			<p class="text-2xl">
+				You can find various insights into your performance on your
+				{#if $isAuth}
+					<a href={`/profile/${$currentUsername}`} class="text-blue-500 underline">profile</a>
+				{:else}
+					profile
+				{/if}
+				page.
+			</p>
+			<h3 class="text-3xl font-bold">Stats</h3>
+			<p class="text-2xl">
+				Your scores and predictions will be tallied in a few ways to display how well you're doing.
+				In addition, you'll be ranked against all other users for each category.
+			</p>
+			<table class="mx-auto w-full overflow-hidden rounded-xl text-center">
+				<thead class="h-12 bg-primary-700 text-2xl text-white">
+					<tr>
+						<th style="width:25%">Stat</th>
+						<th>Description</th>
+					</tr>
+				</thead>
+				<tbody class="text-xl [&>tr>td]:p-4">
+					<tr class="h-12 bg-primary-200">
+						<td class="font-bold">Overall Ranking</td>
+						<td>{rankingDescriptions.overall}</td>
+					</tr>
+					<tr class="h-12 bg-primary-50">
+						<td class="font-bold">Average Points</td>
+						<td>{rankingDescriptions.averagePoints}</td>
+					</tr>
+					<tr class="h-12 bg-primary-200">
+						<td class="font-bold">Prediction Accuracy</td>
+						<td>{rankingDescriptions.predictionAccuracy}</td>
+					</tr>
+				</tbody>
+			</table>
+			<h3 class="text-3xl font-bold">Results</h3>
+			<p class="text-2xl">You can view your past draws and see how you did in each one.</p>
 		</section>
 	</div>
 </main>

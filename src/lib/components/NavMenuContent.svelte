@@ -26,6 +26,10 @@
 
 <nav class="flex h-full w-full flex-col items-start gap-8 p-8">
 	{#if $isAuth}
+		<a href={$drawNavUrl} class="grid w-full grid-cols-4 items-center gap-4" onclick={closeDrawer}>
+			<img src={bracketLeft} alt="draws" width="24" class="justify-self-center" />
+			<p class="col-span-3 text-xl">Draws</p>
+		</a>
 		<a
 			href={`/profile/${$currentUsername}`}
 			class="grid w-full grid-cols-4 items-center gap-4"
@@ -34,16 +38,12 @@
 			<img src={user} alt="user" width="18" class="justify-self-center" />
 			<p class="col-span-3 text-xl">My Profile</p>
 		</a>
-		<a href={$drawNavUrl} class="grid w-full grid-cols-4 items-center gap-4" onclick={closeDrawer}>
-			<img src={bracketLeft} alt="draws" width="24" class="justify-self-center" />
-			<p class="col-span-3 text-xl">Draws</p>
-		</a>
 		<a href={`/rankings`} class="grid w-full grid-cols-4 items-center gap-4" onclick={closeDrawer}>
 			<img src={trophy} alt="rankings" width="24" class="justify-self-center" />
 			<p class="col-span-3 text-xl">Rankings</p>
 		</a>
-		<ShareLink />
 		{@render about()}
+		<ShareLink />
 		<LogoutForm>
 			<button
 				type="submit"
@@ -51,13 +51,13 @@
 				onclick={closeDrawer}
 			>
 				<img src={logout} alt="logout" width="24" class="justify-self-center" />
-				<p class="text-xl">Logout</p>
+				<p class="col-span-3 justify-self-start text-xl">Log out</p>
 			</button>
 		</LogoutForm>
 	{:else}
 		<a href="/login" class="grid w-full grid-cols-4 items-center gap-4" onclick={closeDrawer}>
 			<img src={login} alt="login" width="24" class="justify-self-center" />
-			<p class="col-span-3 text-xl">Login</p>
+			<p class="col-span-3 text-xl">Log in</p>
 		</a>
 		<a
 			href="/create-account"
