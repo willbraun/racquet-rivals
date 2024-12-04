@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fadeAndSlideIn } from '$lib/actions/fadeAndSlideIn'
 	import { isAuth, currentUsername, loginGoto } from '$lib/store'
 	import { getSlug, getTitle } from '$lib/utils'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
@@ -88,11 +89,11 @@
 			data.banner.next_tournament
 		]}"
 	>
-		<p class="text-4xl sm:text-7xl">{data.banner.next_tournament}</p>
-		<p class="text-2xl sm:text-4xl">{dateRange}</p>
+		<p class="text-4xl sm:text-7xl" use:fadeAndSlideIn>{data.banner.next_tournament}</p>
+		<p class="text-2xl sm:text-4xl" use:fadeAndSlideIn>{dateRange}</p>
 	</section>
 	<section class="mx-auto max-w-screen-sm px-4 sm:px-0">
-		<div class="mb-8 flex flex-col overflow-hidden rounded-xl shadow sm:mb-16">
+		<div class="mb-8 flex flex-col overflow-hidden rounded-xl shadow sm:mb-16" use:fadeAndSlideIn>
 			<h3 class="bg-primary-700 px-4 py-2 text-2xl font-bold text-white sm:py-4 sm:text-4xl">
 				Active Draws
 			</h3>
@@ -111,7 +112,7 @@
 				<p class="bg-primary-50 p-4 text-center text-3xl">No active draws</p>
 			{/if}
 		</div>
-		<div class="flex flex-col overflow-hidden rounded-xl shadow">
+		<div class="flex flex-col overflow-hidden rounded-xl shadow" use:fadeAndSlideIn>
 			<h3 class="bg-primary-700 px-4 py-2 text-2xl font-bold text-white sm:py-4 sm:text-4xl">
 				Completed Draws
 			</h3>

@@ -27,12 +27,17 @@ export default {
 				'5': 'repeat(5, 1fr)'
 			},
 			keyframes: {
+				'fade-and-slide-in': {
+					'0%': { opacity: '0', transform: 'translateX(-1rem)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
 				'pulse-green': {
 					'0%, 100%': {},
 					'50%': { backgroundColor: '#a7f3d0' }
 				}
 			},
 			animation: {
+				'fade-and-slide-in': 'fade-and-slide-in 400ms ease-out',
 				'pulse-green': 'pulse-green 3s infinite'
 			}
 		}

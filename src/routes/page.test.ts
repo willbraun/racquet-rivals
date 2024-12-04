@@ -6,6 +6,29 @@ import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
 import { currentUsername, isAuth } from '$lib/store'
 
+// Mock the Intersection Observer
+class IntersectionObserverMock {
+	constructor(
+		private callback: IntersectionObserverCallback,
+		private options?: IntersectionObserverInit
+	) {}
+
+	observe(target: Element) {
+		// No-op
+	}
+
+	unobserve(target: Element) {
+		// No-op
+	}
+
+	disconnect() {
+		// No-op
+	}
+}
+
+// Mock the global IntersectionObserver
+global.IntersectionObserver = IntersectionObserverMock as any
+
 const data: HomePageData = {
 	active: {
 		items: [

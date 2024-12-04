@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { currentUsername, isAuth } from '$lib/store'
+
 	import '../app.postcss'
 	import {
 		Modal,
@@ -26,17 +28,17 @@
 
 	let { data, children }: Props = $props()
 
-	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
-
+	initializeStores()
+	const drawerStore = getDrawerStore()
 	const modalRegistry: Record<string, ModalComponent> = {
 		selectUsers: { ref: SelectUsers }
 	}
-
-	initializeStores()
-	const drawerStore = getDrawerStore()
+	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 
+	isAuth.set(data.pb_auth_valid)
+	currentUsername.set(data.pb_auth_username)
 	afterNavigate(() => updateStores(pb, data))
 </script>
 
