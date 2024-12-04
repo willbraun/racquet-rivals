@@ -43,16 +43,9 @@
 				<AccordionItem>
 					{#snippet summary()}
 						<div class="grid grid-cols-2 items-center gap-4">
-							<a href="/rankings">
-								<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
-									<span
-										>Overall Rank <img
-											src={trophy}
-											alt="trophy"
-											class="inline w-4 md:ml-2 md:w-8"
-										/></span
-									>
-								</h2>
+							<a href="/rankings" class="flex flex-wrap items-center md:hover:underline">
+								<h2 class="font-bold md:text-3xl">Overall Rank</h2>
+								<img src={trophy} alt="trophy" class="ml-2 inline w-4 md:w-8" />
 							</a>
 							<p class="self-end md:text-2xl">Ranking Points</p>
 							<p class="text-2xl font-semibold md:text-7xl">{formatRank(data.overallRank.rank)}</p>
@@ -76,13 +69,12 @@
 				<AccordionItem>
 					{#snippet summary()}
 						<div class="grid grid-cols-4 items-center gap-4">
-							<a href="/rankings/average-points" class="col-span-2">
-								<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
-									<span
-										>Average Points
-										<img src={trophy} alt="trophy" class="inline w-4 md:ml-2 md:w-8" />
-									</span>
-								</h2>
+							<a
+								href="/rankings/average-points"
+								class="col-span-2 flex flex-wrap items-center md:hover:underline"
+							>
+								<h2 class="font-bold md:text-3xl">Average Points</h2>
+								<img src={trophy} alt="trophy" class="ml-2 inline w-4 md:w-8" />
 							</a>
 							<p class="self-end md:text-2xl">Rank</p>
 							<p class="self-end md:text-2xl">Percentile</p>
@@ -112,16 +104,12 @@
 				<AccordionItem>
 					{#snippet summary()}
 						<div class=" grid grid-cols-4 items-center items-center gap-4">
-							<a href="/rankings/prediction-accuracy" class="col-span-2">
-								<h2 class="flex flex-wrap items-center font-bold md:text-3xl md:hover:underline">
-									<span
-										>Prediction Accuracy <img
-											src={trophy}
-											alt="trophy"
-											class="inline w-4 md:ml-2 md:w-8"
-										/></span
-									>
-								</h2>
+							<a
+								href="/rankings/prediction-accuracy"
+								class="col-span-2 flex flex-wrap items-center md:hover:underline"
+							>
+								<h2 class="font-bold md:text-3xl">Prediction Accuracy</h2>
+								<img src={trophy} alt="trophy" class="ml-2 inline w-4 md:w-8" />
 							</a>
 							<p class="self-end md:text-2xl">Rank</p>
 							<p class="self-end md:text-2xl">Percentile</p>
