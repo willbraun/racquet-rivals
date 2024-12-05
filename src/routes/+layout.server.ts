@@ -3,6 +3,8 @@ import { fetchJson } from '$lib/server/utils.js'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 
 export async function load({ locals }) {
+	// locals.pb.authStore is updated on each request via hooks.server.ts
+
 	const url = PUBLIC_POCKETBASE_URL
 	const token = locals.pb.authStore.token
 

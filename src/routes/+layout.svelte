@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { currentUsername, isAuth } from '$lib/store'
-
+	import { get } from 'svelte/store'
+	import { currentUsername, drawNavUrl, isAuth } from '$lib/store'
 	import '../app.postcss'
 	import {
 		Modal,
@@ -14,12 +14,12 @@
 	import Pocketbase from 'pocketbase'
 	import { storePopup } from '@skeletonlabs/skeleton'
 	import { afterNavigate } from '$app/navigation'
-	import { updateStores } from '$lib/utils'
+	import { getSlug } from '$lib/utils'
 	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import type { RootLayoutData } from '$lib/types'
-	import type { Snippet } from 'svelte'
+	import { type Snippet } from 'svelte'
 
 	interface Props {
 		data: RootLayoutData
@@ -37,9 +37,27 @@
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 
+	// initialize stores with server data
 	isAuth.set(data.pb_auth_valid)
 	currentUsername.set(data.pb_auth_username)
-	afterNavigate(() => updateStores(pb, data))
+
+	// update stores
+	// - once client is availble
+	// - after redirect from successful login or logout
+	afterNavigate(() => {
+		if (data.pb_auth_valid) {
+			pb.authStore.loadFromCookie(data.pb_auth_cookie)
+		} else {
+			pb.authStore.clear()
+		}
+		isAuth.set(pb.authStore.isValid)
+		currentUsername.set(data.pb_auth_username)
+
+		if (get(drawNavUrl) === '') {
+			const url = `/draw/${getSlug(data.defaultDraw)}`
+			drawNavUrl.set(url)
+		}
+	})
 </script>
 
 <Modal components={modalRegistry} />

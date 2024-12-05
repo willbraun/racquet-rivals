@@ -1,8 +1,11 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import PocketBase from 'pocketbase'
 
+// This hook is executed on every request to the SvelteKit server (every page navigation).
+// It refreshes the user's auth and sends back the updated auth cookie to the client.
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
+	// create SvelteKit local representing pocketbase client
 	event.locals.pb = new PocketBase(PUBLIC_POCKETBASE_URL)
 
 	// load the store data from the request cookie string
@@ -16,6 +19,7 @@ export async function handle({ event, resolve }) {
 		event.locals.pb.authStore.clear()
 	}
 
+	// pass the request
 	const response = await resolve(event)
 
 	// send back the default 'pb_auth' cookie to the client with the latest store state

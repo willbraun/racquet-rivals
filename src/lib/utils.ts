@@ -43,22 +43,6 @@ const capitalize = (str: string) => {
 	return str[0].toUpperCase() + str.slice(1).toLowerCase()
 }
 
-export const updateStores = (pb: Client, data: RootLayoutData) => {
-	if (data.pb_auth_valid) {
-		pb.authStore.loadFromCookie(data.pb_auth_cookie)
-	} else {
-		pb.authStore.clear()
-	}
-	isAuth.set(pb.authStore.isValid)
-	currentUsername.set(data.pb_auth_username)
-
-	if (get(drawNavUrl) === '') {
-		const url = `/draw/${getSlug(data.defaultDraw)}`
-		console.log('setting', url)
-		drawNavUrl.set(url)
-	}
-}
-
 export const makeSetType = <T>() => {
 	return (result: object): T => {
 		return result as T
