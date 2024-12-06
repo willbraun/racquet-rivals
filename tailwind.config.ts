@@ -15,6 +15,9 @@ export default {
 	safelist: [mainColor, ...selectColors],
 	theme: {
 		extend: {
+			fontFamily: {
+				PoetsenOne: ['PoetsenOne-Regular, sans-serif']
+			},
 			colors: {
 				'pure-red': '#ff0000',
 				'stone-250': '#dedcda'

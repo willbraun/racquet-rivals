@@ -217,7 +217,7 @@
 
 <Header color="bg-primary-50">
 	<select
-		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 text-lg font-bold hover:bg-primary-200 md:text-2xl"
+		class="font-PoetsenOne select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 md:text-2xl md:hover:bg-primary-200"
 		onchange={(e) => goto(e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
@@ -271,7 +271,7 @@
 					</button>
 				{/each}
 				<button
-					class="chip flex h-6 justify-center rounded-full border border-dashed border-black hover:bg-primary-100"
+					class="chip flex h-6 justify-center rounded-full border border-dashed border-black md:hover:bg-primary-100"
 					onclick={() => modalStore.trigger(modal)}
 				>
 					<img src={edit} alt="edit icon" width="16" class="mb-0.5 ml-0.5" />
@@ -312,7 +312,7 @@
 					<div class={`col-span-2 ${rowStyle}`}>
 						<button
 							type="button"
-							class={`chip rounded-full text-lg ${selectedUser ? `shadow ${selectedUser.color}` : 'hover:underline'}`}
+							class={`chip rounded-full text-lg ${selectedUser ? `shadow ${selectedUser.color}` : 'md:hover:underline'}`}
 							onclick={() => goto(`/profile/${result.username}`)}
 						>
 							{result.username}

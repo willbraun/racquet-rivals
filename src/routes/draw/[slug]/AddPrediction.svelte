@@ -53,7 +53,7 @@
 
 <button
 	type="button"
-	class={`${!prediction && 'chip h-6 rounded-full bg-blue-200 '}${!prediction && predictionsAllowed && 'border border-dashed border-black '}${predictionsAllowed && 'hover:brightness-110 '}${!predictionsAllowed && 'pointer-events-none '}${loading && 'brightness-90'}`}
+	class={`${!prediction && 'chip h-6 rounded-full bg-blue-200 '}${!prediction && predictionsAllowed && 'border border-dashed border-black '}${predictionsAllowed && 'md:hover:brightness-110 '}${!predictionsAllowed && 'pointer-events-none '}${loading && 'brightness-90'}`}
 	disabled={!predictionsAllowed}
 	use:popup={{
 		event: 'click',
@@ -114,7 +114,7 @@
 		<div class="flex flex-col overflow-hidden rounded">
 			<button
 				type="submit"
-				class="whitespace-nowrap border-b-1 border-surface-500 px-4 py-2 hover:bg-surface-400 {!player1 &&
+				class="whitespace-nowrap border-b-1 border-surface-500 px-4 py-2 md:hover:bg-surface-400 {!player1 &&
 					'pointer-events-none italic'}"
 				disabled={!player1 || !predictionsAllowed || loading}
 				onclick={() => (predictionValue = player1)}
@@ -125,7 +125,7 @@
 			</button>
 			<button
 				type="submit"
-				class="whitespace-nowrap px-4 py-2 hover:bg-surface-400 {!player2 &&
+				class="whitespace-nowrap px-4 py-2 md:hover:bg-surface-400 {!player2 &&
 					'pointer-events-none italic'}"
 				disabled={!player2 || !predictionsAllowed || loading}
 				onclick={() => (predictionValue = player2)}

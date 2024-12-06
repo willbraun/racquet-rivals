@@ -10,7 +10,7 @@
 <main class="bg-stone-100">
 	<div class="mx-auto flex max-w-screen-lg flex-col gap-8 px-4 pb-8">
 		<section>
-			<h1 class="mb-4 text-5xl font-bold md:text-7xl">About Racquet Rivals</h1>
+			<h1 class="text-4xl font-bold md:text-7xl">About Racquet Rivals</h1>
 		</section>
 		<section>
 			<p class="text-2xl">
@@ -98,7 +98,7 @@
 						<th>Description</th>
 					</tr>
 				</thead>
-				<tbody class="text-xl [&>tr>td]:p-4">
+				<tbody class=" [&>tr>td]:p-4">
 					<tr class="h-12 bg-primary-200">
 						<td class="font-bold">Overall Ranking</td>
 						<td>{rankingDescriptions.overall}</td>
