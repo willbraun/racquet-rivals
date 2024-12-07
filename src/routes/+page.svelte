@@ -100,7 +100,7 @@
 			<p class="bg-primary-700 px-4 py-2 text-2xl font-bold text-white sm:py-4 sm:text-4xl">
 				Active Draws
 			</p>
-			{#if data.active.totalItems > 0}
+			{#if data.active.totalItems > 2}
 				{#each data.active.items as draw, index}
 					<a
 						href={`/draw/${getSlug(draw)}`}
@@ -112,7 +112,7 @@
 					</a>
 				{/each}
 			{:else}
-				<p class="bg-primary-50 p-4 text-center text-3xl">No active draws</p>
+				<p class="bg-primary-50 p-4 text-center md:text-3xl">No active draws</p>
 			{/if}
 		</div>
 		<div class="flex flex-col overflow-hidden rounded-xl shadow" use:fadeAndSlideIn>
