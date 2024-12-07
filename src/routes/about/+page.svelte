@@ -98,7 +98,7 @@
 						<th>Description</th>
 					</tr>
 				</thead>
-				<tbody class=" [&>tr>td]:p-4">
+				<tbody class="md:text-xl [&>tr>td]:p-4">
 					<tr class="h-12 bg-primary-200">
 						<td class="font-bold">Overall Ranking</td>
 						<td>{rankingDescriptions.overall}</td>

@@ -38,19 +38,22 @@
 <Header twClass="absolute z-10" color="transparent" />
 <main class="w-full bg-stone-100 pb-8 sm:pb-16">
 	<section class="relative h-screen w-full overflow-hidden">
+		<!-- Photo credit to Shep McAllister on Unsplash - https://unsplash.com/photos/two-person-playing-tennis-J1j3cImjmgE -->
 		<img
 			src="/src/lib/images/wimbledon.jpg"
 			alt="Wimbledon"
-			class="absolute inset-0 h-full w-full object-cover object-bottom"
+			class="absolute inset-0 h-full w-full object-cover"
 		/>
 		<div class="absolute inset-0 bg-gradient-to-b from-primary-500/40 to-black"></div>
 		<div class="absolute flex h-3/4 w-full items-center justify-center">
-			<img src={bracketLeft} alt="left bracket" class="block h-24 invert sm:h-32 md:h-48" />
-			<h1 class="w-1/2 text-center text-5xl text-white md:text-9xl">Racquet Rivals</h1>
+			<img src={bracketLeft} alt="left bracket" class="block h-24 invert sm:h-32 md:h-48 lg:h-64" />
+			<h1 class="w-1/2 text-center text-5xl text-white md:text-7xl lg:text-9xl">
+				Racquet<br />Rivals
+			</h1>
 			<img
 				src={bracketLeft}
 				alt="right bracket"
-				class="block h-24 rotate-180 invert sm:h-32 md:h-48"
+				class="block h-24 rotate-180 invert sm:h-32 md:h-48 lg:h-64"
 			/>
 		</div>
 		<div class="absolute bottom-32 left-1/2 w-full -translate-x-1/2 px-4">

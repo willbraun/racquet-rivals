@@ -217,7 +217,7 @@
 
 <Header color="bg-primary-50">
 	<select
-		class="font-PoetsenOne select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 md:text-2xl md:hover:bg-primary-200"
+		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 font-PoetsenOne text-xl md:text-2xl md:hover:bg-primary-200"
 		onchange={(e) => goto(e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
