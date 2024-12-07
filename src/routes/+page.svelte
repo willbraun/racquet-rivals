@@ -7,6 +7,7 @@
 	import { type HomePageData, TournamentName } from '$lib/types'
 	import { format } from 'date-fns'
 	import Header from '$lib/components/Header.svelte'
+	import wimbledon from '$lib/images/wimbledon.jpg'
 	import arrow from '$lib/images/icons/arrow-down-solid.svg'
 
 	interface Props {
@@ -39,11 +40,7 @@
 <main class="w-full bg-stone-100 pb-8 sm:pb-16">
 	<section class="relative h-screen w-full overflow-hidden">
 		<!-- Photo credit to Shep McAllister on Unsplash - https://unsplash.com/photos/two-person-playing-tennis-J1j3cImjmgE -->
-		<img
-			src="/images/wimbledon.jpg"
-			alt="Wimbledon"
-			class="absolute inset-0 h-full w-full object-cover"
-		/>
+		<img src={wimbledon} alt="Wimbledon" class="absolute inset-0 h-full w-full object-cover" />
 		<div class="absolute inset-0 bg-gradient-to-b from-primary-500/40 to-black"></div>
 		<div class="absolute flex h-3/4 w-full items-center justify-center">
 			<img src={bracketLeft} alt="left bracket" class="block h-24 invert sm:h-32 md:h-48 lg:h-64" />
