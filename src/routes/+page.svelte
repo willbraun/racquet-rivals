@@ -40,7 +40,7 @@
 	<section class="relative h-screen w-full overflow-hidden">
 		<!-- Photo credit to Shep McAllister on Unsplash - https://unsplash.com/photos/two-person-playing-tennis-J1j3cImjmgE -->
 		<img
-			src="/src/lib/images/wimbledon.jpg"
+			src="/images/wimbledon.jpg"
 			alt="Wimbledon"
 			class="absolute inset-0 h-full w-full object-cover"
 		/>
