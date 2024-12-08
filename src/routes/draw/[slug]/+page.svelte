@@ -32,7 +32,7 @@
 	let { data }: Props = $props()
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
-	const now = new Date()
+
 	const headerColor = 'bg-primary-50'
 	const pointsByRound = {
 		'Round of 16': 0,
@@ -139,13 +139,6 @@
 	let allRounds = $derived([...Array(fullDrawRounds).keys()].map((x) => x + 1))
 	let ourRounds = $derived(allRounds.slice(-5))
 	let slots = $derived(data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4))
-	let pcDate: Date = $derived(
-		data.draw.prediction_close ? new Date(data.draw.prediction_close) : new Date()
-	)
-	let predictionClose: string = $derived(
-		data.draw.prediction_close ? format(pcDate, 'M/d/yyyy h:mmaaa') : '12h after R16 is full'
-	)
-	let predictionsAllowed: boolean = $derived(data.draw.prediction_close ? now < pcDate : true)
 
 	let roundLabel = $derived(
 		(() => {
@@ -239,8 +232,8 @@
 		Active Round: <span class="font-bold">{roundLabel}</span>
 	</div>
 	<div class="col-span-4 text-center text-black sm:col-span-1">
-		{predictionsAllowed ? 'Predictions open until: ' : 'Predictions closed: '}<span
-			class="font-bold">{predictionClose}</span
+		{data.predictionsAllowed ? 'Predictions open until: ' : 'Predictions closed: '}<span
+			class="font-bold">{data.predictionCloseFormatted}</span
 		>
 	</div>
 	{#if $isAuth}
@@ -419,7 +412,7 @@
 											{players}
 											prediction={currentUserPrediction}
 											{getColor}
-											{predictionsAllowed}
+											predictionsAllowed={data.predictionsAllowed}
 										/>
 										{#each selectedUserPredictions as prediction}
 											<ViewPrediction {prediction} {getColor} />
