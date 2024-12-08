@@ -136,12 +136,15 @@
 	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
 
 	// dates handled on the client side to display the correct time for the user's timezone
-	const now = new Date()
-	const predictionCloseFormatted = data.draw.prediction_close
-		? format(data.draw.prediction_close, 'MMM d, yyyy h:mmaaa')
-		: '12h after R16 is full'
-	const predictionsAllowed =
+	let now = $derived(new Date())
+	let predictionCloseFormatted = $derived(
+		data.draw.prediction_close
+			? format(data.draw.prediction_close, 'MMM d, yyyy h:mmaaa')
+			: '12h after R16 is full'
+	)
+	let predictionsAllowed = $derived(
 		!data.draw.prediction_close || now < new Date(data.draw.prediction_close)
+	)
 
 	let userIds = $derived(users.map((user) => user.id))
 	let fullDrawRounds = $derived(Math.log2(data.draw.size) + 1)
