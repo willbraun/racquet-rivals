@@ -305,10 +305,12 @@
 					<div class={`col-span-2 ${rowStyle}`}>
 						<button
 							type="button"
-							class={`chip rounded-full text-lg ${selectedUser ? `shadow ${selectedUser.color}` : 'md:hover:underline'}`}
+							class={`rounded-full px-3 py-1 ${selectedUser ? `shadow ${selectedUser.color} md:hover:brightness-105` : 'md:hover:underline'}`}
 							onclick={() => goto(`/profile/${result.username}`)}
 						>
-							{result.username}
+							<p class="break-all text-lg">
+								{result.username}
+							</p>
 						</button>
 					</div>
 					<div class={rowStyle}>
@@ -322,7 +324,7 @@
 						{:else if combinedSelectedUsers.find((u) => u.id === result.user_id)}
 							<button
 								onclick={() => removeUser(result.user_id)}
-								class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 sm:h-fit"
+								class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 sm:h-fit md:hover:brightness-105"
 							>
 								<p class="hidden sm:block">Remove</p>
 								<img src={x} alt="plus icon" width="12" />
@@ -335,7 +337,7 @@
 							}}
 							<button
 								onclick={() => addUser(newUser)}
-								class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 sm:h-fit ${
+								class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 sm:h-fit md:hover:brightness-105 ${
 									combinedSelectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
 								}`}
 								disabled={combinedSelectedUsers.length >= 5}

@@ -53,7 +53,7 @@
 
 <button
 	type="button"
-	class={`${!prediction && 'chip h-6 rounded-full bg-blue-200 '}${!prediction && predictionsAllowed && 'border border-dashed border-black '}${predictionsAllowed && 'md:hover:brightness-110 '}${!predictionsAllowed && 'pointer-events-none '}${loading && 'brightness-90'}`}
+	class={`${!prediction && 'chip h-6 rounded-full bg-blue-200 '}${!prediction && predictionsAllowed && 'border border-dashed border-black '}${predictionsAllowed && 'md:hover:brightness-105 '}${!predictionsAllowed && 'pointer-events-none '}${loading && 'brightness-90'}`}
 	disabled={!predictionsAllowed}
 	use:popup={{
 		event: 'click',
