@@ -24,6 +24,7 @@
 	import x from '$lib/images/icons/x.svg'
 	import Rank from '$lib/components/Rank.svelte'
 	import Header from '$lib/components/Header.svelte'
+	import { draw } from 'svelte/transition'
 
 	interface Props {
 		data: DrawPageData
@@ -134,6 +135,14 @@
 	)
 	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
 
+	// dates handled on the client side to display the correct time for the user's timezone
+	const now = new Date()
+	const predictionCloseFormatted = data.draw.prediction_close
+		? format(data.draw.prediction_close, 'MMM d, yyyy h:mmaaa')
+		: '12h after R16 is full'
+	const predictionsAllowed =
+		!data.draw.prediction_close || now < new Date(data.draw.prediction_close)
+
 	let userIds = $derived(users.map((user) => user.id))
 	let fullDrawRounds = $derived(Math.log2(data.draw.size) + 1)
 	let allRounds = $derived([...Array(fullDrawRounds).keys()].map((x) => x + 1))
@@ -227,62 +236,71 @@
 		{/each}
 	</select>
 </Header>
-<section class="grid grid-cols-4 gap-2 px-4 pb-4 {headerColor} [&>*]:text-lg">
-	<div class="col-span-4 text-center text-black sm:col-span-1">
-		Active Round: <span class="font-bold">{roundLabel}</span>
-	</div>
-	<div class="col-span-4 text-center text-black sm:col-span-1">
-		{data.predictionsAllowed ? 'Predictions open until: ' : 'Predictions closed: '}<span
-			class="font-bold">{data.predictionCloseFormatted}</span
+<section class="grid grid-cols-4 items-start gap-2 px-4 pb-4 {headerColor} [&>*]:text-lg">
+	<div class="col-span-4 text-center md:col-span-1 md:text-start">
+		Dates: <span class="font-bold"
+			>{format(data.draw.start_date, 'MMM d, yyyy')} - {format(
+				data.draw.end_date,
+				'MMM d, yyyy'
+			)}</span
 		>
+	</div>
+	<div class="col-span-4 text-center text-black md:col-span-1 md:text-start">
+		{predictionsAllowed ? 'Predictions open until: ' : 'Predictions closed: '}<span
+			class="font-bold">{predictionCloseFormatted}</span
+		>
+	</div>
+	<div class="col-span-4 text-center text-black md:col-span-1">
+		Active Round: <span class="font-bold">{roundLabel}</span>
 	</div>
 	{#if $isAuth}
 		<div
-			class="col-span-4 flex flex-col items-center justify-center gap-2 sm:col-span-2 sm:flex-row sm:justify-between"
+			class="col-span-4 mx-auto flex w-fit overflow-hidden rounded-md md:col-span-1"
+			data-testid="LeaderboardToggle"
 		>
-			<div class="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-				<p>Users:</p>
-				{#each users as user}
-					<button
-						type="button"
-						class="chip relative h-6 rounded-full text-black {user.color} shadow"
-						onclick={() => goto(`/profile/${user.username}`)}
-						data-testid={`User_${user.username}`}
-					>
-						<p>{user.username}</p>
-						<div
-							class="badge-icon absolute -right-1.5 -top-1.5 z-10 h-4 w-fit rounded-full bg-green-400 px-1 text-sm"
-							data-testid={`UserPoints_${user.username}`}
-						>
-							<p>
-								{combinedPredictions
-									.filter((p) => p.user_id === user.id)
-									.map((p) => p.points)
-									.reduce((a, b) => a + b, 0)}
-							</p>
-						</div>
-					</button>
-				{/each}
-				<button
-					class="chip flex h-6 justify-center rounded-full border border-dashed border-black md:hover:bg-primary-100"
-					onclick={() => modalStore.trigger(modal)}
-				>
-					<img src={edit} alt="edit icon" width="16" class="mb-0.5 ml-0.5" />
-				</button>
-			</div>
-			<div class="flex min-w-fit overflow-hidden rounded-md" data-testid="LeaderboardToggle">
-				<button
-					class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-300 md:hover:brightness-105' : 'bg-primary-500 text-white'}`}
-					onclick={() => toggleLeaderboard(false)}>Draw</button
-				>
-				<button
-					class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300 md:hover:brightness-105'}`}
-					onclick={() => toggleLeaderboard(true)}>Leaderboard</button
-				>
-			</div>
+			<button
+				class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-300 md:hover:brightness-105' : 'bg-primary-500 text-white'}`}
+				onclick={() => toggleLeaderboard(false)}>Draw</button
+			>
+			<button
+				class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300 md:hover:brightness-105'}`}
+				onclick={() => toggleLeaderboard(true)}>Leaderboard</button
+			>
 		</div>
 	{:else}
-		<p class="col-span-4 text-center italic sm:col-span-2">Log in to play!</p>
+		<p class="col-span-4 text-center italic md:col-span-1">Log in to play!</p>
+	{/if}
+	{#if $isAuth}
+		<div class="col-span-4 mt-1 flex flex-wrap items-center justify-center gap-2 md:justify-start">
+			<p>Users:</p>
+			{#each users as user}
+				<button
+					type="button"
+					class="chip relative h-6 rounded-full text-black {user.color} shadow"
+					onclick={() => goto(`/profile/${user.username}`)}
+					data-testid={`User_${user.username}`}
+				>
+					<p>{user.username}</p>
+					<div
+						class="badge-icon absolute -right-1.5 -top-1.5 z-10 h-4 w-fit rounded-full bg-green-400 px-1 text-sm"
+						data-testid={`UserPoints_${user.username}`}
+					>
+						<p>
+							{combinedPredictions
+								.filter((p) => p.user_id === user.id)
+								.map((p) => p.points)
+								.reduce((a, b) => a + b, 0)}
+						</p>
+					</div>
+				</button>
+			{/each}
+			<button
+				class="chip flex h-6 justify-center rounded-full border border-dashed border-black md:hover:bg-primary-100"
+				onclick={() => modalStore.trigger(modal)}
+			>
+				<img src={edit} alt="edit icon" width="16" class="mb-0.5 ml-0.5" />
+			</button>
+		</div>
 	{/if}
 </section>
 <main>
@@ -324,9 +342,9 @@
 						{:else if combinedSelectedUsers.find((u) => u.id === result.user_id)}
 							<button
 								onclick={() => removeUser(result.user_id)}
-								class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 sm:h-fit md:hover:brightness-105"
+								class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 md:h-fit md:hover:brightness-105"
 							>
-								<p class="hidden sm:block">Remove</p>
+								<p class="hidden md:block">Remove</p>
 								<img src={x} alt="plus icon" width="12" />
 							</button>
 						{:else}
@@ -337,12 +355,12 @@
 							}}
 							<button
 								onclick={() => addUser(newUser)}
-								class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 sm:h-fit md:hover:brightness-105 ${
+								class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 md:h-fit md:hover:brightness-105 ${
 									combinedSelectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
 								}`}
 								disabled={combinedSelectedUsers.length >= 5}
 							>
-								<p class="hidden sm:block">Add</p>
+								<p class="hidden md:block">Add</p>
 								<img src={plus} alt="plus icon" width="12" />
 							</button>
 						{/if}
@@ -414,7 +432,7 @@
 											{players}
 											prediction={currentUserPrediction}
 											{getColor}
-											predictionsAllowed={data.predictionsAllowed}
+											{predictionsAllowed}
 										/>
 										{#each selectedUserPredictions as prediction}
 											<ViewPrediction {prediction} {getColor} />

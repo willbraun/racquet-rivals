@@ -363,7 +363,7 @@ describe('Draw page component', () => {
 		})
 
 		expect(screen.getByText('Predictions closed:')).toHaveTextContent(
-			'Predictions closed: 1/28/2024 12:32am' // America/New_York
+			'Predictions closed: Jan 28, 2024 12:32am' // America/New_York
 		)
 		expect(screen.queryByText('Predictions open until:')).not.toBeInTheDocument()
 	})

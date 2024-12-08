@@ -69,13 +69,6 @@ export async function load({ fetch, params, locals, cookies }) {
 	const allUsers = [currentUser, ...cookieSelectedUsers]
 	const predictionData = await getPredictions(id, allUsers, locals.pb.authStore.token)
 
-	const now = new Date()
-	const predictionCloseDate = draw.prediction_close ? new Date(draw.prediction_close) : new Date()
-	const predictionCloseFormatted = draw.prediction_close
-		? format(predictionCloseDate, 'M/d/yyyy h:mmaaa')
-		: '12h after R16 is full'
-	const predictionsAllowed = !draw.prediction_close || now < predictionCloseDate
-
 	return {
 		active,
 		completed,
@@ -83,8 +76,6 @@ export async function load({ fetch, params, locals, cookies }) {
 		slots,
 		drawResults,
 		predictions: predictionData,
-		predictionCloseFormatted,
-		predictionsAllowed,
 		currentUser: currentUser,
 		cookieSelectedUsers: cookieSelectedUsers,
 		isLeaderboard: cookies.get('isLeaderboard')

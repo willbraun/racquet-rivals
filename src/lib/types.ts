@@ -223,8 +223,6 @@ export interface DrawPageData {
 	slots: PbListResponse<Slot>
 	drawResults: PbListResponse<DrawResult>
 	predictions: PbListResponse<Prediction>
-	predictionCloseFormatted: string
-	predictionsAllowed: boolean
 	cookieSelectedUsers: SelectedUser[]
 	currentUser: SelectedUser
 	isLeaderboard: string

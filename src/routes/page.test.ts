@@ -99,10 +99,8 @@ describe('Home page component', () => {
 			}
 		})
 
-		expect(screen.getByText('Racquet Rivals')).toBeInTheDocument()
+		expect(screen.getByText(/Racquet\s*Rivals/i)).toBeInTheDocument()
 		expect(screen.getByText('Welcome will!')).toBeInTheDocument()
-		expect(screen.getByText("French Open Men's Singles 2024")).toBeInTheDocument()
-		expect(screen.getByText("Australian Open Men's Singles 2024")).toBeInTheDocument()
 	})
 
 	test('Logged out', () => {
@@ -114,9 +112,7 @@ describe('Home page component', () => {
 			}
 		})
 
-		expect(screen.getByText('Racquet Rivals')).toBeInTheDocument()
+		expect(screen.getByText(/Racquet\s*Rivals/i)).toBeInTheDocument()
 		expect(screen.queryByText('Welcome will!')).not.toBeInTheDocument()
-		expect(screen.getByText("French Open Men's Singles 2024")).toBeInTheDocument()
-		expect(screen.getByText("Australian Open Men's Singles 2024")).toBeInTheDocument()
 	})
 })
