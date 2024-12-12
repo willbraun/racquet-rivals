@@ -67,13 +67,13 @@
 					<div class="flex w-full max-w-screen-sm justify-center gap-4">
 						<a
 							href="/login"
-							class="w-1/2 rounded border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 md:hover:scale-105"
+							class="w-1/2 rounded border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
 						>
 							<button type="button">Log in</button>
 						</a>
 						<a
 							href="/create-account"
-							class="w-1/2 rounded border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 md:hover:scale-105"
+							class="w-1/2 rounded border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
 						>
 							<button type="button">Sign up</button>
 						</a>
@@ -101,7 +101,7 @@
 				{#each data.active.items as draw, index}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 sm:p-4 sm:text-3xl md:hover:brightness-105`}
+						class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 sm:p-4 sm:text-3xl hover:brightness-105`}
 					>
 						<button type="button">
 							{getTitle(draw)}
@@ -119,7 +119,7 @@
 			{#each data.completed.items as draw, index}
 				<a
 					href={`/draw/${getSlug(draw)}`}
-					class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 sm:p-4 sm:text-3xl md:hover:brightness-105`}
+					class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 sm:p-4 sm:text-3xl hover:brightness-105`}
 				>
 					<button type="button">
 						{getTitle(draw)}

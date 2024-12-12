@@ -35,7 +35,7 @@
 <main class="bg-stone-100">
 	<div class="mx-auto max-w-screen-lg px-4">
 		<section class="mb-8">
-			<h1 class="mb-4 text-4xl font-bold md:text-7xl">{data.username}</h1>
+			<h1 class="mb-4 break-all text-4xl font-bold md:text-7xl">{data.username}</h1>
 			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM dd, yyyy')}</p>
 		</section>
 		<section class="mb-4 rounded-xl bg-stone-250 shadow md:mb-8 md:p-8">
@@ -43,7 +43,7 @@
 				<AccordionItem>
 					{#snippet summary()}
 						<div class="grid grid-cols-2 items-center gap-4">
-							<a href="/rankings" class="flex flex-wrap items-center md:hover:underline">
+							<a href="/rankings" class="flex flex-wrap items-center hover:underline">
 								<h2 class="font-bold md:text-3xl">Overall Rank</h2>
 								<img src={trophy} alt="trophy" class="ml-2 inline w-4 md:w-8" />
 							</a>
@@ -71,7 +71,7 @@
 						<div class="grid grid-cols-4 items-center gap-4">
 							<a
 								href="/rankings/average-points"
-								class="col-span-2 flex flex-wrap items-center md:hover:underline"
+								class="col-span-2 flex flex-wrap items-center hover:underline"
 							>
 								<h2 class="font-bold md:text-3xl">Average Points</h2>
 								<img src={trophy} alt="trophy" class="ml-2 inline w-4 md:w-8" />
@@ -106,7 +106,7 @@
 						<div class=" grid grid-cols-4 items-center items-center gap-4">
 							<a
 								href="/rankings/prediction-accuracy"
-								class="col-span-2 flex flex-wrap items-center md:hover:underline"
+								class="col-span-2 flex flex-wrap items-center hover:underline"
 							>
 								<h2 class="font-bold md:text-3xl">Prediction Accuracy</h2>
 								<img src={trophy} alt="trophy" class="ml-2 inline w-4 md:w-8" />
@@ -158,7 +158,7 @@
 						{@const status = getDrawStatus(item.draw_start_date, item.draw_end_date)}
 						{@const showCutoff = index === 7 && data.drawResults.items.length > 8}
 						<tr
-							class={`grid w-full grid-cols-8 items-center gap-4 p-2 md:p-4 md:hover:cursor-pointer md:hover:brightness-105 ${
+							class={`grid w-full grid-cols-8 items-center gap-4 p-2 hover:cursor-pointer hover:brightness-105 md:p-4 ${
 								index % 2 ? 'bg-primary-50' : 'bg-primary-200'
 							} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${showCutoff ? 'border-b-2 border-pure-red' : ''}`}
 							onclick={() => goto(`/draw/${getSlug(item)}`)}

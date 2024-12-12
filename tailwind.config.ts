@@ -13,6 +13,9 @@ export default {
 		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
 	safelist: [mainColor, ...selectColors],
+	future: {
+		hoverOnlyWhenSupported: true
+	},
 	theme: {
 		extend: {
 			fontFamily: {

@@ -94,7 +94,7 @@
 
 		<div class="flex flex-wrap gap-2">
 			<div
-				class="variant-filled chip pointer-events-none rounded-full text-black {mainColor} shadow"
+				class="variant-filled chip pointer-events-none break-all rounded-full text-black {mainColor} shadow"
 			>
 				<p>{$modalStore[0].meta.currentUsername}</p>
 			</div>

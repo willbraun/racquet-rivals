@@ -222,7 +222,7 @@
 
 <Header color="bg-primary-50">
 	<select
-		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 font-PoetsenOne text-xl md:text-2xl md:hover:bg-primary-200"
+		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 font-PoetsenOne text-xl hover:bg-primary-200 md:text-2xl"
 		onchange={(e) => goto(e.currentTarget.value)}
 	>
 		<option disabled>Active Draws</option>
@@ -262,11 +262,11 @@
 			data-testid="LeaderboardToggle"
 		>
 			<button
-				class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-300 md:hover:brightness-105' : 'bg-primary-500 text-white'}`}
+				class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-300 hover:brightness-105' : 'bg-primary-500 text-white'}`}
 				onclick={() => toggleLeaderboard(false)}>Draw</button
 			>
 			<button
-				class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300 md:hover:brightness-105'}`}
+				class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300 hover:brightness-105'}`}
 				onclick={() => toggleLeaderboard(true)}>Leaderboard</button
 			>
 		</div>
@@ -298,7 +298,7 @@
 				</button>
 			{/each}
 			<button
-				class="chip flex h-6 justify-center rounded-full border border-dashed border-black md:hover:bg-primary-100"
+				class="chip flex h-6 justify-center rounded-full border border-dashed border-black hover:bg-primary-100"
 				onclick={() => modalStore.trigger(modal)}
 			>
 				<img src={edit} alt="edit icon" width="16" class="mb-0.5 ml-0.5" />
@@ -326,7 +326,7 @@
 					<div class={`col-span-2 ${rowStyle}`}>
 						<button
 							type="button"
-							class={`rounded-full px-3 py-1 ${selectedUser ? `shadow ${selectedUser.color} md:hover:brightness-105` : 'md:hover:underline'}`}
+							class={`rounded-full px-3 py-1 ${selectedUser ? `shadow ${selectedUser.color} hover:brightness-105` : 'hover:underline'}`}
 							onclick={() => goto(`/profile/${result.username}`)}
 						>
 							<p class="break-all text-lg">
@@ -345,7 +345,7 @@
 						{:else if combinedSelectedUsers.find((u) => u.id === result.user_id)}
 							<button
 								onclick={() => removeUser(result.user_id)}
-								class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 md:h-fit md:hover:brightness-105"
+								class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 hover:brightness-105 md:h-fit"
 							>
 								<p class="hidden md:block">Remove</p>
 								<img src={x} alt="plus icon" width="12" />
@@ -358,7 +358,7 @@
 							}}
 							<button
 								onclick={() => addUser(newUser)}
-								class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 md:h-fit md:hover:brightness-105 ${
+								class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 hover:brightness-105 md:h-fit ${
 									combinedSelectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
 								}`}
 								disabled={combinedSelectedUsers.length >= 5}

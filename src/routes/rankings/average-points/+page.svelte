@@ -27,7 +27,7 @@
 	<tbody>
 		{#each data.items as item, index}
 			<tr
-				class={`grid h-16 grid-cols-4 items-center gap-2 px-2 text-start text-xl md:h-20 md:text-3xl md:hover:cursor-pointer md:hover:brightness-105 ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'}`}
+				class={`grid min-h-16 grid-cols-4 items-center gap-2 px-2 text-start text-xl hover:cursor-pointer hover:brightness-105 md:min-h-20 md:text-3xl ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'}`}
 				onclick={() => goto(`/profile/${item.username}`)}
 			>
 				<td
