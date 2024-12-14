@@ -1,4 +1,5 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
+import { SCRIPT_USERNAME } from '$env/static/private'
 import { fetchJson } from '$lib/server/utils.js'
 import type {
 	AveragePoints,
@@ -27,7 +28,7 @@ export async function load({ fetch, params, locals }) {
 	)
 	const user = userData.items[0]
 
-	if (!user || username === 'script_user') {
+	if (!user || username === SCRIPT_USERNAME) {
 		throw error(404, 'User not found')
 	}
 

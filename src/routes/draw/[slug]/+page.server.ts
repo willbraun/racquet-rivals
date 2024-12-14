@@ -14,6 +14,7 @@ import type {
 	Slot
 } from '$lib/types'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
+import { SCRIPT_USERNAME } from '$env/static/private'
 import { getPredictions } from '$lib/api.js'
 import { format } from 'date-fns'
 
@@ -91,6 +92,12 @@ export const actions: Actions = {
 		if (username === '') {
 			return fail(400, {
 				error: 'Please enter a username'
+			})
+		}
+
+		if (username === SCRIPT_USERNAME) {
+			return fail(404, {
+				error: 'Error: 404 - Username not found'
 			})
 		}
 
