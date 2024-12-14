@@ -9,6 +9,7 @@
 	import { predictionStore } from '$lib/store'
 	import { enhance } from '$app/forms'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
+
 	interface Props {
 		slot: Slot
 		roundIndex: number
@@ -37,10 +38,7 @@
 	let animation = $state(false)
 
 	let animate = () => {
-		animation = false
-		requestAnimationFrame(() => {
-			animation = true
-		})
+		animation = true
 	}
 
 	const displayPrediction = (str: string) => {
@@ -63,7 +61,8 @@
 	type="button"
 	class={`${!prediction && 'chip h-6 rounded-full bg-blue-200 '}${!prediction && predictionsAllowed && 'border border-dashed border-black '}${predictionsAllowed && 'hover:brightness-105 '}${!predictionsAllowed && 'pointer-events-none '}${loading && 'brightness-90'}`}
 	disabled={!predictionsAllowed}
-	class:animate-pulse={animation}
+	class:animate-pulse-tilt={animation}
+	onanimationend={() => (animation = false)}
 	use:popup={{
 		event: 'click',
 		target: `popupCombobox-${slot.id}`,
@@ -154,15 +153,4 @@
 		</div>
 		<FormError {error} />
 	</form>
-</div>
-
-<!-- Lines for the burst animation -->
-<div class="absolute top-4 flex items-center justify-center">
-	{#each [55, 90, 125, 235, 270, 305] as angle}
-		<div
-			class:animate-burst={animation}
-			class="absolute w-[3px] bg-blue-500"
-			style={`--rotate: ${angle}deg; --y-offset: ${predictionValue.length}px; animation-delay: 0.12s;`}
-		></div>
-	{/each}
 </div>
