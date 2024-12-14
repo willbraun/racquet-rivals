@@ -35,16 +35,42 @@ export default {
 			keyframes: {
 				'fade-and-slide-in': {
 					'0%': { opacity: '0', transform: 'translateX(-1rem)' },
-					'100%': { opacity: '1', transform: 'translateY(0)' }
+					'100%': { opacity: '1', transform: 'translateX(0)' }
 				},
 				'pulse-green': {
 					'0%, 100%': {},
 					'50%': { backgroundColor: '#a7f3d0' }
+				},
+				pulse: {
+					'0%, 100%': {},
+					'50%': {
+						scale: '0.85',
+						rotate: '-5deg'
+					}
+				},
+				burst: {
+					'0%': {
+						opacity: '1',
+						height: '0',
+						transform: 'rotate(var(--rotate)) translateY(calc(-18px - var(--y-offset)))'
+					},
+					'67%': {
+						opacity: '1',
+						height: '14px',
+						transform: 'rotate(var(--rotate)) translateY(calc(-50px - var(--y-offset)))'
+					},
+					'100%': {
+						opacity: '1',
+						height: '0',
+						transform: 'rotate(var(--rotate)) translateY(calc(-60px - var(--y-offset)))'
+					}
 				}
 			},
 			animation: {
 				'fade-and-slide-in': 'fade-and-slide-in 400ms ease-out',
-				'pulse-green': 'pulse-green 3s infinite'
+				'pulse-green': 'pulse-green 3s infinite',
+				pulse: 'pulse 0.3s',
+				burst: 'burst 0.5s'
 			}
 		}
 	},

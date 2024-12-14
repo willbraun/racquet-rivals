@@ -33,7 +33,15 @@
 
 	let loading = $state(false)
 	let error = $state('')
-	let predictionValue = $state('')
+	let predictionValue = $state(prediction?.name ?? '')
+	let animation = $state(false)
+
+	let animate = () => {
+		animation = false
+		requestAnimationFrame(() => {
+			animation = true
+		})
+	}
 
 	const displayPrediction = (str: string) => {
 		if (str) return str
@@ -55,6 +63,7 @@
 	type="button"
 	class={`${!prediction && 'chip h-6 rounded-full bg-blue-200 '}${!prediction && predictionsAllowed && 'border border-dashed border-black '}${predictionsAllowed && 'hover:brightness-105 '}${!predictionsAllowed && 'pointer-events-none '}${loading && 'brightness-90'}`}
 	disabled={!predictionsAllowed}
+	class:animate-pulse={animation}
 	use:popup={{
 		event: 'click',
 		target: `popupCombobox-${slot.id}`,
@@ -117,7 +126,11 @@
 				class="whitespace-nowrap border-b-1 border-surface-500 px-4 py-2 hover:bg-surface-400 {!player1 &&
 					'pointer-events-none italic'}"
 				disabled={!player1 || !predictionsAllowed || loading}
-				onclick={() => (predictionValue = player1)}
+				onclick={() => {
+					const old = predictionValue
+					predictionValue = player1
+					if (predictionValue !== old) animate()
+				}}
 			>
 				<span class="text-xl">
 					{displayPrediction(player1)}
@@ -128,7 +141,11 @@
 				class="whitespace-nowrap px-4 py-2 hover:bg-surface-400 {!player2 &&
 					'pointer-events-none italic'}"
 				disabled={!player2 || !predictionsAllowed || loading}
-				onclick={() => (predictionValue = player2)}
+				onclick={() => {
+					const old = predictionValue
+					predictionValue = player2
+					if (predictionValue !== old) animate()
+				}}
 			>
 				<span class="text-xl">
 					{displayPrediction(player2)}
@@ -137,4 +154,15 @@
 		</div>
 		<FormError {error} />
 	</form>
+</div>
+
+<!-- Lines for the burst animation -->
+<div class="absolute top-4 flex items-center justify-center">
+	{#each [55, 90, 125, 235, 270, 305] as angle}
+		<div
+			class:animate-burst={animation}
+			class="absolute w-[3px] bg-blue-500"
+			style={`--rotate: ${angle}deg; --y-offset: ${predictionValue.length}px; animation-delay: 0.12s;`}
+		></div>
+	{/each}
 </div>
