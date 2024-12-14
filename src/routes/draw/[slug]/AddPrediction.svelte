@@ -37,9 +37,8 @@
 	let predictionValue = $state(prediction?.name ?? '')
 	let animation = $state(false)
 
-	let animate = () => {
-		animation = true
-	}
+	const animate = () => (animation = true)
+	const stopAnimation = () => (animation = false)
 
 	const displayPrediction = (str: string) => {
 		if (str) return str
@@ -53,6 +52,13 @@
 		}
 	}
 
+	const selectPlayer = (player: string) => {
+		if (predictionValue !== player) {
+			animate()
+		}
+		predictionValue = player
+	}
+
 	const setTypeAddPredictionResult = makeSetType<AddPredictionResult>()
 	const setTypePrediction = makeSetType<Prediction>()
 </script>
@@ -62,7 +68,7 @@
 	class={`${!prediction && 'chip h-6 rounded-full bg-blue-200 '}${!prediction && predictionsAllowed && 'border border-dashed border-black '}${predictionsAllowed && 'hover:brightness-105 '}${!predictionsAllowed && 'pointer-events-none '}${loading && 'brightness-90'}`}
 	disabled={!predictionsAllowed}
 	class:animate-pulse-tilt={animation}
-	onanimationend={() => (animation = false)}
+	onanimationend={stopAnimation}
 	use:popup={{
 		event: 'click',
 		target: `popupCombobox-${slot.id}`,
@@ -125,11 +131,7 @@
 				class="whitespace-nowrap border-b-1 border-surface-500 px-4 py-2 hover:bg-surface-400 {!player1 &&
 					'pointer-events-none italic'}"
 				disabled={!player1 || !predictionsAllowed || loading}
-				onclick={() => {
-					const old = predictionValue
-					predictionValue = player1
-					if (predictionValue !== old) animate()
-				}}
+				onclick={() => selectPlayer(player1)}
 			>
 				<span class="text-xl">
 					{displayPrediction(player1)}
@@ -140,11 +142,7 @@
 				class="whitespace-nowrap px-4 py-2 hover:bg-surface-400 {!player2 &&
 					'pointer-events-none italic'}"
 				disabled={!player2 || !predictionsAllowed || loading}
-				onclick={() => {
-					const old = predictionValue
-					predictionValue = player2
-					if (predictionValue !== old) animate()
-				}}
+				onclick={() => selectPlayer(player2)}
 			>
 				<span class="text-xl">
 					{displayPrediction(player2)}
