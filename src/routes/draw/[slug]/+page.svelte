@@ -279,11 +279,11 @@
 			{#each users as user}
 				<button
 					type="button"
-					class="chip relative h-6 rounded-full text-black {user.color} shadow"
+					class="chip relative h-6 max-w-full rounded-full text-black {user.color} shadow"
 					onclick={() => goto(`/profile/${user.username}`)}
 					data-testid={`User_${user.username}`}
 				>
-					<p>{user.username}</p>
+					<p class="truncate text-ellipsis">{user.username}</p>
 					<div
 						class="badge-icon absolute -right-1.5 -top-1.5 z-10 h-4 w-fit rounded-full bg-green-400 px-1 text-sm"
 						data-testid={`UserPoints_${user.username}`}
@@ -324,9 +324,10 @@
 						<Rank rank={result.rank} containerStyle="w-10" textStyle="text-2xl font-extrabold" />
 					</div>
 					<div class={`col-span-2 ${rowStyle}`}>
+						<!-- rounded-3xl instead of full to handle multiline names -->
 						<button
 							type="button"
-							class={`rounded-full px-3 py-1 ${selectedUser ? `shadow ${selectedUser.color} hover:brightness-105` : 'hover:underline'}`}
+							class={`rounded-3xl px-3 py-1 ${selectedUser ? `shadow ${selectedUser.color} hover:brightness-105` : 'hover:underline'}`}
 							onclick={() => goto(`/profile/${result.username}`)}
 						>
 							<p class="break-all text-lg">

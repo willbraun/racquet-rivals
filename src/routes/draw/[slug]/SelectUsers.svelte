@@ -101,11 +101,11 @@
 			{#each selections as user}
 				<button
 					type="button"
-					class="variant-filled chip rounded-full text-black {user.color} shadow"
+					class="variant-filled chip max-w-full rounded-full text-black {user.color} shadow"
 					onclick={() => removeUser(user.id)}
 					transition:fade={{ duration: 100 }}
 				>
-					<p>{user.username}</p>
+					<p class="truncate text-ellipsis">{user.username}</p>
 					<img src={x} alt="close" width="12" />
 				</button>
 			{/each}
