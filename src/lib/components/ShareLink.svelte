@@ -21,6 +21,6 @@
 		data-testid="share-link-icon"
 	>
 		<img src={share} alt="share" width="24" class="justify-self-center" />
-		<p class="text-xl">Share</p>
+		<p class="col-span-3 justify-self-start text-xl">Share</p>
 	</button>
 {/if}

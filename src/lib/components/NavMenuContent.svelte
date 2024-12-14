@@ -17,31 +17,22 @@
 	}
 </script>
 
-{#snippet about()}
-	<a href="/about" class="grid w-full grid-cols-4 items-center gap-4" onclick={closeDrawer}>
-		<img src={infoIcon} alt="info" width="24" class="justify-self-center" />
-		<p class="col-span-3 text-xl">About</p>
+{#snippet menuLink(name: string, image: string, alt: string, imgWidth: number, url: string)}
+	<a href={url} class="grid w-full grid-cols-4 items-center gap-4" onclick={closeDrawer}>
+		<img src={image} {alt} width={imgWidth} class="justify-self-center" />
+		<p class="col-span-3 text-xl">{name}</p>
 	</a>
+{/snippet}
+
+{#snippet about()}
+	{@render menuLink('About', infoIcon, 'info', 24, '/about')}
 {/snippet}
 
 <nav class="flex h-full w-full flex-col items-start gap-8 p-8">
 	{#if $isAuth}
-		<a href={$drawNavUrl} class="grid w-full grid-cols-4 items-center gap-4" onclick={closeDrawer}>
-			<img src={bracketLeft} alt="draws" width="24" class="justify-self-center" />
-			<p class="col-span-3 text-xl">Draws</p>
-		</a>
-		<a
-			href={`/profile/${$currentUsername}`}
-			class="grid w-full grid-cols-4 items-center gap-4"
-			onclick={closeDrawer}
-		>
-			<img src={user} alt="user" width="18" class="justify-self-center" />
-			<p class="col-span-3 text-xl">My Profile</p>
-		</a>
-		<a href={`/rankings`} class="grid w-full grid-cols-4 items-center gap-4" onclick={closeDrawer}>
-			<img src={trophy} alt="rankings" width="24" class="justify-self-center" />
-			<p class="col-span-3 text-xl">Rankings</p>
-		</a>
+		{@render menuLink('Draws', bracketLeft, 'draws', 24, $drawNavUrl)}
+		{@render menuLink('My Profile', user, 'profile', 18, `/profile/${$currentUsername}`)}
+		{@render menuLink('Rankings', trophy, 'rankings', 24, '/rankings')}
 		{@render about()}
 		<ShareLink />
 		<LogoutForm>
@@ -55,18 +46,8 @@
 			</button>
 		</LogoutForm>
 	{:else}
-		<a href="/login" class="grid w-full grid-cols-4 items-center gap-4" onclick={closeDrawer}>
-			<img src={login} alt="login" width="24" class="justify-self-center" />
-			<p class="col-span-3 text-xl">Log in</p>
-		</a>
-		<a
-			href="/create-account"
-			class="grid w-full grid-cols-4 items-center gap-4"
-			onclick={closeDrawer}
-		>
-			<img src={signup} alt="sign up" width="24" class="justify-self-center" />
-			<p class="col-span-3 text-xl">Sign up</p>
-		</a>
+		{@render menuLink('Log in', login, 'login', 24, '/login')}
+		{@render menuLink('Sign up', signup, 'sign up', 24, '/create-account')}
 		<ShareLink />
 		{@render about()}
 	{/if}
