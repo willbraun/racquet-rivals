@@ -25,6 +25,7 @@
 	import Rank from '$lib/components/Rank.svelte'
 	import Header from '$lib/components/Header.svelte'
 	import { draw } from 'svelte/transition'
+	import { onMount } from 'svelte'
 
 	interface Props {
 		data: DrawPageData
@@ -43,7 +44,6 @@
 		Champion: 8
 	}
 
-	let isScrollListenerAdded: boolean = $state(false)
 	let roundHeader: HTMLElement | null = $state(null)
 	let drawGrid: HTMLElement | null = $state(null)
 
@@ -56,12 +56,21 @@
 	let serverIsLeaderboard = data.isLeaderboard === 'true'
 	isLeaderboard.set(serverIsLeaderboard)
 	let combinedIsLeaderboard = $derived(browser ? $isAuth && $isLeaderboard : serverIsLeaderboard)
+
+	let supportsViewTransitions = false
+	onMount(() => {
+		supportsViewTransitions = 'startViewTransition' in document
+	})
+
 	const toggleLeaderboard = (value: boolean) => {
-		isLeaderboard.set(value)
-		Cookies.set('isLeaderboard', value.toString(), { expires: 0.5 })
-		if (value === true) {
-			isScrollListenerAdded = false
+		if (supportsViewTransitions) {
+			document.startViewTransition(() => {
+				isLeaderboard.set(value)
+			})
+		} else {
+			isLeaderboard.set(value)
 		}
+		Cookies.set('isLeaderboard', value.toString(), { expires: 0.5 })
 	}
 
 	let combinedSelectedUsers = $derived(browser ? $selectedUsers : data.cookieSelectedUsers)
@@ -207,9 +216,8 @@
 	})
 
 	$effect(() => {
-		if (!combinedIsLeaderboard && !isScrollListenerAdded && roundHeader && drawGrid) {
+		if (!combinedIsLeaderboard && roundHeader && drawGrid) {
 			drawGrid.addEventListener('scroll', syncScroll)
-			isScrollListenerAdded = true
 		}
 	})
 
@@ -309,7 +317,7 @@
 <main>
 	{#if combinedIsLeaderboard}
 		<div
-			class="z-10 mx-auto grid grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
+			class="sub-page z-10 mx-auto grid grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
 			data-testid="Leaderboard"
 		>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Rank</div>
@@ -375,7 +383,7 @@
 			{/if}
 		</div>
 	{:else}
-		<div data-testid="Draw">
+		<div class="sub-page" data-testid="Draw">
 			<div
 				class="sticky top-0 z-20 overflow-x-hidden {headerColor} font-semibold tracking-wide shadow [&>*]:text-lg"
 				bind:this={roundHeader}
@@ -451,3 +459,9 @@
 		</div>
 	{/if}
 </main>
+
+<style>
+	.sub-page {
+		view-transition-name: subPage;
+	}
+</style>
