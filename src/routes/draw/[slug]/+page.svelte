@@ -24,7 +24,6 @@
 	import x from '$lib/images/icons/x.svg'
 	import Rank from '$lib/components/Rank.svelte'
 	import Header from '$lib/components/Header.svelte'
-	import { draw } from 'svelte/transition'
 	import { onMount } from 'svelte'
 
 	interface Props {
@@ -52,17 +51,6 @@
 		if (roundHeader && drawGrid) {
 			roundHeader.scrollLeft = drawGrid.scrollLeft
 		}
-	}
-
-	// Svelte action to setup scroll event listener when drawGrid is mounted
-	const setupSyncScroll = (node: HTMLDivElement) => {
-		$effect(() => {
-			node.addEventListener('scroll', syncScroll)
-
-			return () => {
-				node.removeEventListener('scroll', syncScroll)
-			}
-		})
 	}
 
 	let serverIsLeaderboard = data.isLeaderboard === 'true'
@@ -238,7 +226,6 @@
 	<select
 		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 font-PoetsenOne text-xl hover:bg-primary-200 md:text-2xl"
 		onchange={(e) => goto(e.currentTarget.value)}
-		style="view-transition-name: drawId-{data.draw.id}"
 	>
 		<option disabled>Active Draws</option>
 		{#each data.active.items as draw}
@@ -410,7 +397,7 @@
 				class="relative grid overflow-x-auto overscroll-x-none bg-stone-100 pb-12"
 				style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
 				bind:this={drawGrid}
-				use:setupSyncScroll
+				onscroll={syncScroll}
 			>
 				{#each ourRounds as round, index}
 					<div class="column">

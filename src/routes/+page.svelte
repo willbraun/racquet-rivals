@@ -103,7 +103,7 @@
 						href={`/draw/${getSlug(draw)}`}
 						class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 hover:brightness-105 sm:p-4 sm:text-3xl`}
 					>
-						<button type="button" style="view-transition-name: drawId-{draw.id}">
+						<button type="button">
 							{getTitle(draw)}
 						</button>
 					</a>
