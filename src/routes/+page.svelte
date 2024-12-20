@@ -101,9 +101,9 @@
 				{#each data.active.items as draw, index}
 					<a
 						href={`/draw/${getSlug(draw)}`}
-						class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 sm:p-4 sm:text-3xl hover:brightness-105`}
+						class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 hover:brightness-105 sm:p-4 sm:text-3xl`}
 					>
-						<button type="button">
+						<button type="button" style="view-transition-name: drawId-{draw.id}">
 							{getTitle(draw)}
 						</button>
 					</a>
@@ -119,7 +119,7 @@
 			{#each data.completed.items as draw, index}
 				<a
 					href={`/draw/${getSlug(draw)}`}
-					class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 sm:p-4 sm:text-3xl hover:brightness-105`}
+					class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 hover:brightness-105 sm:p-4 sm:text-3xl`}
 				>
 					<button type="button">
 						{getTitle(draw)}

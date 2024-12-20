@@ -47,10 +47,22 @@
 	let roundHeader: HTMLElement | null = $state(null)
 	let drawGrid: HTMLElement | null = $state(null)
 
+	// sync horizontal scroll between roundHeader and drawGrid
 	const syncScroll = () => {
 		if (roundHeader && drawGrid) {
 			roundHeader.scrollLeft = drawGrid.scrollLeft
 		}
+	}
+
+	// Svelte action to setup scroll event listener when drawGrid is mounted
+	const setupSyncScroll = (node: HTMLDivElement) => {
+		$effect(() => {
+			node.addEventListener('scroll', syncScroll)
+
+			return () => {
+				node.removeEventListener('scroll', syncScroll)
+			}
+		})
 	}
 
 	let serverIsLeaderboard = data.isLeaderboard === 'true'
@@ -215,12 +227,6 @@
 		updatePredictions(users)
 	})
 
-	$effect(() => {
-		if (!combinedIsLeaderboard && roundHeader && drawGrid) {
-			drawGrid.addEventListener('scroll', syncScroll)
-		}
-	})
-
 	let url = $derived(`/draw/${getSlug(data.draw)}`)
 	$effect(() => {
 		drawNavUrl.set(url)
@@ -232,6 +238,7 @@
 	<select
 		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 font-PoetsenOne text-xl hover:bg-primary-200 md:text-2xl"
 		onchange={(e) => goto(e.currentTarget.value)}
+		style="view-transition-name: drawId-{data.draw.id}"
 	>
 		<option disabled>Active Draws</option>
 		{#each data.active.items as draw}
@@ -403,6 +410,7 @@
 				class="relative grid overflow-x-auto overscroll-x-none bg-stone-100 pb-12"
 				style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
 				bind:this={drawGrid}
+				use:setupSyncScroll
 			>
 				{#each ourRounds as round, index}
 					<div class="column">
