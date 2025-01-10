@@ -97,7 +97,7 @@
 			<p class="bg-primary-700 px-4 py-2 text-2xl font-bold text-white sm:py-4 sm:text-4xl">
 				Active Draws
 			</p>
-			{#if data.active.totalItems > 2}
+			{#if data.active.totalItems > 0}
 				{#each data.active.items as draw, index}
 					<a
 						href={`/draw/${getSlug(draw)}`}
