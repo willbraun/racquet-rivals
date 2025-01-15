@@ -36,7 +36,7 @@
 	<div class="mx-auto max-w-screen-lg px-4">
 		<section class="mb-8">
 			<h1 class="mb-4 break-all text-4xl font-bold md:text-7xl">{data.username}</h1>
-			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM dd, yyyy')}</p>
+			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM d, yyyy')}</p>
 		</section>
 		<section class="mb-4 rounded-xl bg-stone-250 shadow md:mb-8 md:p-8">
 			<Accordion hover="none">
