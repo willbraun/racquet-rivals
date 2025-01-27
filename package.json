@@ -55,7 +55,7 @@
 		"@floating-ui/dom": "^1.6.13",
 		"date-fns": "^3.6.0",
 		"js-cookie": "^3.0.5",
-		"pocketbase": "^0.25.1",
+		"pocketbase": "^0.22.0",
 		"svelte-persisted-store": "^0.12.0"
 	}
 }
