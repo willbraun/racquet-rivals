@@ -314,7 +314,7 @@
 	{#if combinedIsLeaderboard}
 		<div
 			class="absolute mx-auto grid w-full shrink-0 grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
-			transition:fly={{ duration: 300, x: innerWidth }}
+			transition:fly={{ duration: 300, x: innerWidth, opacity: 1 }}
 			bind:offsetHeight={leaderboardHeight}
 			data-testid="Leaderboard"
 		>
@@ -383,7 +383,7 @@
 	{:else}
 		<div
 			class="absolute w-full"
-			transition:fly={{ duration: 300, x: -innerWidth }}
+			transition:fly={{ duration: 300, x: -innerWidth, opacity: 1 }}
 			bind:offsetHeight={drawHeight}
 			data-testid="Draw"
 		>
