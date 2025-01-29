@@ -25,8 +25,7 @@
 	import Rank from '$lib/components/Rank.svelte'
 	import Header from '$lib/components/Header.svelte'
 	import { onMount } from 'svelte'
-	import { fly, slide } from 'svelte/transition'
-	import { cubicOut } from 'svelte/easing'
+	import { fly } from 'svelte/transition'
 
 	interface Props {
 		data: DrawPageData
@@ -218,13 +217,9 @@
 	})
 
 	let innerWidth = $state(0)
-	let drawSubPageRef: HTMLElement | undefined = $state()
-	let leaderboardSubPageRef: HTMLElement | undefined = $state()
-	let mainHeight = $derived(
-		combinedIsLeaderboard
-			? (leaderboardSubPageRef?.offsetHeight ?? 0)
-			: (drawSubPageRef?.offsetHeight ?? 0)
-	)
+	let drawHeight = $state(0)
+	let leaderboardHeight = $state(0)
+	let mainHeight = $derived(combinedIsLeaderboard ? leaderboardHeight : drawHeight)
 </script>
 
 <svelte:window bind:innerWidth />
@@ -320,7 +315,7 @@
 		<div
 			class="absolute mx-auto grid w-full shrink-0 grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
 			transition:fly={{ duration: 300, x: innerWidth }}
-			bind:this={leaderboardSubPageRef}
+			bind:offsetHeight={leaderboardHeight}
 			data-testid="Leaderboard"
 		>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Rank</div>
@@ -389,7 +384,7 @@
 		<div
 			class="absolute w-full"
 			transition:fly={{ duration: 300, x: -innerWidth }}
-			bind:this={drawSubPageRef}
+			bind:offsetHeight={drawHeight}
 			data-testid="Draw"
 		>
 			<div
