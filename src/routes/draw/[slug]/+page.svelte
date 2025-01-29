@@ -25,6 +25,8 @@
 	import Rank from '$lib/components/Rank.svelte'
 	import Header from '$lib/components/Header.svelte'
 	import { onMount } from 'svelte'
+	import { fly, slide } from 'svelte/transition'
+	import { cubicOut } from 'svelte/easing'
 
 	interface Props {
 		data: DrawPageData
@@ -63,13 +65,7 @@
 	})
 
 	const toggleLeaderboard = (value: boolean) => {
-		if (supportsViewTransitions) {
-			document.startViewTransition(() => {
-				isLeaderboard.set(value)
-			})
-		} else {
-			isLeaderboard.set(value)
-		}
+		isLeaderboard.set(value)
 		Cookies.set('isLeaderboard', value.toString(), { expires: 0.5 })
 	}
 
@@ -220,7 +216,18 @@
 		drawNavUrl.set(url)
 		loginGoto.set(url)
 	})
+
+	let innerWidth = $state(0)
+	let drawSubPageRef: HTMLElement | undefined = $state()
+	let leaderboardSubPageRef: HTMLElement | undefined = $state()
+	let mainHeight = $derived(
+		combinedIsLeaderboard
+			? (leaderboardSubPageRef?.offsetHeight ?? 0)
+			: (drawSubPageRef?.offsetHeight ?? 0)
+	)
 </script>
+
+<svelte:window bind:innerWidth />
 
 <Header color="bg-primary-50">
 	<select
@@ -308,10 +315,12 @@
 		</div>
 	{/if}
 </section>
-<main>
+<main class="relative overflow-x-hidden" style="height: {mainHeight}px">
 	{#if combinedIsLeaderboard}
 		<div
-			class="sub-page z-10 mx-auto grid grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
+			class="absolute mx-auto grid w-full shrink-0 grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
+			transition:fly={{ duration: 300, x: innerWidth }}
+			bind:this={leaderboardSubPageRef}
 			data-testid="Leaderboard"
 		>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Rank</div>
@@ -377,7 +386,12 @@
 			{/if}
 		</div>
 	{:else}
-		<div class="sub-page" data-testid="Draw">
+		<div
+			class="absolute w-full"
+			transition:fly={{ duration: 300, x: -innerWidth }}
+			bind:this={drawSubPageRef}
+			data-testid="Draw"
+		>
 			<div
 				class="sticky top-0 z-20 overflow-x-hidden {headerColor} font-semibold tracking-wide shadow [&>*]:text-lg"
 				bind:this={roundHeader}
@@ -454,9 +468,3 @@
 		</div>
 	{/if}
 </main>
-
-<style>
-	.sub-page {
-		view-transition-name: subPage;
-	}
-</style>
