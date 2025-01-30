@@ -68,15 +68,6 @@
 		Cookies.set('isLeaderboard', value.toString(), { expires: 0.5 })
 	}
 
-	let combinedSelectedUsers = $derived(browser ? $selectedUsers : data.cookieSelectedUsers)
-
-	let combinedPredictions = $state(data.predictions.items)
-	const updatePredictions = async (allUsers: SelectedUser[]) => {
-		const predictionData = await getPredictions(data.draw.id, allUsers, pb.authStore.token)
-		predictionStore.set(predictionData.items)
-		combinedPredictions = $predictionStore
-	}
-
 	const getHeight = (roundIndex: number, position: number): string => {
 		let rems = 0
 		if (position === 1) {
@@ -130,6 +121,7 @@
 		return [player1, player2]
 	}
 
+	let combinedSelectedUsers = $derived(browser ? $selectedUsers : data.cookieSelectedUsers)
 	let users = $derived([
 		data.currentUser,
 		...combinedSelectedUsers.filter((user) => user.selectorId === data.currentUser.id)
@@ -206,6 +198,13 @@
 			: ({} as ModalSettings)
 	)
 
+	let combinedPredictions = $derived(
+		$predictionStore.length ? $predictionStore : (data.predictions.items ?? [])
+	)
+	const updatePredictions = async (allUsers: SelectedUser[]) => {
+		const predictionData = await getPredictions(data.draw.id, allUsers, pb.authStore.token)
+		predictionStore.set(predictionData.items)
+	}
 	$effect(() => {
 		updatePredictions(users)
 	})
