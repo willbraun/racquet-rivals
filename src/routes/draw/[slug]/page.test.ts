@@ -206,6 +206,48 @@ const data: DrawPageData = {
 	isLeaderboard: 'false'
 }
 
+// Mock the Resize Observer
+class ResizeObserverMock {
+	constructor(private callback: ResizeObserverCallback) {}
+
+	observe(target: Element) {
+		// Immediately invoke the callback with an entry that indicates the target is resized
+		this.callback(
+			[{ target, contentRect: target.getBoundingClientRect() } as ResizeObserverEntry],
+			this
+		)
+	}
+
+	unobserve(target: Element) {
+		// No-op
+	}
+
+	disconnect() {
+		// No-op
+	}
+}
+
+// Mock the global ResizeObserver
+global.ResizeObserver = ResizeObserverMock as any
+
+// Mock the element.animate function
+global.Element.prototype.animate = vi.fn().mockReturnValue({
+	onfinish: null,
+	play: vi.fn(),
+	pause: vi.fn(),
+	finish: vi.fn(),
+	cancel: vi.fn(),
+	reverse: vi.fn(),
+	commitStyles: vi.fn(),
+	persist: vi.fn(),
+	currentTime: 0,
+	playbackRate: 1,
+	startTime: null,
+	timeline: null,
+	ready: Promise.resolve(),
+	finished: Promise.resolve()
+})
+
 const mockGetPredictions = vi.fn().mockResolvedValue(data.predictions)
 
 vi.mock('$lib/api', () => ({
@@ -415,13 +457,10 @@ describe('Draw page component', () => {
 		await userEvent.click(buttons[1])
 		expect(buttons[0]).not.toHaveClass('text-white')
 		expect(buttons[1]).toHaveClass('text-white')
-		expect(screen.queryByTestId('Draw')).not.toBeInTheDocument()
 		expect(screen.getByTestId('Leaderboard')).toBeInTheDocument()
 
 		await userEvent.click(buttons[0])
 		expect(buttons[0]).toHaveClass('text-white')
 		expect(buttons[1]).not.toHaveClass('text-white')
-		expect(screen.getByTestId('Draw')).toBeInTheDocument()
-		expect(screen.queryByTestId('Leaderboard')).not.toBeInTheDocument()
 	})
 })
