@@ -5,9 +5,10 @@
 
 	interface Props {
 		password?: string
+		ref?: HTMLInputElement | null
 	}
 
-	let { password = $bindable('') }: Props = $props()
+	let { password = $bindable(''), ref = $bindable(null) }: Props = $props()
 </script>
 
 <label for="password">
@@ -20,6 +21,7 @@
 			name="password"
 			data-testid="PasswordField"
 			oninput={(e) => (password = e.currentTarget.value)}
+			bind:this={ref}
 		/>
 		<button
 			type="button"

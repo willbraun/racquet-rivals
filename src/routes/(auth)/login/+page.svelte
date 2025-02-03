@@ -1,7 +1,5 @@
 <script lang="ts">
 	import PasswordField from '$lib/components/PasswordField.svelte'
-	import { persisted } from 'svelte-persisted-store'
-	import { get } from 'svelte/store'
 	import FormError from '$lib/components/FormError.svelte'
 	import { makeSetType } from '$lib/utils'
 	import { enhance } from '$app/forms'
@@ -17,25 +15,41 @@
 	let loading = $state(false)
 	let rememberMe = $state(false)
 
-	const setType = makeSetType<AuthResult>()
+	interface RememberLogin {
+		usernameOrEmail: string
+		rememberMe: boolean
+	}
 
-	const rememberLogin = persisted('rememberLogin', {
-		rememberMe: false,
-		usernameOrEmail: ''
-	})
+	const toggle = () => {
+		rememberMe = !rememberMe
+		localStorage.setItem(
+			'rememberLogin',
+			JSON.stringify({
+				rememberMe,
+				usernameOrEmail
+			})
+		)
+	}
 
-	const saved = get(rememberLogin)
+	const saved: RememberLogin = JSON.parse(localStorage.getItem('rememberLogin') || '{}')
 	if (saved.rememberMe) {
 		usernameOrEmail = saved.usernameOrEmail
 		rememberMe = true
 	}
 
 	let usernameOrEmailRef: HTMLInputElement | null = $state(null)
+	let passwordRef: HTMLInputElement | null = $state(null)
 	onMount(() => {
-		if (usernameOrEmailRef) {
+		if (!usernameOrEmailRef || !passwordRef) return
+
+		if (rememberMe) {
+			passwordRef.focus()
+		} else {
 			usernameOrEmailRef.focus()
 		}
 	})
+
+	const setType = makeSetType<AuthResult>()
 </script>
 
 <AuthBase>
@@ -44,16 +58,13 @@
 		method="POST"
 		class="[&>*]:mb-4"
 		use:enhance={() => {
+			console.log(rememberMe)
 			loading = true
 			error = ''
 			return async ({ result, update }) => {
 				await update()
 				const typedResult = setType(result)
 				if (result.status === 200) {
-					rememberLogin.set({
-						rememberMe,
-						usernameOrEmail
-					})
 					goto($loginGoto)
 				} else {
 					error = typedResult.data.error
@@ -73,10 +84,10 @@
 				bind:this={usernameOrEmailRef}
 			/>
 		</label>
-		<PasswordField bind:password />
+		<PasswordField bind:password bind:ref={passwordRef} />
 		<div class="flex justify-between">
 			<label class="flex items-center space-x-2">
-				<input class="checkbox" type="checkbox" bind:checked={rememberMe} />
+				<input class="checkbox" type="checkbox" bind:checked={rememberMe} onclick={toggle} />
 				<p>Remember me</p>
 			</label>
 			<a class="-translate-y-4 text-sm text-gray-500" href="/reset-password">Forgot password?</a>
