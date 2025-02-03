@@ -58,7 +58,6 @@
 		method="POST"
 		class="[&>*]:mb-4"
 		use:enhance={() => {
-			console.log(rememberMe)
 			loading = true
 			error = ''
 			return async ({ result, update }) => {
