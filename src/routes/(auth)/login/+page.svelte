@@ -31,11 +31,13 @@
 		)
 	}
 
-	const saved: RememberLogin = JSON.parse(localStorage.getItem('rememberLogin') || '{}')
-	if (saved.rememberMe) {
-		usernameOrEmail = saved.usernameOrEmail
-		rememberMe = true
-	}
+	onMount(() => {
+		const saved: RememberLogin = JSON.parse(localStorage.getItem('rememberLogin') || '{}')
+		if (saved.rememberMe) {
+			usernameOrEmail = saved.usernameOrEmail
+			rememberMe = true
+		}
+	})
 
 	let usernameOrEmailRef: HTMLInputElement | null = $state(null)
 	let passwordRef: HTMLInputElement | null = $state(null)

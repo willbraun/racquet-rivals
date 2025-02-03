@@ -105,7 +105,7 @@
 						position: slot.position,
 						round: slot.round,
 						seed: slot.seed,
-						username: pb.authStore.model?.username ?? ''
+						username: pb.authStore.record?.username ?? ''
 					})
 
 					predictionStore.update((store) => {

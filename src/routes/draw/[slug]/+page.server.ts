@@ -20,9 +20,9 @@ import { format } from 'date-fns'
 
 const getCurrentUser = (locals: App.Locals): SelectedUser => {
 	return {
-		selectorId: locals.pb.authStore.model?.id ?? '',
-		id: locals.pb.authStore.model?.id ?? '',
-		username: locals.pb.authStore.model?.username ?? '',
+		selectorId: locals.pb.authStore.record?.id ?? '',
+		id: locals.pb.authStore.record?.id ?? '',
+		username: locals.pb.authStore.record?.username ?? '',
 		color: mainColor
 	}
 }
@@ -133,7 +133,7 @@ export const actions: Actions = {
 		const currentPredictionId = (form.get(`currentPredictionId`) ?? '') as string
 		const predictionValue = (form.get(`predictionValue`) ?? '') as string
 
-		if (!locals.pb.authStore.isValid || !locals.pb.authStore.model) {
+		if (!locals.pb.authStore.isValid || !locals.pb.authStore.record) {
 			return fail(400, {
 				error: 'Must be logged in to make a prediction'
 			})
@@ -153,7 +153,7 @@ export const actions: Actions = {
 
 		const data = {
 			draw_slot_id: slotId,
-			user_id: locals.pb.authStore.model.id,
+			user_id: locals.pb.authStore.record.id,
 			name: predictionValue,
 			points: 0
 		}
