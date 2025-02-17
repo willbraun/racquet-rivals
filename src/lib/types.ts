@@ -69,20 +69,20 @@ export interface SlotWithRawScore {
 	seed: string
 	updated: string
 	set1_id: string
-	set1_games: number
-	set1_tiebreak: number
+	set1_games: number | null
+	set1_tiebreak: number | null
 	set2_id: string
-	set2_games: number
-	set2_tiebreak: number
+	set2_games: number | null
+	set2_tiebreak: number | null
 	set3_id: string
-	set3_games: number
-	set3_tiebreak: number
+	set3_games: number | null
+	set3_tiebreak: number | null
 	set4_id: string
-	set4_games: number
-	set4_tiebreak: number
+	set4_games: number | null
+	set4_tiebreak: number | null
 	set5_id: string
-	set5_games: number
-	set5_tiebreak: number
+	set5_games: number | null
+	set5_tiebreak: number | null
 }
 
 export interface Slot extends SlotWithRawScore {

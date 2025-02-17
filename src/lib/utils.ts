@@ -7,7 +7,8 @@ import {
 	type DrawResult,
 	type RootLayoutData,
 	type SelectedUser,
-	type SelectedUserNoColor
+	type SelectedUserNoColor,
+	type SlotWithRawScore
 } from './types'
 import { get } from 'svelte/store'
 import Cookies from 'js-cookie'
@@ -151,4 +152,29 @@ export const formatPercent = (num: number | null): string => {
 	}
 
 	return `${result}%`
+}
+
+export const formatScore = (winner: SlotWithRawScore, loser: SlotWithRawScore): string => {
+	let sets = []
+	for (let i = 1; i <= 5; i++) {
+		let setScore = ''
+		const games = `set${i}_games` as keyof SlotWithRawScore
+		const tiebreak = `set${i}_tiebreak` as keyof SlotWithRawScore
+		if (winner[games] !== null && loser[games] !== null) {
+			setScore = `${winner[games]}-${loser[games]}`
+
+			if (Number(winner[games]) === 7 && Number(loser[games]) === 6) {
+				setScore += ` (${loser[tiebreak]})`
+			}
+			if (Number(winner[games]) === 6 && Number(loser[games]) === 7) {
+				setScore += ` (${winner[tiebreak]})`
+			}
+		}
+
+		if (setScore) {
+			sets.push(setScore)
+		}
+	}
+
+	return sets.length === 0 ? 'Walkover' : sets.join(', ')
 }

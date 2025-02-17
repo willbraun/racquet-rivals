@@ -418,15 +418,20 @@
 								{#if slot.name.trim()}
 									<p
 										class={slot.name.length > 16 ? 'text-sm xl:text-lg' : 'text-lg'}
-										data-testid={`SlotR${slot.round}P${slot.position}`}
+										data-testid={`SlotNameR${slot.round}P${slot.position}`}
 									>
 										{`${slot.seed} ${slot.name}`}
 									</p>
-									<p class="w-full text-xs text-gray-500">{slot.score}</p>
+									<p
+										class="w-full text-xs text-gray-500"
+										data-testid={`SlotScoreR${slot.round}P${slot.position}`}
+									>
+										{slot.score}
+									</p>
 								{:else}
 									<p
 										class="text-lg italic text-surface-800"
-										data-testid={`SlotR${slot.round}P${slot.position}`}
+										data-testid={`SlotNameR${slot.round}P${slot.position}`}
 									>
 										TBD
 									</p>

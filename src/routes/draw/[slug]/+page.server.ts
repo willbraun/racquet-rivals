@@ -1,5 +1,5 @@
 import { fail, type Actions } from '@sveltejs/kit'
-import { errorMessage } from '$lib/utils'
+import { errorMessage, formatScore } from '$lib/utils'
 import { mainColor } from '$lib/data'
 import { fetchJson } from '$lib/server/utils'
 import type { ClientResponseError } from 'pocketbase'
@@ -70,11 +70,11 @@ export async function load({ fetch, params, locals, cookies }) {
 	// format score string from raw score of previous two slots
 	const slots: Slot[] = slotsWithRawScores.items.map((slot) => {
 		if (slot.round <= 4) {
-			return slot as Slot
+			return slot
 		}
 
 		if (slot.name === '') {
-			return slot as Slot
+			return slot
 		}
 
 		const prevSlot1 = slotsWithRawScores.items.find(
@@ -85,43 +85,18 @@ export async function load({ fetch, params, locals, cookies }) {
 		)
 
 		if (!prevSlot1 || !prevSlot2) {
-			return slot as Slot
+			return slot
 		}
 
 		const [winner, loser] =
 			slot.name === prevSlot1.name ? [prevSlot1, prevSlot2] : [prevSlot2, prevSlot1]
 
-		let sets = []
-		for (let i = 1; i <= 5; i++) {
-			let setScore = ''
-			const games = `set${i}_games` as keyof SlotWithRawScore
-			const tiebreak = `set${i}_tiebreak` as keyof SlotWithRawScore
-			if (winner[games] !== null && loser[games] !== null) {
-				setScore = `${winner[games]}-${loser[games]}`
+		const score = formatScore(winner, loser)
 
-				if (Number(winner[games]) === 7 && Number(loser[games]) === 6) {
-					setScore += ` (${loser[tiebreak]})`
-				}
-				if (Number(winner[games]) === 6 && Number(loser[games]) === 7) {
-					setScore += ` (${winner[tiebreak]})`
-				}
-			}
-
-			if (setScore) {
-				sets.push(setScore)
-			}
-		}
-
-		let score = ''
-		if (sets.length === 0) {
-			score = 'Walkover'
-		}
-
-		score = sets.join(', ')
 		return {
 			...slot,
 			score
-		} as Slot
+		}
 	})
 
 	const cookieSelectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')

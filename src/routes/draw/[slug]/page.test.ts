@@ -11,10 +11,43 @@ import type {
 	SelectedUser,
 	Slot
 } from '$lib/types'
-import slotData from '$lib/data/slot_data.json'
 import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
 import { isAuth, selectedUsers } from '$lib/store'
+import { formatScore } from '$lib/utils'
+
+const emptySlotData: Slot[] = []
+for (let i = 1; i <= 8; i++) {
+	for (let j = 1; j <= 2 ** (8 - i); j++) {
+		emptySlotData.push({
+			collectionId: 'x9dn3y760dvxbek',
+			collectionName: 'slots_with_scores',
+			created: '2024-05-02 15:48:21.972Z',
+			draw_id: 'j5mehm6fvdf9105',
+			id: 'v8mjytmle1h650x',
+			round: i,
+			position: j,
+			name: '',
+			seed: '',
+			updated: '2024-05-02 15:48:21.972Z',
+			set1_id: 'set1_dummy',
+			set1_games: null,
+			set1_tiebreak: null,
+			set2_id: 'set2_dummy',
+			set2_games: null,
+			set2_tiebreak: null,
+			set3_id: 'set3_dummy',
+			set3_games: null,
+			set3_tiebreak: null,
+			set4_id: 'set4_dummy',
+			set4_games: null,
+			set4_tiebreak: null,
+			set5_id: 'set5_dummy',
+			set5_games: null,
+			set5_tiebreak: null
+		})
+	}
+}
 
 const data: DrawPageData = {
 	active: {
@@ -78,7 +111,7 @@ const data: DrawPageData = {
 		url: 'https://www.atptour.com/en/scores/archive/roland-garros/520/2024/draws',
 		year: 2024
 	} as Draw,
-	slots: slotData as PbListResponse<Slot>,
+	slots: emptySlotData,
 	drawResults: {
 		items: [
 			{
@@ -281,7 +314,7 @@ describe('Draw page component', () => {
 		expect(screen.queryByText('Predictions closed:')).not.toBeInTheDocument()
 		expect(screen.getByText('Users:')).toBeInTheDocument()
 		expect(screen.queryByText('Log in to play!')).not.toBeInTheDocument()
-		expect(screen.getByTestId('SlotR8P1')).toHaveTextContent('TBD')
+		expect(screen.getByTestId('SlotNameR8P1')).toHaveTextContent('TBD')
 	})
 
 	test('Logged out', () => {
@@ -297,55 +330,8 @@ describe('Draw page component', () => {
 		expect(screen.getByText('Log in to play!')).toBeInTheDocument()
 	})
 
-	test('Name and seed render in slot', () => {
-		const slot = slotData.items.at(-1) as Slot
-		const newSlot = {
-			...slot,
-			name: 'Roger Federer',
-			seed: '(1)'
-		} as Slot
-		const newSlots = slotData.items.with(-1, newSlot) as Slot[]
-
-		render(PageSetup, {
-			props: {
-				component: Page,
-				data: {
-					...data,
-					slots: {
-						...slotData,
-						items: newSlots
-					}
-				}
-			}
-		})
-
-		expect(screen.getByTestId('SlotR8P1')).toHaveTextContent('(1) Roger Federer')
-	})
-
-	test('Correct slots render, 128 draw', () => {
-		render(PageSetup, {
-			props: {
-				component: Page,
-				data
-			}
-		})
-
-		const totalRounds = 8
-		for (let round = 1; round <= totalRounds; round++) {
-			const positions = 2 ** (totalRounds - round)
-			for (let position = 1; position <= positions; position++) {
-				const testId = `SlotR${round}P${position}`
-				if (round >= 4) {
-					expect(screen.getByTestId(testId)).toBeInTheDocument()
-				} else {
-					expect(screen.queryByTestId(testId)).not.toBeInTheDocument()
-				}
-			}
-		}
-	})
-
 	const testActiveRound = (activeRound: number, expectedTextContent: string) => {
-		const newSlots = slotData.items.map((slot) => {
+		const newSlots = emptySlotData.map((slot) => {
 			return slot.round <= activeRound ? { ...slot, name: 'Some Player' } : slot
 		}) as Slot[]
 
@@ -354,10 +340,7 @@ describe('Draw page component', () => {
 				component: Page,
 				data: {
 					...data,
-					slots: {
-						...slotData,
-						items: newSlots
-					}
+					slots: newSlots
 				}
 			}
 		})
@@ -462,5 +445,118 @@ describe('Draw page component', () => {
 		await userEvent.click(buttons[0])
 		expect(buttons[0]).toHaveClass('text-white')
 		expect(buttons[1]).not.toHaveClass('text-white')
+	})
+
+	test('Correct slots render, 128 draw', () => {
+		render(PageSetup, {
+			props: {
+				component: Page,
+				data
+			}
+		})
+
+		const totalRounds = 8
+		for (let round = 1; round <= totalRounds; round++) {
+			const positions = 2 ** (totalRounds - round)
+			for (let position = 1; position <= positions; position++) {
+				const testId = `SlotNameR${round}P${position}`
+				if (round >= 4) {
+					expect(screen.getByTestId(testId)).toBeInTheDocument()
+				} else {
+					expect(screen.queryByTestId(testId)).not.toBeInTheDocument()
+				}
+			}
+		}
+	})
+
+	test('Slot data renders', () => {
+		const slot = emptySlotData.at(-1) as Slot
+		const newSlot = {
+			...slot,
+			name: 'Roger Federer',
+			seed: '(1)',
+			score: '6-3, 6-4, 6-2'
+		} as Slot
+		const newSlots = emptySlotData.with(-1, newSlot) as Slot[]
+
+		render(PageSetup, {
+			props: {
+				component: Page,
+				data: {
+					...data,
+					slots: newSlots
+				}
+			}
+		})
+
+		expect(screen.getByTestId('SlotNameR8P1')).toHaveTextContent('(1) Roger Federer')
+		expect(screen.getByTestId('SlotScoreR8P1')).toHaveTextContent('6-3, 6-4, 6-2')
+	})
+
+	test('Score is formatted correctly', () => {
+		const blank = emptySlotData.at(-1) as Slot
+
+		const scenarios = [
+			{
+				winner: {
+					...blank,
+					set1_games: 6,
+					set1_tiebreak: 0,
+					set2_games: 6,
+					set2_tiebreak: 0,
+					set3_games: 6,
+					set3_tiebreak: 0
+				},
+				loser: {
+					...blank,
+					set1_games: 3,
+					set1_tiebreak: 0,
+					set2_games: 4,
+					set2_tiebreak: 0,
+					set3_games: 2,
+					set3_tiebreak: 0
+				},
+				expectedScore: '6-3, 6-4, 6-2'
+			},
+			{
+				winner: {
+					...blank,
+					set1_games: 7,
+					set1_tiebreak: 0,
+					set2_games: 5,
+					set2_tiebreak: 0,
+					set3_games: 6,
+					set3_tiebreak: 10,
+					set4_games: 6,
+					set4_tiebreak: 0,
+					set5_games: 6,
+					set5_tiebreak: 0
+				},
+				loser: {
+					...blank,
+					set1_games: 6,
+					set1_tiebreak: 7,
+					set2_games: 7,
+					set2_tiebreak: 0,
+					set3_games: 7,
+					set3_tiebreak: 0,
+					set4_games: 3,
+					set4_tiebreak: 0,
+					set5_games: 0,
+					set5_tiebreak: 0
+				},
+				expectedScore: '7-6 (7), 5-7, 6-7 (10), 6-3, 6-0'
+			},
+			{
+				winner: blank,
+				loser: blank,
+				expectedScore: 'Walkover'
+			}
+		]
+
+		scenarios.forEach(({ winner, loser, expectedScore }) => {
+			const formattedScore = formatScore(winner, loser)
+			expect(formattedScore).toBe(expectedScore)
+		})
 	})
 })
