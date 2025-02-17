@@ -644,6 +644,28 @@ describe('Draw page component', () => {
 				},
 				showTieBreak: true,
 				expectedScore: '6-4, 1-6 (Ret.)'
+			},
+			{
+				winner: {
+					...blank,
+					set1_games: 6,
+					set1_tiebreak: 0,
+					set2_games: 6,
+					set2_tiebreak: 0,
+					set3_games: 7,
+					set3_tiebreak: 0
+				},
+				loser: {
+					...blank,
+					set1_games: 2,
+					set1_tiebreak: 0,
+					set2_games: 2,
+					set2_tiebreak: 0,
+					set3_games: 6,
+					set3_tiebreak: 4
+				},
+				showTieBreak: true,
+				expectedScore: '6-2, 6-2, 7-6 (4)'
 			}
 		]
 

@@ -199,7 +199,8 @@ export const formatScore = (
 }
 
 const isCompleteSet = (set: string) => {
-	const setStrings = set.split('-', 2)
+	const games = set.trim().split(' ')[0]
+	const setStrings = games.split('-', 2)
 	const [winnerInt, loserInt] = setStrings.map((s) => Number(s))
 	if ((winnerInt === 7 && loserInt === 6) || (winnerInt === 6 && loserInt === 7)) {
 		return true
