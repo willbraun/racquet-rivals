@@ -154,7 +154,11 @@ export const formatPercent = (num: number | null): string => {
 	return `${result}%`
 }
 
-export const formatScore = (winner: SlotWithRawScore, loser: SlotWithRawScore): string => {
+export const formatScore = (
+	winner: SlotWithRawScore,
+	loser: SlotWithRawScore,
+	showTieBreak: boolean
+): string => {
 	let sets = []
 	for (let i = 1; i <= 5; i++) {
 		let setScore = ''
@@ -162,13 +166,13 @@ export const formatScore = (winner: SlotWithRawScore, loser: SlotWithRawScore): 
 		const tiebreak = `set${i}_tiebreak` as keyof SlotWithRawScore
 		if (winner[games] !== null && loser[games] !== null) {
 			setScore = `${winner[games]}-${loser[games]}`
+		}
 
-			if (Number(winner[games]) === 7 && Number(loser[games]) === 6) {
-				setScore += ` (${loser[tiebreak]})`
-			}
-			if (Number(winner[games]) === 6 && Number(loser[games]) === 7) {
-				setScore += ` (${winner[tiebreak]})`
-			}
+		if (showTieBreak && Number(winner[games]) === 7 && Number(loser[games]) === 6) {
+			setScore += ` (${loser[tiebreak]})`
+		}
+		if (showTieBreak && Number(winner[games]) === 6 && Number(loser[games]) === 7) {
+			setScore += ` (${winner[tiebreak]})`
 		}
 
 		if (setScore) {

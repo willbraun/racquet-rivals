@@ -516,6 +516,7 @@ describe('Draw page component', () => {
 					set3_games: 2,
 					set3_tiebreak: 0
 				},
+				showTieBreak: true,
 				expectedScore: '6-3, 6-4, 6-2'
 			},
 			{
@@ -545,17 +546,47 @@ describe('Draw page component', () => {
 					set5_games: 0,
 					set5_tiebreak: 0
 				},
+				showTieBreak: true,
 				expectedScore: '7-6 (7), 5-7, 6-7 (10), 6-3, 6-0'
 			},
 			{
-				winner: blank,
-				loser: blank,
+				winner: { ...blank },
+				loser: { ...blank },
+				showTieBreak: true,
+				expectedScore: 'Walkover'
+			},
+			{
+				winner: {
+					...blank,
+					set1_games: 7,
+					set1_tiebreak: 0,
+					set2_games: 6,
+					set2_tiebreak: 0,
+					set3_games: 7,
+					set3_tiebreak: 0
+				},
+				loser: {
+					...blank,
+					set1_games: 6,
+					set1_tiebreak: 0,
+					set2_games: 7,
+					set2_tiebreak: 0,
+					set3_games: 6,
+					set3_tiebreak: 0
+				},
+				showTieBreak: false,
+				expectedScore: '7-6, 6-7, 7-6'
+			},
+			{
+				winner: { ...blank },
+				loser: { ...blank },
+				showTieBreak: false,
 				expectedScore: 'Walkover'
 			}
 		]
 
-		scenarios.forEach(({ winner, loser, expectedScore }) => {
-			const formattedScore = formatScore(winner, loser)
+		scenarios.forEach(({ winner, loser, showTieBreak, expectedScore }) => {
+			const formattedScore = formatScore(winner, loser, showTieBreak)
 			expect(formattedScore).toBe(expectedScore)
 		})
 	})

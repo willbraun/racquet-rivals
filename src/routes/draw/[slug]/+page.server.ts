@@ -68,6 +68,8 @@ export async function load({ fetch, params, locals, cookies }) {
 	])
 
 	// format score string from raw score of previous two slots
+	// ATP shows tiebreak score, WTA does not
+	const showTieBreak = drawResults.items[0].draw_event === "Men's Singles"
 	const slots: Slot[] = slotsWithRawScores.items.map((slot) => {
 		if (slot.round <= 4) {
 			return slot
@@ -91,7 +93,7 @@ export async function load({ fetch, params, locals, cookies }) {
 		const [winner, loser] =
 			slot.name === prevSlot1.name ? [prevSlot1, prevSlot2] : [prevSlot2, prevSlot1]
 
-		const score = formatScore(winner, loser)
+		const score = formatScore(winner, loser, showTieBreak)
 
 		return {
 			...slot,
