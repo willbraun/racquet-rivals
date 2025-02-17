@@ -107,8 +107,8 @@
 				player2 = prediction2.name
 			}
 		} else {
-			const slot1 = slots.find((s) => s.round === round - 1 && s.position === position * 2 - 1)
-			const slot2 = slots.find((s) => s.round === round - 1 && s.position === position * 2)
+			const slot1 = data.slots.find((s) => s.round === round - 1 && s.position === position * 2 - 1)
+			const slot2 = data.slots.find((s) => s.round === round - 1 && s.position === position * 2)
 
 			if (slot1) {
 				player1 = `${slot1.seed} ${slot1.name}`.trim()
@@ -146,12 +146,12 @@
 	let fullDrawRounds = $derived(Math.log2(data.draw.size) + 1)
 	let allRounds = $derived([...Array(fullDrawRounds).keys()].map((x) => x + 1))
 	let ourRounds = $derived(allRounds.slice(-5))
-	let slots = $derived(data.slots.items.filter((slot) => slot.round >= fullDrawRounds - 4))
+	let slots = $derived(data.slots.filter((slot) => slot.round >= fullDrawRounds - 4))
 
 	let roundLabel = $derived(
 		(() => {
 			const filledRounds = allRounds.filter((round) => {
-				return data.slots.items
+				return data.slots
 					.filter((slot) => {
 						return slot.round === round
 					})
@@ -411,7 +411,7 @@
 					<div class="column">
 						{#each slots.filter((slot) => slot.round === round) as slot}
 							<div
-								class="relative flex items-end justify-center border-b-2 border-black text-center"
+								class="relative flex flex-col items-center justify-end border-b-2 border-black pb-1 text-center"
 								class:border-r-2={!(slot.position % 2)}
 								style:height={getHeight(index, slot.position)}
 							>
@@ -419,6 +419,7 @@
 									<p class="text-lg" data-testid={`SlotR${slot.round}P${slot.position}`}>
 										{`${slot.seed} ${slot.name}`}
 									</p>
+									<p class="w-full text-xs text-gray-500">{slot.score}</p>
 								{:else}
 									<p
 										class="text-lg italic text-surface-800"

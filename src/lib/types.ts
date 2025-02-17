@@ -57,9 +57,9 @@ export interface Draw {
 	year: number
 }
 
-export interface Slot {
+export interface SlotWithRawScore {
 	collectionId: string
-	collectionName: 'draw_slot'
+	collectionName: 'slots_with_scores'
 	created: string
 	draw_id: string
 	id: string
@@ -68,6 +68,25 @@ export interface Slot {
 	round: number
 	seed: string
 	updated: string
+	set1_id: string
+	set1_games: number
+	set1_tiebreak: number
+	set2_id: string
+	set2_games: number
+	set2_tiebreak: number
+	set3_id: string
+	set3_games: number
+	set3_tiebreak: number
+	set4_id: string
+	set4_games: number
+	set4_tiebreak: number
+	set5_id: string
+	set5_games: number
+	set5_tiebreak: number
+}
+
+export interface Slot extends SlotWithRawScore {
+	score?: string
 }
 
 export interface Prediction {
@@ -220,7 +239,7 @@ export interface DrawPageData {
 	active: PbListResponse<Draw>
 	completed: PbListResponse<Draw>
 	draw: Draw
-	slots: PbListResponse<Slot>
+	slots: Slot[]
 	drawResults: PbListResponse<DrawResult>
 	predictions: PbListResponse<Prediction>
 	cookieSelectedUsers: SelectedUser[]

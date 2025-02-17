@@ -11,7 +11,8 @@ import type {
 	PredictionRecord,
 	SelectedUser,
 	SelectedUserNoColor,
-	Slot
+	Slot,
+	SlotWithRawScore
 } from '$lib/types'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { SCRIPT_USERNAME } from '$env/static/private'
@@ -27,6 +28,8 @@ const getCurrentUser = (locals: App.Locals): SelectedUser => {
 	}
 }
 
+// format score string from raw score of previous two slots
+
 export async function load({ fetch, params, locals, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const url = PUBLIC_POCKETBASE_URL
@@ -34,11 +37,11 @@ export async function load({ fetch, params, locals, cookies }) {
 	const today = format(new Date(), 'yyyy-MM-dd')
 	const token = locals.pb.authStore.token
 
-	const [active, completed, draw, slots, drawResults]: [
+	const [active, completed, draw, slotsWithRawScores, drawResults]: [
 		PbListResponse<Draw>,
 		PbListResponse<Draw>,
 		Draw,
-		PbListResponse<Slot>,
+		PbListResponse<SlotWithRawScore>,
 		PbListResponse<DrawResult>
 	] = await Promise.all([
 		fetchJson(
@@ -53,7 +56,7 @@ export async function load({ fetch, params, locals, cookies }) {
 		),
 		fetchJson(`${url}/api/collections/draw/records/${id}`, token, fetch),
 		fetchJson(
-			`${url}/api/collections/draw_slot/records?perPage=255&filter=(draw_id="${id}")`,
+			`${url}/api/collections/slots_with_scores/records?perPage=255&filter=(draw_id="${id}")`,
 			token,
 			fetch
 		),
@@ -65,6 +68,59 @@ export async function load({ fetch, params, locals, cookies }) {
 			fetch
 		)
 	])
+
+	// format score string from raw score of previous two slots
+	const slots = slotsWithRawScores.items.map((slot) => {
+		if (slot.round === 1) {
+			return slot as Slot
+		}
+
+		const prevSlot1 = slotsWithRawScores.items.find(
+			(s) => s.round === slot.round - 1 && s.position === slot.position * 2 - 1
+		)
+		const prevSlot2 = slotsWithRawScores.items.find(
+			(s) => s.round === slot.round - 1 && s.position === slot.position * 2
+		)
+
+		if (!prevSlot1 || !prevSlot2) {
+			return slot as Slot
+		}
+
+		const [winner, loser] =
+			slot.name === prevSlot1.name ? [prevSlot1, prevSlot2] : [prevSlot2, prevSlot1]
+
+		let sets = []
+		for (let i = 1; i <= 5; i++) {
+			let setScore = ''
+			const games = `set${i}_games` as keyof SlotWithRawScore
+			const tiebreak = `set${i}_tiebreak` as keyof SlotWithRawScore
+			if (winner[games] !== null && loser[games] !== null) {
+				setScore = `${winner[games]}-${loser[games]}`
+
+				if (Number(winner[games]) === 7 && Number(loser[games]) === 6) {
+					setScore += ` (${loser[tiebreak]})`
+				}
+				if (Number(winner[games]) === 6 && Number(loser[games]) === 7) {
+					setScore += ` (${winner[tiebreak]})`
+				}
+			}
+
+			if (setScore) {
+				sets.push(setScore)
+			}
+		}
+
+		let score = ''
+		if (sets.length === 0) {
+			score = 'Walkover'
+		}
+
+		score = sets.join(', ')
+		return {
+			...slot,
+			score
+		} as Slot
+	})
 
 	const cookieSelectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
 	const allUsers = [currentUser, ...cookieSelectedUsers]
