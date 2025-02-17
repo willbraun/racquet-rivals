@@ -17,7 +17,7 @@ import type {
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { SCRIPT_USERNAME } from '$env/static/private'
 import { getPredictions } from '$lib/api.js'
-import { format } from 'date-fns'
+import { format, compareAsc } from 'date-fns'
 
 const getCurrentUser = (locals: App.Locals): SelectedUser => {
 	return {
@@ -68,38 +68,40 @@ export async function load({ fetch, params, locals, cookies }) {
 	])
 
 	// format score string from raw score of previous two slots
-	// ATP shows tiebreak score, WTA does not
+	const doFormatScores = compareAsc(draw.start_date, '2024-06-30') > 0
 	const showTieBreak = draw.event === "Men's Singles"
-	const slots: Slot[] = slotsWithRawScores.items.map((slot) => {
-		if (slot.round <= 4) {
-			return slot
-		}
+	const slots: Slot[] = doFormatScores
+		? slotsWithRawScores.items.map((slot) => {
+				if (slot.round <= 4) {
+					return slot
+				}
 
-		if (slot.name === '') {
-			return slot
-		}
+				if (slot.name === '') {
+					return slot
+				}
 
-		const prevSlot1 = slotsWithRawScores.items.find(
-			(s) => s.round === slot.round - 1 && s.position === slot.position * 2 - 1
-		)
-		const prevSlot2 = slotsWithRawScores.items.find(
-			(s) => s.round === slot.round - 1 && s.position === slot.position * 2
-		)
+				const prevSlot1 = slotsWithRawScores.items.find(
+					(s) => s.round === slot.round - 1 && s.position === slot.position * 2 - 1
+				)
+				const prevSlot2 = slotsWithRawScores.items.find(
+					(s) => s.round === slot.round - 1 && s.position === slot.position * 2
+				)
 
-		if (!prevSlot1 || !prevSlot2) {
-			return slot
-		}
+				if (!prevSlot1 || !prevSlot2) {
+					return slot
+				}
 
-		const [winner, loser] =
-			slot.name === prevSlot1.name ? [prevSlot1, prevSlot2] : [prevSlot2, prevSlot1]
+				const [winner, loser] =
+					slot.name === prevSlot1.name ? [prevSlot1, prevSlot2] : [prevSlot2, prevSlot1]
 
-		const score = formatScore(winner, loser, showTieBreak)
+				const score = formatScore(winner, loser, showTieBreak)
 
-		return {
-			...slot,
-			score
-		}
-	})
+				return {
+					...slot,
+					score
+				}
+			})
+		: slotsWithRawScores.items
 
 	const cookieSelectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
 	const allUsers = [currentUser, ...cookieSelectedUsers]
