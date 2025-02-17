@@ -562,8 +562,8 @@ describe('Draw page component', () => {
 				expectedScore: '7-6 (7), 5-7, 6-7 (10), 6-3, 6-0'
 			},
 			{
-				winner: { ...blank },
-				loser: { ...blank },
+				winner: blank,
+				loser: blank,
 				showTieBreak: true,
 				expectedScore: 'Walkover'
 			},
@@ -590,10 +590,60 @@ describe('Draw page component', () => {
 				expectedScore: '7-6, 6-7, 7-6'
 			},
 			{
-				winner: { ...blank },
-				loser: { ...blank },
+				winner: blank,
+				loser: blank,
 				showTieBreak: false,
 				expectedScore: 'Walkover'
+			},
+			{
+				winner: {
+					...blank,
+					set1_games: 5,
+					set1_tiebreak: 0
+				},
+				loser: {
+					...blank,
+					set1_games: 3,
+					set1_tiebreak: 0
+				},
+				showTieBreak: true,
+				expectedScore: '5-3 (Ret.)'
+			},
+			{
+				winner: {
+					...blank,
+					set1_games: 6,
+					set1_tiebreak: 0
+				},
+				loser: {
+					...blank,
+					set1_games: 5,
+					set1_tiebreak: 0
+				},
+				showTieBreak: true,
+				expectedScore: '6-5 (Ret.)'
+			},
+			{
+				winner: {
+					...blank,
+					set1_games: 6,
+					set1_tiebreak: 0,
+					set2_games: 1,
+					set2_tiebreak: 0,
+					set3_games: 0,
+					set3_tiebreak: 0
+				},
+				loser: {
+					...blank,
+					set1_games: 4,
+					set1_tiebreak: 0,
+					set2_games: 6,
+					set2_tiebreak: 0,
+					set3_games: 0,
+					set3_tiebreak: 0
+				},
+				showTieBreak: true,
+				expectedScore: '6-4, 1-6 (Ret.)'
 			}
 		]
 

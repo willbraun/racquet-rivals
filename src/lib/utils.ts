@@ -180,5 +180,34 @@ export const formatScore = (
 		}
 	}
 
-	return sets.length === 0 ? 'Walkover' : sets.join(', ')
+	let isRetire = false
+	const last = sets.at(-1) || '0-0'
+
+	if (!isCompleteSet(last)) {
+		isRetire = true
+	}
+
+	if (last === '0-0') {
+		sets.pop()
+	}
+
+	if (sets.length === 0) {
+		return 'Walkover'
+	}
+
+	return sets.join(', ') + (isRetire ? ' (Ret.)' : '')
+}
+
+const isCompleteSet = (set: string) => {
+	const setStrings = set.split('-', 2)
+	const [winnerInt, loserInt] = setStrings.map((s) => Number(s))
+	if ((winnerInt === 7 && loserInt === 6) || (winnerInt === 6 && loserInt === 7)) {
+		return true
+	}
+
+	if (Math.max(winnerInt, loserInt) >= 6 && Math.abs(winnerInt - loserInt) >= 2) {
+		return true
+	}
+
+	return false
 }
