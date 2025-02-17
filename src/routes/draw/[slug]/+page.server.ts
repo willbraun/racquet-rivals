@@ -28,8 +28,6 @@ const getCurrentUser = (locals: App.Locals): SelectedUser => {
 	}
 }
 
-// format score string from raw score of previous two slots
-
 export async function load({ fetch, params, locals, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const url = PUBLIC_POCKETBASE_URL
@@ -70,8 +68,12 @@ export async function load({ fetch, params, locals, cookies }) {
 	])
 
 	// format score string from raw score of previous two slots
-	const slots = slotsWithRawScores.items.map((slot) => {
-		if (slot.round === 1) {
+	const slots: Slot[] = slotsWithRawScores.items.map((slot) => {
+		if (slot.round <= 4) {
+			return slot as Slot
+		}
+
+		if (slot.name === '') {
 			return slot as Slot
 		}
 

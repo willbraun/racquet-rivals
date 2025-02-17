@@ -416,7 +416,10 @@
 								style:height={getHeight(index, slot.position)}
 							>
 								{#if slot.name.trim()}
-									<p class="text-lg" data-testid={`SlotR${slot.round}P${slot.position}`}>
+									<p
+										class={slot.name.length > 16 ? 'text-sm xl:text-lg' : 'text-lg'}
+										data-testid={`SlotR${slot.round}P${slot.position}`}
+									>
 										{`${slot.seed} ${slot.name}`}
 									</p>
 									<p class="w-full text-xs text-gray-500">{slot.score}</p>
