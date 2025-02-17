@@ -469,7 +469,7 @@ describe('Draw page component', () => {
 		}
 	})
 
-	test('Slot data renders', () => {
+	test('Slot renders with data', () => {
 		const slot = emptySlotData.at(-1) as Slot
 		const newSlot = {
 			...slot,
@@ -491,6 +491,18 @@ describe('Draw page component', () => {
 
 		expect(screen.getByTestId('SlotNameR8P1')).toHaveTextContent('(1) Roger Federer')
 		expect(screen.getByTestId('SlotScoreR8P1')).toHaveTextContent('6-3, 6-4, 6-2')
+	})
+
+	test('Slot renders without data', () => {
+		render(PageSetup, {
+			props: {
+				component: Page,
+				data
+			}
+		})
+
+		expect(screen.getByTestId('SlotNameR8P1')).toHaveTextContent('TBD')
+		expect(screen.queryByTestId('SlotScoreR8P1')).not.toBeInTheDocument()
 	})
 
 	test('Score is formatted correctly', () => {
