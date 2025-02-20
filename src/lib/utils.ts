@@ -1,11 +1,9 @@
-import type Client from 'pocketbase'
 import type { ClientResponseError } from 'pocketbase'
-import { currentUsername, drawNavUrl, isAuth, selectedUsers } from './store'
+import { selectedUsers } from './store'
 import {
 	DrawStatus,
 	type Draw,
 	type DrawResult,
-	type RootLayoutData,
 	type SelectedUser,
 	type SelectedUserNoColor,
 	type SlotWithRawScore
@@ -13,6 +11,8 @@ import {
 import { get } from 'svelte/store'
 import Cookies from 'js-cookie'
 import { selectColors } from './data'
+import { cubicInOut } from 'svelte/easing'
+import type { TransitionConfig } from 'svelte/transition'
 
 type ErrorObjData = {
 	[key: string]: {
@@ -211,4 +211,25 @@ const isCompleteSet = (set: string) => {
 	}
 
 	return false
+}
+
+interface SlideParams {
+	duration?: number
+	x?: number
+}
+
+export function customSlide(
+	_: HTMLElement,
+	{ duration = 250, x = 0 }: SlideParams = {}
+): TransitionConfig {
+	return {
+		duration,
+		css: (t: number): string => {
+			const eased = cubicInOut(t)
+			return `
+        position: fixed;
+        transform: translateX(${(1 - eased) * x}px);
+      `
+		}
+	}
 }

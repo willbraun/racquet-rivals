@@ -25,7 +25,7 @@
 	import Rank from '$lib/components/Rank.svelte'
 	import Header from '$lib/components/Header.svelte'
 	import { onMount } from 'svelte'
-	import { fly } from 'svelte/transition'
+	import { customSlide } from '$lib/utils'
 
 	interface Props {
 		data: DrawPageData
@@ -261,7 +261,7 @@
 	</div>
 	{#if $isAuth}
 		<div
-			class="col-span-4 mx-auto flex w-fit overflow-hidden rounded-md md:col-span-1"
+			class="col-span-4 mx-auto flex w-fit overflow-x-hidden rounded-md md:col-span-1"
 			data-testid="LeaderboardToggle"
 		>
 			<button
@@ -309,11 +309,11 @@
 		</div>
 	{/if}
 </section>
-<main class="relative overflow-x-hidden" style="height: {mainHeight}px">
+<main class="relative" style="height: {mainHeight}px; clip-path: inset(0)">
 	{#if combinedIsLeaderboard}
 		<div
-			class="absolute mx-auto grid w-full shrink-0 grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
-			transition:fly={{ duration: 300, x: innerWidth, opacity: 1 }}
+			class="absolute inset-x-0 mx-auto grid w-full shrink-0 grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
+			transition:customSlide={{ x: innerWidth }}
 			bind:offsetHeight={leaderboardHeight}
 			data-testid="Leaderboard"
 		>
@@ -381,8 +381,8 @@
 		</div>
 	{:else}
 		<div
-			class="absolute w-full"
-			transition:fly={{ duration: 300, x: -innerWidth, opacity: 1 }}
+			class="absolute inset-x-0 w-full"
+			transition:customSlide={{ x: -innerWidth }}
 			bind:offsetHeight={drawHeight}
 			data-testid="Draw"
 		>
