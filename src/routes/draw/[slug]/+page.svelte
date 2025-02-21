@@ -27,6 +27,7 @@
 	import { onMount } from 'svelte'
 	import { customSlide } from '$lib/utils'
 	import MatchScore from '$lib/components/MatchScore.svelte'
+	import { draw } from 'svelte/transition'
 
 	interface Props {
 		data: DrawPageData
@@ -148,6 +149,7 @@
 	let allRounds = $derived([...Array(fullDrawRounds).keys()].map((x) => x + 1))
 	let ourRounds = $derived(allRounds.slice(-5))
 	let slots = $derived(data.slots.filter((slot) => slot.round >= fullDrawRounds - 4))
+	let showTieBreak = $derived(data.draw.event === "Men's Singles")
 
 	let roundLabel = $derived(
 		(() => {
@@ -417,15 +419,19 @@
 								style:height={getHeight(index, slot.position)}
 							>
 								{#if slot.name.trim()}
+									{@const prevSlot1 = slots.find(
+										(s) => s.round === slot.round - 1 && s.position === slot.position * 2 - 1
+									)}
+									{@const prevSlot2 = slots.find(
+										(s) => s.round === slot.round - 1 && s.position === slot.position * 2
+									)}
 									<p
 										class={slot.name.length > 16 ? 'text-sm xl:text-lg' : 'text-lg'}
 										data-testid={`SlotNameR${slot.round}P${slot.position}`}
 									>
 										{`${slot.seed} ${slot.name}`}
 									</p>
-									<div data-testid={`SlotScoreR${slot.round}P${slot.position}`}>
-										<MatchScore {slot} allSlots={slots} showTieBreak />
-									</div>
+									<MatchScore {slot} {prevSlot1} {prevSlot2} draw={data.draw} />
 								{:else}
 									<p
 										class="text-lg italic text-surface-800"

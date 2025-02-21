@@ -1,5 +1,5 @@
 import { fail, type Actions } from '@sveltejs/kit'
-import { errorMessage, formatScore } from '$lib/utils'
+import { errorMessage } from '$lib/utils'
 import { mainColor } from '$lib/data'
 import { fetchJson } from '$lib/server/utils'
 import type { ClientResponseError } from 'pocketbase'
@@ -65,42 +65,6 @@ export async function load({ fetch, params, locals, cookies }) {
 			fetch
 		)
 	])
-
-	// // format score string from raw score of previous two slots
-	// const doFormatScores = compareAsc(draw.start_date, '2024-06-30') > 0
-	// const showTieBreak = draw.event === "Men's Singles"
-	// const slots: Slot[] = doFormatScores
-	// 	? slotsWithRawScores.items.map((slot) => {
-	// 			if (slot.round <= 4) {
-	// 				return slot
-	// 			}
-
-	// 			if (slot.name === '') {
-	// 				return slot
-	// 			}
-
-	// 			const prevSlot1 = slotsWithRawScores.items.find(
-	// 				(s) => s.round === slot.round - 1 && s.position === slot.position * 2 - 1
-	// 			)
-	// 			const prevSlot2 = slotsWithRawScores.items.find(
-	// 				(s) => s.round === slot.round - 1 && s.position === slot.position * 2
-	// 			)
-
-	// 			if (!prevSlot1 || !prevSlot2) {
-	// 				return slot
-	// 			}
-
-	// 			const [winner, loser] =
-	// 				slot.name === prevSlot1.name ? [prevSlot1, prevSlot2] : [prevSlot2, prevSlot1]
-
-	// 			const score = formatScore(winner, loser, showTieBreak)
-
-	// 			return {
-	// 				...slot,
-	// 				score
-	// 			}
-	// 		})
-	// 	: slotsWithRawScores.items
 
 	const cookieSelectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
 	const allUsers = [currentUser, ...cookieSelectedUsers]

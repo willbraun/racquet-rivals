@@ -5,8 +5,7 @@ import {
 	type Draw,
 	type DrawResult,
 	type SelectedUser,
-	type SelectedUserNoColor,
-	type SlotWithRawScore
+	type SelectedUserNoColor
 } from './types'
 import { get } from 'svelte/store'
 import Cookies from 'js-cookie'
@@ -152,65 +151,6 @@ export const formatPercent = (num: number | null): string => {
 	}
 
 	return `${result}%`
-}
-
-export const formatScore = (
-	winner: SlotWithRawScore,
-	loser: SlotWithRawScore,
-	showTieBreak: boolean
-): string => {
-	let sets = []
-	for (let i = 1; i <= 5; i++) {
-		let setScore = ''
-		const games = `set${i}_games` as keyof SlotWithRawScore
-		const tiebreak = `set${i}_tiebreak` as keyof SlotWithRawScore
-		if (winner[games] !== null && loser[games] !== null) {
-			setScore = `${winner[games]}-${loser[games]}`
-		}
-
-		if (showTieBreak && Number(winner[games]) === 7 && Number(loser[games]) === 6) {
-			setScore += ` (${loser[tiebreak]})`
-		}
-		if (showTieBreak && Number(winner[games]) === 6 && Number(loser[games]) === 7) {
-			setScore += ` (${winner[tiebreak]})`
-		}
-
-		if (setScore) {
-			sets.push(setScore)
-		}
-	}
-
-	let isRetire = false
-	const last = sets.at(-1) || '0-0'
-
-	if (!isCompleteSet(last)) {
-		isRetire = true
-	}
-
-	if (last === '0-0') {
-		sets.pop()
-	}
-
-	if (sets.length === 0) {
-		return 'Walkover'
-	}
-
-	return sets.join(', ') + (isRetire ? ' (Ret.)' : '')
-}
-
-const isCompleteSet = (set: string) => {
-	const games = set.trim().split(' ')[0]
-	const setStrings = games.split('-', 2)
-	const [winnerInt, loserInt] = setStrings.map((s) => Number(s))
-	if ((winnerInt === 7 && loserInt === 6) || (winnerInt === 6 && loserInt === 7)) {
-		return true
-	}
-
-	if (Math.max(winnerInt, loserInt) >= 6 && Math.abs(winnerInt - loserInt) >= 2) {
-		return true
-	}
-
-	return false
 }
 
 interface SlideParams {

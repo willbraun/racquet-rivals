@@ -1,33 +1,19 @@
 <script lang="ts">
-	import type { Slot } from '$lib/types'
+	import type { Draw, Slot } from '$lib/types'
+	import { compareAsc } from 'date-fns'
 
 	interface Props {
 		slot: Slot
-		allSlots: Slot[]
-		showTieBreak: boolean
+		prevSlot1?: Slot
+		prevSlot2?: Slot
+		draw: Draw
 	}
 
-	let { slot, allSlots, showTieBreak }: Props = $props()
+	let { slot, prevSlot1, prevSlot2, draw }: Props = $props()
 
-	const prevSlot1 = allSlots.find(
-		(s) => s.round === slot.round - 1 && s.position === slot.position * 2 - 1
-	)
-	const prevSlot2 = allSlots.find(
-		(s) => s.round === slot.round - 1 && s.position === slot.position * 2
-	)
-
-	let winner: Slot | null = $state(null)
-	let loser: Slot | null = $state(null)
-
-	if (prevSlot1 && prevSlot2) {
-		if (slot.name === prevSlot1.name) {
-			winner = prevSlot1
-			loser = prevSlot2
-		} else {
-			winner = prevSlot2
-			loser = prevSlot1
-		}
-	}
+	let showTieBreak = $derived(draw.event === "Men's Singles")
+	let firstToSets = $derived(draw.event === "Men's Singles" ? 3 : 2)
+	const showScores = $derived(compareAsc(draw.start_date, '2024-06-30') > 0 && slot.round > 4)
 
 	interface Set {
 		winner: {
@@ -40,8 +26,15 @@
 		}
 	}
 
-	let sets: Set[] = []
-	if (winner && loser) {
+	let sets = $derived.by(() => {
+		if (!prevSlot1 || !prevSlot2) {
+			return []
+		}
+
+		let winner = slot.name === prevSlot1.name ? prevSlot1 : prevSlot2
+		let loser = slot.name === prevSlot1.name ? prevSlot2 : prevSlot1
+
+		let result: Set[] = []
 		for (let i = 1; i <= 5; i++) {
 			const games = `set${i}_games` as keyof Slot
 			const tiebreak = `set${i}_tiebreak` as keyof Slot
@@ -49,7 +42,7 @@
 				break
 			}
 
-			sets.push({
+			result.push({
 				winner: {
 					games: Number(winner[games]),
 					tiebreak: Number(winner[tiebreak])
@@ -60,30 +53,72 @@
 				}
 			})
 		}
+
+		if (result.length > 0) {
+			const lastSet = result[result.length - 1]
+			if (lastSet.winner.games === 0 && lastSet.loser.games === 0) {
+				result.pop()
+			}
+		}
+
+		return result
+	})
+
+	const isCompleteSet = (set: Set) => {
+		if (
+			(set.winner.games === 7 && set.loser.games === 6) ||
+			(set.winner.games === 6 && set.loser.games === 7)
+		) {
+			return true
+		}
+		if (
+			Math.max(set.winner.games, set.loser.games) >= 6 &&
+			Math.abs(set.winner.games - set.loser.games) >= 2
+		) {
+			return true
+		}
+
+		return false
+	}
+
+	const isRetirement = (sets: Set[]) => {
+		if (sets.length === 0) {
+			return false
+		}
+
+		// Winner didn't win enough sets
+		const winnerSetsWon = sets.filter(
+			(set) => isCompleteSet(set) && set.winner.games > set.loser.games
+		).length
+		if (winnerSetsWon < firstToSets) {
+			return true
+		}
 	}
 </script>
 
-<div class="flex w-full text-xs text-gray-500">
-	{#if winner && loser}
-		{#each sets as set, i}
-			<p>
-				{set.winner.games.toString().trim()}
-				{#if set.winner.games === 6 && set.loser.games === 7}
-					<sup>({set.winner.tiebreak.toString().trim()})</sup>
+<div class="flex w-full justify-center text-xs text-gray-500" data-testid="MatchScore">
+	{#if showScores}
+		{#if sets.length > 0}
+			{#each sets as set, i}
+				<p>
+					{set.winner.games}
+				</p>
+				{#if showTieBreak && set.winner.games === 6 && set.loser.games === 7}
+					<sup class="relative top-[3px]">{set.winner.tiebreak}</sup>
 				{/if}
-			</p>
-			{'-'}
-			<p>
-				{set.loser.games.toString().trim()}
-				{#if set.winner.games === 7 && set.loser.games === 6}
-					<sup>({set.loser.tiebreak.toString().trim()})</sup>
+				<p>{`-${set.loser.games}`}</p>
+				{#if showTieBreak && set.winner.games === 7 && set.loser.games === 6}
+					<sup class="relative top-[3px]">{set.loser.tiebreak}</sup>
 				{/if}
-			</p>
-			{#if i !== sets.length - 1}
-				{', '}
+				{#if i !== sets.length - 1}
+					<p class="pr-0.5">{','}</p>
+				{/if}
+			{/each}
+			{#if isRetirement(sets)}
+				<p class="pl-1">(Ret.)</p>
 			{/if}
-		{/each}
-	{:else}
-		<p>No previous matches</p>
+		{:else}
+			<p>Walkover</p>
+		{/if}
 	{/if}
 </div>

@@ -14,7 +14,6 @@ import type {
 import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
 import { isAuth, selectedUsers } from '$lib/store'
-import { formatScore } from '$lib/utils'
 
 const emptySlotData: Slot[] = []
 for (let i = 1; i <= 8; i++) {
@@ -474,8 +473,7 @@ describe('Draw page component', () => {
 		const newSlot = {
 			...slot,
 			name: 'Roger Federer',
-			seed: '(1)',
-			score: '6-3, 6-4, 6-2'
+			seed: '(1)'
 		} as Slot
 		const newSlots = emptySlotData.with(-1, newSlot) as Slot[]
 
@@ -490,7 +488,6 @@ describe('Draw page component', () => {
 		})
 
 		expect(screen.getByTestId('SlotNameR8P1')).toHaveTextContent('(1) Roger Federer')
-		expect(screen.getByTestId('SlotScoreR8P1')).toHaveTextContent('6-3, 6-4, 6-2')
 	})
 
 	test('Slot renders without data', () => {
@@ -503,175 +500,5 @@ describe('Draw page component', () => {
 
 		expect(screen.getByTestId('SlotNameR8P1')).toHaveTextContent('TBD')
 		expect(screen.queryByTestId('SlotScoreR8P1')).not.toBeInTheDocument()
-	})
-
-	test('Score is formatted correctly', () => {
-		const blank = emptySlotData.at(-1) as Slot
-
-		const scenarios = [
-			{
-				winner: {
-					...blank,
-					set1_games: 6,
-					set1_tiebreak: 0,
-					set2_games: 6,
-					set2_tiebreak: 0,
-					set3_games: 6,
-					set3_tiebreak: 0
-				},
-				loser: {
-					...blank,
-					set1_games: 3,
-					set1_tiebreak: 0,
-					set2_games: 4,
-					set2_tiebreak: 0,
-					set3_games: 2,
-					set3_tiebreak: 0
-				},
-				showTieBreak: true,
-				expectedScore: '6-3, 6-4, 6-2'
-			},
-			{
-				winner: {
-					...blank,
-					set1_games: 7,
-					set1_tiebreak: 0,
-					set2_games: 5,
-					set2_tiebreak: 0,
-					set3_games: 6,
-					set3_tiebreak: 10,
-					set4_games: 6,
-					set4_tiebreak: 0,
-					set5_games: 6,
-					set5_tiebreak: 0
-				},
-				loser: {
-					...blank,
-					set1_games: 6,
-					set1_tiebreak: 7,
-					set2_games: 7,
-					set2_tiebreak: 0,
-					set3_games: 7,
-					set3_tiebreak: 0,
-					set4_games: 3,
-					set4_tiebreak: 0,
-					set5_games: 0,
-					set5_tiebreak: 0
-				},
-				showTieBreak: true,
-				expectedScore: '7-6 (7), 5-7, 6-7 (10), 6-3, 6-0'
-			},
-			{
-				winner: blank,
-				loser: blank,
-				showTieBreak: true,
-				expectedScore: 'Walkover'
-			},
-			{
-				winner: {
-					...blank,
-					set1_games: 7,
-					set1_tiebreak: 0,
-					set2_games: 6,
-					set2_tiebreak: 0,
-					set3_games: 7,
-					set3_tiebreak: 0
-				},
-				loser: {
-					...blank,
-					set1_games: 6,
-					set1_tiebreak: 0,
-					set2_games: 7,
-					set2_tiebreak: 0,
-					set3_games: 6,
-					set3_tiebreak: 0
-				},
-				showTieBreak: false,
-				expectedScore: '7-6, 6-7, 7-6'
-			},
-			{
-				winner: blank,
-				loser: blank,
-				showTieBreak: false,
-				expectedScore: 'Walkover'
-			},
-			{
-				winner: {
-					...blank,
-					set1_games: 5,
-					set1_tiebreak: 0
-				},
-				loser: {
-					...blank,
-					set1_games: 3,
-					set1_tiebreak: 0
-				},
-				showTieBreak: true,
-				expectedScore: '5-3 (Ret.)'
-			},
-			{
-				winner: {
-					...blank,
-					set1_games: 6,
-					set1_tiebreak: 0
-				},
-				loser: {
-					...blank,
-					set1_games: 5,
-					set1_tiebreak: 0
-				},
-				showTieBreak: true,
-				expectedScore: '6-5 (Ret.)'
-			},
-			{
-				winner: {
-					...blank,
-					set1_games: 6,
-					set1_tiebreak: 0,
-					set2_games: 1,
-					set2_tiebreak: 0,
-					set3_games: 0,
-					set3_tiebreak: 0
-				},
-				loser: {
-					...blank,
-					set1_games: 4,
-					set1_tiebreak: 0,
-					set2_games: 6,
-					set2_tiebreak: 0,
-					set3_games: 0,
-					set3_tiebreak: 0
-				},
-				showTieBreak: true,
-				expectedScore: '6-4, 1-6 (Ret.)'
-			},
-			{
-				winner: {
-					...blank,
-					set1_games: 6,
-					set1_tiebreak: 0,
-					set2_games: 6,
-					set2_tiebreak: 0,
-					set3_games: 7,
-					set3_tiebreak: 0
-				},
-				loser: {
-					...blank,
-					set1_games: 2,
-					set1_tiebreak: 0,
-					set2_games: 2,
-					set2_tiebreak: 0,
-					set3_games: 6,
-					set3_tiebreak: 4
-				},
-				showTieBreak: true,
-				expectedScore: '6-2, 6-2, 7-6 (4)'
-			}
-		]
-
-		scenarios.forEach(({ winner, loser, showTieBreak, expectedScore }) => {
-			const formattedScore = formatScore(winner, loser, showTieBreak)
-			expect(formattedScore).toBe(expectedScore)
-		})
 	})
 })

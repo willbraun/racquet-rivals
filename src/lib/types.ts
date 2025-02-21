@@ -68,19 +68,19 @@ export interface Slot {
 	round: number
 	seed: string
 	updated: string
-	set1_id: string
+	set1_id: string | null
 	set1_games: number | null
 	set1_tiebreak: number | null
-	set2_id: string
+	set2_id: string | null
 	set2_games: number | null
 	set2_tiebreak: number | null
-	set3_id: string
+	set3_id: string | null
 	set3_games: number | null
 	set3_tiebreak: number | null
-	set4_id: string
+	set4_id: string | null
 	set4_games: number | null
 	set4_tiebreak: number | null
-	set5_id: string
+	set5_id: string | null
 	set5_games: number | null
 	set5_tiebreak: number | null
 }
