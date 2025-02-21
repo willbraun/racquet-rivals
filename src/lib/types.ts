@@ -57,7 +57,7 @@ export interface Draw {
 	year: number
 }
 
-export interface SlotWithRawScore {
+export interface Slot {
 	collectionId: string
 	collectionName: 'slots_with_scores'
 	created: string
@@ -83,10 +83,6 @@ export interface SlotWithRawScore {
 	set5_id: string
 	set5_games: number | null
 	set5_tiebreak: number | null
-}
-
-export interface Slot extends SlotWithRawScore {
-	score?: string
 }
 
 export interface Prediction {

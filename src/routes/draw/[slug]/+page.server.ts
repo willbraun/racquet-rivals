@@ -11,8 +11,7 @@ import type {
 	PredictionRecord,
 	SelectedUser,
 	SelectedUserNoColor,
-	Slot,
-	SlotWithRawScore
+	Slot
 } from '$lib/types'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { SCRIPT_USERNAME } from '$env/static/private'
@@ -35,11 +34,11 @@ export async function load({ fetch, params, locals, cookies }) {
 	const today = format(new Date(), 'yyyy-MM-dd')
 	const token = locals.pb.authStore.token
 
-	const [active, completed, draw, slotsWithRawScores, drawResults]: [
+	const [active, completed, draw, slots, drawResults]: [
 		PbListResponse<Draw>,
 		PbListResponse<Draw>,
 		Draw,
-		PbListResponse<SlotWithRawScore>,
+		PbListResponse<Slot>,
 		PbListResponse<DrawResult>
 	] = await Promise.all([
 		fetchJson(
@@ -67,41 +66,41 @@ export async function load({ fetch, params, locals, cookies }) {
 		)
 	])
 
-	// format score string from raw score of previous two slots
-	const doFormatScores = compareAsc(draw.start_date, '2024-06-30') > 0
-	const showTieBreak = draw.event === "Men's Singles"
-	const slots: Slot[] = doFormatScores
-		? slotsWithRawScores.items.map((slot) => {
-				if (slot.round <= 4) {
-					return slot
-				}
+	// // format score string from raw score of previous two slots
+	// const doFormatScores = compareAsc(draw.start_date, '2024-06-30') > 0
+	// const showTieBreak = draw.event === "Men's Singles"
+	// const slots: Slot[] = doFormatScores
+	// 	? slotsWithRawScores.items.map((slot) => {
+	// 			if (slot.round <= 4) {
+	// 				return slot
+	// 			}
 
-				if (slot.name === '') {
-					return slot
-				}
+	// 			if (slot.name === '') {
+	// 				return slot
+	// 			}
 
-				const prevSlot1 = slotsWithRawScores.items.find(
-					(s) => s.round === slot.round - 1 && s.position === slot.position * 2 - 1
-				)
-				const prevSlot2 = slotsWithRawScores.items.find(
-					(s) => s.round === slot.round - 1 && s.position === slot.position * 2
-				)
+	// 			const prevSlot1 = slotsWithRawScores.items.find(
+	// 				(s) => s.round === slot.round - 1 && s.position === slot.position * 2 - 1
+	// 			)
+	// 			const prevSlot2 = slotsWithRawScores.items.find(
+	// 				(s) => s.round === slot.round - 1 && s.position === slot.position * 2
+	// 			)
 
-				if (!prevSlot1 || !prevSlot2) {
-					return slot
-				}
+	// 			if (!prevSlot1 || !prevSlot2) {
+	// 				return slot
+	// 			}
 
-				const [winner, loser] =
-					slot.name === prevSlot1.name ? [prevSlot1, prevSlot2] : [prevSlot2, prevSlot1]
+	// 			const [winner, loser] =
+	// 				slot.name === prevSlot1.name ? [prevSlot1, prevSlot2] : [prevSlot2, prevSlot1]
 
-				const score = formatScore(winner, loser, showTieBreak)
+	// 			const score = formatScore(winner, loser, showTieBreak)
 
-				return {
-					...slot,
-					score
-				}
-			})
-		: slotsWithRawScores.items
+	// 			return {
+	// 				...slot,
+	// 				score
+	// 			}
+	// 		})
+	// 	: slotsWithRawScores.items
 
 	const cookieSelectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
 	const allUsers = [currentUser, ...cookieSelectedUsers]
@@ -111,7 +110,7 @@ export async function load({ fetch, params, locals, cookies }) {
 		active,
 		completed,
 		draw,
-		slots,
+		slots: slots.items,
 		drawResults,
 		predictions: predictionData,
 		currentUser: currentUser,

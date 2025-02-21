@@ -26,6 +26,7 @@
 	import Header from '$lib/components/Header.svelte'
 	import { onMount } from 'svelte'
 	import { customSlide } from '$lib/utils'
+	import MatchScore from '$lib/components/MatchScore.svelte'
 
 	interface Props {
 		data: DrawPageData
@@ -422,12 +423,9 @@
 									>
 										{`${slot.seed} ${slot.name}`}
 									</p>
-									<p
-										class="w-full text-xs text-gray-500"
-										data-testid={`SlotScoreR${slot.round}P${slot.position}`}
-									>
-										{slot.score}
-									</p>
+									<div data-testid={`SlotScoreR${slot.round}P${slot.position}`}>
+										<MatchScore {slot} allSlots={slots} showTieBreak />
+									</div>
 								{:else}
 									<p
 										class="text-lg italic text-surface-800"
