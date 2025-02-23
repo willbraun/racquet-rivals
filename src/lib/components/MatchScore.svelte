@@ -13,7 +13,9 @@
 
 	let showTieBreak = $derived(draw.event === "Men's Singles")
 	let firstToSets = $derived(draw.event === "Men's Singles" ? 3 : 2)
-	const showScores = $derived(compareAsc(draw.start_date, '2024-06-30') > 0 && slot.round > 4)
+	const showScores = $derived(
+		slot.name && slot.round > 4 && compareAsc(draw.start_date, '2024-06-30')
+	)
 
 	interface Set {
 		winner: {
