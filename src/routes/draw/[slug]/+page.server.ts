@@ -1,6 +1,6 @@
 import { fail, type Actions } from '@sveltejs/kit'
 import { errorMessage } from '$lib/utils'
-import { mainColor } from '$lib/data'
+import { exampleSelectedUsers, mainColor } from '$lib/data'
 import { fetchJson } from '$lib/server/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
@@ -16,7 +16,7 @@ import type {
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { SCRIPT_USERNAME } from '$env/static/private'
 import { getPredictions } from '$lib/api.js'
-import { format, compareAsc } from 'date-fns'
+import { format } from 'date-fns'
 
 const getCurrentUser = (locals: App.Locals): SelectedUser => {
 	return {
@@ -31,6 +31,7 @@ export async function load({ fetch, params, locals, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const url = PUBLIC_POCKETBASE_URL
 	const currentUser = getCurrentUser(locals)
+	console.log('currentUser', currentUser)
 	const today = format(new Date(), 'yyyy-MM-dd')
 	const token = locals.pb.authStore.token
 
@@ -43,34 +44,38 @@ export async function load({ fetch, params, locals, cookies }) {
 	] = await Promise.all([
 		fetchJson(
 			`${url}/api/collections/draw/records?filter=(end_date>="${today}")&sort=-start_date,event`,
-			token,
-			fetch
+			fetch,
+			token
 		),
 		fetchJson(
 			`${url}/api/collections/draw/records?filter=(end_date<"${today}")&sort=-start_date,event`,
-			token,
-			fetch
+			fetch,
+			token
 		),
-		fetchJson(`${url}/api/collections/draw/records/${id}`, token, fetch),
+		fetchJson(`${url}/api/collections/draw/records/${id}`, fetch, token),
 		fetchJson(
 			`${url}/api/collections/slots_with_scores/records?perPage=255&filter=(draw_id="${id}")`,
-			token,
-			fetch
+			fetch,
+			token
 		),
 		fetchJson(
 			`${url}/api/collections/draw_results/records?perPage=255&filter=${encodeURIComponent(
 				`(draw_id="${id}" && prediction_count > 0)`
 			)}`,
-			token,
-			fetch
+			fetch,
+			token
 		)
 	])
 
-	const cookieSelectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
+	const cookieSelectedUsers: SelectedUser[] = token
+		? JSON.parse(cookies.get('selectedUsers') ?? '[]')
+		: exampleSelectedUsers
+	console.log('test', JSON.parse(cookies.get('selectedUsers') ?? '[]'))
 	const selectedUsersFromCurrentUser = cookieSelectedUsers.filter(
 		(user) => user.selectorId === currentUser.id && user.id !== currentUser.id
 	)
-	const allUsers = [currentUser, ...selectedUsersFromCurrentUser]
+	console.log('selectedUsersFromCurrentUser', selectedUsersFromCurrentUser)
+	const allUsers = token ? [currentUser, ...selectedUsersFromCurrentUser] : cookieSelectedUsers
 	const predictionData = await getPredictions(id, allUsers, locals.pb.authStore.token)
 
 	return {

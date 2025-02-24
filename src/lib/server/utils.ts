@@ -2,12 +2,14 @@ import { errorMessage } from '$lib/utils'
 import { error } from '@sveltejs/kit'
 import type { ClientResponseError } from 'pocketbase'
 
-export const fetchJson = async (url: string, token: string, svelteFetch: SvelteFetch) => {
-	const options = {
-		headers: {
-			Authorization: token
-		}
-	}
+export const fetchJson = async (url: string, svelteFetch: SvelteFetch, token?: string) => {
+	const options: RequestInit = token
+		? {
+				headers: {
+					Authorization: token
+				}
+			}
+		: {}
 
 	try {
 		const response = await svelteFetch(url, options)

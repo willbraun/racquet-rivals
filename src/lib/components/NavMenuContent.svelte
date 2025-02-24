@@ -29,12 +29,14 @@
 {/snippet}
 
 <nav class="flex h-full w-full flex-col items-start gap-8 p-8">
+	{@render menuLink('Draws', bracketLeft, 'draws', 24, $drawNavUrl)}
 	{#if $isAuth}
-		{@render menuLink('Draws', bracketLeft, 'draws', 24, $drawNavUrl)}
 		{@render menuLink('My Profile', user, 'profile', 18, `/profile/${$currentUsername}`)}
-		{@render menuLink('Rankings', trophy, 'rankings', 24, '/rankings')}
-		{@render about()}
-		<ShareLink />
+	{/if}
+	{@render menuLink('Rankings', trophy, 'rankings', 24, '/rankings')}
+	{@render about()}
+	<ShareLink />
+	{#if $isAuth}
 		<LogoutForm>
 			<button
 				type="submit"
@@ -48,7 +50,5 @@
 	{:else}
 		{@render menuLink('Log in', login, 'login', 24, '/login')}
 		{@render menuLink('Sign up', signup, 'sign up', 24, '/create-account')}
-		<ShareLink />
-		{@render about()}
 	{/if}
 </nav>
