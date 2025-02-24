@@ -25,12 +25,6 @@
 	const buttonStyle = `btn btn-sm rounded-lg ${isInverted ? 'bg-white text-black' : 'bg-black text-white'}`
 </script>
 
-{#snippet about()}
-	<a href="/about">
-		<img src={infoIcon} alt="about" width="24" class:invert={isInverted} />
-	</a>
-{/snippet}
-
 <button
 	onclick={() => drawerStore.open(drawerSettings)}
 	class="block flex-shrink-0 sm:hidden"
@@ -46,22 +40,25 @@
 </button>
 <nav class="hidden flex-shrink-0 sm:block">
 	<div class="flex items-center gap-4">
+		<a href={$drawNavUrl}>
+			<img src={bracketLeft} alt="draws" width="24" class:invert={isInverted} />
+		</a>
 		{#if $isAuth}
-			<a href={$drawNavUrl}>
-				<img src={bracketLeft} alt="draws" width="24" class:invert={isInverted} />
-			</a>
 			<a href={`/profile/${$currentUsername}`}>
 				<img src={user} alt="profile" width="18" class:invert={isInverted} />
 			</a>
-			<a href={`/rankings`}>
-				<img src={trophy} alt="rankings" width="24" class:invert={isInverted} />
-			</a>
-			{@render about()}
+		{/if}
+		<a href={`/rankings`}>
+			<img src={trophy} alt="rankings" width="24" class:invert={isInverted} />
+		</a>
+		<a href="/about">
+			<img src={infoIcon} alt="about" width="24" class:invert={isInverted} />
+		</a>
+		{#if $isAuth}
 			<LogoutForm>
 				<button type="submit" class={buttonStyle}>Log out</button>
 			</LogoutForm>
 		{:else}
-			{@render about()}
 			<a href="/login">
 				<button type="button" class={buttonStyle}>Log in</button>
 			</a>
