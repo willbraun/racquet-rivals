@@ -1,6 +1,6 @@
 import { fail, type Actions } from '@sveltejs/kit'
 import { errorMessage } from '$lib/utils'
-import { mainColor } from '$lib/data'
+import { exampleSelectedUsers, mainColor } from '$lib/data'
 import { fetchJson } from '$lib/server/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
@@ -16,7 +16,7 @@ import type {
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { SCRIPT_USERNAME } from '$env/static/private'
 import { getPredictions } from '$lib/api.js'
-import { format, compareAsc } from 'date-fns'
+import { format } from 'date-fns'
 
 const getCurrentUser = (locals: App.Locals): SelectedUser => {
 	return {
@@ -66,8 +66,10 @@ export async function load({ fetch, params, locals, cookies }) {
 		)
 	])
 
-	const cookieSelectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
-	const allUsers = [currentUser, ...cookieSelectedUsers]
+	const cookieSelectedUsers: SelectedUser[] = token
+		? JSON.parse(cookies.get('selectedUsers') ?? '[]')
+		: exampleSelectedUsers
+	const allUsers = token ? [currentUser, ...cookieSelectedUsers] : cookieSelectedUsers
 	const predictionData = await getPredictions(id, allUsers, locals.pb.authStore.token)
 
 	return {

@@ -14,3 +14,18 @@ export const rankingDescriptions = {
 	averagePoints: `Your average score across all tournaments you've played.`,
 	predictionAccuracy: `How often you choose correctly across all tournaments you've played.`
 }
+
+export const exampleSelectedUsers = [
+	{
+		selectorId: 'logged-out-user',
+		id: 'gvi2dlpb8gltpvo',
+		username: 'will',
+		color: 'bg-blue-300'
+	},
+	{
+		selectorId: 'logged-out-user',
+		id: 'eycqioo1bkgb3fp',
+		username: 'TereseM',
+		color: 'bg-red-300'
+	}
+]

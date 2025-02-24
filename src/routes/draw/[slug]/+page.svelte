@@ -27,7 +27,7 @@
 	import { onMount } from 'svelte'
 	import { customSlide } from '$lib/utils'
 	import MatchScore from '$lib/components/MatchScore.svelte'
-	import { draw } from 'svelte/transition'
+	import { exampleSelectedUsers } from '$lib/data'
 
 	interface Props {
 		data: DrawPageData
@@ -58,12 +58,7 @@
 
 	let serverIsLeaderboard = data.isLeaderboard === 'true'
 	isLeaderboard.set(serverIsLeaderboard)
-	let combinedIsLeaderboard = $derived(browser ? $isAuth && $isLeaderboard : serverIsLeaderboard)
-
-	let supportsViewTransitions = false
-	onMount(() => {
-		supportsViewTransitions = 'startViewTransition' in document
-	})
+	let combinedIsLeaderboard = $derived(browser ? $isLeaderboard : serverIsLeaderboard)
 
 	const toggleLeaderboard = (value: boolean) => {
 		isLeaderboard.set(value)
@@ -124,10 +119,16 @@
 	}
 
 	let combinedSelectedUsers = $derived(browser ? $selectedUsers : data.cookieSelectedUsers)
-	let users = $derived([
-		data.currentUser,
-		...combinedSelectedUsers.filter((user) => user.selectorId === data.currentUser.id)
-	])
+	let users: SelectedUser[] = $derived.by(() => {
+		if ($isAuth) {
+			return [
+				data.currentUser,
+				...combinedSelectedUsers.filter((user) => user.selectorId === data.currentUser.id)
+			]
+		} else {
+			return exampleSelectedUsers
+		}
+	})
 	const colorMap: Map<string, string> = $derived(
 		new Map(users.map((user) => [user.id, user.color]))
 	)
@@ -149,7 +150,6 @@
 	let allRounds = $derived([...Array(fullDrawRounds).keys()].map((x) => x + 1))
 	let ourRounds = $derived(allRounds.slice(-5))
 	let slots = $derived(data.slots.filter((slot) => slot.round >= fullDrawRounds - 4))
-	let showTieBreak = $derived(data.draw.event === "Men's Singles")
 
 	let roundLabel = $derived(
 		(() => {
@@ -262,55 +262,53 @@
 	<div class="col-span-4 text-center text-black md:col-span-1">
 		Active Round: <span class="font-bold">{roundLabel}</span>
 	</div>
-	{#if $isAuth}
-		<div
-			class="col-span-4 mx-auto flex w-fit overflow-x-hidden rounded-md md:col-span-1"
-			data-testid="LeaderboardToggle"
+	<div
+		class="col-span-4 mx-auto flex w-fit overflow-x-hidden rounded-md md:col-span-1"
+		data-testid="LeaderboardToggle"
+	>
+		<button
+			class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-300 hover:brightness-105' : 'bg-primary-500 text-white'}`}
+			onclick={() => toggleLeaderboard(false)}>Draw</button
 		>
+		<button
+			class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300 hover:brightness-105'}`}
+			onclick={() => toggleLeaderboard(true)}>Leaderboard</button
+		>
+	</div>
+	<div class="col-span-4 mt-1 flex flex-wrap items-center justify-center gap-2 md:justify-start">
+		<p>Users:</p>
+		{#each users as user}
 			<button
-				class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-300 hover:brightness-105' : 'bg-primary-500 text-white'}`}
-				onclick={() => toggleLeaderboard(false)}>Draw</button
+				type="button"
+				class="chip relative h-6 max-w-full rounded-full text-black {user.color} shadow"
+				onclick={() => goto(`/profile/${user.username}`)}
+				data-testid={`User_${user.username}`}
 			>
-			<button
-				class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300 hover:brightness-105'}`}
-				onclick={() => toggleLeaderboard(true)}>Leaderboard</button
-			>
-		</div>
-	{:else}
-		<p class="col-span-4 text-center italic md:col-span-1">Log in to play!</p>
-	{/if}
-	{#if $isAuth}
-		<div class="col-span-4 mt-1 flex flex-wrap items-center justify-center gap-2 md:justify-start">
-			<p>Users:</p>
-			{#each users as user}
-				<button
-					type="button"
-					class="chip relative h-6 max-w-full rounded-full text-black {user.color} shadow"
-					onclick={() => goto(`/profile/${user.username}`)}
-					data-testid={`User_${user.username}`}
+				<p class="truncate text-ellipsis">{user.username}</p>
+				<div
+					class="badge-icon absolute -right-1.5 -top-1.5 z-10 h-4 w-fit rounded-full bg-green-400 px-1 text-sm"
+					data-testid={`UserPoints_${user.username}`}
 				>
-					<p class="truncate text-ellipsis">{user.username}</p>
-					<div
-						class="badge-icon absolute -right-1.5 -top-1.5 z-10 h-4 w-fit rounded-full bg-green-400 px-1 text-sm"
-						data-testid={`UserPoints_${user.username}`}
-					>
-						<p>
-							{combinedPredictions
-								.filter((p) => p.user_id === user.id)
-								.map((p) => p.points)
-								.reduce((a, b) => a + b, 0)}
-						</p>
-					</div>
-				</button>
-			{/each}
-			<button
-				class="chip flex h-6 justify-center rounded-full border border-dashed border-black hover:bg-primary-100"
-				onclick={() => modalStore.trigger(modal)}
-			>
-				<img src={edit} alt="edit icon" width="16" class="mb-0.5 ml-0.5" />
+					<p>
+						{combinedPredictions
+							.filter((p) => p.user_id === user.id)
+							.map((p) => p.points)
+							.reduce((a, b) => a + b, 0)}
+					</p>
+				</div>
 			</button>
-		</div>
-	{/if}
+		{/each}
+		<button
+			class="chip flex h-6 justify-center rounded-full border border-dashed border-black hover:bg-primary-100"
+			onclick={() => modalStore.trigger(modal)}
+			disabled={!$isAuth}
+		>
+			<img src={edit} alt="edit icon" width="16" class="mb-0.5 ml-0.5" />
+		</button>
+		{#if !$isAuth}
+			<p class="text-sm italic">Log in to select</p>
+		{/if}
+	</div>
 </section>
 <main class="relative" style="height: {mainHeight}px; clip-path: inset(0)">
 	{#if combinedIsLeaderboard}
@@ -351,10 +349,14 @@
 					<div class={rowStyle}>
 						{#if selectedUser?.id === data.currentUser.id}
 							<p>N/A</p>
-						{:else if combinedSelectedUsers.find((u) => u.id === result.user_id)}
+						{:else if ($isAuth && combinedSelectedUsers.find((u) => u.id === result.user_id)) || (!$isAuth && ['will', 'TereseM'].includes(result.username))}
+							{@const isDisabled = !$isAuth}
 							<button
 								onclick={() => removeUser(result.user_id)}
-								class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 hover:brightness-105 md:h-fit"
+								class="mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-red-200 px-2 py-1 hover:brightness-105 md:h-fit ${isDisabled
+									? 'cursor-not-allowed opacity-50'
+									: ''}"
+								disabled={isDisabled}
 							>
 								<p class="hidden md:block">Remove</p>
 								<img src={x} alt="plus icon" width="12" />
@@ -365,12 +367,13 @@
 								id: result.user_id,
 								username: result.username
 							}}
+							{@const isDisabled = combinedSelectedUsers.length >= 5 || !$isAuth}
 							<button
 								onclick={() => addUser(newUser)}
 								class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 hover:brightness-105 md:h-fit ${
-									combinedSelectedUsers.length >= 5 ? 'cursor-not-allowed opacity-50' : ''
+									isDisabled ? 'cursor-not-allowed opacity-50' : ''
 								}`}
-								disabled={combinedSelectedUsers.length >= 5}
+								disabled={isDisabled}
 							>
 								<p class="hidden md:block">Add</p>
 								<img src={plus} alt="plus icon" width="12" />
@@ -440,7 +443,7 @@
 										TBD
 									</p>
 								{/if}
-								{#if $isAuth && index > 0}
+								{#if index > 0}
 									{@const slotPredictions = combinedPredictions
 										.filter((p) => p.draw_slot_id === slot.id)
 										.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))}
@@ -454,14 +457,16 @@
 									<div
 										class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
 									>
-										<AddPrediction
-											{slot}
-											roundIndex={index}
-											{players}
-											prediction={currentUserPrediction}
-											{getColor}
-											{predictionsAllowed}
-										/>
+										{#if $isAuth}
+											<AddPrediction
+												{slot}
+												roundIndex={index}
+												{players}
+												prediction={currentUserPrediction}
+												{getColor}
+												{predictionsAllowed}
+											/>
+										{/if}
 										{#each selectedUserPredictions as prediction}
 											<ViewPrediction {prediction} {getColor} />
 										{/each}

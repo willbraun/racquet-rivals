@@ -310,9 +310,8 @@ describe('Draw page component', () => {
 		expect(screen.getByText('Predictions open until:')).toHaveTextContent(
 			'Predictions open until: 12h after R16 is full'
 		)
+		expect(screen.queryByText('Log in to select')).not.toBeInTheDocument()
 		expect(screen.queryByText('Predictions closed:')).not.toBeInTheDocument()
-		expect(screen.getByText('Users:')).toBeInTheDocument()
-		expect(screen.queryByText('Log in to play!')).not.toBeInTheDocument()
 		expect(screen.getByTestId('SlotNameR8P1')).toHaveTextContent('TBD')
 	})
 
@@ -325,8 +324,9 @@ describe('Draw page component', () => {
 			}
 		})
 
-		expect(screen.queryByText('Users:')).not.toBeInTheDocument()
-		expect(screen.getByText('Log in to play!')).toBeInTheDocument()
+		expect(screen.getByText('will')).toBeInTheDocument()
+		expect(screen.getByText('TereseM')).toBeInTheDocument()
+		expect(screen.getByText('Log in to select')).toBeInTheDocument()
 	})
 
 	const testActiveRound = (activeRound: number, expectedTextContent: string) => {
