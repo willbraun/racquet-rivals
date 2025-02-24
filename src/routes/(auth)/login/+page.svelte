@@ -22,13 +22,6 @@
 
 	const toggle = () => {
 		rememberMe = !rememberMe
-		localStorage.setItem(
-			'rememberLogin',
-			JSON.stringify({
-				rememberMe,
-				usernameOrEmail
-			})
-		)
 	}
 
 	onMount(() => {
@@ -62,10 +55,15 @@
 		use:enhance={() => {
 			loading = true
 			error = ''
+			const afterSuccessRememberLogin = {
+				rememberMe,
+				usernameOrEmail
+			}
 			return async ({ result, update }) => {
 				await update()
 				const typedResult = setType(result)
 				if (result.status === 200) {
+					localStorage.setItem('rememberLogin', JSON.stringify(afterSuccessRememberLogin))
 					goto($loginGoto)
 				} else {
 					error = typedResult.data.error
@@ -88,7 +86,18 @@
 		<PasswordField bind:password bind:ref={passwordRef} />
 		<div class="flex justify-between">
 			<label class="flex items-center space-x-2">
-				<input class="checkbox" type="checkbox" bind:checked={rememberMe} onclick={toggle} />
+				<input
+					class="checkbox"
+					type="checkbox"
+					bind:checked={rememberMe}
+					onclick={toggle}
+					onkeydown={(e) => {
+						if (e.key === 'Enter') {
+							e.preventDefault()
+							toggle()
+						}
+					}}
+				/>
 				<p>Remember me</p>
 			</label>
 			<a class="-translate-y-4 text-sm text-gray-500" href="/reset-password">Forgot password?</a>
