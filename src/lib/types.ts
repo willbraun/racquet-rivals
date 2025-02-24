@@ -238,7 +238,7 @@ export interface DrawPageData {
 	slots: Slot[]
 	drawResults: PbListResponse<DrawResult>
 	predictions: PbListResponse<Prediction>
-	cookieSelectedUsers: SelectedUser[]
+	selectedUsersFromCurrentUser: SelectedUser[]
 	currentUser: SelectedUser
 	isLeaderboard: string
 }

@@ -123,11 +123,9 @@
 		return [player1, player2]
 	}
 
-	let combinedSelectedUsers = $derived(browser ? $selectedUsers : data.cookieSelectedUsers)
-	let users = $derived([
-		data.currentUser,
-		...combinedSelectedUsers.filter((user) => user.selectorId === data.currentUser.id)
-	])
+	selectedUsers.set(data.selectedUsersFromCurrentUser)
+	let combinedSelectedUsers = $derived(browser ? $selectedUsers : data.selectedUsersFromCurrentUser)
+	let users = $derived([data.currentUser, ...combinedSelectedUsers])
 	const colorMap: Map<string, string> = $derived(
 		new Map(users.map((user) => [user.id, user.color]))
 	)

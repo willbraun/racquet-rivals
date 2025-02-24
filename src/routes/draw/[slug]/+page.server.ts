@@ -67,7 +67,10 @@ export async function load({ fetch, params, locals, cookies }) {
 	])
 
 	const cookieSelectedUsers: SelectedUser[] = JSON.parse(cookies.get('selectedUsers') ?? '[]')
-	const allUsers = [currentUser, ...cookieSelectedUsers]
+	const selectedUsersFromCurrentUser = cookieSelectedUsers.filter(
+		(user) => user.selectorId === currentUser.id && user.id !== currentUser.id
+	)
+	const allUsers = [currentUser, ...selectedUsersFromCurrentUser]
 	const predictionData = await getPredictions(id, allUsers, locals.pb.authStore.token)
 
 	return {
@@ -78,7 +81,7 @@ export async function load({ fetch, params, locals, cookies }) {
 		drawResults,
 		predictions: predictionData,
 		currentUser: currentUser,
-		cookieSelectedUsers: cookieSelectedUsers,
+		selectedUsersFromCurrentUser,
 		isLeaderboard: cookies.get('isLeaderboard')
 	} as DrawPageData
 }
