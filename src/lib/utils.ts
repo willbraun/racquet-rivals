@@ -91,14 +91,14 @@ export const addUser = (user: SelectedUserNoColor) => {
 	}
 	const newUsers = [...users, newUser]
 	selectedUsers.set(newUsers)
-	Cookies.set('selectedUsers', JSON.stringify(newUsers))
+	// Cookies.set('selectedUsers', JSON.stringify(newUsers))
 }
 
 export const removeUser = (userId: string) => {
 	const users = get(selectedUsers)
 	const newUsers = users.filter((u) => u.id !== userId)
 	selectedUsers.set(newUsers)
-	Cookies.set('selectedUsers', JSON.stringify(newUsers))
+	// Cookies.set('selectedUsers', JSON.stringify(newUsers))
 }
 
 export const getDrawStatus = (startDate: string, endDate: string): DrawStatus => {

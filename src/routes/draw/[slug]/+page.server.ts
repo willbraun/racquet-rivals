@@ -31,7 +31,6 @@ export async function load({ fetch, params, locals, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const url = PUBLIC_POCKETBASE_URL
 	const currentUser = getCurrentUser(locals)
-	console.log('currentUser', currentUser)
 	const today = format(new Date(), 'yyyy-MM-dd')
 	const token = locals.pb.authStore.token
 
@@ -67,16 +66,16 @@ export async function load({ fetch, params, locals, cookies }) {
 		)
 	])
 
-	const cookieSelectedUsers: SelectedUser[] = token
-		? JSON.parse(cookies.get('selectedUsers') ?? '[]')
-		: exampleSelectedUsers
-	console.log('test', JSON.parse(cookies.get('selectedUsers') ?? '[]'))
-	const selectedUsersFromCurrentUser = cookieSelectedUsers.filter(
-		(user) => user.selectorId === currentUser.id && user.id !== currentUser.id
-	)
-	console.log('selectedUsersFromCurrentUser', selectedUsersFromCurrentUser)
-	const allUsers = token ? [currentUser, ...selectedUsersFromCurrentUser] : cookieSelectedUsers
-	const predictionData = await getPredictions(id, allUsers, locals.pb.authStore.token)
+	// const cookieSelectedUsers: SelectedUser[] = token
+	// 	? JSON.parse(cookies.get('selectedUsers') ?? '[]')
+	// 	: exampleSelectedUsers
+	// console.log('test', JSON.parse(cookies.get('selectedUsers') ?? '[]'))
+	// const selectedUsersFromCurrentUser = cookieSelectedUsers.filter(
+	// 	(user) => user.selectorId === currentUser.id && user.id !== currentUser.id
+	// )
+	// console.log('selectedUsersFromCurrentUser', selectedUsersFromCurrentUser)
+	// const allUsers = token ? [currentUser, ...selectedUsersFromCurrentUser] : cookieSelectedUsers
+	// const predictionData = await getPredictions(id, allUsers, token)
 
 	return {
 		active,
@@ -84,9 +83,9 @@ export async function load({ fetch, params, locals, cookies }) {
 		draw,
 		slots: slots.items,
 		drawResults,
-		predictions: predictionData,
+		// predictions: predictionData,
 		currentUser: currentUser,
-		selectedUsersFromCurrentUser,
+		// selectedUsersFromCurrentUser,
 		isLeaderboard: cookies.get('isLeaderboard')
 	} as DrawPageData
 }

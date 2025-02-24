@@ -27,6 +27,7 @@
 	import { customSlide } from '$lib/utils'
 	import MatchScore from '$lib/components/MatchScore.svelte'
 	import { exampleSelectedUsers } from '$lib/data'
+	import { onMount } from 'svelte'
 
 	interface Props {
 		data: DrawPageData
@@ -117,15 +118,26 @@
 		return [player1, player2]
 	}
 
-	selectedUsers.set(data.selectedUsersFromCurrentUser)
-	let combinedSelectedUsers = $derived(browser ? $selectedUsers : data.selectedUsersFromCurrentUser)
+	// selectedUsers.set(data.selectedUsersFromCurrentUser)
+
+	$inspect($selectedUsers)
+	// let combinedSelectedUsers = $derived(browser ? $selectedUsers : data.selectedUsersFromCurrentUser)
+	// let combinedSelectedUsers = $derived(browser ? $selectedUsers : [])
 	let users: SelectedUser[] = $derived.by(() => {
 		if ($isAuth) {
-			return [data.currentUser, ...combinedSelectedUsers]
+			if (browser) {
+				return [
+					data.currentUser,
+					...$selectedUsers.filter((u) => u.selectorId === data.currentUser.id)
+				]
+			} else {
+				return [data.currentUser]
+			}
 		} else {
 			return exampleSelectedUsers
 		}
 	})
+	$inspect(users)
 	const colorMap: Map<string, string> = $derived(
 		new Map(users.map((user) => [user.id, user.color]))
 	)
@@ -198,16 +210,25 @@
 			: ({} as ModalSettings)
 	)
 
-	let combinedPredictions = $derived(
-		$predictionStore.length ? $predictionStore : (data.predictions.items ?? [])
-	)
+	// let combinedPredictions = $derived(
+	// 	$predictionStore.length ? $predictionStore : (data.predictions.items ?? [])
+	// )
+	// let combinedPredictions = $predictionStore
 	const updatePredictions = async (allUsers: SelectedUser[]) => {
 		const predictionData = await getPredictions(data.draw.id, allUsers, pb.authStore.token)
 		predictionStore.set(predictionData.items)
 	}
+	onMount(() => {
+		updatePredictions(users)
+	})
 	$effect(() => {
 		updatePredictions(users)
 	})
+
+	// let combinedPredictions = $derived.by(async () => {
+	// 	const predictionData = await getPredictions(data.draw.id, users, pb.authStore.token)
+	// 	return predictionData.items
+	// })
 
 	let url = $derived(`/draw/${getSlug(data.draw)}`)
 	$effect(() => {
@@ -287,7 +308,7 @@
 					data-testid={`UserPoints_${user.username}`}
 				>
 					<p>
-						{combinedPredictions
+						{$predictionStore
 							.filter((p) => p.user_id === user.id)
 							.map((p) => p.points)
 							.reduce((a, b) => a + b, 0)}
@@ -346,7 +367,7 @@
 					<div class={rowStyle}>
 						{#if selectedUser?.id === data.currentUser.id}
 							<p>N/A</p>
-						{:else if ($isAuth && combinedSelectedUsers.find((u) => u.id === result.user_id)) || (!$isAuth && ['will', 'TereseM'].includes(result.username))}
+						{:else if ($isAuth && $selectedUsers.find((u) => u.id === result.user_id)) || (!$isAuth && ['will', 'TereseM'].includes(result.username))}
 							{@const isDisabled = !$isAuth}
 							<button
 								onclick={() => removeUser(result.user_id)}
@@ -364,7 +385,7 @@
 								id: result.user_id,
 								username: result.username
 							}}
-							{@const isDisabled = combinedSelectedUsers.length >= 5 || !$isAuth}
+							{@const isDisabled = $selectedUsers.length >= 5 || !$isAuth}
 							<button
 								onclick={() => addUser(newUser)}
 								class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 hover:brightness-105 md:h-fit ${
@@ -441,7 +462,7 @@
 									</p>
 								{/if}
 								{#if index > 0}
-									{@const slotPredictions = combinedPredictions
+									{@const slotPredictions = $predictionStore
 										.filter((p) => p.draw_slot_id === slot.id)
 										.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))}
 									{@const currentUserPrediction = slotPredictions.find(
@@ -450,7 +471,7 @@
 									{@const selectedUserPredictions = slotPredictions.filter(
 										(p) => p.user_id !== data.currentUser.id
 									)}
-									{@const players = getPlayerOptions(slot, combinedPredictions, index)}
+									{@const players = getPlayerOptions(slot, $predictionStore, index)}
 									<div
 										class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
 									>
