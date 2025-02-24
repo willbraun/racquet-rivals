@@ -10,8 +10,8 @@ export async function load({ locals }) {
 
 	const draws = await fetchJson(
 		`${url}/api/collections/draw/records?sort=-start_date,event&perPage=1`,
-		token,
-		fetch
+		fetch,
+		token
 	)
 
 	return {

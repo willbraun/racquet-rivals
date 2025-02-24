@@ -43,26 +43,26 @@ export async function load({ fetch, params, locals, cookies }) {
 	] = await Promise.all([
 		fetchJson(
 			`${url}/api/collections/draw/records?filter=(end_date>="${today}")&sort=-start_date,event`,
-			token,
-			fetch
+			fetch,
+			token
 		),
 		fetchJson(
 			`${url}/api/collections/draw/records?filter=(end_date<"${today}")&sort=-start_date,event`,
-			token,
-			fetch
+			fetch,
+			token
 		),
-		fetchJson(`${url}/api/collections/draw/records/${id}`, token, fetch),
+		fetchJson(`${url}/api/collections/draw/records/${id}`, fetch, token),
 		fetchJson(
 			`${url}/api/collections/slots_with_scores/records?perPage=255&filter=(draw_id="${id}")`,
-			token,
-			fetch
+			fetch,
+			token
 		),
 		fetchJson(
 			`${url}/api/collections/draw_results/records?perPage=255&filter=${encodeURIComponent(
 				`(draw_id="${id}" && prediction_count > 0)`
 			)}`,
-			token,
-			fetch
+			fetch,
+			token
 		)
 	])
 

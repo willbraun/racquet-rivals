@@ -18,15 +18,15 @@ export async function load({ fetch, locals }) {
 	] = await Promise.all([
 		fetchJson(
 			`${url}/api/collections/draw/records?filter=(end_date>="${today}")&sort=-start_date,event`,
-			token,
-			fetch
+			fetch,
+			token
 		),
 		fetchJson(
 			`${url}/api/collections/draw/records?filter=(end_date<"${today}")&sort=-start_date,event`,
-			token,
-			fetch
+			fetch,
+			token
 		),
-		fetchJson(`${url}/api/collections/banner/records?perPage=1`, token, fetch)
+		fetchJson(`${url}/api/collections/banner/records?perPage=1`, fetch, token)
 	])
 
 	return {
