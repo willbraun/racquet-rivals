@@ -24,7 +24,6 @@
 	import x from '$lib/images/icons/x.svg'
 	import Rank from '$lib/components/Rank.svelte'
 	import Header from '$lib/components/Header.svelte'
-	import { onMount } from 'svelte'
 	import { customSlide } from '$lib/utils'
 	import MatchScore from '$lib/components/MatchScore.svelte'
 	import { exampleSelectedUsers } from '$lib/data'
