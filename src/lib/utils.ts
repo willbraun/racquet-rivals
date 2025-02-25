@@ -8,7 +8,6 @@ import {
 	type SelectedUserNoColor
 } from './types'
 import { get } from 'svelte/store'
-import Cookies from 'js-cookie'
 import { selectColors } from './data'
 import { cubicInOut } from 'svelte/easing'
 import type { TransitionConfig } from 'svelte/transition'
@@ -91,14 +90,12 @@ export const addUser = (user: SelectedUserNoColor) => {
 	}
 	const newUsers = [...users, newUser]
 	selectedUsers.set(newUsers)
-	// Cookies.set('selectedUsers', JSON.stringify(newUsers))
 }
 
 export const removeUser = (userId: string) => {
 	const users = get(selectedUsers)
 	const newUsers = users.filter((u) => u.id !== userId)
 	selectedUsers.set(newUsers)
-	// Cookies.set('selectedUsers', JSON.stringify(newUsers))
 }
 
 export const getDrawStatus = (startDate: string, endDate: string): DrawStatus => {

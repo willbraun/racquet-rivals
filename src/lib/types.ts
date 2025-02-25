@@ -237,10 +237,8 @@ export interface DrawPageData {
 	draw: Draw
 	slots: Slot[]
 	drawResults: PbListResponse<DrawResult>
-	// predictions: PbListResponse<Prediction>
-	// selectedUsersFromCurrentUser: SelectedUser[]
 	currentUser: SelectedUser
-	isLeaderboard: string
+	isLeaderboard: boolean
 }
 
 export interface ProfilePageData {

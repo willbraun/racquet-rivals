@@ -15,7 +15,6 @@ import type {
 } from '$lib/types'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { SCRIPT_USERNAME } from '$env/static/private'
-import { getPredictions } from '$lib/api.js'
 import { format } from 'date-fns'
 
 const getCurrentUser = (locals: App.Locals): SelectedUser => {
@@ -66,27 +65,14 @@ export async function load({ fetch, params, locals, cookies }) {
 		)
 	])
 
-	// const cookieSelectedUsers: SelectedUser[] = token
-	// 	? JSON.parse(cookies.get('selectedUsers') ?? '[]')
-	// 	: exampleSelectedUsers
-	// console.log('test', JSON.parse(cookies.get('selectedUsers') ?? '[]'))
-	// const selectedUsersFromCurrentUser = cookieSelectedUsers.filter(
-	// 	(user) => user.selectorId === currentUser.id && user.id !== currentUser.id
-	// )
-	// console.log('selectedUsersFromCurrentUser', selectedUsersFromCurrentUser)
-	// const allUsers = token ? [currentUser, ...selectedUsersFromCurrentUser] : cookieSelectedUsers
-	// const predictionData = await getPredictions(id, allUsers, token)
-
 	return {
 		active,
 		completed,
 		draw,
 		slots: slots.items,
 		drawResults,
-		// predictions: predictionData,
 		currentUser: currentUser,
-		// selectedUsersFromCurrentUser,
-		isLeaderboard: cookies.get('isLeaderboard')
+		isLeaderboard: cookies.get('isLeaderboard') === 'true'
 	} as DrawPageData
 }
 

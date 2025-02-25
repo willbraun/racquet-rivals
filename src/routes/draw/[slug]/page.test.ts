@@ -13,7 +13,7 @@ import type {
 } from '$lib/types'
 import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
-import { isAuth, selectedUsers } from '$lib/store'
+import { isAuth, predictionStore, selectedUsers } from '$lib/store'
 
 const emptySlotData: Slot[] = []
 for (let i = 1; i <= 8; i++) {
@@ -159,83 +159,13 @@ const data: DrawPageData = {
 		totalItems: 4,
 		totalPages: 1
 	} as PbListResponse<DrawResult>,
-	predictions: {
-		items: [
-			{
-				collectionId: 'collectionId',
-				collectionName: 'view_predictions',
-				draw_id: 'drawId',
-				draw_slot_id: 'drawSlotId',
-				round: 7,
-				position: 1,
-				seed: '(1)',
-				id: 'predictionId1',
-				name: 'Roger Federer',
-				points: 4,
-				user_id: 'userId',
-				username: 'will'
-			},
-			{
-				collectionId: 'collectionId',
-				collectionName: 'view_predictions',
-				draw_id: 'drawId',
-				draw_slot_id: 'drawSlotId',
-				round: 7,
-				position: 2,
-				seed: '(2)',
-				id: 'predictionId2',
-				name: 'Bad PredictionTest',
-				points: 4,
-				user_id: 'userId',
-				username: 'will'
-			},
-			{
-				collectionId: 'collectionId',
-				collectionName: 'view_predictions',
-				draw_id: 'drawId',
-				draw_slot_id: 'drawSlotId',
-				round: 8,
-				position: 1,
-				seed: '(1)',
-				id: 'predictionId3',
-				name: 'Roger Federer',
-				points: 8,
-				user_id: 'userId',
-				username: 'will'
-			}
-		] as Prediction[],
-		page: 1,
-		perPage: 30,
-		totalItems: 0,
-		totalPages: 1
-	} as PbListResponse<Prediction>,
-	cookieSelectedUsers: [
-		{
-			selectorId: 'userId',
-			id: 'userId1',
-			username: 'john',
-			color: 'bg-red-300'
-		},
-		{
-			selectorId: 'userId',
-			id: 'userId2',
-			username: 'steve',
-			color: 'bg-yellow-300'
-		},
-		{
-			selectorId: 'userId',
-			id: 'userId3',
-			username: 'sally',
-			color: 'bg-green-300'
-		}
-	],
 	currentUser: {
 		selectorId: 'userId',
 		id: 'userId',
 		username: 'will',
 		color: 'bg-blue-300'
 	} as SelectedUser,
-	isLeaderboard: 'false'
+	isLeaderboard: false
 }
 
 // Mock the Resize Observer
@@ -280,7 +210,52 @@ global.Element.prototype.animate = vi.fn().mockReturnValue({
 	finished: Promise.resolve()
 })
 
-const mockGetPredictions = vi.fn().mockResolvedValue(data.predictions)
+const mockPredictions = [
+	{
+		collectionId: 'collectionId',
+		collectionName: 'view_predictions',
+		draw_id: 'drawId',
+		draw_slot_id: 'drawSlotId',
+		round: 7,
+		position: 1,
+		seed: '(1)',
+		id: 'predictionId1',
+		name: 'Roger Federer',
+		points: 4,
+		user_id: 'userId',
+		username: 'will'
+	},
+	{
+		collectionId: 'collectionId',
+		collectionName: 'view_predictions',
+		draw_id: 'drawId',
+		draw_slot_id: 'drawSlotId',
+		round: 7,
+		position: 2,
+		seed: '(2)',
+		id: 'predictionId2',
+		name: 'Bad PredictionTest',
+		points: 4,
+		user_id: 'userId',
+		username: 'will'
+	},
+	{
+		collectionId: 'collectionId',
+		collectionName: 'view_predictions',
+		draw_id: 'drawId',
+		draw_slot_id: 'drawSlotId',
+		round: 8,
+		position: 1,
+		seed: '(1)',
+		id: 'predictionId3',
+		name: 'Roger Federer',
+		points: 8,
+		user_id: 'userId',
+		username: 'will'
+	}
+] as Prediction[]
+
+const mockGetPredictions = vi.fn().mockResolvedValue(mockPredictions)
 
 vi.mock('$lib/api', () => ({
 	getPredictions: () => mockGetPredictions()
@@ -292,10 +267,12 @@ describe('Draw page component', () => {
 	beforeEach(() => {
 		isAuth.set(true)
 		selectedUsers.set(initialSelections)
+		predictionStore.set(mockPredictions)
 	})
 
 	afterEach(() => {
 		selectedUsers.set(initialSelections)
+		predictionStore.set(mockPredictions)
 	})
 
 	test('Renders', () => {
@@ -393,7 +370,28 @@ describe('Draw page component', () => {
 	})
 
 	test('Selected users render', () => {
-		selectedUsers.set(data.cookieSelectedUsers)
+		const testSelectedUsers = [
+			{
+				selectorId: 'userId',
+				id: 'userId1',
+				username: 'john',
+				color: 'bg-red-300'
+			},
+			{
+				selectorId: 'userId',
+				id: 'userId2',
+				username: 'steve',
+				color: 'bg-yellow-300'
+			},
+			{
+				selectorId: 'userId',
+				id: 'userId3',
+				username: 'sally',
+				color: 'bg-green-300'
+			}
+		]
+
+		selectedUsers.set(testSelectedUsers)
 
 		render(PageSetup, {
 			props: {

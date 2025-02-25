@@ -37,6 +37,10 @@
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 
+	//////////////////////////////////////////
+	// PAGE SETUP
+	//////////////////////////////////////////
+
 	const headerColor = 'bg-primary-50'
 	const pointsByRound = {
 		'Round of 16': 0,
@@ -56,7 +60,7 @@
 		}
 	}
 
-	let serverIsLeaderboard = data.isLeaderboard === 'true'
+	let serverIsLeaderboard = data.isLeaderboard
 	isLeaderboard.set(serverIsLeaderboard)
 	let combinedIsLeaderboard = $derived(browser ? $isLeaderboard : serverIsLeaderboard)
 
@@ -75,11 +79,145 @@
 		return `${rems}rem`
 	}
 
-	const getPlayerOptions = (
-		slot: Slot,
-		predictions: Prediction[],
-		index: number
-	): [string, string] => {
+	// dates handled on the client side to display the correct time for the user's timezone
+	let now = $derived(new Date())
+	let predictionCloseFormatted = $derived(
+		data.draw.prediction_close
+			? format(data.draw.prediction_close, 'MMM d, yyyy h:mmaaa')
+			: '12h after R16 is full'
+	)
+	let predictionsAllowed = $derived(
+		!data.draw.prediction_close || now < new Date(data.draw.prediction_close)
+	)
+
+	let innerWidth = $state(0)
+	let drawHeight = $state(0)
+	let leaderboardHeight = $state(0)
+	let mainHeight = $derived(combinedIsLeaderboard ? leaderboardHeight : drawHeight)
+
+	//////////////////////////////////////////
+	// USER SETUP
+	//////////////////////////////////////////
+
+	let users: SelectedUser[] = $derived.by(() => {
+		if ($isAuth) {
+			if (browser) {
+				return [
+					data.currentUser,
+					...$selectedUsers.filter((u) => u.selectorId === data.currentUser.id)
+				]
+			} else {
+				return [data.currentUser]
+			}
+		} else {
+			return exampleSelectedUsers
+		}
+	})
+
+	const colorMap: Map<string, string> = $derived(
+		new Map(users.map((user) => [user.id, user.color]))
+	)
+	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
+
+	let userIds = $derived(users.map((user) => user.id))
+	let predictions = $derived($predictionStore ?? [])
+	let userPoints = $derived(
+		users.map((user) => ({
+			id: user.id,
+			points: predictions
+				.filter((p) => p.user_id === user.id)
+				.map((p) => p.points)
+				.reduce((a, b) => a + b, 0)
+		}))
+	)
+	const getUserPoints = (userId: string) => userPoints.find((u) => u.id === userId)?.points ?? 0
+
+	//////////////////////////////////////////
+	// DRAW SETUP
+	//////////////////////////////////////////
+
+	let fullDrawRounds = $derived(Math.log2(data.draw.size) + 1)
+	let allRounds = $derived([...Array(fullDrawRounds).keys()].map((x) => x + 1))
+	let ourRounds = $derived(allRounds.slice(-5))
+
+	let roundLabel = $derived(
+		(() => {
+			const filledRounds = allRounds.filter((round) => {
+				return data.slots
+					.filter((slot) => {
+						return slot.round === round
+					})
+					.every((slot) => slot.name.trim() !== '')
+			})
+
+			if (filledRounds.at(-1) === fullDrawRounds) {
+				return 'Tournament Completed'
+			}
+
+			const activeRound = Math.max(0, ...filledRounds) // round being played
+			const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Final']
+			const index = ourRounds.indexOf(activeRound)
+
+			if (index !== -1) {
+				return labels[index]
+			} else {
+				const sizeLabel = `(R${2 ** (fullDrawRounds - activeRound)})`
+				const earlyLabels = [
+					'Qualifying Rounds',
+					`1st Round ${sizeLabel}`,
+					`2nd Round ${sizeLabel}`,
+					`3rd Round ${sizeLabel}`
+				]
+				return `${earlyLabels[activeRound]}`
+			}
+		})()
+	)
+
+	let url = $derived(`/draw/${getSlug(data.draw)}`)
+	$effect(() => {
+		drawNavUrl.set(url)
+		loginGoto.set(url)
+	})
+
+	//////////////////////////////////////////
+	// SLOT SETUP
+	//////////////////////////////////////////
+
+	interface SlotRenderData {
+		slotId: string
+		slotPredictions: Prediction[]
+		currentUserPrediction: Prediction | undefined
+		selectedUserPredictions: Prediction[]
+	}
+
+	let slots = $derived(data.slots.filter((slot) => slot.round >= fullDrawRounds - 4))
+	let slotRenderData: SlotRenderData[] = $derived(
+		slots.map((slot) => {
+			if (!predictions.length) {
+				return {
+					slotId: slot.id,
+					slotPredictions: [],
+					currentUserPrediction: undefined,
+					selectedUserPredictions: []
+				}
+			}
+
+			const slotPredictions = predictions
+				.filter((p) => p.draw_slot_id === slot.id)
+				.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))
+
+			return {
+				slotId: slot.id,
+				slotPredictions,
+				currentUserPrediction: slotPredictions.find((p) => p.user_id === data.currentUser.id),
+				selectedUserPredictions: slotPredictions.filter((p) => p.user_id !== data.currentUser.id)
+			}
+		})
+	)
+
+	const getSlotRenderData = (slot: Slot) => slotRenderData.find((s) => s.slotId === slot.id)
+
+	const getPlayerOptions = (slot: Slot, index: number): [string, string] => {
 		let player1 = ''
 		let player2 = ''
 		const round = slot.round
@@ -118,81 +256,6 @@
 		return [player1, player2]
 	}
 
-	// selectedUsers.set(data.selectedUsersFromCurrentUser)
-
-	$inspect($selectedUsers)
-	// let combinedSelectedUsers = $derived(browser ? $selectedUsers : data.selectedUsersFromCurrentUser)
-	// let combinedSelectedUsers = $derived(browser ? $selectedUsers : [])
-	let users: SelectedUser[] = $derived.by(() => {
-		if ($isAuth) {
-			if (browser) {
-				return [
-					data.currentUser,
-					...$selectedUsers.filter((u) => u.selectorId === data.currentUser.id)
-				]
-			} else {
-				return [data.currentUser]
-			}
-		} else {
-			return exampleSelectedUsers
-		}
-	})
-	$inspect(users)
-	const colorMap: Map<string, string> = $derived(
-		new Map(users.map((user) => [user.id, user.color]))
-	)
-	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
-
-	// dates handled on the client side to display the correct time for the user's timezone
-	let now = $derived(new Date())
-	let predictionCloseFormatted = $derived(
-		data.draw.prediction_close
-			? format(data.draw.prediction_close, 'MMM d, yyyy h:mmaaa')
-			: '12h after R16 is full'
-	)
-	let predictionsAllowed = $derived(
-		!data.draw.prediction_close || now < new Date(data.draw.prediction_close)
-	)
-
-	let userIds = $derived(users.map((user) => user.id))
-	let fullDrawRounds = $derived(Math.log2(data.draw.size) + 1)
-	let allRounds = $derived([...Array(fullDrawRounds).keys()].map((x) => x + 1))
-	let ourRounds = $derived(allRounds.slice(-5))
-	let slots = $derived(data.slots.filter((slot) => slot.round >= fullDrawRounds - 4))
-
-	let roundLabel = $derived(
-		(() => {
-			const filledRounds = allRounds.filter((round) => {
-				return data.slots
-					.filter((slot) => {
-						return slot.round === round
-					})
-					.every((slot) => slot.name.trim() !== '')
-			})
-
-			if (filledRounds.at(-1) === fullDrawRounds) {
-				return 'Tournament Completed'
-			}
-
-			const activeRound = Math.max(0, ...filledRounds) // round being played
-			const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Final']
-			const index = ourRounds.indexOf(activeRound)
-
-			if (index !== -1) {
-				return labels[index]
-			} else {
-				const sizeLabel = `(R${2 ** (fullDrawRounds - activeRound)})`
-				const earlyLabels = [
-					'Qualifying Rounds',
-					`1st Round ${sizeLabel}`,
-					`2nd Round ${sizeLabel}`,
-					`3rd Round ${sizeLabel}`
-				]
-				return `${earlyLabels[activeRound]}`
-			}
-		})()
-	)
-
 	const modalStore = getModalStore()
 	let modal: ModalSettings = $derived(
 		$isAuth
@@ -210,10 +273,10 @@
 			: ({} as ModalSettings)
 	)
 
-	// let combinedPredictions = $derived(
-	// 	$predictionStore.length ? $predictionStore : (data.predictions.items ?? [])
-	// )
-	// let combinedPredictions = $predictionStore
+	//////////////////////////////////////////
+	// UPDATE PREDICTIONS
+	//////////////////////////////////////////
+
 	const updatePredictions = async (allUsers: SelectedUser[]) => {
 		const predictionData = await getPredictions(data.draw.id, allUsers, pb.authStore.token)
 		predictionStore.set(predictionData.items)
@@ -224,22 +287,6 @@
 	$effect(() => {
 		updatePredictions(users)
 	})
-
-	// let combinedPredictions = $derived.by(async () => {
-	// 	const predictionData = await getPredictions(data.draw.id, users, pb.authStore.token)
-	// 	return predictionData.items
-	// })
-
-	let url = $derived(`/draw/${getSlug(data.draw)}`)
-	$effect(() => {
-		drawNavUrl.set(url)
-		loginGoto.set(url)
-	})
-
-	let innerWidth = $state(0)
-	let drawHeight = $state(0)
-	let leaderboardHeight = $state(0)
-	let mainHeight = $derived(combinedIsLeaderboard ? leaderboardHeight : drawHeight)
 </script>
 
 <svelte:window bind:innerWidth />
@@ -308,10 +355,7 @@
 					data-testid={`UserPoints_${user.username}`}
 				>
 					<p>
-						{$predictionStore
-							.filter((p) => p.user_id === user.id)
-							.map((p) => p.points)
-							.reduce((a, b) => a + b, 0)}
+						{getUserPoints(user.id)}
 					</p>
 				</div>
 			</button>
@@ -462,32 +506,28 @@
 									</p>
 								{/if}
 								{#if index > 0}
-									{@const slotPredictions = $predictionStore
-										.filter((p) => p.draw_slot_id === slot.id)
-										.sort((a, b) => userIds.indexOf(a.user_id) - userIds.indexOf(b.user_id))}
-									{@const currentUserPrediction = slotPredictions.find(
-										(p) => p.user_id === data.currentUser.id
-									)}
-									{@const selectedUserPredictions = slotPredictions.filter(
-										(p) => p.user_id !== data.currentUser.id
-									)}
-									{@const players = getPlayerOptions(slot, $predictionStore, index)}
+									{@const slotRenderData = getSlotRenderData(slot)}
+									{@const players = getPlayerOptions(slot, index)}
 									<div
 										class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
 									>
-										{#if $isAuth}
-											<AddPrediction
-												{slot}
-												roundIndex={index}
-												{players}
-												prediction={currentUserPrediction}
-												{getColor}
-												{predictionsAllowed}
-											/>
+										{#if slotRenderData}
+											{#if $isAuth}
+												<AddPrediction
+													{slot}
+													roundIndex={index}
+													{players}
+													prediction={slotRenderData.currentUserPrediction}
+													{getColor}
+													{predictionsAllowed}
+												/>
+											{/if}
+											{#each slotRenderData.selectedUserPredictions as prediction}
+												<ViewPrediction {prediction} {getColor} />
+											{/each}
+										{:else}
+											<p class="text-sm italic">No slot data found</p>
 										{/if}
-										{#each selectedUserPredictions as prediction}
-											<ViewPrediction {prediction} {getColor} />
-										{/each}
 									</div>
 								{/if}
 							</div>
