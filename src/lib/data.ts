@@ -1,3 +1,5 @@
+import type { SelectedUser } from './types'
+
 export const mainColor = 'bg-blue-300'
 
 export const selectColors = [
@@ -15,7 +17,7 @@ export const rankingDescriptions = {
 	predictionAccuracy: `How often you choose correctly across all tournaments you've played.`
 }
 
-export const exampleSelectedUsers = [
+export const exampleSelectedUsers: SelectedUser[] = [
 	{
 		selectorId: 'logged-out-user',
 		id: 'gvi2dlpb8gltpvo',

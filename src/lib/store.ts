@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
+import { derived, writable } from 'svelte/store'
 import type { Prediction, SelectedUser } from '$lib/types'
 import { persisted } from 'svelte-persisted-store'
 import Cookies from 'js-cookie'
@@ -12,8 +12,15 @@ isAuth.subscribe((value) => {
 })
 
 export const currentUsername = writable<string>('')
+export const currentUserId = writable<string>('')
 export const predictionStore = writable<Prediction[]>([])
 export const selectedUsers = persisted<SelectedUser[]>('selectedUsers', [])
+export const mySelectedUsers = derived(
+	[selectedUsers, currentUserId],
+	([$selectedUsers, $currentUserId]) => {
+		return $selectedUsers.filter((user) => user.selectorId === $currentUserId)
+	}
+)
 export const isLeaderboard = writable<boolean>(false)
 export const drawNavUrl = writable<string>('')
 export const loginGoto = writable<string>('/')

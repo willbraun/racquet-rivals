@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
-	import { isAuth } from '$lib/store'
+	import { currentUserId, currentUsername, isAuth } from '$lib/store'
 	import type { Snippet } from 'svelte'
 
 	interface Props {
@@ -18,6 +18,8 @@
 			await update()
 			if (result.status === 200) {
 				isAuth.set(false)
+				currentUsername.set('')
+				currentUserId.set('')
 			}
 		}
 	}}

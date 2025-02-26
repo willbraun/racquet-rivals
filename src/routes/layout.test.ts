@@ -8,6 +8,7 @@ const data: RootLayoutData = {
 	pb_auth_valid: true,
 	pb_auth_cookie: 'dummy_cookie',
 	pb_auth_username: 'will',
+	pb_auth_user_id: 'dummy_user_id',
 	defaultDraw: {
 		collectionId: 'zpjgxcf4d9ojqcd',
 		collectionName: 'draw',

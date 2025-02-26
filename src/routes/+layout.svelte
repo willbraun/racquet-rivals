@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { get } from 'svelte/store'
-	import { currentUsername, drawNavUrl, isAuth } from '$lib/store'
+	import { currentUserId, currentUsername, drawNavUrl, isAuth } from '$lib/store'
 	import '../app.postcss'
 	import {
 		Modal,
@@ -40,6 +40,7 @@
 	// initialize stores with server data
 	isAuth.set(data.pb_auth_valid)
 	currentUsername.set(data.pb_auth_username)
+	currentUserId.set(data.pb_auth_user_id)
 
 	// update stores
 	// - once client is availble
@@ -52,6 +53,7 @@
 		}
 		isAuth.set(pb.authStore.isValid)
 		currentUsername.set(data.pb_auth_username)
+		currentUserId.set(data.pb_auth_user_id)
 
 		if (get(drawNavUrl) === '') {
 			const url = `/draw/${getSlug(data.defaultDraw)}`

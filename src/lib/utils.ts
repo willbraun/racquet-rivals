@@ -1,5 +1,5 @@
 import type { ClientResponseError } from 'pocketbase'
-import { selectedUsers } from './store'
+import { selectedUsers, mySelectedUsers, currentUserId } from './store'
 import {
 	DrawStatus,
 	type Draw,
@@ -84,9 +84,16 @@ const getNextColor = (users: SelectedUser[]) => {
 
 export const addUser = (user: SelectedUserNoColor) => {
 	const users = get(selectedUsers)
+	const myUsers = get(mySelectedUsers)
+	const color = getNextColor(myUsers)
+
+	if (!color) {
+		return
+	}
+
 	const newUser = {
 		...user,
-		color: getNextColor(users)
+		color: getNextColor(myUsers)
 	}
 	const newUsers = [...users, newUser]
 	selectedUsers.set(newUsers)
@@ -94,8 +101,15 @@ export const addUser = (user: SelectedUserNoColor) => {
 
 export const removeUser = (userId: string) => {
 	const users = get(selectedUsers)
-	const newUsers = users.filter((u) => u.id !== userId)
-	selectedUsers.set(newUsers)
+	const remainingUsers = users.filter((user) => {
+		if (user.selectorId === get(currentUserId)) {
+			return user.id !== userId
+		} else {
+			return true
+		}
+	})
+
+	selectedUsers.set(remainingUsers)
 }
 
 export const getDrawStatus = (startDate: string, endDate: string): DrawStatus => {

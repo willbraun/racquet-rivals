@@ -13,7 +13,7 @@ import type {
 } from '$lib/types'
 import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
-import { isAuth, predictionStore, selectedUsers } from '$lib/store'
+import { currentUserId, isAuth, predictionStore, selectedUsers } from '$lib/store'
 
 const emptySlotData: Slot[] = []
 for (let i = 1; i <= 8; i++) {
@@ -391,6 +391,7 @@ describe('Draw page component', () => {
 			}
 		]
 
+		currentUserId.set('userId')
 		selectedUsers.set(testSelectedUsers)
 
 		render(PageSetup, {

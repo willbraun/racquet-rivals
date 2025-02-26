@@ -5,7 +5,7 @@
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import {
 		isAuth,
-		selectedUsers,
+		mySelectedUsers,
 		isLeaderboard,
 		predictionStore,
 		drawNavUrl,
@@ -102,10 +102,7 @@
 	let users: SelectedUser[] = $derived.by(() => {
 		if ($isAuth) {
 			if (browser) {
-				return [
-					data.currentUser,
-					...$selectedUsers.filter((u) => u.selectorId === data.currentUser.id)
-				]
+				return [data.currentUser, ...$mySelectedUsers]
 			} else {
 				return [data.currentUser]
 			}
@@ -411,7 +408,7 @@
 					<div class={rowStyle}>
 						{#if selectedUser?.id === data.currentUser.id}
 							<p>N/A</p>
-						{:else if ($isAuth && $selectedUsers.find((u) => u.id === result.user_id)) || (!$isAuth && ['will', 'TereseM'].includes(result.username))}
+						{:else if ($isAuth && $mySelectedUsers.find((u) => u.id === result.user_id)) || (!$isAuth && ['will', 'TereseM'].includes(result.username))}
 							{@const isDisabled = !$isAuth}
 							<button
 								onclick={() => removeUser(result.user_id)}
@@ -429,7 +426,7 @@
 								id: result.user_id,
 								username: result.username
 							}}
-							{@const isDisabled = $selectedUsers.length >= 5 || !$isAuth}
+							{@const isDisabled = $mySelectedUsers.length >= 5 || !$isAuth}
 							<button
 								onclick={() => addUser(newUser)}
 								class={`mx-auto flex h-6 items-center justify-center gap-2 rounded-lg bg-green-300 px-2 py-1 hover:brightness-105 md:h-fit ${

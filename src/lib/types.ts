@@ -222,6 +222,7 @@ export interface RootLayoutData {
 	pb_auth_valid: boolean
 	pb_auth_cookie: string
 	pb_auth_username: string
+	pb_auth_user_id: string
 	defaultDraw: Draw
 }
 
