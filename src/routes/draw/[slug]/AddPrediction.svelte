@@ -82,7 +82,7 @@
 		<span class="text-xs">Add</span>
 		<img src={plus} alt="Add Prediction" width="12" />
 	{:else}
-		<span class="italic">None</span>
+		<span class="text-xs italic">None</span>
 	{/if}
 </button>
 
