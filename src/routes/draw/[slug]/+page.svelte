@@ -342,7 +342,7 @@
 		{#each users as user}
 			<button
 				type="button"
-				class="chip relative h-6 max-w-full rounded-full text-black {user.color} shadow"
+				class="chip relative h-6 max-w-full rounded-full text-black {user.color} shadow duration-0"
 				onclick={() => goto(`/profile/${user.username}`)}
 				data-testid={`User_${user.username}`}
 			>
