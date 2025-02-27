@@ -114,7 +114,6 @@
 	const colorMap: Map<string, string> = $derived(
 		new Map(users.map((user) => [user.id, user.color]))
 	)
-	const getColor = (userId: string | undefined) => colorMap.get(userId ?? '') ?? 'bg-white'
 
 	let userIds = $derived(users.map((user) => user.id))
 	let predictions = $derived($predictionStore ?? [])
@@ -276,7 +275,11 @@
 
 	const updatePredictions = async (allUsers: SelectedUser[]) => {
 		const predictionData = await getPredictions(data.draw.id, allUsers, pb.authStore.token)
-		predictionStore.set(predictionData.items)
+		const predictionsWithColors = predictionData.items.map((p) => ({
+			...p,
+			color: colorMap.get(p.user_id) ?? 'bg-primary-500'
+		}))
+		predictionStore.set(predictionsWithColors)
 	}
 	onMount(() => {
 		updatePredictions(users)
@@ -515,12 +518,11 @@
 													roundIndex={index}
 													{players}
 													prediction={slotRenderData.currentUserPrediction}
-													{getColor}
 													{predictionsAllowed}
 												/>
 											{/if}
 											{#each slotRenderData.selectedUserPredictions as prediction}
-												<ViewPrediction {prediction} {getColor} />
+												<ViewPrediction {prediction} />
 											{/each}
 										{:else}
 											<p class="text-sm italic">No slot data found</p>

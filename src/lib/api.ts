@@ -1,5 +1,5 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
-import type { PbListResponse, Prediction, SelectedUser } from './types'
+import type { PbListResponse, ViewPredictionRecord, SelectedUser } from './types'
 
 export const getPredictions = async (drawId: string, allUsers: SelectedUser[], token: string) => {
 	const allUserIds = allUsers.map((user) => user.id)
@@ -17,6 +17,6 @@ export const getPredictions = async (drawId: string, allUsers: SelectedUser[], t
 		`${PUBLIC_POCKETBASE_URL}/api/collections/view_predictions/records?perPage=300&filter=${encoded}`,
 		options
 	)
-	const predictionData: PbListResponse<Prediction> = await predictionRes.json()
+	const predictionData: PbListResponse<ViewPredictionRecord> = await predictionRes.json()
 	return predictionData
 }

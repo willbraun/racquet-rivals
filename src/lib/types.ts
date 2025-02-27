@@ -85,7 +85,7 @@ export interface Slot {
 	set5_tiebreak: number | null
 }
 
-export interface Prediction {
+export interface ViewPredictionRecord {
 	collectionId: string
 	collectionName: 'view_predictions'
 	draw_id: string
@@ -98,6 +98,10 @@ export interface Prediction {
 	points: number
 	user_id: string
 	username: string
+}
+
+export interface Prediction extends ViewPredictionRecord {
+	color: string
 }
 
 export interface PredictionRecord {

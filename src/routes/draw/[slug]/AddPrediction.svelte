@@ -9,6 +9,7 @@
 	import { predictionStore } from '$lib/store'
 	import { enhance } from '$app/forms'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
+	import { mainColor } from '$lib/data'
 
 	interface Props {
 		slot: Slot
@@ -16,7 +17,6 @@
 		players: [string, string]
 		prediction: Prediction | undefined
 		predictionsAllowed: boolean
-		getColor: (userId: string | undefined) => string
 	}
 
 	let {
@@ -24,8 +24,7 @@
 		roundIndex,
 		players,
 		prediction = $bindable(),
-		predictionsAllowed,
-		getColor
+		predictionsAllowed
 	}: Props = $props()
 
 	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -77,7 +76,7 @@
 	}}
 >
 	{#if prediction}
-		<ViewPrediction {prediction} {getColor} />
+		<ViewPrediction {prediction} />
 	{:else if predictionsAllowed}
 		<span class="text-xs">Add</span>
 		<img src={plus} alt="Add Prediction" width="12" />
@@ -105,7 +104,8 @@
 						position: slot.position,
 						round: slot.round,
 						seed: slot.seed,
-						username: pb.authStore.record?.username ?? ''
+						username: pb.authStore.record?.username ?? '',
+						color: mainColor
 					})
 
 					predictionStore.update((store) => {

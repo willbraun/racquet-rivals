@@ -3,17 +3,15 @@
 
 	interface Props {
 		prediction: Prediction
-		getColor: (userId: string | undefined) => string
 	}
 
-	let { prediction, getColor }: Props = $props()
+	let { prediction }: Props = $props()
 
-	let color = $derived(getColor(prediction.user_id))
 	let display = $derived(prediction.name.replace(') ', '').split(' ').slice(1).join(' '))
 </script>
 
 <div
-	class="chip pointer-events-none relative flex h-6 w-fit items-center justify-between rounded-full text-black {color} shadow duration-0"
+	class="chip pointer-events-none relative flex h-6 w-fit items-center justify-between rounded-full text-black {prediction.color} shadow duration-0"
 >
 	<div>
 		<p class="text-xs">{display}</p>
