@@ -111,10 +111,6 @@
 		}
 	})
 
-	const colorMap: Map<string, string> = $derived(
-		new Map(users.map((user) => [user.id, user.color]))
-	)
-
 	let userIds = $derived(users.map((user) => user.id))
 	let predictions = $derived($predictionStore ?? [])
 	let userPoints = $derived(
@@ -273,14 +269,19 @@
 	// UPDATE PREDICTIONS
 	//////////////////////////////////////////
 
+	const colorMap: Map<string, string> = $derived(
+		new Map(users.map((user) => [user.id, user.color]))
+	)
+
 	const updatePredictions = async (allUsers: SelectedUser[]) => {
 		const predictionData = await getPredictions(data.draw.id, allUsers, pb.authStore.token)
-		const predictionsWithColors = predictionData.items.map((p) => ({
+		const predictions: Prediction[] = predictionData.items.map((p) => ({
 			...p,
-			color: colorMap.get(p.user_id) ?? 'bg-primary-500'
+			color: colorMap.get(p.user_id) ?? 'bg-white'
 		}))
-		predictionStore.set(predictionsWithColors)
+		predictionStore.set(predictions)
 	}
+
 	onMount(() => {
 		updatePredictions(users)
 	})

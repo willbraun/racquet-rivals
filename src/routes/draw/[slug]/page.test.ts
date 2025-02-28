@@ -9,7 +9,8 @@ import type {
 	PbListResponse,
 	Prediction,
 	SelectedUser,
-	Slot
+	Slot,
+	ViewPredictionRecord
 } from '$lib/types'
 import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
@@ -210,7 +211,7 @@ global.Element.prototype.animate = vi.fn().mockReturnValue({
 	finished: Promise.resolve()
 })
 
-const mockPredictions = [
+const mockViewPredictionRecords = [
 	{
 		collectionId: 'collectionId',
 		collectionName: 'view_predictions',
@@ -253,9 +254,17 @@ const mockPredictions = [
 		user_id: 'userId',
 		username: 'will'
 	}
-] as Prediction[]
+] as ViewPredictionRecord[]
 
-const mockGetPredictions = vi.fn().mockResolvedValue(mockPredictions)
+const mockViewPredictionResponse = {
+	items: mockViewPredictionRecords,
+	page: 1,
+	perPage: 30,
+	totalItems: 3,
+	totalPages: 1
+} as PbListResponse<ViewPredictionRecord>
+
+const mockGetPredictions = vi.fn().mockResolvedValue(mockViewPredictionResponse)
 
 vi.mock('$lib/api', () => ({
 	getPredictions: () => mockGetPredictions()
@@ -264,15 +273,20 @@ vi.mock('$lib/api', () => ({
 describe('Draw page component', () => {
 	const initialSelections: SelectedUser[] = []
 
+	const predictions = mockViewPredictionRecords.map((p) => ({
+		...p,
+		color: 'bg-blue-300'
+	}))
+
 	beforeEach(() => {
 		isAuth.set(true)
 		selectedUsers.set(initialSelections)
-		predictionStore.set(mockPredictions)
+		predictionStore.set(predictions)
 	})
 
 	afterEach(() => {
 		selectedUsers.set(initialSelections)
-		predictionStore.set(mockPredictions)
+		predictionStore.set(predictions)
 	})
 
 	test('Renders', () => {
