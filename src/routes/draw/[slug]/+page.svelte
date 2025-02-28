@@ -11,7 +11,15 @@
 		drawNavUrl,
 		loginGoto
 	} from '$lib/store'
-	import { type DrawPageData, type Prediction, type SelectedUser, type Slot } from '$lib/types'
+	import {
+		PredictionLoadingState,
+		type DrawPageData,
+		type PbListResponse,
+		type Prediction,
+		type SelectedUser,
+		type Slot,
+		type ViewPredictionRecord
+	} from '$lib/types'
 	import { goto } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { addUser, getSlug, getTitle, removeUser } from '$lib/utils'
@@ -123,6 +131,11 @@
 		}))
 	)
 	const getUserPoints = (userId: string) => userPoints.find((u) => u.id === userId)?.points ?? 0
+	$effect(() => {
+		if (users) {
+			updatePredictions(PredictionLoadingState.LOADING_USER)
+		}
+	})
 
 	//////////////////////////////////////////
 	// DRAW SETUP
@@ -169,6 +182,7 @@
 	$effect(() => {
 		drawNavUrl.set(url)
 		loginGoto.set(url)
+		updatePredictions(PredictionLoadingState.LOADING_DRAW)
 	})
 
 	//////////////////////////////////////////
@@ -269,24 +283,34 @@
 	// UPDATE PREDICTIONS
 	//////////////////////////////////////////
 
+	let predictionsLoading = $state<PredictionLoadingState>(PredictionLoadingState.IDLE)
+	let predictionsError = $state('')
+
 	const colorMap: Map<string, string> = $derived(
 		new Map(users.map((user) => [user.id, user.color]))
 	)
 
-	const updatePredictions = async (allUsers: SelectedUser[]) => {
-		const predictionData = await getPredictions(data.draw.id, allUsers, pb.authStore.token)
-		const predictions: Prediction[] = predictionData.items.map((p) => ({
-			...p,
-			color: colorMap.get(p.user_id) ?? 'bg-white'
-		}))
-		predictionStore.set(predictions)
+	const updatePredictions = async (loadingState: PredictionLoadingState) => {
+		predictionsLoading = loadingState
+
+		try {
+			const predictionData = await getPredictions(data.draw.id, users, pb.authStore.token)
+			const predictions: Prediction[] = predictionData.items.map((p) => ({
+				...p,
+				color: colorMap.get(p.user_id) ?? 'bg-white'
+			}))
+			predictionStore.set(predictions)
+			predictionsError = ''
+		} catch (error) {
+			predictionsError = `Error: ${error instanceof Error ? error.message : 'Failed to load predictions'}`
+			console.error(predictionsError)
+		} finally {
+			predictionsLoading = PredictionLoadingState.IDLE
+		}
 	}
 
 	onMount(() => {
-		updatePredictions(users)
-	})
-	$effect(() => {
-		updatePredictions(users)
+		updatePredictions(PredictionLoadingState.LOADING_DRAW)
 	})
 </script>
 
@@ -370,6 +394,9 @@
 		</button>
 		{#if !$isAuth}
 			<p class="text-sm italic">Log in to select</p>
+		{/if}
+		{#if predictionsError}
+			<p class="text-red-500">{predictionsError}</p>
 		{/if}
 	</div>
 </section>
@@ -512,21 +539,23 @@
 									<div
 										class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
 									>
-										{#if slotRenderData}
-											{#if $isAuth}
-												<AddPrediction
-													{slot}
-													roundIndex={index}
-													{players}
-													prediction={slotRenderData.currentUserPrediction}
-													{predictionsAllowed}
-												/>
+										{#if predictionsLoading !== PredictionLoadingState.LOADING_DRAW}
+											{#if slotRenderData}
+												{#if $isAuth}
+													<AddPrediction
+														{slot}
+														roundIndex={index}
+														{players}
+														prediction={slotRenderData?.currentUserPrediction}
+														{predictionsAllowed}
+													/>
+												{/if}
+												{#each slotRenderData?.selectedUserPredictions ?? [] as prediction}
+													<ViewPrediction {prediction} />
+												{/each}
+											{:else}
+												<p class="text-sm italic">No slot data found</p>
 											{/if}
-											{#each slotRenderData.selectedUserPredictions as prediction}
-												<ViewPrediction {prediction} />
-											{/each}
-										{:else}
-											<p class="text-sm italic">No slot data found</p>
 										{/if}
 									</div>
 								{/if}
