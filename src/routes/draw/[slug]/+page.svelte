@@ -526,11 +526,10 @@
 								{#if index > 0}
 									{@const slotRenderData = getSlotRenderData(slot)}
 									{@const players = getPlayerOptions(slot, index)}
-									{#if !predictionsLoading}
-										<div
-											class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
-											in:fade={{ duration: 100 }}
-										>
+									<div
+										class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
+									>
+										{#if !predictionsLoading}
 											{#if slotRenderData}
 												{#if $isAuth}
 													<AddPrediction
@@ -547,8 +546,8 @@
 											{:else}
 												<p class="text-sm italic">No slot data found</p>
 											{/if}
-										</div>
-									{/if}
+										{/if}
+									</div>
 								{/if}
 							</div>
 						{/each}
