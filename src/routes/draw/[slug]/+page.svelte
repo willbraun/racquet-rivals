@@ -9,16 +9,11 @@
 		isLeaderboard,
 		predictionStore,
 		drawNavUrl,
-		loginGoto
+		loginGoto,
+		currentDrawId,
+		predictionsError
 	} from '$lib/store'
-	import {
-		type DrawPageData,
-		type PbListResponse,
-		type Prediction,
-		type SelectedUser,
-		type Slot,
-		type ViewPredictionRecord
-	} from '$lib/types'
+	import { type DrawPageData, type Prediction, type SelectedUser, type Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { addUser, getSlug, getTitle, removeUser } from '$lib/utils'
@@ -35,6 +30,7 @@
 	import MatchScore from '$lib/components/MatchScore.svelte'
 	import { exampleSelectedUsers } from '$lib/data'
 	import { onMount } from 'svelte'
+	import { fade } from 'svelte/transition'
 
 	interface Props {
 		data: DrawPageData
@@ -179,6 +175,7 @@
 		const url = `/draw/${getSlug(data.draw)}`
 		drawNavUrl.set(url)
 		loginGoto.set(url)
+		currentDrawId.set(data.draw.id)
 		getAllUserPredictions()
 	})
 
@@ -281,7 +278,6 @@
 	//////////////////////////////////////////
 
 	let predictionsLoading = $state(false)
-	let predictionsError = $state('')
 
 	const colorMap: Map<string, string> = $derived(
 		new Map(users.map((user) => [user.id, user.color]))
@@ -291,16 +287,17 @@
 		predictionsLoading = true
 
 		try {
-			const predictionData = await getPredictions(data.draw.id, users, pb.authStore.token)
-			const predictions: Prediction[] = predictionData.items.map((p) => ({
+			const predictionRecords = await getPredictions(data.draw.id, users, pb.authStore.token)
+			const predictions: Prediction[] = predictionRecords.items.map((p) => ({
 				...p,
 				color: colorMap.get(p.user_id) ?? 'bg-white'
 			}))
 			predictionStore.set(predictions)
-			predictionsError = ''
+			predictionsError.set('')
 		} catch (error) {
-			predictionsError = `Error: ${error instanceof Error ? error.message : 'Failed to load predictions'}`
-			console.error(predictionsError)
+			predictionsError.set(
+				`Error: ${error instanceof Error ? error.message : 'Failed to load predictions'}`
+			)
 		} finally {
 			predictionsLoading = false
 		}
@@ -388,8 +385,8 @@
 		{#if !$isAuth}
 			<p class="text-sm italic">Log in to select</p>
 		{/if}
-		{#if predictionsError}
-			<p class="text-red-500">{predictionsError}</p>
+		{#if $predictionsError}
+			<p class="text-red-500">{$predictionsError}</p>
 		{/if}
 	</div>
 </section>
@@ -529,10 +526,11 @@
 								{#if index > 0}
 									{@const slotRenderData = getSlotRenderData(slot)}
 									{@const players = getPlayerOptions(slot, index)}
-									<div
-										class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
-									>
-										{#if !predictionsLoading}
+									{#if !predictionsLoading}
+										<div
+											class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
+											in:fade={{ duration: 100 }}
+										>
 											{#if slotRenderData}
 												{#if $isAuth}
 													<AddPrediction
@@ -549,8 +547,8 @@
 											{:else}
 												<p class="text-sm italic">No slot data found</p>
 											{/if}
-										{/if}
-									</div>
+										</div>
+									{/if}
 								{/if}
 							</div>
 						{/each}

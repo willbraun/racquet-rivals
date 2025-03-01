@@ -23,7 +23,15 @@ export const mySelectedUsers = derived(
 )
 export const isLeaderboard = writable<boolean>(false)
 export const drawNavUrl = writable<string>('')
+export const currentDrawId = writable<string>('')
 export const loginGoto = writable<string>('/')
+
+export const predictionsError = writable<string>('')
+predictionsError.subscribe((value) => {
+	if (value) {
+		console.error(value)
+	}
+})
 
 export const isMobile = writable<boolean>(false)
 if (typeof window !== 'undefined') {

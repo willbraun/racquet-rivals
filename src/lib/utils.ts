@@ -1,9 +1,17 @@
 import type { ClientResponseError } from 'pocketbase'
-import { selectedUsers, mySelectedUsers, currentUserId } from './store'
+import {
+	selectedUsers,
+	mySelectedUsers,
+	currentUserId,
+	currentDrawId,
+	predictionStore,
+	predictionsError
+} from './store'
 import {
 	DrawStatus,
 	type Draw,
 	type DrawResult,
+	type Prediction,
 	type SelectedUser,
 	type SelectedUserNoColor
 } from './types'
@@ -11,6 +19,9 @@ import { get } from 'svelte/store'
 import { selectColors } from './data'
 import { cubicInOut } from 'svelte/easing'
 import type { TransitionConfig } from 'svelte/transition'
+import { getPredictions } from './api'
+import Pocketbase from 'pocketbase'
+import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 
 type ErrorObjData = {
 	[key: string]: {
@@ -56,9 +67,9 @@ const isDrawResult = (draw: Draw | DrawResult): draw is DrawResult => {
 	return draw.collectionName === 'draw_results'
 }
 
-export const getSlug = (draw: Draw | DrawResult): string => {
-	const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-').replaceAll("'", '')
+const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-').replaceAll("'", '')
 
+export const getSlug = (draw: Draw | DrawResult): string => {
 	if (isDraw(draw)) {
 		return `${slugify(draw.name)}-${slugify(draw.event)}-${draw.year}-${draw.id}`
 	} else if (isDrawResult(draw)) {
@@ -79,12 +90,16 @@ export const getTitle = (draw: Draw | DrawResult): string => {
 }
 
 const getNextColor = (users: SelectedUser[]) => {
-	return selectColors.filter((color) => !users.some((user) => user.color === color))[0]
+	const userColors = new Set(users.map((user) => user.color))
+	return selectColors.find((color) => !userColors.has(color)) || ''
 }
 
-export const addUser = (user: SelectedUserNoColor) => {
+export const addUser = async (user: SelectedUserNoColor) => {
+	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
+
 	const users = get(selectedUsers)
 	const myUsers = get(mySelectedUsers)
+	const drawId = get(currentDrawId)
 	const color = getNextColor(myUsers)
 
 	if (!color) {
@@ -93,10 +108,25 @@ export const addUser = (user: SelectedUserNoColor) => {
 
 	const newUser = {
 		...user,
-		color: getNextColor(myUsers)
+		color
 	}
-	const newUsers = [...users, newUser]
-	selectedUsers.set(newUsers)
+
+	try {
+		const newUserPredictionRecords = await getPredictions(drawId, [newUser], pb.authStore.token)
+		const newUserPredictions: Prediction[] = newUserPredictionRecords.items.map((record) => ({
+			...record,
+			color
+		}))
+
+		const newUsers = [...users, newUser]
+		selectedUsers.set(newUsers)
+		predictionStore.update((predictions) => [...predictions, ...newUserPredictions])
+		predictionsError.set('')
+	} catch (error) {
+		predictionsError.set(
+			`Error: ${error instanceof Error ? error.message : `Failed to load predictions for ${newUser.username}`}`
+		)
+	}
 }
 
 export const removeUser = (userId: string) => {
@@ -109,7 +139,12 @@ export const removeUser = (userId: string) => {
 		}
 	})
 
+	const remainingUsersPredictions = get(predictionStore).filter(
+		(prediction) => prediction.user_id !== userId
+	)
+
 	selectedUsers.set(remainingUsers)
+	predictionStore.set(remainingUsersPredictions)
 }
 
 export const getDrawStatus = (startDate: string, endDate: string): DrawStatus => {
@@ -168,7 +203,6 @@ interface SlideParams {
 	duration?: number
 	x?: number
 }
-
 export function customSlide(
 	_: HTMLElement,
 	{ duration = 250, x = 0 }: SlideParams = {}
@@ -178,9 +212,9 @@ export function customSlide(
 		css: (t: number): string => {
 			const eased = cubicInOut(t)
 			return `
-        position: fixed;
-        transform: translateX(${(1 - eased) * x}px);
-      `
+				position: fixed;
+				transform: translateX(${(1 - eased) * x}px);
+			`
 		}
 	}
 }

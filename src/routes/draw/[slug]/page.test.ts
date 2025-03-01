@@ -1,7 +1,7 @@
-import { render, screen, within } from '@testing-library/svelte'
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import { render, screen, waitFor, within } from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import type {
 	Draw,
 	DrawPageData,
@@ -264,29 +264,33 @@ const mockViewPredictionResponse = {
 	totalPages: 1
 } as PbListResponse<ViewPredictionRecord>
 
-const mockGetPredictions = vi.fn().mockResolvedValue(mockViewPredictionResponse)
+const mockGetPredictions = vi.fn()
 
 vi.mock('$lib/api', () => ({
 	getPredictions: () => mockGetPredictions()
 }))
 
+const initialSelections: SelectedUser[] = []
+const predictions = mockViewPredictionRecords.map((p) => ({
+	...p,
+	color: 'bg-blue-300'
+}))
+
+beforeEach(() => {
+	isAuth.set(true)
+	selectedUsers.set(initialSelections)
+	predictionStore.set(predictions)
+})
+
+afterEach(() => {
+	selectedUsers.set(initialSelections)
+	predictionStore.set(predictions)
+	mockGetPredictions.mockReset()
+})
+
 describe('Draw page component', () => {
-	const initialSelections: SelectedUser[] = []
-
-	const predictions = mockViewPredictionRecords.map((p) => ({
-		...p,
-		color: 'bg-blue-300'
-	}))
-
 	beforeEach(() => {
-		isAuth.set(true)
-		selectedUsers.set(initialSelections)
-		predictionStore.set(predictions)
-	})
-
-	afterEach(() => {
-		selectedUsers.set(initialSelections)
-		predictionStore.set(predictions)
+		mockGetPredictions.mockResolvedValue(mockViewPredictionResponse)
 	})
 
 	test('Renders', () => {
@@ -513,5 +517,26 @@ describe('Draw page component', () => {
 
 		expect(screen.getByTestId('SlotNameR8P1')).toHaveTextContent('TBD')
 		expect(screen.queryByTestId('SlotScoreR8P1')).not.toBeInTheDocument()
+	})
+})
+
+describe('Errors', () => {
+	const errorMessage = 'Error: 500 - Internal Server Error'
+	const error = new Error(errorMessage)
+
+	beforeEach(() => {
+		mockGetPredictions.mockRejectedValue(error)
+	})
+
+	test('getPredictions error', async () => {
+		render(PageSetup, {
+			props: {
+				component: Page,
+				data
+			}
+		})
+
+		expect(mockGetPredictions).toHaveBeenCalledTimes(1)
+		waitFor(() => expect(screen.getByText(errorMessage)).toBeInTheDocument())
 	})
 })
