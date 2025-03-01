@@ -12,7 +12,6 @@
 		loginGoto
 	} from '$lib/store'
 	import {
-		PredictionLoadingState,
 		type DrawPageData,
 		type PbListResponse,
 		type Prediction,
@@ -20,7 +19,7 @@
 		type Slot,
 		type ViewPredictionRecord
 	} from '$lib/types'
-	import { goto } from '$app/navigation'
+	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { addUser, getSlug, getTitle, removeUser } from '$lib/utils'
 	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
@@ -131,11 +130,6 @@
 		}))
 	)
 	const getUserPoints = (userId: string) => userPoints.find((u) => u.id === userId)?.points ?? 0
-	$effect(() => {
-		if (users) {
-			updatePredictions(PredictionLoadingState.LOADING_USER)
-		}
-	})
 
 	//////////////////////////////////////////
 	// DRAW SETUP
@@ -178,11 +172,14 @@
 		})()
 	)
 
-	let url = $derived(`/draw/${getSlug(data.draw)}`)
-	$effect(() => {
+	onMount(() => {
+		getAllUserPredictions()
+	})
+	afterNavigate(() => {
+		const url = `/draw/${getSlug(data.draw)}`
 		drawNavUrl.set(url)
 		loginGoto.set(url)
-		updatePredictions(PredictionLoadingState.LOADING_DRAW)
+		getAllUserPredictions()
 	})
 
 	//////////////////////////////////////////
@@ -283,15 +280,15 @@
 	// UPDATE PREDICTIONS
 	//////////////////////////////////////////
 
-	let predictionsLoading = $state<PredictionLoadingState>(PredictionLoadingState.IDLE)
+	let predictionsLoading = $state(false)
 	let predictionsError = $state('')
 
 	const colorMap: Map<string, string> = $derived(
 		new Map(users.map((user) => [user.id, user.color]))
 	)
 
-	const updatePredictions = async (loadingState: PredictionLoadingState) => {
-		predictionsLoading = loadingState
+	const getAllUserPredictions = async () => {
+		predictionsLoading = true
 
 		try {
 			const predictionData = await getPredictions(data.draw.id, users, pb.authStore.token)
@@ -305,13 +302,9 @@
 			predictionsError = `Error: ${error instanceof Error ? error.message : 'Failed to load predictions'}`
 			console.error(predictionsError)
 		} finally {
-			predictionsLoading = PredictionLoadingState.IDLE
+			predictionsLoading = false
 		}
 	}
-
-	onMount(() => {
-		updatePredictions(PredictionLoadingState.LOADING_DRAW)
-	})
 </script>
 
 <svelte:window bind:innerWidth />
@@ -539,7 +532,7 @@
 									<div
 										class="absolute bottom-0 z-10 flex h-20 w-full translate-y-full flex-wrap content-start justify-center gap-2 p-1.5"
 									>
-										{#if predictionsLoading !== PredictionLoadingState.LOADING_DRAW}
+										{#if !predictionsLoading}
 											{#if slotRenderData}
 												{#if $isAuth}
 													<AddPrediction

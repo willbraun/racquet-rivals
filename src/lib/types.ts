@@ -21,14 +21,6 @@ export const DrawStatus = {
 } as const
 export type DrawStatus = (typeof DrawStatus)[keyof typeof DrawStatus]
 
-export const PredictionLoadingState = {
-	IDLE: 'idle',
-	LOADING_DRAW: 'loading_draw',
-	LOADING_USER: 'loading_user'
-} as const
-export type PredictionLoadingState =
-	(typeof PredictionLoadingState)[keyof typeof PredictionLoadingState]
-
 // Pocketbase API types
 export interface PbListResponse<T> {
 	page: number
