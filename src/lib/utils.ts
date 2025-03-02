@@ -202,10 +202,11 @@ export const formatPercent = (num: number | null): string => {
 interface SlideParams {
 	duration?: number
 	x?: number
+	containerTop?: number
 }
 export function customSlide(
 	_: HTMLElement,
-	{ duration = 250, x = 0 }: SlideParams = {}
+	{ duration = 250, x = 0, containerTop = 0 }: SlideParams = {}
 ): TransitionConfig {
 	return {
 		duration,
@@ -213,6 +214,7 @@ export function customSlide(
 			const eased = cubicInOut(t)
 			return `
 				position: fixed;
+				top: ${containerTop}px;
 				transform: translateX(${(1 - eased) * x}px);
 			`
 		}

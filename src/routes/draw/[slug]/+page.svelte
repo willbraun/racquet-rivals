@@ -97,6 +97,7 @@
 	let drawHeight = $state(0)
 	let leaderboardHeight = $state(0)
 	let mainHeight = $derived(combinedIsLeaderboard ? leaderboardHeight : drawHeight)
+	let main: HTMLElement | null = $state(null)
 
 	//////////////////////////////////////////
 	// USER SETUP
@@ -390,11 +391,14 @@
 		{/if}
 	</div>
 </section>
-<main class="relative" style="height: {mainHeight}px; clip-path: inset(0)">
+<main class="relative" style="height: {mainHeight}px;" bind:this={main}>
 	{#if combinedIsLeaderboard}
 		<div
 			class="absolute mx-auto grid w-full shrink-0 grid-cols-5 text-center text-lg [&>div]:flex [&>div]:items-center [&>div]:justify-center"
-			transition:customSlide={{ x: innerWidth }}
+			transition:customSlide={{
+				x: innerWidth,
+				containerTop: main?.getBoundingClientRect().top ?? 0
+			}}
 			bind:offsetHeight={leaderboardHeight}
 			data-testid="Leaderboard"
 		>
@@ -468,7 +472,10 @@
 	{:else}
 		<div
 			class="absolute w-full"
-			transition:customSlide={{ x: -innerWidth }}
+			transition:customSlide={{
+				x: -innerWidth,
+				containerTop: main?.getBoundingClientRect().top ?? 0
+			}}
 			bind:offsetHeight={drawHeight}
 			data-testid="Draw"
 		>
