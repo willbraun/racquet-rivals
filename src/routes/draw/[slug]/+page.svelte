@@ -72,7 +72,7 @@
 		Cookies.set('isLeaderboard', value.toString(), { expires: 0.5 })
 	}
 
-	const getHeight = (roundIndex: number, position: number): string => {
+	const getBracketSectionHeight = (roundIndex: number, position: number): string => {
 		let rems = 0
 		if (position === 1) {
 			rems = 2 ** (roundIndex - 1) * 4 + 2
@@ -506,7 +506,7 @@
 							<div
 								class="relative flex flex-col items-center justify-end border-b-2 border-black pb-1 text-center"
 								class:border-r-2={!(slot.position % 2)}
-								style:height={getHeight(index, slot.position)}
+								style:height={getBracketSectionHeight(index, slot.position)}
 							>
 								{#if slot.name.trim()}
 									{@const prevSlot1 = slots.find(
