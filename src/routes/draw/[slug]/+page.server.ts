@@ -33,6 +33,8 @@ export async function load({ fetch, params, locals, cookies }) {
 	const today = format(new Date(), 'yyyy-MM-dd')
 	const token = locals.pb.authStore.token
 
+	console.log(locals.pb.authStore.token)
+
 	const [active, completed, draw, slots, drawResults]: [
 		PbListResponse<Draw>,
 		PbListResponse<Draw>,
@@ -64,6 +66,8 @@ export async function load({ fetch, params, locals, cookies }) {
 			token
 		)
 	])
+
+	console.log(currentUser)
 
 	return {
 		active,

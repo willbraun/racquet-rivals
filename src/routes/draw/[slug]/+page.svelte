@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Pocketbase from 'pocketbase'
+	import { pb } from '$lib/pocketbase'
 	import AddPrediction from './AddPrediction.svelte'
 	import ViewPrediction from './ViewPrediction.svelte'
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
@@ -17,7 +17,6 @@
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { addUser, getSlug, getTitle, removeUser } from '$lib/utils'
-	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import { getPredictions } from '$lib/api'
 	import { browser } from '$app/environment'
 	import Cookies from 'js-cookie'
@@ -30,15 +29,12 @@
 	import MatchScore from '$lib/components/MatchScore.svelte'
 	import { exampleSelectedUsers } from '$lib/data'
 	import { onMount } from 'svelte'
-	import { fade } from 'svelte/transition'
 
 	interface Props {
 		data: DrawPageData
 	}
 
 	let { data }: Props = $props()
-
-	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 
 	//////////////////////////////////////////
 	// PAGE SETUP

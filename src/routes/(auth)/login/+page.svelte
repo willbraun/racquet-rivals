@@ -1,13 +1,12 @@
 <script lang="ts">
+	import { pb } from '$lib/pocketbase'
 	import PasswordField from '$lib/components/PasswordField.svelte'
 	import FormError from '$lib/components/FormError.svelte'
-	import { makeSetType } from '$lib/utils'
-	import { enhance } from '$app/forms'
-	import type { AuthResult } from '$lib/types'
 	import { goto } from '$app/navigation'
 	import { onMount } from 'svelte'
-	import { loginGoto } from '$lib/store'
+	import { currentUserId, currentUsername, isAuth, loginGoto } from '$lib/store'
 	import AuthBase from '../AuthBase.svelte'
+	import { errorMessage } from '$lib/utils'
 
 	let usernameOrEmail = $state('')
 	let password = $state('')
@@ -44,34 +43,57 @@
 		}
 	})
 
-	const setType = makeSetType<AuthResult>()
+	const handleLogin = async (event: Event) => {
+		event.preventDefault()
+		loading = true
+		error = ''
+
+		let clientError = ''
+
+		if (usernameOrEmail === '') {
+			clientError = 'Please enter your username or email\n'
+		}
+
+		if (password === '') {
+			clientError += 'Please enter your password'
+		}
+
+		if (clientError) {
+			error = clientError
+			loading = false
+			return
+		}
+
+		try {
+			const response = await pb.collection('user').authWithPassword(usernameOrEmail, password)
+
+			console.log(response)
+
+			isAuth.set(pb.authStore.isValid)
+			currentUsername.set(response.record.username)
+			currentUserId.set(response.record.id)
+
+			localStorage.setItem(
+				'rememberLogin',
+				JSON.stringify({
+					rememberMe,
+					usernameOrEmail
+				})
+			)
+
+			goto($loginGoto)
+			error = ''
+		} catch (err) {
+			error = errorMessage(err)
+		} finally {
+			loading = false
+		}
+	}
 </script>
 
 <AuthBase>
 	<h1 class="mb-4 text-4xl font-semibold">Login</h1>
-	<form
-		method="POST"
-		class="[&>*]:mb-4"
-		use:enhance={() => {
-			loading = true
-			error = ''
-			const afterSuccessRememberLogin = {
-				rememberMe,
-				usernameOrEmail
-			}
-			return async ({ result, update }) => {
-				await update()
-				const typedResult = setType(result)
-				if (result.status === 200) {
-					localStorage.setItem('rememberLogin', JSON.stringify(afterSuccessRememberLogin))
-					goto($loginGoto)
-				} else {
-					error = typedResult.data.error
-				}
-				loading = false
-			}
-		}}
-	>
+	<form method="POST" class="[&>*]:mb-4" onsubmit={handleLogin}>
 		<label class="label">
 			<p>Username or email</p>
 			<input

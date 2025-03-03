@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { get } from 'svelte/store'
+	import { pb } from '$lib/pocketbase'
 	import { currentUserId, currentUsername, drawNavUrl, isAuth } from '$lib/store'
 	import '../app.postcss'
 	import {
@@ -11,15 +11,14 @@
 	} from '@skeletonlabs/skeleton'
 	import SelectUsers from './draw/[slug]/SelectUsers.svelte'
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
-	import Pocketbase from 'pocketbase'
 	import { storePopup } from '@skeletonlabs/skeleton'
 	import { afterNavigate } from '$app/navigation'
 	import { getSlug } from '$lib/utils'
 	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
-	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import type { RootLayoutData } from '$lib/types'
 	import { type Snippet } from 'svelte'
+	import Cookies from 'js-cookie'
 
 	interface Props {
 		data: RootLayoutData
@@ -35,27 +34,24 @@
 	}
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
-	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
-
-	// initialize stores with server data
-	isAuth.set(data.pb_auth_valid)
-	currentUsername.set(data.pb_auth_username)
-	currentUserId.set(data.pb_auth_user_id)
-
 	// update stores
 	// - once client is availble
 	// - after redirect from successful login or logout
 	afterNavigate(() => {
-		if (data.pb_auth_valid) {
-			pb.authStore.loadFromCookie(data.pb_auth_cookie)
-		} else {
+		const storedAuth = Cookies.get('pb_auth')
+
+		if (storedAuth) {
+			pb.authStore.loadFromCookie(storedAuth)
+		}
+
+		isAuth.set(pb.authStore.isValid)
+		currentUsername.set(pb.authStore.record?.username ?? '')
+		currentUserId.set(pb.authStore.record?.id ?? '')
+		if (!pb.authStore.isValid) {
 			pb.authStore.clear()
 		}
-		isAuth.set(pb.authStore.isValid)
-		currentUsername.set(data.pb_auth_username)
-		currentUserId.set(data.pb_auth_user_id)
 
-		if (get(drawNavUrl) === '') {
+		if ($drawNavUrl === '') {
 			const url = `/draw/${getSlug(data.defaultDraw)}`
 			drawNavUrl.set(url)
 		}

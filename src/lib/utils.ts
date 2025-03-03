@@ -1,4 +1,5 @@
 import type { ClientResponseError } from 'pocketbase'
+import { pb } from '$lib/pocketbase'
 import {
 	selectedUsers,
 	mySelectedUsers,
@@ -95,8 +96,6 @@ const getNextColor = (users: SelectedUser[]) => {
 }
 
 export const addUser = async (user: SelectedUserNoColor) => {
-	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
-
 	const users = get(selectedUsers)
 	const myUsers = get(mySelectedUsers)
 	const drawId = get(currentDrawId)

@@ -31,6 +31,8 @@
 
 	const dateRange = formatDateRange(data.banner.start_date, data.banner.end_date)
 
+	$inspect($isAuth)
+
 	onMount(() => {
 		loginGoto.set('/')
 	})

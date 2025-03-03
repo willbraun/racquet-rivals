@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Pocketbase from 'pocketbase'
+	import { pb } from '$lib/pocketbase'
 	import { popup } from '@skeletonlabs/skeleton'
 	import ViewPrediction from './ViewPrediction.svelte'
 	import type { Prediction, Slot, AddPredictionResult } from '$lib/types'
@@ -8,7 +8,6 @@
 	import FormError from '$lib/components/FormError.svelte'
 	import { predictionStore } from '$lib/store'
 	import { enhance } from '$app/forms'
-	import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 	import { mainColor } from '$lib/data'
 
 	interface Props {
@@ -26,8 +25,6 @@
 		prediction = $bindable(),
 		predictionsAllowed
 	}: Props = $props()
-
-	const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 
 	let [player1, player2] = $derived(players)
 
