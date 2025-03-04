@@ -1,9 +1,32 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
-import { currentDrawId, currentUserId, predictionStore, selectedUsers } from './store'
+import { currentDrawId, currentUser, predictionStore, selectedUsers } from './store'
 import { addUser, removeUser } from './utils'
 import { get } from 'svelte/store'
-import type { ViewPredictionRecord, PbListResponse, SelectedUser, Prediction } from './types'
+import type {
+	ViewPredictionRecord,
+	PbListResponse,
+	SelectedUser,
+	Prediction,
+	UserRecord
+} from './types'
+
+const userWill = {
+	collectionId: '_pb_users_auth_',
+	collectionName: 'user',
+	avatar: '',
+	id: 'willId',
+	username: 'will',
+	emailVisibility: true,
+	created: '2024-05-02 15:42:20.397Z',
+	updated: '2024-05-02 15:42:20.397Z'
+} as UserRecord
+
+const userJames = {
+	...userWill,
+	id: 'jamesId',
+	username: 'james'
+} as UserRecord
 
 const testSelectedUsers: SelectedUser[] = [
 	{
@@ -178,7 +201,7 @@ beforeEach(() => {
 
 describe('addUser', () => {
 	test('Same current user, color is correct', async () => {
-		currentUserId.set('willId')
+		currentUser.set(userWill)
 
 		await addUser({
 			selectorId: 'willId',
@@ -204,7 +227,7 @@ describe('addUser', () => {
 	})
 
 	test('Different current user, color is correct', async () => {
-		currentUserId.set('jamesId')
+		currentUser.set(userJames)
 
 		await addUser({
 			selectorId: 'jamesId',
@@ -230,7 +253,7 @@ describe('addUser', () => {
 	})
 
 	test('No more colors', async () => {
-		currentUserId.set('willId')
+		currentUser.set(userWill)
 		selectedUsers.set([
 			...testSelectedUsers,
 			{
@@ -260,7 +283,7 @@ describe('addUser', () => {
 
 describe('removeUser', () => {
 	test('Success', () => {
-		currentUserId.set('willId')
+		currentUser.set(userWill)
 
 		removeUser('userId2')
 
@@ -296,7 +319,7 @@ describe('removeUser', () => {
 	})
 
 	test('No change', () => {
-		currentUserId.set('willId')
+		currentUser.set(userWill)
 
 		removeUser('userId4')
 
@@ -310,7 +333,7 @@ describe('removeUser', () => {
 
 describe('Add and remove user', () => {
 	test('Same current user', async () => {
-		currentUserId.set('willId')
+		currentUser.set(userWill)
 
 		await addUser({
 			selectorId: 'willId',
@@ -325,7 +348,7 @@ describe('Add and remove user', () => {
 	})
 
 	test('Different current user', async () => {
-		currentUserId.set('jamesId')
+		currentUser.set(userJames)
 
 		await addUser({
 			selectorId: 'jamesId',

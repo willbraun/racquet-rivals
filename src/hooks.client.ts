@@ -1,10 +1,9 @@
 import { pb } from '$lib/pocketbase'
-import { currentUsername, currentUserId } from '$lib/store'
+import { currentUser } from '$lib/store'
+import type { UserRecord } from '$lib/types'
 
 pb.authStore.loadFromCookie(document.cookie)
 pb.authStore.onChange(() => {
-	// TODO - update to this: currentUser.set(pb.authStore.record)
-	currentUsername.set(pb.authStore.record?.username ?? '')
-	currentUserId.set(pb.authStore.record?.id ?? '')
+	currentUser.set(pb.authStore.record as UserRecord)
 	document.cookie = pb.authStore.exportToCookie({ httpOnly: false })
 }, true)

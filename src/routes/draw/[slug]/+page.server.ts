@@ -71,7 +71,6 @@ export async function load({ fetch, params, locals, cookies }) {
 		draw,
 		slots: slots.items,
 		drawResults,
-		currentUser: currentUser,
 		isLeaderboard: cookies.get('isLeaderboard') === 'true'
 	} as DrawPageData
 }

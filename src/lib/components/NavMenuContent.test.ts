@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
 import '@testing-library/jest-dom/vitest'
-import { isAuth } from '../store'
+import { currentUser, isAuth } from '../store'
 import PageSetup from './PageSetup.test.svelte'
 import NavMenuContent from './NavMenuContent.svelte'
 
 describe('NavMenu component', () => {
 	test('Renders logged out', () => {
-		isAuth.set(false)
+		currentUser.set(null)
 		render(PageSetup, { component: NavMenuContent })
 
 		expect(screen.queryByText('Draws')).toBeInTheDocument()
@@ -19,7 +19,16 @@ describe('NavMenu component', () => {
 		expect(screen.queryByText('Log out')).not.toBeInTheDocument()
 	})
 	test('Renders logged in', () => {
-		isAuth.set(true)
+		currentUser.set({
+			collectionId: '_pb_users_auth_',
+			collectionName: 'user',
+			avatar: '',
+			id: 'willId',
+			username: 'will',
+			emailVisibility: true,
+			created: '2024-05-02 15:42:20.397Z',
+			updated: '2024-05-02 15:42:20.397Z'
+		})
 		render(PageSetup, { component: NavMenuContent })
 
 		expect(screen.getByText('Draws')).toBeInTheDocument()

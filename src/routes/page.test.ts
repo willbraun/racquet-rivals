@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/vitest'
 import type { Draw, HomePageData, PbListResponse } from '$lib/types'
 import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
-import { currentUsername, isAuth } from '$lib/store'
+import { currentUser, isAuth } from '$lib/store'
 
 // Mock the Intersection Observer
 class IntersectionObserverMock {
@@ -90,8 +90,16 @@ const data: HomePageData = {
 
 describe('Home page component', () => {
 	test('Logged in', () => {
-		isAuth.set(true)
-		currentUsername.set('will')
+		currentUser.set({
+			collectionId: '_pb_users_auth_',
+			collectionName: 'user',
+			avatar: '',
+			id: 'willId',
+			username: 'will',
+			emailVisibility: true,
+			created: '2024-05-02 15:42:20.397Z',
+			updated: '2024-05-02 15:42:20.397Z'
+		})
 		render(PageSetup, {
 			props: {
 				component: Page,
@@ -104,7 +112,7 @@ describe('Home page component', () => {
 	})
 
 	test('Logged out', () => {
-		isAuth.set(false)
+		currentUser.set(null)
 		render(PageSetup, {
 			props: {
 				component: Page,

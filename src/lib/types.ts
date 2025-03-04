@@ -1,3 +1,5 @@
+import type { RecordModel } from 'pocketbase'
+
 // Constants
 export const Events = {
 	MENS_SINGLES: "Men's Singles",
@@ -30,7 +32,7 @@ export interface PbListResponse<T> {
 	items: T[]
 }
 
-export interface User {
+export interface UserRecord extends RecordModel {
 	collectionId: '_pb_users_auth_'
 	collectionName: 'user'
 	avatar: string
@@ -242,7 +244,6 @@ export interface DrawPageData {
 	draw: Draw
 	slots: Slot[]
 	drawResults: PbListResponse<DrawResult>
-	currentUser: SelectedUser
 	isLeaderboard: boolean
 }
 

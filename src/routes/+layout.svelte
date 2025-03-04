@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase'
-	import { currentUserId, currentUsername, drawNavUrl, isAuth } from '$lib/store'
+	import { drawNavUrl } from '$lib/store'
 	import '../app.postcss'
 	import {
 		Modal,
@@ -18,7 +18,6 @@
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	import type { RootLayoutData } from '$lib/types'
 	import { type Snippet } from 'svelte'
-	import Cookies from 'js-cookie'
 
 	interface Props {
 		data: RootLayoutData
@@ -34,23 +33,7 @@
 	}
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
-	// update stores
-	// - once client is availble
-	// - after redirect from successful login or logout
 	afterNavigate(() => {
-		const storedAuth = Cookies.get('pb_auth')
-
-		if (storedAuth) {
-			pb.authStore.loadFromCookie(storedAuth)
-		}
-
-		isAuth.set(pb.authStore.isValid)
-		currentUsername.set(pb.authStore.record?.username ?? '')
-		currentUserId.set(pb.authStore.record?.id ?? '')
-		if (!pb.authStore.isValid) {
-			pb.authStore.clear()
-		}
-
 		if ($drawNavUrl === '') {
 			const url = `/draw/${getSlug(data.defaultDraw)}`
 			drawNavUrl.set(url)

@@ -11,7 +11,8 @@
 		drawNavUrl,
 		loginGoto,
 		currentDrawId,
-		predictionsError
+		predictionsError,
+		currentUser
 	} from '$lib/store'
 	import { type DrawPageData, type Prediction, type SelectedUser, type Slot } from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
@@ -27,7 +28,7 @@
 	import Header from '$lib/components/Header.svelte'
 	import { customSlide } from '$lib/utils'
 	import MatchScore from '$lib/components/MatchScore.svelte'
-	import { exampleSelectedUsers } from '$lib/data'
+	import { exampleSelectedUsers, mainColor } from '$lib/data'
 	import { onMount } from 'svelte'
 
 	interface Props {
@@ -99,12 +100,19 @@
 	// USER SETUP
 	//////////////////////////////////////////
 
+	let currentSelectedUser = $derived({
+		selectorId: $currentUser?.id ?? '',
+		id: $currentUser?.id ?? '',
+		username: $currentUser?.username ?? '',
+		color: mainColor
+	})
+
 	let users: SelectedUser[] = $derived.by(() => {
-		if ($isAuth) {
+		if ($currentUser) {
 			if (browser) {
-				return [data.currentUser, ...$mySelectedUsers]
+				return [currentSelectedUser, ...$mySelectedUsers]
 			} else {
-				return [data.currentUser]
+				return [currentSelectedUser]
 			}
 		} else {
 			return exampleSelectedUsers
@@ -206,8 +214,8 @@
 			return {
 				slotId: slot.id,
 				slotPredictions,
-				currentUserPrediction: slotPredictions.find((p) => p.user_id === data.currentUser.id),
-				selectedUserPredictions: slotPredictions.filter((p) => p.user_id !== data.currentUser.id)
+				currentUserPrediction: slotPredictions.find((p) => p.user_id === currentSelectedUser.id),
+				selectedUserPredictions: slotPredictions.filter((p) => p.user_id !== currentSelectedUser.id)
 			}
 		})
 	)
@@ -223,13 +231,15 @@
 		if (index > 1) {
 			const prediction1 = predictions.find(
 				(p) =>
-					p.user_id === data.currentUser.id &&
+					p.user_id === currentSelectedUser.id &&
 					p.round === round - 1 &&
 					p.position === position * 2 - 1
 			)
 			const prediction2 = predictions.find(
 				(p) =>
-					p.user_id === data.currentUser.id && p.round === round - 1 && p.position === position * 2
+					p.user_id === currentSelectedUser.id &&
+					p.round === round - 1 &&
+					p.position === position * 2
 			)
 
 			if (prediction1) {
@@ -261,11 +271,7 @@
 					component: 'selectUsers',
 					title: 'Select Users',
 					body: 'Compare predictions with your friends (max of 6 total)',
-					backdropClasses: 'bg-surface-500',
-					meta: {
-						currentUserId: data.currentUser.id,
-						currentUsername: data.currentUser.username
-					}
+					backdropClasses: 'bg-surface-500'
 				}
 			: ({} as ModalSettings)
 	)
@@ -427,7 +433,7 @@
 						</div>
 					</div>
 					<div class={rowStyle}>
-						{#if selectedUser?.id === data.currentUser.id}
+						{#if selectedUser?.id === currentSelectedUser.id}
 							<p>N/A</p>
 						{:else if ($isAuth && $mySelectedUsers.find((u) => u.id === result.user_id)) || (!$isAuth && ['will', 'TereseM'].includes(result.username))}
 							{@const isDisabled = !$isAuth}
@@ -443,7 +449,7 @@
 							</button>
 						{:else}
 							{@const newUser = {
-								selectorId: data.currentUser.id,
+								selectorId: currentSelectedUser.id,
 								id: result.user_id,
 								username: result.username
 							}}

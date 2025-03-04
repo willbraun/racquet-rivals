@@ -10,11 +10,12 @@ import type {
 	Prediction,
 	SelectedUser,
 	Slot,
+	UserRecord,
 	ViewPredictionRecord
 } from '$lib/types'
 import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
-import { currentUserId, isAuth, predictionStore, selectedUsers } from '$lib/store'
+import { currentUser, predictionStore, selectedUsers } from '$lib/store'
 
 const emptySlotData: Slot[] = []
 for (let i = 1; i <= 8; i++) {
@@ -160,12 +161,6 @@ const data: DrawPageData = {
 		totalItems: 4,
 		totalPages: 1
 	} as PbListResponse<DrawResult>,
-	currentUser: {
-		selectorId: 'userId',
-		id: 'userId',
-		username: 'will',
-		color: 'bg-blue-300'
-	} as SelectedUser,
 	isLeaderboard: false
 }
 
@@ -276,8 +271,19 @@ const predictions = mockViewPredictionRecords.map((p) => ({
 	color: 'bg-blue-300'
 }))
 
+const testUser = {
+	collectionId: '_pb_users_auth_',
+	collectionName: 'user',
+	avatar: '',
+	id: 'willId',
+	username: 'will',
+	emailVisibility: true,
+	created: '2024-05-02 15:42:20.397Z',
+	updated: '2024-05-02 15:42:20.397Z'
+} as UserRecord
+
 beforeEach(() => {
-	isAuth.set(true)
+	currentUser.set(testUser)
 	selectedUsers.set(initialSelections)
 	predictionStore.set(predictions)
 })
@@ -311,7 +317,7 @@ describe('Draw page component', () => {
 	})
 
 	test('Logged out', () => {
-		isAuth.set(false)
+		currentUser.set(null)
 		render(PageSetup, {
 			props: {
 				component: Page,
@@ -409,7 +415,10 @@ describe('Draw page component', () => {
 			}
 		]
 
-		currentUserId.set('userId')
+		currentUser.set({
+			...testUser,
+			id: 'userId'
+		})
 		selectedUsers.set(testSelectedUsers)
 
 		render(PageSetup, {
@@ -432,9 +441,11 @@ describe('Draw page component', () => {
 			}
 		})
 
+		screen.debug()
+
 		expect(screen.getByTestId('User_will')).toHaveTextContent('will')
 		expect(screen.getByTestId('User_will')).toHaveClass('bg-blue-300')
-		expect(screen.getByTestId('UserPoints_will')).toHaveTextContent('16')
+		waitFor(() => expect(screen.getByTestId('UserPoints_will')).toHaveTextContent('16'))
 	})
 
 	test('Leaderboard toggles in and out', async () => {

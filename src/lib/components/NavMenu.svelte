@@ -5,8 +5,8 @@
 	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
 	import type { DrawerSettings } from '@skeletonlabs/skeleton'
-	import LogoutForm from './LogoutForm.svelte'
-	import { isAuth, currentUsername, drawNavUrl } from '$lib/store'
+	import LogoutButton from './LogoutButton.svelte'
+	import { isAuth, currentUser, drawNavUrl } from '$lib/store'
 	import infoIcon from '$lib/images/icons/circle-info-solid.svg'
 
 	const drawerStore = getDrawerStore()
@@ -44,7 +44,7 @@
 			<img src={bracketLeft} alt="draws" width="24" class:invert={isInverted} />
 		</a>
 		{#if $isAuth}
-			<a href={`/profile/${$currentUsername}`}>
+			<a href={`/profile/${$currentUser?.username}`}>
 				<img src={user} alt="profile" width="18" class:invert={isInverted} />
 			</a>
 		{/if}
@@ -55,9 +55,9 @@
 			<img src={infoIcon} alt="about" width="24" class:invert={isInverted} />
 		</a>
 		{#if $isAuth}
-			<LogoutForm>
-				<button type="submit" class={buttonStyle}>Log out</button>
-			</LogoutForm>
+			<LogoutButton>
+				<div class={buttonStyle}>Log out</div>
+			</LogoutButton>
 		{:else}
 			<a href="/login">
 				<button type="button" class={buttonStyle}>Log in</button>

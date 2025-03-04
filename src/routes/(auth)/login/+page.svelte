@@ -4,7 +4,7 @@
 	import FormError from '$lib/components/FormError.svelte'
 	import { goto } from '$app/navigation'
 	import { onMount } from 'svelte'
-	import { currentUserId, currentUsername, isAuth, loginGoto } from '$lib/store'
+	import { loginGoto } from '$lib/store'
 	import AuthBase from '../AuthBase.svelte'
 	import { errorMessage } from '$lib/utils'
 
@@ -65,13 +65,7 @@
 		}
 
 		try {
-			const response = await pb.collection('user').authWithPassword(usernameOrEmail, password)
-
-			console.log(response)
-
-			isAuth.set(pb.authStore.isValid)
-			currentUsername.set(response.record.username)
-			currentUserId.set(response.record.id)
+			await pb.collection('user').authWithPassword(usernameOrEmail, password)
 
 			localStorage.setItem(
 				'rememberLogin',

@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
-	import { currentUsername } from '$lib/store'
+	import { currentUser } from '$lib/store'
 	import x from '$lib/images/icons/x.svg'
 	import clone from '$lib/images/icons/clone-regular.svg'
 	import sms from '$lib/images/icons/comment-sms-solid.svg'
 	import check from '$lib/images/icons/check-solid.svg'
 	import { onMount } from 'svelte'
 
-	const message = $currentUsername
-		? `Join me (${$currentUsername}) on Racquet Rivals! Click here to play - https://racquetrivals.com`
+	const message = $currentUser
+		? `Join me (${$currentUser?.username}) on Racquet Rivals! Click here to play - https://racquetrivals.com`
 		: 'Check out Racquet Rivals! Click here to play - https://racquetrivals.com'
 	const encoded = encodeURIComponent(message)
 

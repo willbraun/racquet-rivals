@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LogoutForm from './LogoutForm.svelte'
+	import LogoutButton from './LogoutButton.svelte'
 	import user from '$lib/images/icons/user-solid.svg'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
 	import trophy from '$lib/images/icons/trophy-solid.svg'
@@ -8,7 +8,7 @@
 	import signup from '$lib/images/icons/user-plus-solid.svg'
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
 	import ShareLink from './ShareLink.svelte'
-	import { isAuth, currentUsername, drawNavUrl } from '$lib/store'
+	import { isAuth, currentUser, drawNavUrl } from '$lib/store'
 	import infoIcon from '$lib/images/icons/circle-info-solid.svg'
 
 	const drawerStore = getDrawerStore()
@@ -31,22 +31,18 @@
 <nav class="flex h-full w-full flex-col items-start gap-8 p-8">
 	{@render menuLink('Draws', bracketLeft, 'draws', 24, $drawNavUrl)}
 	{#if $isAuth}
-		{@render menuLink('My Profile', user, 'profile', 18, `/profile/${$currentUsername}`)}
+		{@render menuLink('My Profile', user, 'profile', 18, `/profile/${$currentUser?.username}`)}
 	{/if}
 	{@render menuLink('Rankings', trophy, 'rankings', 24, '/rankings')}
 	{@render about()}
 	<ShareLink />
 	{#if $isAuth}
-		<LogoutForm>
-			<button
-				type="submit"
-				class="grid w-full grid-cols-4 items-center gap-4"
-				onclick={closeDrawer}
-			>
+		<LogoutButton onLogout={closeDrawer}>
+			<div class="grid w-full grid-cols-4 items-center gap-4">
 				<img src={logout} alt="logout" width="24" class="justify-self-center" />
 				<p class="col-span-3 justify-self-start text-xl">Log out</p>
-			</button>
-		</LogoutForm>
+			</div>
+		</LogoutButton>
 	{:else}
 		{@render menuLink('Log in', login, 'login', 24, '/login')}
 		{@render menuLink('Sign up', signup, 'sign up', 24, '/create-account')}

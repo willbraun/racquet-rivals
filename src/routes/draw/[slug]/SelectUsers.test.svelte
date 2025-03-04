@@ -18,11 +18,7 @@
 		component: 'selectUsers',
 		title: 'Select Users',
 		body: 'Compare predictions with your friends (max of 6 total)',
-		backdropClasses: 'bg-surface-500',
-		meta: {
-			currentUserId: 'userId',
-			currentUsername: 'will'
-		}
+		backdropClasses: 'bg-surface-500'
 	}
 
 	modalStore.trigger(modal)

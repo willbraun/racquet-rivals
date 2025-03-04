@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte'
-	import { currentUsername, drawNavUrl, isAuth } from '$lib/store'
+	import { currentUser, drawNavUrl, isAuth } from '$lib/store'
 	import { rankingDescriptions } from '$lib/data'
 
 	const scoreFormatting = 'font-bold bg-green-400 rounded-full w-8 mx-auto shadow'
@@ -80,7 +80,7 @@
 			<p class="text-2xl">
 				You can find various insights into your performance on your
 				{#if $isAuth}
-					<a href={`/profile/${$currentUsername}`} class="text-blue-500 underline">profile</a>
+					<a href={`/profile/${$currentUser?.username}`} class="text-blue-500 underline">profile</a>
 				{:else}
 					profile
 				{/if}

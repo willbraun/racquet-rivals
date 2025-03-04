@@ -6,7 +6,7 @@
 	import { addUser, makeSetType, removeUser } from '$lib/utils'
 	import { mainColor } from '$lib/data'
 	import { fade } from 'svelte/transition'
-	import { selectedUsers } from '$lib/store'
+	import { selectedUsers, currentUser } from '$lib/store'
 	import x from '$lib/images/icons/x.svg'
 	let { parent } = $props()
 
@@ -15,9 +15,9 @@
 	let value = $state('')
 	let selectLoading = $state(false)
 	let error = $state('')
-	let currentUserId = $modalStore[0]?.meta?.currentUserId
-	let currentUsername = $modalStore[0]?.meta?.currentUsername
-	let selections = $derived([...$selectedUsers.filter((user) => user.selectorId === currentUserId)])
+	let selections = $derived([
+		...$selectedUsers.filter((user) => user.selectorId === $currentUser?.id)
+	])
 
 	let inputRef: HTMLInputElement | null = $state(null)
 	const refocus = () => {
@@ -51,7 +51,7 @@
 						return
 					}
 
-					const takenNames = [currentUsername, ...selections.map((user) => user.username)]
+					const takenNames = [$currentUser?.username, ...selections.map((user) => user.username)]
 					if (takenNames.some((name) => name === username)) {
 						error = `User "${username}" is already selected`
 						selectLoading = false
@@ -96,7 +96,7 @@
 			<div
 				class="variant-filled chip pointer-events-none break-all rounded-full text-black {mainColor} shadow"
 			>
-				<p>{$modalStore[0].meta.currentUsername}</p>
+				<p>{$currentUser?.username}</p>
 			</div>
 			{#each selections as user}
 				<button

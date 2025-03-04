@@ -3,10 +3,10 @@ import { pb } from '$lib/pocketbase'
 import {
 	selectedUsers,
 	mySelectedUsers,
-	currentUserId,
 	currentDrawId,
 	predictionStore,
-	predictionsError
+	predictionsError,
+	currentUser
 } from './store'
 import {
 	DrawStatus,
@@ -21,8 +21,6 @@ import { selectColors } from './data'
 import { cubicInOut } from 'svelte/easing'
 import type { TransitionConfig } from 'svelte/transition'
 import { getPredictions } from './api'
-import Pocketbase from 'pocketbase'
-import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 
 type ErrorObjData = {
 	[key: string]: {
@@ -131,7 +129,7 @@ export const addUser = async (user: SelectedUserNoColor) => {
 export const removeUser = (userId: string) => {
 	const users = get(selectedUsers)
 	const remainingUsers = users.filter((user) => {
-		if (user.selectorId === get(currentUserId)) {
+		if (user.selectorId === get(currentUser)?.id) {
 			return user.id !== userId
 		} else {
 			return true

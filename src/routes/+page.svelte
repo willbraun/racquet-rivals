@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fadeAndSlideIn } from '$lib/actions/fadeAndSlideIn'
-	import { isAuth, currentUsername, loginGoto } from '$lib/store'
+	import { isAuth, currentUser, loginGoto } from '$lib/store'
 	import { getSlug, getTitle } from '$lib/utils'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
 	import { onMount } from 'svelte'
@@ -31,8 +31,6 @@
 
 	const dateRange = formatDateRange(data.banner.start_date, data.banner.end_date)
 
-	$inspect($isAuth)
-
 	onMount(() => {
 		loginGoto.set('/')
 	})
@@ -58,7 +56,7 @@
 		<div class="absolute bottom-32 left-1/2 w-full -translate-x-1/2 px-4">
 			{#if $isAuth}
 				<p class="mb-8 text-center text-3xl font-semibold text-white sm:text-4xl">
-					Welcome {$currentUsername}!
+					Welcome {$currentUser?.username}!
 				</p>
 			{:else}
 				<div class="flex flex-col items-center gap-4">
