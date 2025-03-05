@@ -14,7 +14,13 @@
 		predictionsError,
 		currentUser
 	} from '$lib/store'
-	import { type DrawPageData, type Prediction, type SelectedUser, type Slot } from '$lib/types'
+	import {
+		type DrawPageData,
+		type Prediction,
+		type SelectedUser,
+		type SelectedUserWithPoints,
+		type Slot
+	} from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format } from 'date-fns'
 	import { addUser, getSlug, getTitle, removeUser } from '$lib/utils'
@@ -100,37 +106,42 @@
 	// USER SETUP
 	//////////////////////////////////////////
 
-	let currentSelectedUser = $derived({
+	let predictions = $derived($predictionStore ?? [])
+
+	const tallyPoints = (user: SelectedUser): number => {
+		return predictions
+			.filter((p) => p.user_id === user.id)
+			.map((p) => p.points)
+			.reduce((a, b) => a + b, 0)
+	}
+
+	let currentSelectedUser: SelectedUser = $derived({
 		selectorId: $currentUser?.id ?? '',
 		id: $currentUser?.id ?? '',
 		username: $currentUser?.username ?? '',
 		color: mainColor
 	})
 
-	let users: SelectedUser[] = $derived.by(() => {
+	let users: SelectedUserWithPoints[] = $derived.by(() => {
+		let selectedUsers: SelectedUser[]
+
 		if ($currentUser) {
 			if (browser) {
-				return [currentSelectedUser, ...$mySelectedUsers]
+				selectedUsers = [currentSelectedUser, ...$mySelectedUsers]
 			} else {
-				return [currentSelectedUser]
+				selectedUsers = [currentSelectedUser]
 			}
 		} else {
-			return exampleSelectedUsers
+			selectedUsers = exampleSelectedUsers
 		}
+
+		return selectedUsers.map((user) => ({
+			...user,
+			points: tallyPoints(user)
+		}))
 	})
 
 	let userIds = $derived(users.map((user) => user.id))
-	let predictions = $derived($predictionStore ?? [])
-	let userPoints = $derived(
-		users.map((user) => ({
-			id: user.id,
-			points: predictions
-				.filter((p) => p.user_id === user.id)
-				.map((p) => p.points)
-				.reduce((a, b) => a + b, 0)
-		}))
-	)
-	const getUserPoints = (userId: string) => userPoints.find((u) => u.id === userId)?.points ?? 0
 
 	//////////////////////////////////////////
 	// DRAW SETUP
@@ -373,7 +384,7 @@
 					data-testid={`UserPoints_${user.username}`}
 				>
 					<p>
-						{getUserPoints(user.id)}
+						{user.points}
 					</p>
 				</div>
 			</button>
@@ -389,7 +400,7 @@
 			<p class="text-sm italic">Log in to select</p>
 		{/if}
 		{#if $predictionsError}
-			<p class="text-red-500">{$predictionsError}</p>
+			<p class="text-red-500" data-testid="PredictionsError">{$predictionsError}</p>
 		{/if}
 	</div>
 </section>

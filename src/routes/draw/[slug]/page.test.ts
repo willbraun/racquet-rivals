@@ -1,13 +1,12 @@
 import { render, screen, waitFor, within } from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/vitest'
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
 import type {
 	Draw,
 	DrawPageData,
 	DrawResult,
 	PbListResponse,
-	Prediction,
 	SelectedUser,
 	Slot,
 	UserRecord,
@@ -218,7 +217,7 @@ const mockViewPredictionRecords = [
 		id: 'predictionId1',
 		name: 'Roger Federer',
 		points: 4,
-		user_id: 'userId',
+		user_id: 'willId',
 		username: 'will'
 	},
 	{
@@ -232,7 +231,7 @@ const mockViewPredictionRecords = [
 		id: 'predictionId2',
 		name: 'Bad PredictionTest',
 		points: 4,
-		user_id: 'userId',
+		user_id: 'willId',
 		username: 'will'
 	},
 	{
@@ -246,7 +245,7 @@ const mockViewPredictionRecords = [
 		id: 'predictionId3',
 		name: 'Roger Federer',
 		points: 8,
-		user_id: 'userId',
+		user_id: 'willId',
 		username: 'will'
 	}
 ] as ViewPredictionRecord[]
@@ -259,11 +258,20 @@ const mockViewPredictionResponse = {
 	totalPages: 1
 } as PbListResponse<ViewPredictionRecord>
 
-const mockGetPredictions = vi.fn()
+// Save the original fetch
+const originalFetch = global.fetch
 
-vi.mock('$lib/api', () => ({
-	getPredictions: () => mockGetPredictions()
-}))
+beforeAll(() => {
+	// Mock the global fetch
+	global.fetch = vi.fn().mockResolvedValue({
+		json: () => new Promise((resolve) => resolve(mockViewPredictionResponse))
+	})
+})
+
+afterAll(() => {
+	// Restore original fetch
+	global.fetch = originalFetch
+})
 
 const initialSelections: SelectedUser[] = []
 const predictions = mockViewPredictionRecords.map((p) => ({
@@ -282,21 +290,16 @@ const testUser = {
 	updated: '2024-05-02 15:42:20.397Z'
 } as UserRecord
 
-beforeEach(() => {
-	currentUser.set(testUser)
-	selectedUsers.set(initialSelections)
-	predictionStore.set(predictions)
-})
-
-afterEach(() => {
-	selectedUsers.set(initialSelections)
-	predictionStore.set(predictions)
-	mockGetPredictions.mockReset()
-})
-
 describe('Draw page component', () => {
 	beforeEach(() => {
-		mockGetPredictions.mockResolvedValue(mockViewPredictionResponse)
+		currentUser.set(testUser)
+		selectedUsers.set(initialSelections)
+		predictionStore.set(predictions)
+	})
+
+	afterEach(() => {
+		selectedUsers.set(initialSelections)
+		predictionStore.set(predictions)
 	})
 
 	test('Renders', () => {
@@ -433,7 +436,7 @@ describe('Draw page component', () => {
 		expect(screen.getByText('sally')).toBeInTheDocument()
 	})
 
-	test('Points tallied correctly', () => {
+	test('Points tallied correctly', async () => {
 		render(PageSetup, {
 			props: {
 				component: Page,
@@ -441,11 +444,9 @@ describe('Draw page component', () => {
 			}
 		})
 
-		screen.debug()
-
 		expect(screen.getByTestId('User_will')).toHaveTextContent('will')
 		expect(screen.getByTestId('User_will')).toHaveClass('bg-blue-300')
-		waitFor(() => expect(screen.getByTestId('UserPoints_will')).toHaveTextContent('16'))
+		expect(screen.getByTestId('UserPoints_will')).toHaveTextContent('16')
 	})
 
 	test('Leaderboard toggles in and out', async () => {
@@ -531,15 +532,17 @@ describe('Draw page component', () => {
 	})
 })
 
-describe('Errors', () => {
-	const errorMessage = 'Error: 500 - Internal Server Error'
-	const error = new Error(errorMessage)
-
+describe('Error handling', () => {
 	beforeEach(() => {
-		mockGetPredictions.mockRejectedValue(error)
+		vi.mocked(global.fetch).mockReset()
 	})
 
 	test('getPredictions error', async () => {
+		const errorMessage = 'Error: 500 - Internal Server Error'
+
+		// Make fetch reject with the specific error for this test only
+		vi.mocked(global.fetch).mockRejectedValueOnce(new Error(errorMessage))
+
 		render(PageSetup, {
 			props: {
 				component: Page,
@@ -547,7 +550,12 @@ describe('Errors', () => {
 			}
 		})
 
-		expect(mockGetPredictions).toHaveBeenCalledTimes(1)
-		waitFor(() => expect(screen.getByText(errorMessage)).toBeInTheDocument())
+		expect(global.fetch).toHaveBeenCalledTimes(1)
+
+		// Wait for the error to appear in the component
+		await waitFor(() => {
+			expect(screen.getByTestId('PredictionsError')).toBeInTheDocument()
+			expect(screen.getByTestId('PredictionsError')).toHaveTextContent(errorMessage)
+		})
 	})
 })

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { currentDrawId, currentUser, predictionStore, selectedUsers } from './store'
 import { addUser, removeUser } from './utils'
@@ -187,11 +187,20 @@ const mockViewPredictionResponse = {
 	totalPages: 1
 } as PbListResponse<ViewPredictionRecord>
 
-const mockGetPredictions = vi.fn().mockResolvedValue(mockViewPredictionResponse)
+// Save the original fetch
+const originalFetch = global.fetch
 
-vi.mock('$lib/api', () => ({
-	getPredictions: () => mockGetPredictions()
-}))
+beforeAll(() => {
+	// Mock the global fetch
+	global.fetch = vi.fn().mockResolvedValue({
+		json: () => new Promise((resolve) => resolve(mockViewPredictionResponse))
+	})
+})
+
+afterAll(() => {
+	// Restore original fetch
+	global.fetch = originalFetch
+})
 
 beforeEach(() => {
 	currentDrawId.set('drawId1')

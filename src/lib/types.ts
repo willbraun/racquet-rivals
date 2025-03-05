@@ -218,6 +218,10 @@ export interface SelectedUser extends SelectedUserNoColor {
 	color: string
 }
 
+export interface SelectedUserWithPoints extends SelectedUser {
+	points: number
+}
+
 declare global {
 	interface SvelteFetch {
 		(url: string, init?: RequestInit): Promise<Response>
