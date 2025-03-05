@@ -18,7 +18,6 @@ if (typeof window !== 'undefined') {
 
 // Update the currentUser store when the authStore changes
 pb.authStore.onChange(() => {
-	console.log('authStore.onChange')
 	currentUser.set(pb.authStore.record as UserRecord)
 	const auth = pb.authStore.exportToCookie({ httpOnly: false })
 	Cookies.set('pb_auth', auth, { secure: true, sameSite: 'strict' })
