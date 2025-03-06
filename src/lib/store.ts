@@ -8,6 +8,7 @@ export const currentUser = writable<UserRecord | null>(null)
 export const isAuth = derived(currentUser, ($currentUser) => {
 	return !!$currentUser
 })
+
 isAuth.subscribe((value) => {
 	if (value === false) {
 		Cookies.remove('isLeaderboard')

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase'
-	import { drawNavUrl } from '$lib/store'
+	import { currentUser, drawNavUrl, isAuth } from '$lib/store'
 	import '../app.postcss'
 	import {
 		Modal,
@@ -17,7 +17,7 @@
 	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	import type { RootLayoutData } from '$lib/types'
-	import { type Snippet } from 'svelte'
+	import { onMount, type Snippet } from 'svelte'
 
 	interface Props {
 		data: RootLayoutData

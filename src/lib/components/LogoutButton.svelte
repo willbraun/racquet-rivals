@@ -2,7 +2,6 @@
 	import { pb } from '$lib/pocketbase'
 	import type { Snippet } from 'svelte'
 	import Cookies from 'js-cookie'
-	import { currentUser } from '$lib/store'
 	import { goto } from '$app/navigation'
 
 	interface Props {
@@ -18,7 +17,7 @@
 		}
 
 		pb.authStore.clear()
-		currentUser.set(null)
+		Cookies.remove('pb_auth')
 		Cookies.remove('isLeaderboard')
 		goto('/')
 	}
