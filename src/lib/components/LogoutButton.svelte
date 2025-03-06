@@ -3,6 +3,7 @@
 	import type { Snippet } from 'svelte'
 	import Cookies from 'js-cookie'
 	import { currentUser } from '$lib/store'
+	import { goto } from '$app/navigation'
 
 	interface Props {
 		children?: Snippet
@@ -12,13 +13,14 @@
 	let { children, onLogout }: Props = $props()
 
 	const handleLogout = () => {
-		pb.authStore.clear()
-		currentUser.set(null)
-		Cookies.remove('isLeaderboard')
-
 		if (onLogout) {
 			onLogout()
 		}
+
+		pb.authStore.clear()
+		currentUser.set(null)
+		Cookies.remove('isLeaderboard')
+		goto('/')
 	}
 </script>
 
