@@ -11,9 +11,8 @@ export const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
 if (typeof window !== 'undefined') {
 	pb.authStore.onChange(() => {
 		currentUser.set(pb.authStore.record as UserRecord)
-		const cookieValue = pb.authStore
-			.exportToCookie({ httpOnly: false, secure: false, sameSite: 'lax' })
-			.split('=')[1]
-		Cookies.set('pb_auth', cookieValue)
+
+		// Create encoded pb_auth cookie string and set it in the document
+		document.cookie = pb.authStore.exportToCookie()
 	}, true)
 }
