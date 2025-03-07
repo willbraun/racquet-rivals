@@ -125,7 +125,7 @@
 	let users: SelectedUserWithPoints[] = $derived.by(() => {
 		let selectedUsers: SelectedUser[]
 
-		if ($currentUser) {
+		if ($isAuth) {
 			if (browser) {
 				selectedUsers = [currentSelectedUser, ...$mySelectedUsers]
 			} else {

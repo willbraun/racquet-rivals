@@ -12,8 +12,6 @@ export async function load({ locals }) {
 		token
 	)
 
-	console.log('layout.server', locals.pb.authStore.record)
-
 	return {
 		cookieCurrentUser: locals.pb.authStore.record,
 		defaultDraw: draws.items[0]

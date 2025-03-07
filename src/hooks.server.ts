@@ -11,8 +11,6 @@ export async function handle({ event, resolve }) {
 	// load the store data from the request cookie string
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '')
 
-	console.log('hook authStore', event.locals.pb.authStore.record)
-
 	try {
 		// get an up-to-date auth store state by verifying and refreshing the loaded auth model (if any)
 		event.locals.pb.authStore.isValid && (await event.locals.pb.collection('user').authRefresh())
@@ -24,12 +22,11 @@ export async function handle({ event, resolve }) {
 	// pass the request
 	const response = await resolve(event)
 
-	console.log('handle.server response', event.locals.pb.authStore.exportToCookie())
-
 	// send back the default 'pb_auth' cookie to the client with the latest store state
 	response.headers.append(
 		'set-cookie',
 		event.locals.pb.authStore.exportToCookie({
+			httpOnly: false, // so it can be cleared from a client logout
 			secure: true, // set to false if testing on phone
 			sameSite: true // set to false if testing on phone
 		})

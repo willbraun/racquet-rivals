@@ -2,7 +2,6 @@ import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import Pocketbase from 'pocketbase'
 import { currentUser } from './store'
 import type { UserRecord } from './types'
-import Cookies from 'js-cookie'
 
 // Create a single PocketBase instance for the client
 export const pb = new Pocketbase(PUBLIC_POCKETBASE_URL)
@@ -13,6 +12,8 @@ if (typeof window !== 'undefined') {
 		currentUser.set(pb.authStore.record as UserRecord)
 
 		// Create encoded pb_auth cookie string and set it in the document
-		document.cookie = pb.authStore.exportToCookie()
+		document.cookie = pb.authStore.exportToCookie({
+			httpOnly: false // so it can be cleared from a client logout
+		})
 	}, true)
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase'
-	import { currentUser, drawNavUrl, isAuth } from '$lib/store'
+	import { currentUser, drawNavUrl } from '$lib/store'
 	import '../app.postcss'
 	import {
 		Modal,
@@ -17,7 +17,7 @@
 	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	import type { RootLayoutData } from '$lib/types'
-	import { onMount, type Snippet } from 'svelte'
+	import { type Snippet } from 'svelte'
 
 	interface Props {
 		data: RootLayoutData
@@ -32,6 +32,9 @@
 		selectUsers: { ref: SelectUsers }
 	}
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
+
+	// Initialize with server data so authenticated content is available on first render
+	currentUser.set(data.cookieCurrentUser)
 
 	afterNavigate(() => {
 		if ($drawNavUrl === '') {

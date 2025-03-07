@@ -3,7 +3,7 @@
 	import { isAuth, currentUser, loginGoto } from '$lib/store'
 	import { getSlug, getTitle } from '$lib/utils'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
-	import { onMount } from 'svelte'
+	import { getContext, onMount } from 'svelte'
 	import { type HomePageData, TournamentName } from '$lib/types'
 	import { format } from 'date-fns'
 	import Header from '$lib/components/Header.svelte'
@@ -15,6 +15,8 @@
 	}
 
 	let { data }: Props = $props()
+
+	const auth = getContext('auth')
 
 	const bannerStyleMap: { [key in TournamentName]: string } = {
 		[TournamentName.AUSTRALIAN_OPEN]: 'bg-gradient-to-r from-indigo-800 via-blue-500 to-cyan-300',
