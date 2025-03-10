@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores'
-
+	import { page } from '$app/state'
 	import home from '$lib/images/icons/home.svg'
 	import NavMenu from '$lib/components/NavMenu.svelte'
 	import type { Snippet } from 'svelte'
@@ -13,7 +12,7 @@
 
 	let { twClass, color = 'bg-stone-100', children }: Props = $props()
 
-	const isInverted = $page.url.pathname === '/'
+	const isInverted = page.url.pathname === '/'
 </script>
 
 <header class="flex items-start gap-4 {twClass} {color} w-full p-4">

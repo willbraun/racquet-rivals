@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { pb } from '$lib/pocketbase'
 	import { currentUser, drawNavUrl } from '$lib/store'
 	import '../app.postcss'
 	import {

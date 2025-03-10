@@ -1,8 +1,6 @@
 <script lang="ts">
 	import EmailField from '$lib/components/EmailField.svelte'
 	import FormError from '$lib/components/FormError.svelte'
-	import { makeSetType } from '$lib/utils.js'
-	import type { AuthResult } from '$lib/types'
 	import { onMount } from 'svelte'
 	import AuthBase from '../AuthBase.svelte'
 	import { pb } from '$lib/pocketbase'
