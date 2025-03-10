@@ -1,14 +1,13 @@
 <script lang="ts">
-	import { goto } from '$app/navigation'
+	import { pb } from '$lib/pocketbase'
 	import EmailField from '$lib/components/EmailField.svelte'
 	import PasswordField from '$lib/components/PasswordField.svelte'
 	import FormError from '$lib/components/FormError.svelte'
-	import { makeSetType } from '$lib/utils.js'
-	import { enhance } from '$app/forms'
-	import type { AuthResult } from '$lib/types'
+	import { goto } from '$app/navigation'
 	import { onMount } from 'svelte'
 	import { loginGoto } from '$lib/store'
 	import AuthBase from '../AuthBase.svelte'
+	import { errorMessage } from '$lib/utils'
 
 	let username = $state('')
 	let email = $state('')
@@ -21,35 +20,63 @@
 		!username || !email || password.length < 8 || loading || showEmailValidation
 	)
 
-	const setType = makeSetType<AuthResult>()
-
 	let usernameRef: HTMLInputElement | null = $state(null)
 	onMount(() => {
 		if (usernameRef) {
 			usernameRef.focus()
 		}
 	})
+
+	const handleCreateAccount = async (event: Event) => {
+		event.preventDefault()
+		loading = true
+		error = ''
+
+		let clientError = ''
+
+		if (username === '') {
+			clientError = 'Please enter your username\n'
+		}
+
+		if (email === '') {
+			clientError += 'Please enter your email\n'
+		}
+
+		if (password === '') {
+			clientError += 'Please enter your password'
+		}
+
+		if (clientError) {
+			error = clientError
+			loading = false
+			return
+		}
+
+		const data = {
+			username,
+			email,
+			emailVisibility: true,
+			password,
+			passwordConfirm: password
+		}
+
+		try {
+			await pb.collection('user').create(data)
+			await pb.collection('user').authWithPassword(email, password)
+
+			error = ''
+			goto($loginGoto)
+		} catch (err) {
+			error = errorMessage(err)
+		} finally {
+			loading = false
+		}
+	}
 </script>
 
 <AuthBase>
-	<h1 class="mb-4 text-4xl font-semibold">Create Account</h1>
-	<form
-		method="POST"
-		use:enhance={() => {
-			loading = true
-			error = ''
-			return async ({ result, update }) => {
-				await update()
-				const typedResult = setType(result)
-				if (result.status === 200) {
-					goto($loginGoto)
-				} else {
-					error = typedResult.data.error
-				}
-				loading = false
-			}
-		}}
-	>
+	<h1 class="mb-8 text-4xl font-semibold">Create Account</h1>
+	<form onsubmit={handleCreateAccount}>
 		<label class="label mb-4">
 			<p>Username</p>
 			<input

@@ -154,54 +154,60 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each data.drawResults.items as item, index}
-						{@const status = getDrawStatus(item.draw_start_date, item.draw_end_date)}
-						{@const showCutoff = index === 7 && data.drawResults.items.length > 8}
-						<tr
-							class={`grid w-full grid-cols-8 items-center gap-4 p-2 hover:cursor-pointer hover:brightness-105 md:p-4 ${
-								index % 2 ? 'bg-primary-50' : 'bg-primary-200'
-							} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${showCutoff ? 'border-b-2 border-pure-red' : ''}`}
-							onclick={() => goto(`/draw/${getSlug(item)}`)}
-						>
-							<td class="col-span-6 md:text-3xl">
-								<p class="text-wrap break-words">{getTitle(item)}</p>
-							</td>
-							{#if item.prediction_count > 0 || status === DrawStatus.ACTIVE}
-								<td>
-									<div
-										class={`badge-icon mx-auto w-fit rounded-full bg-green-400 px-2 text-lg md:h-10 md:min-w-10 md:text-3xl`}
-									>
-										{item.total_points}
-									</div>
+					{#if data.drawResults.items.length > 0}
+						{#each data.drawResults.items as item, index}
+							{@const status = getDrawStatus(item.draw_start_date, item.draw_end_date)}
+							{@const showCutoff = index === 7 && data.drawResults.items.length > 8}
+							<tr
+								class={`grid w-full grid-cols-8 items-center gap-4 p-2 hover:cursor-pointer hover:brightness-105 md:p-4 ${
+									index % 2 ? 'bg-primary-50' : 'bg-primary-200'
+								} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${showCutoff ? 'border-b-2 border-pure-red' : ''}`}
+								onclick={() => goto(`/draw/${getSlug(item)}`)}
+							>
+								<td class="col-span-6 md:text-3xl">
+									<p class="text-wrap break-words">{getTitle(item)}</p>
 								</td>
-								<td>
-									<Rank
-										rank={item.rank}
-										containerStyle="mx-auto w-6 md:w-10"
-										textStyle="text-lg md:text-3xl font-extrabold"
-									/>
-								</td>
-							{:else}
-								<td class="col-span-2">
-									<div
-										class="mx-auto w-5/6 rounded bg-primary-600 px-2 text-center text-xs font-bold text-white md:text-2xl"
-									>
-										<p class="hidden sm:block">DID NOT PLAY</p>
-										<p class="block sm:hidden">DNP</p>
-									</div>
-								</td>
-							{/if}
-						</tr>
-						{#if showCutoff}
-							<tr>
-								<td
-									class="absolute left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded bg-pure-red px-2 text-xs font-bold text-white"
-								>
-									OVERALL RANK CUTOFF
-								</td>
+								{#if item.prediction_count > 0 || status === DrawStatus.ACTIVE}
+									<td>
+										<div
+											class={`badge-icon mx-auto w-fit rounded-full bg-green-400 px-2 text-lg md:h-10 md:min-w-10 md:text-3xl`}
+										>
+											{item.total_points}
+										</div>
+									</td>
+									<td>
+										<Rank
+											rank={item.rank}
+											containerStyle="mx-auto w-6 md:w-10"
+											textStyle="text-lg md:text-3xl font-extrabold"
+										/>
+									</td>
+								{:else}
+									<td class="col-span-2">
+										<div
+											class="mx-auto w-5/6 rounded bg-primary-600 px-2 text-center text-xs font-bold text-white md:text-2xl"
+										>
+											<p class="hidden sm:block">DID NOT PLAY</p>
+											<p class="block sm:hidden">DNP</p>
+										</div>
+									</td>
+								{/if}
 							</tr>
-						{/if}
-					{/each}
+							{#if showCutoff}
+								<tr>
+									<td
+										class="absolute left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded bg-pure-red px-2 text-xs font-bold text-white"
+									>
+										OVERALL RANK CUTOFF
+									</td>
+								</tr>
+							{/if}
+						{/each}
+					{:else}
+						<tr class="bg-primary-200">
+							<td colspan="8" class="py-4 text-center md:text-3xl"> No results yet</td>
+						</tr>
+					{/if}
 				</tbody>
 			</table>
 		</section>

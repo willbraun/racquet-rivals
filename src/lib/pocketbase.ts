@@ -11,9 +11,9 @@ if (typeof window !== 'undefined') {
 	pb.authStore.onChange(() => {
 		currentUser.set(pb.authStore.record as UserRecord)
 
-		// Create encoded pb_auth cookie string and set it in the document
+		// Create encoded pb_auth cookie string and set it in the document, or remove it if logging out
 		document.cookie = pb.authStore.exportToCookie({
-			httpOnly: false // so it can be cleared from a client logout
+			httpOnly: false // so it can be managed from the client in this file
 		})
 	}, true)
 }

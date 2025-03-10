@@ -13,7 +13,6 @@
 
 	const handleLogout = () => {
 		pb.authStore.clear()
-		Cookies.remove('pb_auth')
 		Cookies.remove('isLeaderboard')
 
 		if (onLogout) {
