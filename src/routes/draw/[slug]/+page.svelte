@@ -22,7 +22,7 @@
 		type Slot
 	} from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
-	import { format } from 'date-fns'
+	import { format, addDays } from 'date-fns'
 	import { addUser, getSlug, getTitle, removeUser } from '$lib/utils'
 	import { getPredictions } from '$lib/api'
 	import { browser } from '$app/environment'
@@ -86,11 +86,12 @@
 	}
 
 	// dates handled on the client side to display the correct time for the user's timezone
+	let estimatedPredictionCloseDate = addDays(new Date(data.draw.start_date), 6)
 	let now = $derived(new Date())
 	let predictionCloseFormatted = $derived(
 		data.draw.prediction_close
 			? format(data.draw.prediction_close, 'MMM d, yyyy h:mmaaa')
-			: '12h after R16 is full'
+			: `12 hours after Round of 16 is full, around ${format(estimatedPredictionCloseDate, 'MMMM do')}`
 	)
 	let predictionsAllowed = $derived(
 		!data.draw.prediction_close || now < new Date(data.draw.prediction_close)

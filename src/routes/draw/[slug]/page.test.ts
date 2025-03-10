@@ -312,7 +312,7 @@ describe('Draw page component', () => {
 
 		expect(screen.getByText('Active Round:')).toHaveTextContent('Active Round: Qualifying Rounds')
 		expect(screen.getByText('Predictions open until:')).toHaveTextContent(
-			'Predictions open until: 12h after R16 is full'
+			'Predictions open until: 12 hours after Round of 16 is full, around June 1st'
 		)
 		expect(screen.queryByText('Log in to select')).not.toBeInTheDocument()
 		expect(screen.queryByText('Predictions closed:')).not.toBeInTheDocument()
