@@ -12,14 +12,13 @@
 	let { children, onLogout }: Props = $props()
 
 	const handleLogout = () => {
+		goto('/')
 		pb.authStore.clear()
 		Cookies.remove('isLeaderboard')
 
 		if (onLogout) {
 			onLogout()
 		}
-
-		goto('/')
 	}
 </script>
 
