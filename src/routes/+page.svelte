@@ -53,27 +53,27 @@
 				class="block h-24 rotate-180 invert sm:h-32 md:h-48 lg:h-64"
 			/>
 		</div>
-		<div class="absolute bottom-32 left-1/2 w-full -translate-x-1/2 px-4">
+		<div class="absolute bottom-16 left-1/2 w-full -translate-x-1/2 px-4">
 			{#if $isAuth}
 				<p class="mb-8 text-center text-3xl font-semibold text-white sm:text-4xl">
 					Welcome {$currentUser?.username}!
 				</p>
 			{:else}
-				<div class="flex flex-col items-center gap-4">
-					<p class="text-center text-xl font-semibold text-white sm:text-3xl">
-						Predict outcomes of tennis matches, and compete with fellow fans!
-					</p>
-
+				<div class="flex flex-col items-center gap-8 pt-8">
+					<div class="text-center text-xl font-semibold text-white sm:text-3xl">
+						<p>Your fantasy tennis community.</p>
+						<p>Predict match winners, and compete with fellow fans!</p>
+					</div>
 					<div class="flex w-full max-w-screen-sm justify-center gap-4">
 						<a
 							href="/login"
-							class="w-1/2 rounded border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
+							class="w-1/2 rounded-xl border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
 						>
 							<button type="button">Log in</button>
 						</a>
 						<a
 							href="/create-account"
-							class="w-1/2 rounded border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
+							class="w-1/2 rounded-xl border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
 						>
 							<button type="button">Sign up</button>
 						</a>
