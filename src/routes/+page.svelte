@@ -42,7 +42,7 @@
 		<!-- Photo credit to Shep McAllister on Unsplash - https://unsplash.com/photos/two-person-playing-tennis-J1j3cImjmgE -->
 		<img src={wimbledon} alt="Wimbledon" class="absolute inset-0 h-full w-full object-cover" />
 		<div class="absolute inset-0 bg-gradient-to-b from-primary-500/40 to-black"></div>
-		<div class="absolute flex h-3/4 w-full items-center justify-center">
+		<div class="absolute flex h-2/3 w-full items-center justify-center">
 			<img src={bracketLeft} alt="left bracket" class="block h-24 invert sm:h-32 md:h-48 lg:h-64" />
 			<h1 class="w-1/2 text-center text-5xl text-white md:text-7xl lg:text-9xl">
 				Racquet<br />Rivals
@@ -53,13 +53,13 @@
 				class="block h-24 rotate-180 invert sm:h-32 md:h-48 lg:h-64"
 			/>
 		</div>
-		<div class="absolute bottom-16 left-1/2 w-full -translate-x-1/2 px-4">
+		<div class="absolute bottom-32 left-1/2 w-full -translate-x-1/2 px-4 lg:bottom-16">
 			{#if $isAuth}
 				<p class="mb-8 text-center text-3xl font-semibold text-white sm:text-4xl">
 					Welcome {$currentUser?.username}!
 				</p>
 			{:else}
-				<div class="flex flex-col items-center gap-8 pt-8">
+				<div class="flex flex-col items-center gap-4 pt-8 lg:gap-8">
 					<div class="text-center text-xl font-semibold text-white sm:text-3xl">
 						<p>Your fantasy tennis community.</p>
 						<p>Predict match winners, and compete with fellow fans!</p>
