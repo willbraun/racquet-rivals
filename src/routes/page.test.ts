@@ -109,9 +109,9 @@ describe('Home page component', () => {
 
 		expect(screen.getByText(/Racquet\s*Rivals/i)).toBeInTheDocument()
 		expect(screen.getByText('Welcome will!')).toBeInTheDocument()
-		expect(screen.queryByRole('button', { name: /Log in/i })).not.toBeInTheDocument()
-		expect(screen.queryByRole('button', { name: /Sign up/i })).not.toBeInTheDocument()
-		expect(screen.getByRole('button', { name: /Log out/i })).toBeInTheDocument()
+		expect(screen.queryByText('Log in')).not.toBeInTheDocument()
+		expect(screen.queryByText('Sign up')).not.toBeInTheDocument()
+		expect(screen.getByText('Log out')).toBeInTheDocument()
 	})
 
 	test('Logged out', () => {
@@ -125,8 +125,8 @@ describe('Home page component', () => {
 
 		expect(screen.getByText(/Racquet\s*Rivals/i)).toBeInTheDocument()
 		expect(screen.queryByText('Welcome will!')).not.toBeInTheDocument()
-		expect(screen.getAllByRole('button', { name: /Log in/i })).toHaveLength(2)
-		expect(screen.getAllByRole('button', { name: /Sign up/i })).toHaveLength(2)
-		expect(screen.queryByRole('button', { name: /Log out/i })).not.toBeInTheDocument()
+		expect(screen.getAllByText('Log in')).toHaveLength(2)
+		expect(screen.getAllByText('Sign up')).toHaveLength(2)
+		expect(screen.queryByText('Log out')).not.toBeInTheDocument()
 	})
 })

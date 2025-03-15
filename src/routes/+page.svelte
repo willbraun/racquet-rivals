@@ -38,11 +38,11 @@
 
 <Header twClass="absolute z-10" color="transparent" />
 <main class="w-full bg-stone-100 pb-8 sm:pb-16">
-	<section class="relative h-screen w-full overflow-hidden">
+	<section class="relative h-svh w-full overflow-hidden">
 		<!-- Photo credit to Shep McAllister on Unsplash - https://unsplash.com/photos/two-person-playing-tennis-J1j3cImjmgE -->
 		<img src={wimbledon} alt="Wimbledon" class="absolute inset-0 h-full w-full object-cover" />
 		<div class="absolute inset-0 bg-gradient-to-b from-primary-500/40 to-black"></div>
-		<div class="absolute flex h-2/3 w-full items-center justify-center">
+		<div class="absolute flex h-3/4 w-full items-center justify-center">
 			<img src={bracketLeft} alt="left bracket" class="block h-24 invert sm:h-32 md:h-48 lg:h-64" />
 			<h1 class="w-1/2 text-center text-5xl text-white md:text-7xl lg:text-9xl">
 				Racquet<br />Rivals
@@ -53,7 +53,7 @@
 				class="block h-24 rotate-180 invert sm:h-32 md:h-48 lg:h-64"
 			/>
 		</div>
-		<div class="absolute bottom-32 left-1/2 w-full -translate-x-1/2 px-4 lg:bottom-16">
+		<div class="absolute bottom-16 left-1/2 w-full -translate-x-1/2 px-4">
 			{#if $isAuth}
 				<p class="mb-8 text-center text-3xl font-semibold text-white sm:text-4xl">
 					Welcome {$currentUser?.username}!
@@ -62,27 +62,34 @@
 				<div class="flex flex-col items-center gap-4 pt-8 lg:gap-8">
 					<div class="text-center text-xl font-semibold text-white sm:text-3xl">
 						<p>Your fantasy tennis community.</p>
-						<p>Predict match winners, and compete with fellow fans!</p>
+						<p>Predict match winners and compete with fellow fans!</p>
 					</div>
 					<div class="flex w-full max-w-screen-sm justify-center gap-4">
 						<a
 							href="/login"
 							class="w-1/2 rounded-xl border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
 						>
-							<button type="button">Log in</button>
+							Log in
 						</a>
 						<a
 							href="/create-account"
 							class="w-1/2 rounded-xl border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
 						>
-							<button type="button">Sign up</button>
+							Sign up
 						</a>
 					</div>
 					<a href="/about" class="text-center text-white underline">Learn More</a>
 				</div>
 			{/if}
 		</div>
-		<img src={arrow} alt="arrow" class="absolute bottom-4 left-1/2 w-6 -translate-x-1/2 invert" />
+		<div class="absolute bottom-4 left-1/2 w-6 -translate-x-1/2">
+			<img
+				src={arrow}
+				alt="arrow"
+				aria-label="Scroll down to see more content"
+				class="animate-bounce invert"
+			/>
+		</div>
 	</section>
 	<section
 		class="mx-auto mb-8 flex flex-col gap-8 py-24 text-center font-bold text-white sm:mb-16 {bannerStyleMap[
@@ -103,9 +110,7 @@
 						href={`/draw/${getSlug(draw)}`}
 						class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 hover:brightness-105 sm:p-4 sm:text-3xl`}
 					>
-						<button type="button">
-							{getTitle(draw)}
-						</button>
+						{getTitle(draw)}
 					</a>
 				{/each}
 			{:else}
@@ -121,9 +126,7 @@
 					href={`/draw/${getSlug(draw)}`}
 					class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 hover:brightness-105 sm:p-4 sm:text-3xl`}
 				>
-					<button type="button">
-						{getTitle(draw)}
-					</button>
+					{getTitle(draw)}
 				</a>
 			{/each}
 		</div>
