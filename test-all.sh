@@ -12,7 +12,7 @@ fi
 
 echo "Testing Racquet Rivals backend..."
 cd ../tennis-bracket-pb-extend &&
-go test
+go test ./src/tests
 
 if [ $? -eq 0 ]; then
     echo "Backend tests passed ✅"
