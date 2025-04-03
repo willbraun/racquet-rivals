@@ -5,6 +5,7 @@
 	import AuthBase from '../AuthBase.svelte'
 	import { pb } from '$lib/pocketbase'
 	import { errorMessage } from '$lib/utils'
+	import { slide } from 'svelte/transition'
 
 	let email = $state('')
 	let showEmailValidation = $state(false)
@@ -33,19 +34,22 @@
 		event.preventDefault()
 		loading = true
 		error = ''
-		success = false
 
 		if (email === '') {
 			error = 'Please enter your email'
+			success = false
 			loading = false
 			return
 		}
 
+		const trimmedEmail = email.trim()
+
 		try {
-			await pb.collection('user').requestPasswordReset(email)
+			await pb.collection('user').requestPasswordReset(trimmedEmail)
 			success = true
 			error = ''
 		} catch (err) {
+			success = false
 			error = errorMessage(err)
 		} finally {
 			loading = false
@@ -56,7 +60,7 @@
 <AuthBase>
 	<h1 class="mb-8 text-4xl font-semibold">Reset Password</h1>
 	<p class="mb-4">Enter your email and we'll send you a link to reset your password</p>
-	<form method="POST" onsubmit={handleResetPassword}>
+	<form onsubmit={handleResetPassword}>
 		<EmailField bind:email bind:showValidation={showEmailValidation} bind:ref={emailRef} />
 		<div class="flex justify-center">
 			<button
@@ -71,9 +75,18 @@
 	</form>
 
 	{#if success}
-		<p class="text-center">
-			Sent! Please check your email and spam folder for your password reset link
-		</p>
+		<div class="relative my-4 overflow-hidden rounded-md bg-green-100">
+			<div
+				class="p-4 text-center text-green-900"
+				transition:slide={{ duration: 300, axis: 'y', easing: (t) => t * (2 - t) }}
+			>
+				Sent! Please check your email and spam folder for your password reset link.
+			</div>
+			<!-- Gradient overlay for blur effect -->
+			<div
+				class="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-green-100 to-transparent"
+			></div>
+		</div>
 	{/if}
 	<div class="mt-2">
 		<FormError {error} />
