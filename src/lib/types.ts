@@ -234,14 +234,16 @@ export interface RootLayoutData {
 }
 
 export interface HomePageData {
-	active: PbListResponse<Draw>
-	completed: PbListResponse<Draw>
+	upcoming: Draw[]
+	active: Draw[]
+	completed: Draw[]
 	banner: Banner
 }
 
 export interface DrawPageData {
-	active: PbListResponse<Draw>
-	completed: PbListResponse<Draw>
+	upcoming: Draw[]
+	active: Draw[]
+	completed: Draw[]
 	draw: Draw
 	slots: Slot[]
 	drawResults: PbListResponse<DrawResult>

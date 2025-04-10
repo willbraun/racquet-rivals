@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { fadeAndSlideIn } from '$lib/actions/fadeAndSlideIn'
 	import { isAuth, currentUser, loginGoto } from '$lib/store'
-	import { getSlug, getTitle } from '$lib/utils'
+	import { capitalize, getSlug, getTitle } from '$lib/utils'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
 	import { onMount } from 'svelte'
-	import { type HomePageData, TournamentName } from '$lib/types'
+	import { type Draw, type HomePageData, TournamentName } from '$lib/types'
 	import { format } from 'date-fns'
 	import Header from '$lib/components/Header.svelte'
 	import wimbledon from '$lib/images/wimbledon.jpg'
@@ -36,8 +36,26 @@
 	})
 </script>
 
+{#snippet drawList(listTitle: string, draws: Draw[])}
+	{#if draws.length > 0}
+		<div class="mb-8 flex flex-col overflow-hidden rounded-xl shadow sm:mb-16" use:fadeAndSlideIn>
+			<p class="bg-primary-700 px-4 py-2 text-2xl font-bold text-white sm:py-4 sm:text-4xl">
+				{`${capitalize(listTitle)} Draws`}
+			</p>
+			{#each draws as draw, index}
+				<a
+					href={`/draw/${getSlug(draw)}`}
+					class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 hover:brightness-105 sm:p-4 sm:text-3xl`}
+				>
+					{getTitle(draw)}
+				</a>
+			{/each}
+		</div>
+	{/if}
+{/snippet}
+
 <Header twClass="absolute z-10" color="transparent" />
-<main class="w-full bg-stone-100 pb-8 sm:pb-16">
+<main class="w-full bg-stone-100 pb-8">
 	<section class="relative h-svh w-full overflow-hidden">
 		<!-- Photo credit to Shep McAllister on Unsplash - https://unsplash.com/photos/two-person-playing-tennis-J1j3cImjmgE -->
 		<img src={wimbledon} alt="Wimbledon" class="absolute inset-0 h-full w-full object-cover" />
@@ -100,35 +118,8 @@
 		<p class="text-2xl sm:text-4xl" use:fadeAndSlideIn>{dateRange}</p>
 	</section>
 	<section class="mx-auto max-w-screen-sm px-4 sm:px-0">
-		<div class="mb-8 flex flex-col overflow-hidden rounded-xl shadow sm:mb-16" use:fadeAndSlideIn>
-			<p class="bg-primary-700 px-4 py-2 text-2xl font-bold text-white sm:py-4 sm:text-4xl">
-				Active Draws
-			</p>
-			{#if data.active.totalItems > 0}
-				{#each data.active.items as draw, index}
-					<a
-						href={`/draw/${getSlug(draw)}`}
-						class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 hover:brightness-105 sm:p-4 sm:text-3xl`}
-					>
-						{getTitle(draw)}
-					</a>
-				{/each}
-			{:else}
-				<p class="bg-primary-50 p-4 text-center md:text-3xl">No active draws</p>
-			{/if}
-		</div>
-		<div class="flex flex-col overflow-hidden rounded-xl shadow" use:fadeAndSlideIn>
-			<p class="bg-primary-700 px-4 py-2 text-2xl font-bold text-white sm:py-4 sm:text-4xl">
-				Completed Draws
-			</p>
-			{#each data.completed.items as draw, index}
-				<a
-					href={`/draw/${getSlug(draw)}`}
-					class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 hover:brightness-105 sm:p-4 sm:text-3xl`}
-				>
-					{getTitle(draw)}
-				</a>
-			{/each}
-		</div>
+		{@render drawList('Upcoming', data.upcoming)}
+		{@render drawList('Active', data.active)}
+		{@render drawList('Completed', data.completed)}
 	</section>
 </main>

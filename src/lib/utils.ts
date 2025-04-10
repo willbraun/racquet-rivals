@@ -14,7 +14,8 @@ import {
 	type DrawResult,
 	type Prediction,
 	type SelectedUser,
-	type SelectedUserNoColor
+	type SelectedUserNoColor,
+	type Slot
 } from './types'
 import { get } from 'svelte/store'
 import { selectColors } from './data'
@@ -47,7 +48,7 @@ export const errorMessage = (error: unknown) => {
 	return result
 }
 
-const capitalize = (str: string) => {
+export const capitalize = (str: string) => {
 	if (!str) return ''
 	return str[0].toUpperCase() + str.slice(1).toLowerCase()
 }
@@ -103,7 +104,7 @@ export const addUser = async (user: SelectedUserNoColor) => {
 		return
 	}
 
-	const newUser = {
+	const newUser: SelectedUser = {
 		...user,
 		color
 	}
@@ -216,4 +217,67 @@ export function customSlide(
 			`
 		}
 	}
+}
+
+export const generateDummySlots = (
+	drawId: string,
+	startRound: number,
+	endRound: number
+): Slot[] => {
+	const numRounds = endRound - startRound + 1
+	const dummySlots: Slot[] = []
+	for (let i = 0; i < numRounds; i++) {
+		const numPositions = 2 ** (numRounds - 1 - i)
+		for (let j = 0; j < numPositions; j++) {
+			const round = startRound + i
+			const position = j + 1
+			dummySlots.push({
+				collectionId: 'x9dn3y760dvxbek',
+				collectionName: 'slots_with_scores',
+				created: '2024-05-02 15:48:21.972Z',
+				draw_id: drawId,
+				id: 'dummySlotId_' + round + '_' + position,
+				round,
+				position,
+				name: '',
+				seed: '',
+				updated: '2024-05-02 15:48:21.972Z',
+				set1_id: 'set1_dummy',
+				set1_games: null,
+				set1_tiebreak: null,
+				set2_id: 'set2_dummy',
+				set2_games: null,
+				set2_tiebreak: null,
+				set3_id: 'set3_dummy',
+				set3_games: null,
+				set3_tiebreak: null,
+				set4_id: 'set4_dummy',
+				set4_games: null,
+				set4_tiebreak: null,
+				set5_id: 'set5_dummy',
+				set5_games: null,
+				set5_tiebreak: null
+			})
+		}
+	}
+
+	return dummySlots
+}
+
+export const classifyDraws = (draws: Draw[]) => {
+	const today = new Date()
+	let upcoming: Draw[] = []
+	let active: Draw[] = []
+	let completed: Draw[] = []
+	for (const draw of draws) {
+		if (new Date(draw.start_date) >= today) {
+			upcoming.push(draw)
+		} else if (new Date(draw.start_date) <= today && new Date(draw.end_date) >= today) {
+			active.push(draw)
+		} else if (new Date(draw.end_date) < today) {
+			completed.push(draw)
+		}
+	}
+
+	return [upcoming, active, completed]
 }

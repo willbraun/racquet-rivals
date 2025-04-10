@@ -15,6 +15,7 @@
 		currentUser
 	} from '$lib/store'
 	import {
+		type Draw,
 		type DrawPageData,
 		type Prediction,
 		type SelectedUser,
@@ -321,23 +322,25 @@
 
 <svelte:window bind:innerWidth />
 
+{#snippet drawSelectOptions(drawType: string, draws: Draw[])}
+	{#if draws.length > 0}
+		<option disabled>{drawType}</option>
+		{#each draws as draw}
+			<option selected={data.draw.id === draw.id} value={`/draw/${getSlug(draw)}`}
+				>{getTitle(draw)}</option
+			>
+		{/each}
+	{/if}
+{/snippet}
+
 <Header color="bg-primary-50">
 	<select
 		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 font-PoetsenOne text-xl hover:bg-primary-200 md:text-2xl"
 		onchange={(e) => goto(e.currentTarget.value)}
 	>
-		<option disabled>Active Draws</option>
-		{#each data.active.items as draw}
-			<option selected={data.draw.id === draw.id} value={`/draw/${getSlug(draw)}`}
-				>{getTitle(draw)}</option
-			>
-		{/each}
-		<option disabled>Completed Draws</option>
-		{#each data.completed.items as draw}
-			<option selected={data.draw.id === draw.id} value={`/draw/${getSlug(draw)}`}
-				>{getTitle(draw)}</option
-			>
-		{/each}
+		{@render drawSelectOptions('Upcoming', data.upcoming)}
+		{@render drawSelectOptions('Active', data.active)}
+		{@render drawSelectOptions('Completed', data.completed)}
 	</select>
 </Header>
 <section class="grid grid-cols-4 items-start gap-2 px-4 pb-4 {headerColor} [&>*]:text-lg">

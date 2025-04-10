@@ -15,87 +15,46 @@ import type {
 import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
 import { currentUser, predictionStore, selectedUsers } from '$lib/store'
+import { generateDummySlots } from '$lib/utils'
 
-const emptySlotData: Slot[] = []
-for (let i = 1; i <= 8; i++) {
-	for (let j = 1; j <= 2 ** (8 - i); j++) {
-		emptySlotData.push({
-			collectionId: 'x9dn3y760dvxbek',
-			collectionName: 'slots_with_scores',
-			created: '2024-05-02 15:48:21.972Z',
-			draw_id: 'j5mehm6fvdf9105',
-			id: 'v8mjytmle1h650x',
-			round: i,
-			position: j,
-			name: '',
-			seed: '',
-			updated: '2024-05-02 15:48:21.972Z',
-			set1_id: 'set1_dummy',
-			set1_games: null,
-			set1_tiebreak: null,
-			set2_id: 'set2_dummy',
-			set2_games: null,
-			set2_tiebreak: null,
-			set3_id: 'set3_dummy',
-			set3_games: null,
-			set3_tiebreak: null,
-			set4_id: 'set4_dummy',
-			set4_games: null,
-			set4_tiebreak: null,
-			set5_id: 'set5_dummy',
-			set5_games: null,
-			set5_tiebreak: null
-		})
-	}
-}
+const emptySlotData = generateDummySlots('j5mehm6fvdf9105', 1, 8)
 
 const data: DrawPageData = {
-	active: {
-		items: [
-			{
-				collectionId: 'zpjgxcf4d9ojqcd',
-				collectionName: 'draw',
-				created: '2024-05-02 15:42:20.397Z',
-				end_date: '2024-06-09 23:00:00.000Z',
-				event: "Men's Singles",
-				id: 'j5mehm6fvdf9105',
-				name: 'French Open',
-				prediction_close: '',
-				size: 128,
-				start_date: '2024-05-26 12:00:00.000Z',
-				updated: '2024-05-02 15:44:08.159Z',
-				url: 'https://www.atptour.com/en/scores/archive/roland-garros/520/2024/draws',
-				year: 2024
-			}
-		],
-		page: 1,
-		perPage: 30,
-		totalItems: 1,
-		totalPages: 1
-	} as PbListResponse<Draw>,
-	completed: {
-		items: [
-			{
-				collectionId: 'zpjgxcf4d9ojqcd',
-				collectionName: 'draw',
-				created: '2024-05-02 15:42:20.397Z',
-				end_date: '2024-06-09 23:00:00.000Z',
-				event: "Men's Singles",
-				id: '757duh3a8vpgyrq',
-				name: 'Australian Open',
-				prediction_close: '2024-01-28 05:32:34.187Z',
-				size: 128,
-				start_date: '2024-01-13 13:00:00.000Z',
-				updated: '2024-01-27 19:47:22.187Z',
-				url: 'https://www.atptour.com/en/scores/current/australian-open/580/draws',
-				year: 2024
-			}
-		],
-		page: 1,
-		perPage: 30,
-		totalItems: 1,
-		totalPages: 1
-	} as PbListResponse<Draw>,
+	upcoming: [],
+	active: [
+		{
+			collectionId: 'zpjgxcf4d9ojqcd',
+			collectionName: 'draw',
+			created: '2024-05-02 15:42:20.397Z',
+			end_date: '2024-06-09 23:00:00.000Z',
+			event: "Men's Singles",
+			id: 'j5mehm6fvdf9105',
+			name: 'French Open',
+			prediction_close: '',
+			size: 128,
+			start_date: '2024-05-26 12:00:00.000Z',
+			updated: '2024-05-02 15:44:08.159Z',
+			url: 'https://www.atptour.com/en/scores/archive/roland-garros/520/2024/draws',
+			year: 2024
+		}
+	],
+	completed: [
+		{
+			collectionId: 'zpjgxcf4d9ojqcd',
+			collectionName: 'draw',
+			created: '2024-05-02 15:42:20.397Z',
+			end_date: '2024-06-09 23:00:00.000Z',
+			event: "Men's Singles",
+			id: '757duh3a8vpgyrq',
+			name: 'Australian Open',
+			prediction_close: '2024-01-28 05:32:34.187Z',
+			size: 128,
+			start_date: '2024-01-13 13:00:00.000Z',
+			updated: '2024-01-27 19:47:22.187Z',
+			url: 'https://www.atptour.com/en/scores/current/australian-open/580/draws',
+			year: 2024
+		}
+	],
 	draw: {
 		collectionId: 'zpjgxcf4d9ojqcd',
 		collectionName: 'draw',

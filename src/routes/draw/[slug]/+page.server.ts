@@ -1,6 +1,6 @@
 import { fail, type Actions } from '@sveltejs/kit'
-import { errorMessage } from '$lib/utils'
-import { exampleSelectedUsers, mainColor } from '$lib/data'
+import { classifyDraws, errorMessage, generateDummySlots } from '$lib/utils'
+import { mainColor } from '$lib/data'
 import { fetchJson } from '$lib/server/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
@@ -15,7 +15,6 @@ import type {
 } from '$lib/types'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { SCRIPT_USERNAME } from '$env/static/private'
-import { format } from 'date-fns'
 
 const getCurrentUser = (locals: App.Locals): SelectedUser => {
 	return {
@@ -29,27 +28,15 @@ const getCurrentUser = (locals: App.Locals): SelectedUser => {
 export async function load({ fetch, params, locals, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const url = PUBLIC_POCKETBASE_URL
-	const currentUser = getCurrentUser(locals)
-	const today = format(new Date(), 'yyyy-MM-dd')
 	const token = locals.pb.authStore.token
 
-	const [active, completed, draw, slots, drawResults]: [
-		PbListResponse<Draw>,
+	const [draws, draw, slots, drawResults]: [
 		PbListResponse<Draw>,
 		Draw,
 		PbListResponse<Slot>,
 		PbListResponse<DrawResult>
 	] = await Promise.all([
-		fetchJson(
-			`${url}/api/collections/draw/records?filter=(end_date>="${today}")&sort=-start_date,event`,
-			fetch,
-			token
-		),
-		fetchJson(
-			`${url}/api/collections/draw/records?filter=(end_date<"${today}")&sort=-start_date,event`,
-			fetch,
-			token
-		),
+		fetchJson(`${url}/api/collections/draw/records?sort=-start_date,event`, fetch, token),
 		fetchJson(`${url}/api/collections/draw/records/${id}`, fetch, token),
 		fetchJson(
 			`${url}/api/collections/slots_with_scores/records?perPage=255&filter=(draw_id="${id}")`,
@@ -65,11 +52,15 @@ export async function load({ fetch, params, locals, cookies }) {
 		)
 	])
 
+	const [upcoming, active, completed] = classifyDraws(draws.items)
+	const renderedSlots = slots.items.length > 0 ? slots.items : generateDummySlots(draw.id, 4, 8)
+
 	return {
+		upcoming,
 		active,
 		completed,
 		draw,
-		slots: slots.items,
+		slots: renderedSlots,
 		drawResults,
 		isLeaderboard: cookies.get('isLeaderboard') === 'true'
 	} as DrawPageData
