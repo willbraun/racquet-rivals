@@ -104,7 +104,7 @@ export const addUser = async (user: SelectedUserNoColor) => {
 		return
 	}
 
-	const newUser = {
+	const newUser: SelectedUser = {
 		...user,
 		color
 	}
