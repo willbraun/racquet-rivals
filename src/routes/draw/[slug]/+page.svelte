@@ -157,9 +157,9 @@
 	// DRAW SETUP
 	//////////////////////////////////////////
 
-	const fullDrawRounds = getFullDrawRounds(data.draw)
-	const allRounds = getAllRounds(fullDrawRounds)
-	const ourRounds = getOurRounds(allRounds)
+	const fullDrawRounds = $derived(getFullDrawRounds(data.draw))
+	const allRounds = $derived(getAllRounds(fullDrawRounds))
+	const ourRounds = $derived(getOurRounds(allRounds))
 
 	onMount(() => {
 		getAllUserPredictions()
