@@ -15,39 +15,9 @@ import type {
 import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
 import { currentUser, predictionStore, selectedUsers } from '$lib/store'
+import { generateDummySlots } from '$lib/utils'
 
-const emptySlotData: Slot[] = []
-for (let i = 1; i <= 8; i++) {
-	for (let j = 1; j <= 2 ** (8 - i); j++) {
-		emptySlotData.push({
-			collectionId: 'x9dn3y760dvxbek',
-			collectionName: 'slots_with_scores',
-			created: '2024-05-02 15:48:21.972Z',
-			draw_id: 'j5mehm6fvdf9105',
-			id: 'v8mjytmle1h650x',
-			round: i,
-			position: j,
-			name: '',
-			seed: '',
-			updated: '2024-05-02 15:48:21.972Z',
-			set1_id: 'set1_dummy',
-			set1_games: null,
-			set1_tiebreak: null,
-			set2_id: 'set2_dummy',
-			set2_games: null,
-			set2_tiebreak: null,
-			set3_id: 'set3_dummy',
-			set3_games: null,
-			set3_tiebreak: null,
-			set4_id: 'set4_dummy',
-			set4_games: null,
-			set4_tiebreak: null,
-			set5_id: 'set5_dummy',
-			set5_games: null,
-			set5_tiebreak: null
-		})
-	}
-}
+const emptySlotData = generateDummySlots('j5mehm6fvdf9105', 4, 8)
 
 const data: DrawPageData = {
 	active: {
@@ -111,6 +81,7 @@ const data: DrawPageData = {
 		url: 'https://www.atptour.com/en/scores/archive/roland-garros/520/2024/draws',
 		year: 2024
 	} as Draw,
+	activeRound: 'Qualifying Rounds',
 	slots: emptySlotData,
 	drawResults: {
 		items: [
@@ -333,47 +304,18 @@ describe('Draw page component', () => {
 		expect(screen.getByText('Log in to select')).toBeInTheDocument()
 	})
 
-	const testActiveRound = (activeRound: number, expectedTextContent: string) => {
-		const newSlots = emptySlotData.map((slot) => {
-			return slot.round <= activeRound ? { ...slot, name: 'Some Player' } : slot
-		}) as Slot[]
-
+	test('Active round shows', () => {
 		render(PageSetup, {
 			props: {
 				component: Page,
 				data: {
 					...data,
-					slots: newSlots
+					activeRound: 'Round of 16'
 				}
 			}
 		})
 
-		expect(screen.getByText('Active Round:')).toHaveTextContent(expectedTextContent)
-	}
-
-	test('Active Round: 1st Round', () => {
-		testActiveRound(1, 'Active Round: 1st Round (R128)')
-	})
-	test('Active Round: 2nd Round', () => {
-		testActiveRound(2, 'Active Round: 2nd Round (R64)')
-	})
-	test('Active Round: 3rd Round', () => {
-		testActiveRound(3, 'Active Round: 3rd Round (R32)')
-	})
-	test('Active Round: Round of 16', () => {
-		testActiveRound(4, 'Active Round: Round of 16')
-	})
-	test('Active Round: Quarterfinals', () => {
-		testActiveRound(5, 'Active Round: Quarterfinals')
-	})
-	test('Active Round: Semifinals', () => {
-		testActiveRound(6, 'Active Round: Semifinals')
-	})
-	test('Active Round: Final', () => {
-		testActiveRound(7, 'Active Round: Final')
-	})
-	test('Active Round: Tournament Completed', () => {
-		testActiveRound(8, 'Active Round: Tournament Completed')
+		expect(screen.getByText('Active Round:')).toHaveTextContent('Active Round: Round of 16')
 	})
 
 	test('Predictions closed', () => {

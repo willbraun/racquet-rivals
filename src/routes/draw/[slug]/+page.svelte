@@ -23,7 +23,15 @@
 	} from '$lib/types'
 	import { afterNavigate, goto } from '$app/navigation'
 	import { format, addDays } from 'date-fns'
-	import { addUser, getSlug, getTitle, removeUser } from '$lib/utils'
+	import {
+		addUser,
+		getAllRounds,
+		getFullDrawRounds,
+		getOurRounds,
+		getSlug,
+		getTitle,
+		removeUser
+	} from '$lib/utils'
 	import { getPredictions } from '$lib/api'
 	import { browser } from '$app/environment'
 	import Cookies from 'js-cookie'
@@ -36,6 +44,7 @@
 	import MatchScore from '$lib/components/MatchScore.svelte'
 	import { exampleSelectedUsers, mainColor } from '$lib/data'
 	import { onMount } from 'svelte'
+	import { draw } from 'svelte/transition'
 
 	interface Props {
 		data: DrawPageData
@@ -148,42 +157,9 @@
 	// DRAW SETUP
 	//////////////////////////////////////////
 
-	let fullDrawRounds = $derived(Math.log2(data.draw.size) + 1)
-	let allRounds = $derived([...Array(fullDrawRounds).keys()].map((x) => x + 1))
-	let ourRounds = $derived(allRounds.slice(-5))
-
-	let roundLabel = $derived(
-		(() => {
-			const filledRounds = allRounds.filter((round) => {
-				return data.slots
-					.filter((slot) => {
-						return slot.round === round
-					})
-					.every((slot) => slot.name.trim() !== '')
-			})
-
-			if (filledRounds.at(-1) === fullDrawRounds) {
-				return 'Tournament Completed'
-			}
-
-			const activeRound = Math.max(0, ...filledRounds) // round being played
-			const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Final']
-			const index = ourRounds.indexOf(activeRound)
-
-			if (index !== -1) {
-				return labels[index]
-			} else {
-				const sizeLabel = `(R${2 ** (fullDrawRounds - activeRound)})`
-				const earlyLabels = [
-					'Qualifying Rounds',
-					`1st Round ${sizeLabel}`,
-					`2nd Round ${sizeLabel}`,
-					`3rd Round ${sizeLabel}`
-				]
-				return `${earlyLabels[activeRound]}`
-			}
-		})()
-	)
+	const fullDrawRounds = getFullDrawRounds(data.draw)
+	const allRounds = getAllRounds(fullDrawRounds)
+	const ourRounds = getOurRounds(allRounds)
 
 	onMount(() => {
 		getAllUserPredictions()
@@ -207,7 +183,7 @@
 		selectedUserPredictions: Prediction[]
 	}
 
-	let slots = $derived(data.slots.filter((slot) => slot.round >= fullDrawRounds - 4))
+	let slots = $derived(data.slots ?? [])
 	let slotRenderData: SlotRenderData[] = $derived(
 		slots.map((slot) => {
 			if (!predictions.length) {
@@ -355,7 +331,7 @@
 		>
 	</div>
 	<div class="col-span-4 text-center text-black md:col-span-1">
-		Active Round: <span class="font-bold">{roundLabel}</span>
+		Active Round: <span class="font-bold">{data.activeRound}</span>
 	</div>
 	<div
 		class="col-span-4 mx-auto flex w-fit overflow-x-hidden rounded-md md:col-span-1"

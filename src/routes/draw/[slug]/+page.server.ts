@@ -1,6 +1,6 @@
 import { fail, type Actions } from '@sveltejs/kit'
-import { errorMessage } from '$lib/utils'
-import { exampleSelectedUsers, mainColor } from '$lib/data'
+import { errorMessage, getActiveRound, getFullDrawRounds } from '$lib/utils'
+import { mainColor } from '$lib/data'
 import { fetchJson } from '$lib/server/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
@@ -29,7 +29,6 @@ const getCurrentUser = (locals: App.Locals): SelectedUser => {
 export async function load({ fetch, params, locals, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const url = PUBLIC_POCKETBASE_URL
-	const currentUser = getCurrentUser(locals)
 	const today = format(new Date(), 'yyyy-MM-dd')
 	const token = locals.pb.authStore.token
 
@@ -65,11 +64,16 @@ export async function load({ fetch, params, locals, cookies }) {
 		)
 	])
 
+	const fullDrawRounds = getFullDrawRounds(draw)
+	const renderedSlots = slots.items.filter((slot) => slot.round >= fullDrawRounds - 4)
+	const activeRound = getActiveRound(draw, slots.items)
+
 	return {
 		active,
 		completed,
 		draw,
-		slots: slots.items,
+		activeRound,
+		slots: renderedSlots,
 		drawResults,
 		isLeaderboard: cookies.get('isLeaderboard') === 'true'
 	} as DrawPageData
@@ -95,14 +99,14 @@ export const actions: Actions = {
 
 		try {
 			// search for username, case insensitive
-			const data = await locals.pb
+			const user = await locals.pb
 				.collection('user')
 				.getFirstListItem(`username~"${username}"&&"${username}"~username`)
 			return {
 				user: {
 					selectorId: currentUser.id,
-					id: data.id,
-					username: data.username
+					id: user.id,
+					username: user.username
 				} as SelectedUserNoColor,
 				error: ''
 			}

@@ -14,12 +14,13 @@ import {
 	type DrawResult,
 	type Prediction,
 	type SelectedUser,
-	type SelectedUserNoColor
+	type SelectedUserNoColor,
+	type Slot
 } from './types'
 import { get } from 'svelte/store'
 import { selectColors } from './data'
 import { cubicInOut } from 'svelte/easing'
-import type { TransitionConfig } from 'svelte/transition'
+import { type TransitionConfig } from 'svelte/transition'
 import { getPredictions } from './api'
 
 type ErrorObjData = {
@@ -216,4 +217,95 @@ export function customSlide(
 			`
 		}
 	}
+}
+
+export const getFullDrawRounds = (draw: Draw): number => {
+	return Math.log2(draw.size) + 1
+}
+
+export const getAllRounds = (fullDrawRounds: number): number[] => {
+	return [...Array(fullDrawRounds).keys()].map((x) => x + 1)
+}
+
+export const getOurRounds = (allRounds: number[]): number[] => {
+	return allRounds.slice(-5)
+}
+
+export const getActiveRound = (draw: Draw, slots: Slot[]) => {
+	const fullDrawRounds = getFullDrawRounds(draw)
+	const allRounds = getAllRounds(fullDrawRounds)
+	const ourRounds = getOurRounds(allRounds)
+	const filledRounds = allRounds.filter((round) => {
+		return slots
+			.filter((slot) => {
+				return slot.round === round
+			})
+			.every((slot) => slot.name.trim() !== '')
+	})
+
+	if (filledRounds.at(-1) === fullDrawRounds) {
+		return 'Tournament Completed'
+	}
+
+	const activeRoundIndex = Math.max(0, ...filledRounds) // round being played
+	const labels = ['Round of 16', 'Quarterfinals', 'Semifinals', 'Final']
+	const index = ourRounds.indexOf(activeRoundIndex)
+
+	if (index !== -1) {
+		return labels[index]
+	} else {
+		const sizeLabel = `(R${2 ** (fullDrawRounds - activeRoundIndex)})`
+		const earlyLabels = [
+			'Qualifying Rounds',
+			`1st Round ${sizeLabel}`,
+			`2nd Round ${sizeLabel}`,
+			`3rd Round ${sizeLabel}`
+		]
+		return `${earlyLabels[activeRoundIndex]}`
+	}
+}
+
+export const generateDummySlots = (
+	drawId: string,
+	startRound: number,
+	endRound: number
+): Slot[] => {
+	const numRounds = endRound - startRound + 1
+	const dummySlots: Slot[] = []
+	for (let i = 0; i < numRounds; i++) {
+		const numPositions = 2 ** (numRounds - 1 - i)
+		for (let j = 0; j < numPositions; j++) {
+			const round = startRound + i
+			const position = j + 1
+			dummySlots.push({
+				collectionId: 'x9dn3y760dvxbek',
+				collectionName: 'slots_with_scores',
+				created: '2024-05-02 15:48:21.972Z',
+				draw_id: drawId,
+				id: 'dummySlotId_' + round + '_' + position,
+				round,
+				position,
+				name: '',
+				seed: '',
+				updated: '2024-05-02 15:48:21.972Z',
+				set1_id: 'set1_dummy',
+				set1_games: null,
+				set1_tiebreak: null,
+				set2_id: 'set2_dummy',
+				set2_games: null,
+				set2_tiebreak: null,
+				set3_id: 'set3_dummy',
+				set3_games: null,
+				set3_tiebreak: null,
+				set4_id: 'set4_dummy',
+				set4_games: null,
+				set4_tiebreak: null,
+				set5_id: 'set5_dummy',
+				set5_games: null,
+				set5_tiebreak: null
+			})
+		}
+	}
+
+	return dummySlots
 }
