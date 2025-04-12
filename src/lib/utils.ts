@@ -20,7 +20,7 @@ import {
 import { get } from 'svelte/store'
 import { selectColors } from './data'
 import { cubicInOut } from 'svelte/easing'
-import type { TransitionConfig } from 'svelte/transition'
+import { type TransitionConfig } from 'svelte/transition'
 import { getPredictions } from './api'
 
 type ErrorObjData = {
@@ -217,6 +217,18 @@ export function customSlide(
 			`
 		}
 	}
+}
+
+export const getFullDrawRounds = (draw: Draw): number => {
+	return Math.log2(draw.size) + 1
+}
+
+export const getAllRounds = (fullDrawRounds: number): number[] => {
+	return [...Array(fullDrawRounds).keys()].map((x) => x + 1)
+}
+
+export const getOurRounds = (allRounds: number[]): number[] => {
+	return allRounds.slice(-5)
 }
 
 export const generateDummySlots = (

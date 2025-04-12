@@ -245,6 +245,7 @@ export interface DrawPageData {
 	active: Draw[]
 	completed: Draw[]
 	draw: Draw
+	activeRound: string
 	slots: Slot[]
 	drawResults: PbListResponse<DrawResult>
 	isLeaderboard: boolean

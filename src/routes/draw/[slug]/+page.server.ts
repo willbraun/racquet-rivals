@@ -1,7 +1,7 @@
 import { fail, type Actions } from '@sveltejs/kit'
-import { classifyDraws, errorMessage, generateDummySlots } from '$lib/utils'
+import { classifyDraws, errorMessage, generateDummySlots, getFullDrawRounds } from '$lib/utils'
 import { mainColor } from '$lib/data'
-import { fetchJson } from '$lib/server/utils'
+import { fetchJson, getActiveRound } from '$lib/server/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
 	Draw,
@@ -53,13 +53,21 @@ export async function load({ fetch, params, locals, cookies }) {
 	])
 
 	const [upcoming, active, completed] = classifyDraws(draws.items)
-	const renderedSlots = slots.items.length > 0 ? slots.items : generateDummySlots(draw.id, 4, 8)
+
+	const activeRound = getActiveRound(draw, slots.items)
+	const fullDrawRounds = getFullDrawRounds(draw)
+	const startRound = fullDrawRounds - 4
+	const renderedSlots =
+		slots.items.length > 0
+			? slots.items.filter((slot) => slot.round >= fullDrawRounds - 4)
+			: generateDummySlots(draw.id, startRound, fullDrawRounds)
 
 	return {
 		upcoming,
 		active,
 		completed,
 		draw,
+		activeRound,
 		slots: renderedSlots,
 		drawResults,
 		isLeaderboard: cookies.get('isLeaderboard') === 'true'
@@ -86,14 +94,14 @@ export const actions: Actions = {
 
 		try {
 			// search for username, case insensitive
-			const data = await locals.pb
+			const user = await locals.pb
 				.collection('user')
 				.getFirstListItem(`username~"${username}"&&"${username}"~username`)
 			return {
 				user: {
 					selectorId: currentUser.id,
-					id: data.id,
-					username: data.username
+					id: user.id,
+					username: user.username
 				} as SelectedUserNoColor,
 				error: ''
 			}

@@ -8,7 +8,9 @@ import type {
 	PbListResponse,
 	SelectedUser,
 	Prediction,
-	UserRecord
+	UserRecord,
+	Slot,
+	Draw
 } from './types'
 
 const userWill = {
