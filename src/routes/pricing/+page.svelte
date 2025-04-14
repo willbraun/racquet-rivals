@@ -1,13 +1,19 @@
-<script>
+<script lang="ts">
 	import Header from '$lib/components/Header.svelte'
+	import { page } from '$app/state'
+	import { TournamentName, type Draw } from '$lib/types'
+	import { bannerStyleMap, pricingHeaderStyleMap } from '$lib/data'
+
+	const draw: Draw = page.data.defaultDraw
+	const header = `${draw.name} ${draw.year}`
 
 	const pricingOptions = [
 		{
 			title: "Men's Draw",
 			price: '$4.99',
-			event: 'French Open',
+			header: header,
 			features: [
-				"Access to make predictions for men's draw",
+				"Access to make predictions for men's singles draw",
 				'Earn points and a global ranking',
 				'View all rankings, leaderboards, and stats'
 			]
@@ -15,9 +21,9 @@
 		{
 			title: "Women's Draw",
 			price: '$4.99',
-			event: 'French Open',
+			header: header,
 			features: [
-				"Access to make predictions for women's draw",
+				"Access to make predictions for women's singles draw",
 				'Earn points and a global ranking',
 				'View all rankings, leaderboards, and stats'
 			]
@@ -25,9 +31,9 @@
 		{
 			title: 'Both Draws',
 			price: '$7.99',
-			event: 'French Open',
+			header: header,
 			features: [
-				"Access to make predictions for men's and women's draws",
+				"Access to make predictions for men's and women's singles draws",
 				'20% savings',
 				'Earn points and a global ranking',
 				'View all rankings, leaderboards, and stats'
@@ -49,7 +55,7 @@
 </script>
 
 <Header />
-<main class="bg-stone-100 px-4 pb-12 sm:px-6 lg:px-8">
+<main class="bg-stone-100 px-4 pb-24 sm:px-6 lg:px-8">
 	<div class="mx-auto max-w-7xl">
 		<div class="mb-12 text-center">
 			<h1 class="mb-4 text-4xl font-semibold sm:text-6xl">Pricing Plans</h1>
@@ -57,25 +63,27 @@
 				Choose the plan that works best for you and get ready to make your predictions.
 			</p>
 		</div>
-		<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
 			{#each pricingOptions as option}
 				<div
 					class="relative flex flex-col overflow-hidden rounded-lg border shadow-lg {option.featured
 						? 'border-primary-500 ring-2 ring-primary-500'
 						: 'border-gray-200'}"
 				>
-					{#if option.event}
+					{#if option.header}
 						<div
-							class="absolute w-full bg-red-600 py-1 text-center text-sm font-semibold text-white"
+							class="absolute w-full py-1 text-center text-sm font-semibold text-white {pricingHeaderStyleMap[
+								draw.name
+							]}"
 						>
-							{option.event} 2023
+							{option.header}
 						</div>
 					{/if}
-					<div class="bg-white px-6 py-8 sm:p-10 sm:pb-6">
-						<div class="flex h-16 items-center justify-center">
-							<h3 class="text-center text-2xl font-medium text-gray-900">{option.title}</h3>
+					<div class="bg-white px-0 py-8 sm:pb-6">
+						<div class="flex h-16 items-end justify-center">
+							<p class="text-center text-3xl font-bold text-gray-900">{option.title}</p>
 						</div>
-						<div class="mt-4 flex items-center justify-center">
+						<div class="mt-6 flex items-end justify-center">
 							<span class="text-5xl font-extrabold text-gray-900">{option.price}</span>
 						</div>
 					</div>
@@ -109,7 +117,7 @@
 								type="button"
 								class="w-full rounded-md border border-transparent bg-primary-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
 							>
-								{option.featured ? 'Get Started' : 'Select Plan'}
+								{option.featured ? 'Get Started' : 'Select'}
 							</button>
 						</div>
 					</div>

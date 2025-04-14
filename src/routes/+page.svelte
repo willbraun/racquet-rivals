@@ -2,9 +2,10 @@
 	import { fadeAndSlideIn } from '$lib/actions/fadeAndSlideIn'
 	import { isAuth, currentUser, loginGoto } from '$lib/store'
 	import { capitalize, getSlug, getTitle } from '$lib/utils'
+	import { bannerStyleMap } from '$lib/data'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
 	import { onMount } from 'svelte'
-	import { type Draw, type HomePageData, TournamentName } from '$lib/types'
+	import { type Draw, type HomePageData } from '$lib/types'
 	import { format } from 'date-fns'
 	import Header from '$lib/components/Header.svelte'
 	import wimbledon from '$lib/images/wimbledon.jpg'
@@ -15,13 +16,6 @@
 	}
 
 	let { data }: Props = $props()
-
-	const bannerStyleMap: { [key in TournamentName]: string } = {
-		[TournamentName.AUSTRALIAN_OPEN]: 'bg-gradient-to-r from-indigo-800 via-blue-500 to-cyan-300',
-		[TournamentName.FRENCH_OPEN]: 'bg-gradient-to-r from-red-700 via-orange-500 to-amber-300',
-		[TournamentName.WIMBLEDON]: 'bg-gradient-to-r from-green-600 via-blue-400 to-purple-600',
-		[TournamentName.US_OPEN]: 'bg-gradient-to-r from-blue-700 via-orange-500 to-yellow-300'
-	}
 
 	const formatDateRange = (start: string, end: string) => {
 		const startDate = new Date(start)
