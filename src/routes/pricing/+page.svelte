@@ -1,7 +1,6 @@
 <script>
 	import Header from '$lib/components/Header.svelte'
 
-	// Define pricing options
 	const pricingOptions = [
 		{
 			title: "Men's Draw",
