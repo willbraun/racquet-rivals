@@ -1,9 +1,12 @@
 <script>
+	import Header from '$lib/components/Header.svelte'
+
 	// Define pricing options
 	const pricingOptions = [
 		{
 			title: "Men's Draw",
 			price: '$4.99',
+			event: 'French Open',
 			features: [
 				"Access to make predictions for men's draw",
 				'Earn points and a global ranking',
@@ -13,6 +16,7 @@
 		{
 			title: "Women's Draw",
 			price: '$4.99',
+			event: 'French Open',
 			features: [
 				"Access to make predictions for women's draw",
 				'Earn points and a global ranking',
@@ -22,6 +26,7 @@
 		{
 			title: 'Both Draws',
 			price: '$7.99',
+			event: 'French Open',
 			features: [
 				"Access to make predictions for men's and women's draws",
 				'20% savings',
@@ -36,7 +41,7 @@
 			features: [
 				'Access to make predictions for all draws throughout the year',
 				'50% savings',
-				'Priority support',
+				'One-time setup',
 				'Earn points and a global ranking',
 				'View all rankings, leaderboards, and stats'
 			]
@@ -44,7 +49,8 @@
 	]
 </script>
 
-<main class="bg-stone-100 px-4 py-10 sm:px-6 lg:px-8">
+<Header />
+<main class="bg-stone-100 px-4 pb-12 sm:px-6 lg:px-8">
 	<div class="mx-auto max-w-7xl">
 		<div class="mb-12 text-center">
 			<h1 class="mb-4 text-4xl font-semibold sm:text-6xl">Pricing Plans</h1>
@@ -55,10 +61,17 @@
 		<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
 			{#each pricingOptions as option}
 				<div
-					class="flex flex-col overflow-hidden rounded-lg border shadow-lg {option.featured
+					class="relative flex flex-col overflow-hidden rounded-lg border shadow-lg {option.featured
 						? 'border-primary-500 ring-2 ring-primary-500'
 						: 'border-gray-200'}"
 				>
+					{#if option.event}
+						<div
+							class="absolute w-full bg-red-600 py-1 text-center text-sm font-semibold text-white"
+						>
+							{option.event} 2023
+						</div>
+					{/if}
 					<div class="bg-white px-6 py-8 sm:p-10 sm:pb-6">
 						<div class="flex h-16 items-center justify-center">
 							<h3 class="text-center text-2xl font-medium text-gray-900">{option.title}</h3>
