@@ -10,6 +10,7 @@
 	import ShareLink from './ShareLink.svelte'
 	import { isAuth, currentUser, drawNavUrl } from '$lib/store'
 	import infoIcon from '$lib/images/icons/circle-info-solid.svg'
+	import dollarSign from '$lib/images/icons/dollar-sign-solid.svg'
 
 	const drawerStore = getDrawerStore()
 	const closeDrawer = () => {
@@ -34,6 +35,7 @@
 		{@render menuLink('My Profile', user, 'profile', 18, `/profile/${$currentUser?.username}`)}
 	{/if}
 	{@render menuLink('Rankings', trophy, 'rankings', 24, '/rankings')}
+	{@render menuLink('Pricing', dollarSign, 'rankings', 16, '/pricing')}
 	{@render about()}
 	<ShareLink />
 	{#if $isAuth}

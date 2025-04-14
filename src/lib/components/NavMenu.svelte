@@ -8,6 +8,7 @@
 	import LogoutButton from './LogoutButton.svelte'
 	import { isAuth, currentUser, drawNavUrl } from '$lib/store'
 	import infoIcon from '$lib/images/icons/circle-info-solid.svg'
+	import dollarSign from '$lib/images/icons/dollar-sign-solid.svg'
 
 	const drawerStore = getDrawerStore()
 	const drawerSettings: DrawerSettings = {
@@ -50,6 +51,9 @@
 		{/if}
 		<a href={`/rankings`}>
 			<img src={trophy} alt="rankings" width="24" class:invert={isInverted} />
+		</a>
+		<a href="/pricing">
+			<img src={dollarSign} alt="pricing" width="16" class:invert={isInverted} />
 		</a>
 		<a href="/about">
 			<img src={infoIcon} alt="about" width="24" class:invert={isInverted} />
