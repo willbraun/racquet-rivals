@@ -1,15 +1,48 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte'
 	import { page } from '$app/state'
-	import { TournamentName, type Draw } from '$lib/types'
-	import { bannerStyleMap, pricingHeaderStyleMap } from '$lib/data'
+	import { type Draw } from '$lib/types'
+	import { pricingHeaderStyleMap } from '$lib/data'
+	import { isAuth, loginGoto } from '$lib/store'
+	import { onMount } from 'svelte'
+	import { goto } from '$app/navigation'
 
 	const draw: Draw = page.data.defaultDraw
 	const header = `${draw.name} ${draw.year}`
 
-	const pricingOptions = [
+	const selectedPlan = page.url.searchParams.get('selectedPlan')
+	if (selectedPlan) {
+		console.log('Selected plan from redirect:', selectedPlan) // TODO - update this with real checkout
+		history.replaceState(null, '', '/pricing')
+		sessionStorage.removeItem('selectedPlan')
+	}
+
+	const handleClick = (plan: string) => {
+		if ($isAuth) {
+			console.log('Selected plan logged in:', plan) // TODO - update this with real checkout
+		} else {
+			sessionStorage.setItem('selectedPlan', plan)
+			goto('/create-account')
+		}
+	}
+
+	onMount(() => {
+		loginGoto.set('/pricing')
+	})
+
+	type PricingOption = {
+		title: string
+		plan: string
+		price: string
+		header?: string
+		featured?: boolean
+		features: string[]
+	}
+
+	const pricingOptions: PricingOption[] = [
 		{
 			title: "Men's Draw",
+			plan: 'men',
 			price: '$4.99',
 			header: header,
 			features: [
@@ -20,6 +53,7 @@
 		},
 		{
 			title: "Women's Draw",
+			plan: 'women',
 			price: '$4.99',
 			header: header,
 			features: [
@@ -30,6 +64,7 @@
 		},
 		{
 			title: 'Both Draws',
+			plan: 'both',
 			price: '$7.99',
 			header: header,
 			features: [
@@ -41,6 +76,7 @@
 		},
 		{
 			title: 'Full Access Subscription',
+			plan: 'subscription',
 			price: '$19.99/yr',
 			featured: true,
 			features: [
@@ -116,6 +152,7 @@
 							<button
 								type="button"
 								class="w-full rounded-md border border-transparent bg-primary-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+								onclick={() => handleClick(option.plan)}
 							>
 								{option.featured ? 'Get Started' : 'Select'}
 							</button>
@@ -125,4 +162,11 @@
 			{/each}
 		</div>
 	</div>
+	{#if !$isAuth}
+		<div>
+			<p class="mt-6 text-center text-sm text-gray-500">
+				You'll be prompted to create an account and then taken to the payment page.
+			</p>
+		</div>
+	{/if}
 </main>

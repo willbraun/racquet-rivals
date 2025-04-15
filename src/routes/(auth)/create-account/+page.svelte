@@ -21,10 +21,12 @@
 	)
 
 	let usernameRef: HTMLInputElement | null = $state(null)
+	let selectedPlan: string | null = $state(null)
 	onMount(() => {
 		if (usernameRef) {
 			usernameRef.focus()
 		}
+		selectedPlan = sessionStorage.getItem('selectedPlan')
 	})
 
 	const handleCreateAccount = async (event: Event) => {
@@ -65,7 +67,10 @@
 			await pb.collection('user').authWithPassword(email, password)
 
 			error = ''
-			goto($loginGoto)
+
+			const selectedPlan = sessionStorage.getItem('selectedPlan')
+			const redirectUrl = selectedPlan ? `/pricing?selectedPlan=${selectedPlan}` : $loginGoto
+			goto(redirectUrl)
 		} catch (err) {
 			error = errorMessage(err)
 		} finally {
@@ -76,6 +81,12 @@
 
 <AuthBase>
 	<h1 class="mb-8 text-4xl font-semibold">Create Account</h1>
+	{#if selectedPlan}
+		<!-- TODO - update with a better message and styling, and add to login page too -->
+		<p class="mb-4 text-center text-2xl font-semibold">
+			You are signing up for the {selectedPlan} plan
+		</p>
+	{/if}
 	<form onsubmit={handleCreateAccount}>
 		<label class="label mb-4">
 			<p>Username</p>

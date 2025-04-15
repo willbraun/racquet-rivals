@@ -75,8 +75,11 @@
 				})
 			)
 
-			goto($loginGoto)
 			error = ''
+
+			const selectedPlan = sessionStorage.getItem('selectedPlan')
+			const redirectUrl = selectedPlan ? `/pricing?selectedPlan=${selectedPlan}` : $loginGoto
+			goto(redirectUrl)
 		} catch (err) {
 			error = errorMessage(err)
 		} finally {
