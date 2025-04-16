@@ -1,13 +1,19 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte'
-	import { page } from '$app/state'
-	import { type Draw, type SelectedPlan } from '$lib/types'
+	import { type PricingPageData, type SelectedPlan } from '$lib/types'
 	import { pricingHeaderStyleMap } from '$lib/data'
 	import { isAuth, loginGoto } from '$lib/store'
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
+	import { page } from '$app/state'
 
-	const draw: Draw = page.data.defaultDraw
+	interface Props {
+		data: PricingPageData
+	}
+
+	let { data }: Props = $props()
+
+	const draw = data.drawForSale
 	const header = `${draw.name} ${draw.year}`
 
 	const selectedPlan = page.url.searchParams.get('selectedPlan')

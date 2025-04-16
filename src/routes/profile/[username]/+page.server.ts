@@ -8,7 +8,7 @@ import type {
 	PbListResponse,
 	PredictionAccuracy,
 	ProfilePageData,
-	User
+	UserRecord
 } from '$lib/types.js'
 import { error } from '@sveltejs/kit'
 
@@ -16,7 +16,7 @@ export async function load({ fetch, params }) {
 	const username = params.username.trim()
 	const url = PUBLIC_POCKETBASE_URL
 
-	const userData: PbListResponse<User> = await fetchJson(
+	const userData: PbListResponse<UserRecord> = await fetchJson(
 		`${url}/api/collections/user/records?filter=(username="${username}")`,
 		fetch
 	)

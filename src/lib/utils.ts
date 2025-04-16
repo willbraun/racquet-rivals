@@ -22,6 +22,7 @@ import { selectColors } from './data'
 import { cubicInOut } from 'svelte/easing'
 import { type TransitionConfig } from 'svelte/transition'
 import { getPredictions } from './api'
+import { compareAsc } from 'date-fns'
 
 type ErrorObjData = {
 	[key: string]: {
@@ -278,18 +279,23 @@ export const generateDummySlots = (
 
 export const classifyDraws = (draws: Draw[]) => {
 	const today = new Date()
-	let upcoming: Draw[] = []
+
+	let future: Draw[] = []
 	let active: Draw[] = []
 	let completed: Draw[] = []
 	for (const draw of draws) {
 		if (new Date(draw.start_date) >= today) {
-			upcoming.push(draw)
+			future.push(draw)
 		} else if (new Date(draw.start_date) <= today && new Date(draw.end_date) >= today) {
 			active.push(draw)
 		} else if (new Date(draw.end_date) < today) {
 			completed.push(draw)
 		}
 	}
+
+	const upcoming = future
+		.sort((a, b) => compareAsc(new Date(a.start_date), new Date(b.start_date)))
+		.slice(0, 2)
 
 	return [upcoming, active, completed]
 }

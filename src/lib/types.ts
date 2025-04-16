@@ -260,6 +260,10 @@ export interface ProfilePageData {
 	drawResults: PbListResponse<DrawResult>
 }
 
+export interface PricingPageData {
+	drawForSale: Draw
+}
+
 export interface SelectedPlan {
 	plan: string
 	title: string
