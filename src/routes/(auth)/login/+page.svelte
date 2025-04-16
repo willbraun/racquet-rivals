@@ -7,12 +7,18 @@
 	import { loginGoto } from '$lib/store'
 	import AuthBase from '../AuthBase.svelte'
 	import { errorMessage } from '$lib/utils'
+	import type { SelectedPlan } from '$lib/types'
+	import x from '$lib/images/icons/x.svg'
 
 	let usernameOrEmail = $state('')
 	let password = $state('')
 	let error = $state('')
 	let loading = $state(false)
 	let rememberMe = $state(false)
+	let selectedPlan: SelectedPlan | null = $state(null)
+	let redirectCanceled = $state(false)
+	let usernameOrEmailRef: HTMLInputElement | null = $state(null)
+	let passwordRef: HTMLInputElement | null = $state(null)
 
 	interface RememberLogin {
 		usernameOrEmail: string
@@ -24,22 +30,24 @@
 	}
 
 	onMount(() => {
+		// Handle selected plan from session storage
+		const selectedPlanStr = sessionStorage.getItem('selectedPlan')
+		selectedPlan = selectedPlanStr ? JSON.parse(selectedPlanStr) : null
+
+		// Handle remembered login info
 		const saved: RememberLogin = JSON.parse(localStorage.getItem('rememberLogin') || '{}')
 		if (saved.rememberMe) {
 			usernameOrEmail = saved.usernameOrEmail
 			rememberMe = true
 		}
-	})
 
-	let usernameOrEmailRef: HTMLInputElement | null = $state(null)
-	let passwordRef: HTMLInputElement | null = $state(null)
-	onMount(() => {
-		if (!usernameOrEmailRef || !passwordRef) return
-
-		if (rememberMe) {
-			passwordRef.focus()
-		} else {
-			usernameOrEmailRef.focus()
+		// Handle input focus
+		if (usernameOrEmailRef && passwordRef) {
+			if (rememberMe) {
+				passwordRef.focus()
+			} else {
+				usernameOrEmailRef.focus()
+			}
 		}
 	})
 
@@ -77,8 +85,12 @@
 
 			error = ''
 
-			const selectedPlan = sessionStorage.getItem('selectedPlan')
-			const redirectUrl = selectedPlan ? `/pricing?selectedPlan=${selectedPlan}` : $loginGoto
+			sessionStorage.removeItem('selectedPlan')
+
+			const redirectUrl =
+				selectedPlan && !redirectCanceled
+					? `/pricing?selectedPlan=${selectedPlan.plan}`
+					: $loginGoto
 			goto(redirectUrl)
 		} catch (err) {
 			error = errorMessage(err)
@@ -130,6 +142,35 @@
 				{loading ? 'Logging in...' : 'Log in'}
 			</button>
 		</div>
+		{#if selectedPlan}
+			<div class="mt-8 flex items-center justify-center gap-4 rounded-lg bg-primary-50 p-4">
+				{#if redirectCanceled}
+					<p class="text-muted-foreground text-center text-sm">
+						Redirect canceled.
+						<button
+							type="button"
+							class="hover:text-foreground ml-2 underline underline-offset-2"
+							onclick={() => (redirectCanceled = false)}
+						>
+							Undo
+						</button>
+					</p>
+				{:else}
+					<p class="text-center text-sm">
+						You'll be redirected to complete your purchase for <span class="font-bold"
+							>{selectedPlan?.title}</span
+						> after logging in.
+					</p>
+					<button
+						type="button"
+						class="text-muted-foreground text-sm underline underline-offset-2"
+						onclick={() => (redirectCanceled = true)}
+					>
+						<img src={x} alt="cancel redirect to pricing page" class="inline w-6" />
+					</button>
+				{/if}
+			</div>
+		{/if}
 	</form>
 
 	<FormError {error} />

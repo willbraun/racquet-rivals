@@ -259,3 +259,8 @@ export interface ProfilePageData {
 	overallRank: OverallRank
 	drawResults: PbListResponse<DrawResult>
 }
+
+export interface SelectedPlan {
+	plan: string
+	title: string
+}

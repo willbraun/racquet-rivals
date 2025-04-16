@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte'
 	import { page } from '$app/state'
-	import { type Draw } from '$lib/types'
+	import { type Draw, type SelectedPlan } from '$lib/types'
 	import { pricingHeaderStyleMap } from '$lib/data'
 	import { isAuth, loginGoto } from '$lib/store'
 	import { onMount } from 'svelte'
@@ -14,14 +14,14 @@
 	if (selectedPlan) {
 		console.log('Selected plan from redirect:', selectedPlan) // TODO - update this with real checkout
 		history.replaceState(null, '', '/pricing')
-		sessionStorage.removeItem('selectedPlan')
 	}
 
-	const handleClick = (plan: string) => {
+	const handleClick = (plan: string, title: string) => {
 		if ($isAuth) {
 			console.log('Selected plan logged in:', plan) // TODO - update this with real checkout
 		} else {
-			sessionStorage.setItem('selectedPlan', plan)
+			const selectedPlan: SelectedPlan = { plan, title }
+			sessionStorage.setItem('selectedPlan', JSON.stringify(selectedPlan))
 			goto('/create-account')
 		}
 	}
@@ -152,7 +152,7 @@
 							<button
 								type="button"
 								class="w-full rounded-md border border-transparent bg-primary-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-								onclick={() => handleClick(option.plan)}
+								onclick={() => handleClick(option.plan, option.title)}
 							>
 								{option.featured ? 'Get Started' : 'Select'}
 							</button>
