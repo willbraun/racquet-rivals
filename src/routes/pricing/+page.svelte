@@ -152,6 +152,7 @@
 		</div>
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
 			{#each pricingOptions as option}
+				{@const disabled = option.messages[data.userAccess] !== '' && $isAuth}
 				<div
 					class="relative flex flex-col overflow-hidden rounded-lg border shadow-lg {option.featured
 						? 'border-primary-500 ring-2 ring-primary-500'
@@ -200,19 +201,19 @@
 							{/each}
 						</ul>
 						<div class="mt-8">
+							{#if disabled}
+								<p class="my-4 text-center text-sm text-gray-500">
+									{option.messages[data.userAccess]}
+								</p>
+							{/if}
 							<button
 								type="button"
 								class="variant-filled-primary btn w-full"
 								onclick={() => handleClick(option.plan, option.title)}
-								disabled={option.messages[data.userAccess] !== ''}
+								{disabled}
 							>
 								{option.featured ? 'Get Started' : 'Select'}
 							</button>
-							{#if option.messages[data.userAccess] !== ''}
-								<p class="mt-2 text-center text-sm text-gray-500">
-									{option.messages[data.userAccess]}
-								</p>
-							{/if}
 						</div>
 					</div>
 				</div>
