@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte'
-	import { type PricingPageData, type SelectedPlan } from '$lib/types'
+	import { UserAccess, type PricingPageData, type SelectedPlan } from '$lib/types'
 	import { pricingHeaderStyleMap } from '$lib/data'
 	import { isAuth, loginGoto } from '$lib/store'
 	import { onMount } from 'svelte'
@@ -13,11 +13,13 @@
 
 	let { data }: Props = $props()
 
-	const draw = data.drawForSale
-	const header = `${draw.name} ${draw.year}`
+	const mensDraw = data.mensDraw
+	const header = `${mensDraw.name} ${mensDraw.year}`
+	$inspect(data.userAccess)
 
 	const selectedPlan = page.url.searchParams.get('selectedPlan')
 	if (selectedPlan) {
+		// TODO - if selectedPlan is not valid for that user (grandfathered, subscribed, already has access to draw or partial access to both), don't redirect to the checkout
 		console.log('Selected plan from redirect:', selectedPlan) // TODO - update this with real checkout
 		history.replaceState(null, '', '/pricing')
 	}
@@ -36,6 +38,8 @@
 		loginGoto.set('/pricing')
 	})
 
+	const grandfatheredMessage = 'No charge for you. Thanks for being an early supporter!'
+
 	type PricingOption = {
 		title: string
 		plan: string
@@ -43,6 +47,9 @@
 		header?: string
 		featured?: boolean
 		features: string[]
+		messages: {
+			[userAccess: string]: string
+		}
 	}
 
 	const pricingOptions: PricingOption[] = [
@@ -55,7 +62,16 @@
 				"Access to make predictions for men's singles draw",
 				'Earn points and a global ranking',
 				'View all rankings, leaderboards, and stats'
-			]
+			],
+			messages: {
+				[UserAccess.GRANDFATHERED]: grandfatheredMessage,
+				[UserAccess.SUBSCRIPTION]: 'You already have access through your subscription.',
+				[UserAccess.BOTH]: 'You already have access to both draws.',
+				[UserAccess.MEN]: 'You already have access to this draw.',
+				[UserAccess.WOMEN]: '',
+				[UserAccess.NONE]: '',
+				[UserAccess.LOGGED_OUT]: ''
+			}
 		},
 		{
 			title: "Women's Draw",
@@ -66,7 +82,16 @@
 				"Access to make predictions for women's singles draw",
 				'Earn points and a global ranking',
 				'View all rankings, leaderboards, and stats'
-			]
+			],
+			messages: {
+				[UserAccess.GRANDFATHERED]: grandfatheredMessage,
+				[UserAccess.SUBSCRIPTION]: 'You already have access through your subscription.',
+				[UserAccess.BOTH]: 'You already have access to both draws.',
+				[UserAccess.MEN]: '',
+				[UserAccess.WOMEN]: 'You already have access to this draw.',
+				[UserAccess.NONE]: '',
+				[UserAccess.LOGGED_OUT]: ''
+			}
 		},
 		{
 			title: 'Both Draws',
@@ -78,7 +103,18 @@
 				'20% savings',
 				'Earn points and a global ranking',
 				'View all rankings, leaderboards, and stats'
-			]
+			],
+			messages: {
+				[UserAccess.GRANDFATHERED]: grandfatheredMessage,
+				[UserAccess.SUBSCRIPTION]: 'You already have access through your subscription.',
+				[UserAccess.BOTH]: 'You already have access to both draws.',
+				[UserAccess.MEN]:
+					"You already have access to the men's draw. You may purchase the women's draw as well.",
+				[UserAccess.WOMEN]:
+					"You already have access to the women's draw. You may purchase the men's draw as well.",
+				[UserAccess.NONE]: '',
+				[UserAccess.LOGGED_OUT]: ''
+			}
 		},
 		{
 			title: 'Full Access Subscription',
@@ -91,7 +127,16 @@
 				'One-time setup',
 				'Earn points and a global ranking',
 				'View all rankings, leaderboards, and stats'
-			]
+			],
+			messages: {
+				[UserAccess.GRANDFATHERED]: grandfatheredMessage,
+				[UserAccess.SUBSCRIPTION]: 'You already have an active subscription.',
+				[UserAccess.BOTH]: '',
+				[UserAccess.MEN]: '',
+				[UserAccess.WOMEN]: '',
+				[UserAccess.NONE]: '',
+				[UserAccess.LOGGED_OUT]: ''
+			}
 		}
 	]
 </script>
@@ -115,7 +160,7 @@
 					{#if option.header}
 						<div
 							class="absolute w-full py-1 text-center text-sm font-semibold text-white {pricingHeaderStyleMap[
-								draw.name
+								mensDraw.name
 							]}"
 						>
 							{option.header}
@@ -157,11 +202,17 @@
 						<div class="mt-8">
 							<button
 								type="button"
-								class="w-full rounded-md border border-transparent bg-primary-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+								class="variant-filled-primary btn w-full"
 								onclick={() => handleClick(option.plan, option.title)}
+								disabled={option.messages[data.userAccess] !== ''}
 							>
 								{option.featured ? 'Get Started' : 'Select'}
 							</button>
+							{#if option.messages[data.userAccess] !== ''}
+								<p class="mt-2 text-center text-sm text-gray-500">
+									{option.messages[data.userAccess]}
+								</p>
+							{/if}
 						</div>
 					</div>
 				</div>

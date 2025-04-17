@@ -23,6 +23,17 @@ export const DrawStatus = {
 } as const
 export type DrawStatus = (typeof DrawStatus)[keyof typeof DrawStatus]
 
+export const UserAccess = {
+	GRANDFATHERED: 'grandfathered',
+	SUBSCRIPTION: 'subscription',
+	MEN: 'men',
+	WOMEN: 'women',
+	BOTH: 'both',
+	NONE: 'none',
+	LOGGED_OUT: 'loggedOut'
+}
+export type UserAccess = (typeof UserAccess)[keyof typeof UserAccess]
+
 // Pocketbase API types
 export interface PbListResponse<T> {
 	page: number
@@ -39,6 +50,7 @@ export interface UserRecord extends RecordModel {
 	id: string
 	username: string
 	emailVisibility: boolean
+	grandfathered: boolean
 	created: string
 	updated: string
 }
@@ -261,7 +273,9 @@ export interface ProfilePageData {
 }
 
 export interface PricingPageData {
-	drawForSale: Draw
+	mensDraw: Draw
+	womensDraw: Draw
+	userAccess: UserAccess
 }
 
 export interface SelectedPlan {
