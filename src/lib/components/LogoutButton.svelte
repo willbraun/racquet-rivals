@@ -12,13 +12,16 @@
 	let { children, onLogout }: Props = $props()
 
 	const handleLogout = () => {
-		goto('/')
 		pb.authStore.clear()
 		Cookies.remove('isLeaderboard')
 
 		if (onLogout) {
 			onLogout()
 		}
+
+		// Redirect must be done after clearing the auth store to pass the
+		// updated pb.authStore to the server via hooks
+		goto('/')
 	}
 </script>
 
