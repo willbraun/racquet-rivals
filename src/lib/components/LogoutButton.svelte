@@ -14,6 +14,7 @@
 	const handleLogout = () => {
 		pb.authStore.clear()
 		Cookies.remove('isLeaderboard')
+		sessionStorage.removeItem('selectedPlan')
 
 		if (onLogout) {
 			onLogout()

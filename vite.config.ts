@@ -11,6 +11,10 @@ export default defineConfig({
 		setupFiles: ['./vitest-setup.js']
 	},
 	server: {
-		host: '0.0.0.0'
+		host: '0.0.0.0',
+		headers: {
+			'Content-Security-Policy':
+				"frame-ancestors 'self' http://localhost:* https://checkout.paddle.com https://sandbox-checkout.paddle.com https://*.paddle.com"
+		}
 	}
 })

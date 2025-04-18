@@ -2,20 +2,30 @@
 	import Header from '$lib/components/Header.svelte'
 	import { UserAccess, type PricingPageData, type SelectedPlan } from '$lib/types'
 	import { pricingHeaderStyleMap } from '$lib/data'
-	import { isAuth, loginGoto } from '$lib/store'
+	import { currentUser, isAuth, loginGoto } from '$lib/store'
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/state'
+	import { initializePaddle, type Paddle, type Environments } from '@paddle/paddle-js'
+	import {
+		PUBLIC_PADDLE_CLIENT_TOKEN,
+		PUBLIC_PADDLE_ENVIRONMENT,
+		PUBLIC_PADDLE_BOTH_DRAWS_PRICE_ID,
+		PUBLIC_PADDLE_MENS_DRAW_PRICE_ID,
+		PUBLIC_PADDLE_SUBSCRIPTION_PRICE_ID,
+		PUBLIC_PADDLE_WOMENS_DRAW_PRICE_ID
+	} from '$env/static/public'
 
 	interface Props {
 		data: PricingPageData
 	}
 
 	let { data }: Props = $props()
+	let paddle = $state<Paddle>()
 
 	const mensDraw = data.mensDraw
+	const womensDraw = data.womensDraw
 	const header = `${mensDraw.name} ${mensDraw.year}`
-	$inspect(data.userAccess)
 
 	const selectedPlan = page.url.searchParams.get('selectedPlan')
 	if (selectedPlan) {
@@ -24,18 +34,68 @@
 		history.replaceState(null, '', '/pricing')
 	}
 
-	const handleClick = (plan: string, title: string) => {
+	const openPaddleCheckout = (priceId: string) => {
+		if (!paddle) {
+			console.error('Paddle is not initialized')
+			return
+		}
+
+		if (!$currentUser) {
+			console.error('Current user is not available')
+			return
+		}
+
+		paddle?.Checkout.open({
+			items: [
+				{
+					priceId,
+					quantity: 1
+				}
+			],
+			customData: {
+				user_id: $currentUser.id,
+				mens_draw_id: mensDraw.id,
+				womens_draw_id: womensDraw.id
+			}
+		})
+	}
+
+	const handleClick = (option: PricingOption) => {
 		if ($isAuth) {
-			console.log('Selected plan logged in:', plan) // TODO - update this with real checkout
+			openPaddleCheckout(option.priceId)
 		} else {
-			const selectedPlan: SelectedPlan = { plan, title }
+			const selectedPlan: SelectedPlan = { plan: option.plan, title: option.title }
 			sessionStorage.setItem('selectedPlan', JSON.stringify(selectedPlan))
 			goto('/create-account')
 		}
 	}
 
+	const validatePaddleEnvironment = (env: string): Environments => {
+		if (env !== 'sandbox' && env !== 'production') {
+			throw new Error(`Invalid Paddle environment: ${env}. Must be 'sandbox' or 'production'.`)
+		}
+		return env as Environments
+	}
+
 	onMount(() => {
 		loginGoto.set('/pricing')
+
+		initializePaddle({
+			environment: validatePaddleEnvironment(PUBLIC_PADDLE_ENVIRONMENT),
+			token: PUBLIC_PADDLE_CLIENT_TOKEN,
+			checkout: {
+				settings: {
+					displayMode: 'overlay'
+				}
+			}
+		})
+			.then((paddleInstance) => {
+				paddle = paddleInstance
+				console.log('Paddle initialized successfully')
+			})
+			.catch((error) => {
+				console.error('Failed to initialize Paddle:', error)
+			})
 	})
 
 	const grandfatheredMessage = 'No charge for you. Thanks for being an early supporter!'
@@ -44,6 +104,7 @@
 		title: string
 		plan: string
 		price: string
+		priceId: string
 		header?: string
 		featured?: boolean
 		features: string[]
@@ -57,6 +118,7 @@
 			title: "Men's Draw",
 			plan: 'men',
 			price: '$4.99',
+			priceId: PUBLIC_PADDLE_MENS_DRAW_PRICE_ID,
 			header: header,
 			features: [
 				"Access to make predictions for men's singles draw",
@@ -77,6 +139,7 @@
 			title: "Women's Draw",
 			plan: 'women',
 			price: '$4.99',
+			priceId: PUBLIC_PADDLE_WOMENS_DRAW_PRICE_ID,
 			header: header,
 			features: [
 				"Access to make predictions for women's singles draw",
@@ -97,6 +160,7 @@
 			title: 'Both Draws',
 			plan: 'both',
 			price: '$7.99',
+			priceId: PUBLIC_PADDLE_BOTH_DRAWS_PRICE_ID,
 			header: header,
 			features: [
 				"Access to make predictions for men's and women's singles draws",
@@ -120,6 +184,7 @@
 			title: 'Full Access Subscription',
 			plan: 'subscription',
 			price: '$19.99/yr',
+			priceId: PUBLIC_PADDLE_SUBSCRIPTION_PRICE_ID,
 			featured: true,
 			features: [
 				'Access to make predictions for all draws throughout the year',
@@ -209,7 +274,7 @@
 							<button
 								type="button"
 								class="variant-filled-primary btn w-full"
-								onclick={() => handleClick(option.plan, option.title)}
+								onclick={() => handleClick(option)}
 								{disabled}
 							>
 								{option.featured ? 'Get Started' : 'Select'}
