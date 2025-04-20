@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte'
-	import { UserAccess, type PricingPageData, type SelectedPlan } from '$lib/types'
+	import { PlanName, UserAccess, type PricingPageData, type SelectedPlan } from '$lib/types'
 	import { pricingHeaderStyleMap } from '$lib/data'
 	import { currentUser, isAuth, loginGoto } from '$lib/store'
 	import { onMount } from 'svelte'
@@ -34,7 +34,7 @@
 		history.replaceState(null, '', '/pricing')
 	}
 
-	const openPaddleCheckout = (priceId: string) => {
+	const openPaddleCheckout = (option: PricingOption) => {
 		if (!paddle) {
 			console.error('Paddle is not initialized')
 			return
@@ -48,7 +48,7 @@
 		paddle?.Checkout.open({
 			items: [
 				{
-					priceId,
+					priceId: option.priceId,
 					quantity: 1
 				}
 			],
@@ -56,13 +56,18 @@
 				user_id: $currentUser.id,
 				mens_draw_id: mensDraw.id,
 				womens_draw_id: womensDraw.id
+			},
+			settings: {
+				showAddDiscounts: false,
+				theme: 'light',
+				successUrl: `${page.url.origin}/thank-you?plan=${option.plan}`
 			}
 		})
 	}
 
 	const handleClick = (option: PricingOption) => {
 		if ($isAuth) {
-			openPaddleCheckout(option.priceId)
+			openPaddleCheckout(option)
 		} else {
 			const selectedPlan: SelectedPlan = { plan: option.plan, title: option.title }
 			sessionStorage.setItem('selectedPlan', JSON.stringify(selectedPlan))
@@ -91,7 +96,6 @@
 		})
 			.then((paddleInstance) => {
 				paddle = paddleInstance
-				console.log('Paddle initialized successfully')
 			})
 			.catch((error) => {
 				console.error('Failed to initialize Paddle:', error)
@@ -102,7 +106,7 @@
 
 	type PricingOption = {
 		title: string
-		plan: string
+		plan: PlanName
 		price: string
 		priceId: string
 		header?: string
@@ -116,7 +120,7 @@
 	const pricingOptions: PricingOption[] = [
 		{
 			title: "Men's Draw",
-			plan: 'men',
+			plan: PlanName.MEN,
 			price: '$4.99',
 			priceId: PUBLIC_PADDLE_MENS_DRAW_PRICE_ID,
 			header: header,
@@ -137,7 +141,7 @@
 		},
 		{
 			title: "Women's Draw",
-			plan: 'women',
+			plan: PlanName.WOMEN,
 			price: '$4.99',
 			priceId: PUBLIC_PADDLE_WOMENS_DRAW_PRICE_ID,
 			header: header,
@@ -158,7 +162,7 @@
 		},
 		{
 			title: 'Both Draws',
-			plan: 'both',
+			plan: PlanName.BOTH,
 			price: '$7.99',
 			priceId: PUBLIC_PADDLE_BOTH_DRAWS_PRICE_ID,
 			header: header,
@@ -182,7 +186,7 @@
 		},
 		{
 			title: 'Full Access Subscription',
-			plan: 'subscription',
+			plan: PlanName.SUBSCRIPTION,
 			price: '$19.99/yr',
 			priceId: PUBLIC_PADDLE_SUBSCRIPTION_PRICE_ID,
 			featured: true,

@@ -23,12 +23,20 @@ export const DrawStatus = {
 } as const
 export type DrawStatus = (typeof DrawStatus)[keyof typeof DrawStatus]
 
-export const UserAccess = {
-	GRANDFATHERED: 'grandfathered',
-	SUBSCRIPTION: 'subscription',
+export const PlanName = {
 	MEN: 'men',
 	WOMEN: 'women',
 	BOTH: 'both',
+	SUBSCRIPTION: 'subscription'
+}
+export type PlanName = (typeof PlanName)[keyof typeof PlanName]
+
+export const UserAccess = {
+	GRANDFATHERED: 'grandfathered',
+	SUBSCRIPTION: PlanName.SUBSCRIPTION,
+	MEN: PlanName.MEN,
+	WOMEN: PlanName.WOMEN,
+	BOTH: PlanName.BOTH,
 	NONE: 'none',
 	LOGGED_OUT: 'loggedOut'
 }

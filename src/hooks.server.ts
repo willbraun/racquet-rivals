@@ -22,12 +22,6 @@ export async function handle({ event, resolve }) {
 	// pass the request
 	const response = await resolve(event)
 
-	// Add CSP headers for Paddle integration
-	response.headers.set(
-		'Content-Security-Policy',
-		"frame-ancestors 'self' http://localhost:* https://checkout.paddle.com https://sandbox-checkout.paddle.com https://*.paddle.com"
-	)
-
 	// send back the default 'pb_auth' cookie to the client with the latest store state
 	response.headers.append(
 		'set-cookie',
