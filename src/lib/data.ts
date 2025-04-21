@@ -17,11 +17,11 @@ export const bannerStyleMap: { [key in TournamentName]: string } = {
 	[TournamentName.US_OPEN]: 'bg-gradient-to-r from-blue-700 via-orange-500 to-yellow-300'
 }
 
-export const pricingHeaderStyleMap: { [key in TournamentName]: string } = {
-	[TournamentName.AUSTRALIAN_OPEN]: 'bg-[#02B2F2]',
+export const drawColorMap: { [key in TournamentName]: string } = {
+	[TournamentName.AUSTRALIAN_OPEN]: 'bg-[#0BA3EA]',
 	[TournamentName.FRENCH_OPEN]: 'bg-[#D44822]',
-	[TournamentName.WIMBLEDON]: 'bg-[#598B2C]',
-	[TournamentName.US_OPEN]: 'bg-[#2044D5]'
+	[TournamentName.WIMBLEDON]: 'bg-[#199F79]',
+	[TournamentName.US_OPEN]: 'bg-[#3772FF]'
 }
 
 export const rankingDescriptions = {

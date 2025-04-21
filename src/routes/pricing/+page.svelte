@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte'
 	import { PlanName, UserAccess, type PricingPageData, type SelectedPlan } from '$lib/types'
-	import { pricingHeaderStyleMap } from '$lib/data'
+	import { drawColorMap } from '$lib/data'
 	import { currentUser, isAuth, loginGoto } from '$lib/store'
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
@@ -15,6 +15,7 @@
 		PUBLIC_PADDLE_SUBSCRIPTION_PRICE_ID,
 		PUBLIC_PADDLE_WOMENS_DRAW_PRICE_ID
 	} from '$env/static/public'
+	import { getSlug } from '$lib/utils'
 
 	interface Props {
 		data: PricingPageData
@@ -60,7 +61,7 @@
 			settings: {
 				showAddDiscounts: false,
 				theme: 'light',
-				successUrl: `${page.url.origin}/thank-you?plan=${option.plan}`
+				successUrl: `${page.url.origin}/thank-you?plan=${option.plan}&mensDrawSlug=${getSlug(mensDraw)}&womensDrawSlug=${getSlug(womensDraw)}`
 			}
 		})
 	}
@@ -229,7 +230,7 @@
 				>
 					{#if option.header}
 						<div
-							class="absolute w-full py-1 text-center text-sm font-semibold text-white {pricingHeaderStyleMap[
+							class="absolute w-full py-1 text-center text-sm font-semibold text-white {drawColorMap[
 								mensDraw.name
 							]}"
 						>
