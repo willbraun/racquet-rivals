@@ -28,11 +28,20 @@
 	const womensDraw = data.womensDraw
 	const header = `${mensDraw.name} ${mensDraw.year}`
 
-	const selectedPlan = page.url.searchParams.get('selectedPlan')
-	if (selectedPlan) {
-		// TODO - if selectedPlan is not valid for that user (grandfathered, subscribed, already has access to draw or partial access to both), don't redirect to the checkout
-		console.log('Selected plan from redirect:', selectedPlan) // TODO - update this with real checkout
-		history.replaceState(null, '', '/pricing')
+	const allowCheckoutFromLogin = (selectedPlan: PlanName, userAccess: UserAccess) => {
+		if (userAccess === UserAccess.GRANDFATHERED || userAccess === UserAccess.SUBSCRIPTION) {
+			return false
+		}
+
+		if (selectedPlan === userAccess) {
+			return false
+		}
+
+		if (selectedPlan === PlanName.BOTH && [UserAccess.MEN, UserAccess.WOMEN].includes(userAccess)) {
+			return false
+		}
+
+		return true
 	}
 
 	const openPaddleCheckout = (option: PricingOption) => {
@@ -83,24 +92,47 @@
 		return env as Environments
 	}
 
-	onMount(() => {
+	const setupPaddle = async () => {
+		try {
+			const paddleInstance = await initializePaddle({
+				environment: validatePaddleEnvironment(PUBLIC_PADDLE_ENVIRONMENT),
+				token: PUBLIC_PADDLE_CLIENT_TOKEN,
+				checkout: {
+					settings: {
+						displayMode: 'overlay'
+					}
+				}
+			})
+			paddle = paddleInstance
+		} catch (error) {
+			console.error('Failed to initialize Paddle:', error)
+		}
+	}
+
+	onMount(async () => {
 		loginGoto.set('/pricing')
 
-		initializePaddle({
-			environment: validatePaddleEnvironment(PUBLIC_PADDLE_ENVIRONMENT),
-			token: PUBLIC_PADDLE_CLIENT_TOKEN,
-			checkout: {
-				settings: {
-					displayMode: 'overlay'
+		await setupPaddle()
+		if (!paddle) {
+			console.error('Paddle is not initialized')
+			return
+		}
+
+		const selectedPlan = page.url.searchParams.get('selectedPlan')
+		if (selectedPlan) {
+			history.replaceState(null, '', '/pricing')
+
+			if (allowCheckoutFromLogin(selectedPlan, data.userAccess)) {
+				const option: PricingOption | null =
+					pricingOptions.find((o) => o.plan === selectedPlan) || null
+
+				if (option) {
+					openPaddleCheckout(option)
+				} else {
+					console.error('Invalid selected plan:', selectedPlan)
 				}
 			}
-		})
-			.then((paddleInstance) => {
-				paddle = paddleInstance
-			})
-			.catch((error) => {
-				console.error('Failed to initialize Paddle:', error)
-			})
+		}
 	})
 
 	const grandfatheredMessage = 'No charge for you. Thanks for being an early supporter!'
