@@ -45,13 +45,13 @@
 	import MatchScore from '$lib/components/MatchScore.svelte'
 	import { exampleSelectedUsers, mainColor } from '$lib/data'
 	import { onMount } from 'svelte'
+	import LockedPrediction from './LockedPrediction.svelte'
 
 	interface Props {
 		data: DrawPageData
 	}
 
 	let { data }: Props = $props()
-	$inspect(data.hasAccess)
 
 	//////////////////////////////////////////
 	// PAGE SETUP
@@ -532,13 +532,17 @@
 										{#if !predictionsLoading}
 											{#if slotRenderData}
 												{#if $isAuth}
-													<AddPrediction
-														{slot}
-														roundIndex={index}
-														{players}
-														prediction={slotRenderData?.currentUserPrediction}
-														{predictionsAllowed}
-													/>
+													{#if data.hasAccess}
+														<AddPrediction
+															{slot}
+															roundIndex={index}
+															{players}
+															prediction={slotRenderData?.currentUserPrediction}
+															{predictionsAllowed}
+														/>
+													{:else}
+														<LockedPrediction draw={data.draw} />
+													{/if}
 												{/if}
 												{#each slotRenderData?.selectedUserPredictions ?? [] as prediction}
 													<ViewPrediction {prediction} />

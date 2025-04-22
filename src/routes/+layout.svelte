@@ -17,6 +17,7 @@
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	import type { RootLayoutData } from '$lib/types'
 	import { type Snippet } from 'svelte'
+	import LockedDrawPricing from './draw/[slug]/LockedDrawPricing.svelte'
 
 	interface Props {
 		data: RootLayoutData
@@ -28,7 +29,8 @@
 	initializeStores()
 	const drawerStore = getDrawerStore()
 	const modalRegistry: Record<string, ModalComponent> = {
-		selectUsers: { ref: SelectUsers }
+		selectUsers: { ref: SelectUsers },
+		lockedDrawPricing: { ref: LockedDrawPricing }
 	}
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
