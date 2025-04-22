@@ -2,13 +2,20 @@ import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import Layout from './+layout.svelte'
-import type { Draw, RootLayoutData } from '$lib/types'
+import type { Draw, RootLayoutData, UserRecord } from '$lib/types'
 
 const data: RootLayoutData = {
-	pb_auth_valid: true,
-	pb_auth_cookie: 'dummy_cookie',
-	pb_auth_username: 'will',
-	pb_auth_user_id: 'dummy_user_id',
+	cookieCurrentUser: {
+		collectionId: '_pb_users_auth_',
+		collectionName: 'user',
+		avatar: '',
+		id: 'willId',
+		username: 'will',
+		emailVisibility: true,
+		created: '2024-05-02 15:42:20.397Z',
+		updated: '2024-05-02 15:42:20.397Z',
+		grandfathered: false
+	},
 	defaultDraw: {
 		collectionId: 'zpjgxcf4d9ojqcd',
 		collectionName: 'draw',
@@ -34,7 +41,7 @@ describe('Root layout component', () => {
 	})
 
 	test('Renders logged out', () => {
-		render(Layout, { data: { ...data, pb_auth_valid: false } })
+		render(Layout, { data: { ...data, cookieCurrentUser: {} as UserRecord } })
 
 		expect(screen.getByTestId('Footer')).toBeInTheDocument()
 	})

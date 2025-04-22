@@ -22,8 +22,7 @@ const prediction = {
 describe('ViewPrediction component', () => {
 	test('Roger Federer', () => {
 		render(ViewPrediction, {
-			prediction,
-			getColor: vi.fn()
+			prediction
 		})
 
 		expect(screen.getByText('Federer')).toHaveTextContent('Federer')
@@ -34,8 +33,7 @@ describe('ViewPrediction component', () => {
 			prediction: {
 				...prediction,
 				name: 'Alex de Minaur'
-			},
-			getColor: vi.fn()
+			}
 		})
 
 		expect(screen.getByText('de Minaur')).toHaveTextContent('de Minaur')

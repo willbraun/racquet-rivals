@@ -11,7 +11,7 @@ storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 const props = {
 	slot: {
 		collectionId: 'collectionId',
-		collectionName: 'draw_slot',
+		collectionName: 'slots_with_scores',
 		created: '',
 		draw_id: 'drawId',
 		id: 'slotId',
@@ -19,7 +19,22 @@ const props = {
 		position: 1,
 		round: 3,
 		seed: '',
-		updated: ''
+		updated: '',
+		set1_id: 'set1',
+		set1_games: 6,
+		set1_tiebreak: 0,
+		set2_id: 'set2',
+		set2_games: 7,
+		set2_tiebreak: 0,
+		set3_id: 'set3',
+		set3_games: 6,
+		set3_tiebreak: 0,
+		set4_id: null,
+		set4_games: null,
+		set4_tiebreak: null,
+		set5_id: null,
+		set5_games: null,
+		set5_tiebreak: null
 	} as Slot,
 	roundIndex: 1,
 	players: ['Roger Federer', 'Rafael Nadal'] as [string, string],

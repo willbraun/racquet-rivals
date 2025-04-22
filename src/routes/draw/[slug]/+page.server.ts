@@ -5,6 +5,7 @@ import { fetchJson, getActiveRound } from '$lib/server/utils'
 import type { ClientResponseError } from 'pocketbase'
 import type {
 	Draw,
+	DrawAccess,
 	DrawPageData,
 	DrawResult,
 	PbListResponse,
@@ -28,13 +29,15 @@ const getCurrentUser = (locals: App.Locals): SelectedUser => {
 export async function load({ fetch, params, locals, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const url = PUBLIC_POCKETBASE_URL
+	const userId = locals.pb.authStore.record?.id ?? ''
 	const token = locals.pb.authStore.token
 
-	const [draws, draw, slots, drawResults]: [
+	const [draws, draw, slots, drawResults, drawAccess]: [
 		PbListResponse<Draw>,
 		Draw,
 		PbListResponse<Slot>,
-		PbListResponse<DrawResult>
+		PbListResponse<DrawResult>,
+		DrawAccess
 	] = await Promise.all([
 		fetchJson(`${url}/api/collections/draw/records?sort=-start_date,event`, fetch, token),
 		fetchJson(`${url}/api/collections/draw/records/${id}`, fetch, token),
@@ -49,7 +52,8 @@ export async function load({ fetch, params, locals, cookies }) {
 			)}`,
 			fetch,
 			token
-		)
+		),
+		fetchJson(`${url}/access/${userId}/${id}`, fetch, token)
 	])
 
 	const [upcoming, active, completed] = classifyDraws(draws.items)
@@ -70,7 +74,8 @@ export async function load({ fetch, params, locals, cookies }) {
 		activeRound,
 		slots: renderedSlots,
 		drawResults,
-		isLeaderboard: cookies.get('isLeaderboard') === 'true'
+		isLeaderboard: cookies.get('isLeaderboard') === 'true',
+		hasAccess: drawAccess.hasAccess
 	} as DrawPageData
 }
 

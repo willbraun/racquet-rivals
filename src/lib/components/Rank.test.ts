@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
 import '@testing-library/jest-dom/vitest'
-import PageSetup from './PageSetup.test.svelte'
 import Rank from './Rank.svelte'
 
 describe('Rank component', () => {

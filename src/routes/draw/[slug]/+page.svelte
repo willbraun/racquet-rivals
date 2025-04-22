@@ -45,13 +45,13 @@
 	import MatchScore from '$lib/components/MatchScore.svelte'
 	import { exampleSelectedUsers, mainColor } from '$lib/data'
 	import { onMount } from 'svelte'
-	import { draw } from 'svelte/transition'
 
 	interface Props {
 		data: DrawPageData
 	}
 
 	let { data }: Props = $props()
+	$inspect(data.hasAccess)
 
 	//////////////////////////////////////////
 	// PAGE SETUP

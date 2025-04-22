@@ -87,7 +87,8 @@ describe('Home page component', () => {
 			username: 'will',
 			emailVisibility: true,
 			created: '2024-05-02 15:42:20.397Z',
-			updated: '2024-05-02 15:42:20.397Z'
+			updated: '2024-05-02 15:42:20.397Z',
+			grandfathered: false
 		})
 		render(PageSetup, {
 			props: {

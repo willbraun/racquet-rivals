@@ -269,6 +269,7 @@ export interface DrawPageData {
 	slots: Slot[]
 	drawResults: PbListResponse<DrawResult>
 	isLeaderboard: boolean
+	hasAccess: boolean
 }
 
 export interface ProfilePageData {
@@ -289,4 +290,8 @@ export interface PricingPageData {
 export interface SelectedPlan {
 	plan: string
 	title: string
+}
+
+export interface DrawAccess {
+	hasAccess: boolean
 }

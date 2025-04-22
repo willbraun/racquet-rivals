@@ -120,7 +120,8 @@ const data: DrawPageData = {
 		totalItems: 4,
 		totalPages: 1
 	} as PbListResponse<DrawResult>,
-	isLeaderboard: false
+	isLeaderboard: false,
+	hasAccess: true
 }
 
 // Mock the Resize Observer
