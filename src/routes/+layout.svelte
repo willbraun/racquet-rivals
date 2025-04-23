@@ -17,7 +17,8 @@
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	import type { RootLayoutData } from '$lib/types'
 	import { type Snippet } from 'svelte'
-	import LockedDrawPricing from './draw/[slug]/LockedDrawPricing.svelte'
+	import DrawPricingModal from './draw/[slug]/DrawPricingModal.svelte'
+	import DrawPricingDrawer from './draw/[slug]/DrawPricingDrawer.svelte'
 
 	interface Props {
 		data: RootLayoutData
@@ -27,10 +28,11 @@
 	let { data, children }: Props = $props()
 
 	initializeStores()
+
 	const drawerStore = getDrawerStore()
 	const modalRegistry: Record<string, ModalComponent> = {
 		selectUsers: { ref: SelectUsers },
-		lockedDrawPricing: { ref: LockedDrawPricing }
+		drawPricingModal: { ref: DrawPricingModal }
 	}
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
@@ -51,6 +53,12 @@
 		<ShareLinkContent />
 	{:else if $drawerStore.id === 'nav-menu'}
 		<NavMenuContent />
+	{:else if $drawerStore.id === 'draw-pricing'}
+		<DrawPricingDrawer draw={$drawerStore.meta?.draw} />
+	{:else}
+		<div class="flex h-full w-full items-center justify-center">
+			<p class="text-2xl font-bold">Drawer not found</p>
+		</div>
 	{/if}
 </Drawer>
 
