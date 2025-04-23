@@ -11,8 +11,10 @@
 
 	interface Props {
 		draw: Draw
+		mensDraw: Draw | undefined
+		womensDraw: Draw | undefined
 	}
-	let { draw }: Props = $props()
+	let { draw, mensDraw, womensDraw }: Props = $props()
 
 	const modalStore = getModalStore()
 	let modal: ModalSettings = {
@@ -21,7 +23,9 @@
 		title: 'Purchase Entry',
 		backdropClasses: 'bg-surface-500',
 		meta: {
-			draw
+			draw,
+			mensDraw,
+			womensDraw
 		}
 	}
 
@@ -31,7 +35,9 @@
 		position: 'bottom',
 		height: 'h-5/6',
 		meta: {
-			draw
+			draw,
+			mensDraw,
+			womensDraw
 		}
 	}
 

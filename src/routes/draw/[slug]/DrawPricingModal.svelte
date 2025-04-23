@@ -18,7 +18,12 @@
 	<div class="modal-example-form {cBase}" in:fly={{ y: 20, duration: 300 }} out:fade>
 		<header class={cHeader}>{$modalStore[0].title ?? '(title missing)'}</header>
 		<article>
-			<DrawPricingContent draw={$modalStore[0].meta.draw} onClose={parent.onClose} />
+			<DrawPricingContent
+				draw={$modalStore[0].meta.draw}
+				mensDraw={$modalStore[0].meta?.mensDraw}
+				womensDraw={$modalStore[0].meta?.womensDraw}
+				onClose={parent.onClose}
+			/>
 		</article>
 		<footer class="modal-footer flex justify-end gap-2">
 			<button

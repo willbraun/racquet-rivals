@@ -23,6 +23,8 @@ import { cubicInOut } from 'svelte/easing'
 import { type TransitionConfig } from 'svelte/transition'
 import { getPredictions } from './api'
 import { compareAsc } from 'date-fns'
+import { initializePaddle, type Environments } from '@paddle/paddle-js'
+import { PUBLIC_PADDLE_CLIENT_TOKEN, PUBLIC_PADDLE_ENVIRONMENT } from '$env/static/public'
 
 type ErrorObjData = {
 	[key: string]: {
@@ -298,4 +300,28 @@ export const classifyDraws = (draws: Draw[]) => {
 		.slice(0, 2)
 
 	return [upcoming, active, completed]
+}
+
+const validatePaddleEnvironment = (env: string): Environments => {
+	if (env !== 'sandbox' && env !== 'production') {
+		throw new Error(`Invalid Paddle environment: ${env}. Must be 'sandbox' or 'production'.`)
+	}
+	return env as Environments
+}
+
+export const setupPaddle = async () => {
+	try {
+		const paddleInstance = await initializePaddle({
+			environment: validatePaddleEnvironment(PUBLIC_PADDLE_ENVIRONMENT),
+			token: PUBLIC_PADDLE_CLIENT_TOKEN,
+			checkout: {
+				settings: {
+					displayMode: 'overlay'
+				}
+			}
+		})
+		return paddleInstance
+	} catch (error) {
+		console.error('Failed to initialize Paddle:', error)
+	}
 }

@@ -1,16 +1,82 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
-	import type { Draw } from '$lib/types'
+	import { page } from '$app/state'
+	import { PlanName, type Draw } from '$lib/types'
+	import { getSlug, setupPaddle } from '$lib/utils'
+	import type { Paddle } from '@paddle/paddle-js'
+	import { onMount } from 'svelte'
+	import { currentUser } from '$lib/store'
+	import {
+		PUBLIC_PADDLE_MENS_DRAW_PRICE_ID,
+		PUBLIC_PADDLE_WOMENS_DRAW_PRICE_ID,
+		PUBLIC_PADDLE_BOTH_DRAWS_PRICE_ID,
+		PUBLIC_PADDLE_SUBSCRIPTION_PRICE_ID
+	} from '$env/static/public'
 
 	interface Props {
 		draw: Draw
+		mensDraw: Draw | undefined
+		womensDraw: Draw | undefined
 		onClose: () => void
 	}
 
-	let { draw, onClose }: Props = $props()
+	let { draw, mensDraw, womensDraw, onClose }: Props = $props()
 
 	let eventType = $derived(draw.event.split("'")[0])
 	let otherEventType = $derived(eventType === 'Men' ? 'Women' : 'Men')
+	let singleDrawPriceId = $derived(
+		eventType === 'Men' ? PUBLIC_PADDLE_MENS_DRAW_PRICE_ID : PUBLIC_PADDLE_WOMENS_DRAW_PRICE_ID
+	)
+
+	let paddle = $state<Paddle>()
+	onMount(async () => {
+		paddle = await setupPaddle()
+		if (!paddle) {
+			console.error('Paddle is not initialized')
+			return
+		}
+	})
+
+	const openPaddleCheckout = (priceId: string, plan: PlanName) => {
+		if (!paddle) {
+			console.error('Paddle is not initialized')
+			return
+		}
+
+		if (!$currentUser) {
+			console.error('Current user is not available')
+			return
+		}
+
+		if (!mensDraw) {
+			console.error('Mens draw is not available')
+			return
+		}
+
+		if (!womensDraw) {
+			console.error('Womens draw is not available')
+			return
+		}
+
+		paddle?.Checkout.open({
+			items: [
+				{
+					priceId,
+					quantity: 1
+				}
+			],
+			customData: {
+				user_id: $currentUser.id,
+				mens_draw_id: mensDraw.id,
+				womens_draw_id: womensDraw.id
+			},
+			settings: {
+				showAddDiscounts: false,
+				theme: 'light',
+				successUrl: `${page.url.origin}/thank-you?plan=${plan}&mensDrawSlug=${getSlug(mensDraw)}&womensDrawSlug=${getSlug(womensDraw)}`
+			}
+		})
+	}
 </script>
 
 <div>
@@ -25,8 +91,9 @@
 				<p class="text-gray-600">Access the {eventType.toLowerCase()}'s tournament</p>
 			</div>
 			<button
+				type="button"
 				class="variant-filled-primary btn px-6 transition-transform duration-200 hover:scale-105"
-				>$4.99</button
+				onclick={() => openPaddleCheckout(singleDrawPriceId, eventType.toLowerCase())}>$4.99</button
 			>
 		</div>
 
@@ -44,7 +111,9 @@
 				<p class="text-gray-600">Access both tournaments</p>
 			</div>
 			<button
+				type="button"
 				class="variant-filled-primary btn px-6 transition-transform duration-200 hover:scale-105"
+				onclick={() => openPaddleCheckout(PUBLIC_PADDLE_BOTH_DRAWS_PRICE_ID, PlanName.BOTH)}
 				>$7.99</button
 			>
 		</div>
@@ -63,7 +132,10 @@
 				<p class="text-gray-600">All tournaments for a full year</p>
 			</div>
 			<button
+				type="button"
 				class="variant-filled-primary btn px-6 transition-transform duration-200 hover:scale-105"
+				onclick={() =>
+					openPaddleCheckout(PUBLIC_PADDLE_SUBSCRIPTION_PRICE_ID, PlanName.SUBSCRIPTION)}
 				>$19.99</button
 			>
 		</div>

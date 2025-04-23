@@ -54,7 +54,11 @@
 	{:else if $drawerStore.id === 'nav-menu'}
 		<NavMenuContent />
 	{:else if $drawerStore.id === 'draw-pricing'}
-		<DrawPricingDrawer draw={$drawerStore.meta?.draw} />
+		<DrawPricingDrawer
+			draw={$drawerStore.meta?.draw}
+			mensDraw={$drawerStore.meta?.mensDraw}
+			womensDraw={$drawerStore.meta?.womensDraw}
+		/>
 	{:else}
 		<div class="flex h-full w-full items-center justify-center">
 			<p class="text-2xl font-bold">Drawer not found</p>

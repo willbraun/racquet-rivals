@@ -15,7 +15,7 @@
 		PUBLIC_PADDLE_SUBSCRIPTION_PRICE_ID,
 		PUBLIC_PADDLE_WOMENS_DRAW_PRICE_ID
 	} from '$env/static/public'
-	import { getSlug } from '$lib/utils'
+	import { getSlug, setupPaddle } from '$lib/utils'
 
 	interface Props {
 		data: PricingPageData
@@ -85,34 +85,10 @@
 		}
 	}
 
-	const validatePaddleEnvironment = (env: string): Environments => {
-		if (env !== 'sandbox' && env !== 'production') {
-			throw new Error(`Invalid Paddle environment: ${env}. Must be 'sandbox' or 'production'.`)
-		}
-		return env as Environments
-	}
-
-	const setupPaddle = async () => {
-		try {
-			const paddleInstance = await initializePaddle({
-				environment: validatePaddleEnvironment(PUBLIC_PADDLE_ENVIRONMENT),
-				token: PUBLIC_PADDLE_CLIENT_TOKEN,
-				checkout: {
-					settings: {
-						displayMode: 'overlay'
-					}
-				}
-			})
-			paddle = paddleInstance
-		} catch (error) {
-			console.error('Failed to initialize Paddle:', error)
-		}
-	}
-
 	onMount(async () => {
 		loginGoto.set('/pricing')
 
-		await setupPaddle()
+		paddle = await setupPaddle()
 		if (!paddle) {
 			console.error('Paddle is not initialized')
 			return

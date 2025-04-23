@@ -5,9 +5,11 @@
 
 	interface Props {
 		draw: Draw
+		mensDraw: Draw | undefined
+		womensDraw: Draw | undefined
 	}
 
-	let { draw }: Props = $props()
+	let { draw, mensDraw, womensDraw }: Props = $props()
 
 	const drawerStore = getDrawerStore()
 
@@ -20,7 +22,7 @@
 	<header class="mb-4 rounded-lg bg-gradient-to-l from-primary-300 to-primary-500 p-4">
 		<h2 class="text-2xl font-bold text-white">Purchase Entry</h2>
 	</header>
-	<DrawPricingContent {draw} onClose={handleClose} />
+	<DrawPricingContent {draw} {mensDraw} {womensDraw} onClose={handleClose} />
 	<footer class="mt-6 flex justify-end gap-2">
 		<button
 			class="variant-soft btn transition-all duration-200 hover:variant-soft-primary"

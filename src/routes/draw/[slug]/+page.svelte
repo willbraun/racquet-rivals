@@ -15,6 +15,7 @@
 		currentUser
 	} from '$lib/store'
 	import {
+		Events,
 		type Draw,
 		type DrawPageData,
 		type Prediction,
@@ -106,6 +107,7 @@
 	let predictionsAllowed = $derived(
 		!data.draw.prediction_close || now < new Date(data.draw.prediction_close)
 	)
+	let drawCompleted = $derived(now > new Date(data.draw.end_date))
 
 	let innerWidth = $state(0)
 	let drawHeight = $state(0)
@@ -153,6 +155,19 @@
 	})
 
 	let userIds = $derived(users.map((user) => user.id))
+
+	const modalStore = getModalStore()
+	let modal: ModalSettings = $derived(
+		$isAuth
+			? {
+					type: 'component',
+					component: 'selectUsers',
+					title: 'Select Users',
+					body: 'Compare predictions with your friends (max of 6 total)',
+					backdropClasses: 'bg-surface-500'
+				}
+			: ({} as ModalSettings)
+	)
 
 	//////////////////////////////////////////
 	// DRAW SETUP
@@ -252,19 +267,6 @@
 		return [player1, player2]
 	}
 
-	const modalStore = getModalStore()
-	let modal: ModalSettings = $derived(
-		$isAuth
-			? {
-					type: 'component',
-					component: 'selectUsers',
-					title: 'Select Users',
-					body: 'Compare predictions with your friends (max of 6 total)',
-					backdropClasses: 'bg-surface-500'
-				}
-			: ({} as ModalSettings)
-	)
-
 	//////////////////////////////////////////
 	// UPDATE PREDICTIONS
 	//////////////////////////////////////////
@@ -294,6 +296,31 @@
 			predictionsLoading = false
 		}
 	}
+
+	//////////////////////////////////////////
+	// PADDLE SETUP
+	//////////////////////////////////////////
+
+	let [mensDraw, womensDraw] = $derived.by(() => {
+		let men: Draw | undefined
+		let women: Draw | undefined
+
+		const drawType =
+			data.active.length === 2 ? 'active' : data.upcoming.length === 2 ? 'upcoming' : ''
+
+		if (!drawType) {
+			return [undefined, undefined]
+		}
+
+		data[drawType].forEach((draw) => {
+			if (draw.event === Events.MENS_SINGLES) {
+				men = draw
+			} else {
+				women = draw
+			}
+		})
+		return [men, women]
+	})
 </script>
 
 <svelte:window bind:innerWidth />
@@ -532,7 +559,9 @@
 										{#if !predictionsLoading}
 											{#if slotRenderData}
 												{#if $isAuth}
-													{#if data.hasAccess}
+													{#if !data.hasAccess && !drawCompleted}
+														<LockedPrediction draw={data.draw} {mensDraw} {womensDraw} />
+													{:else}
 														<AddPrediction
 															{slot}
 															roundIndex={index}
@@ -540,8 +569,6 @@
 															prediction={slotRenderData?.currentUserPrediction}
 															{predictionsAllowed}
 														/>
-													{:else}
-														<LockedPrediction draw={data.draw} />
 													{/if}
 												{/if}
 												{#each slotRenderData?.selectedUserPredictions ?? [] as prediction}
