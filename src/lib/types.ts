@@ -59,6 +59,7 @@ export interface UserRecord extends RecordModel {
 	username: string
 	emailVisibility: boolean
 	grandfathered: boolean
+	paddle_customer_id: string
 	created: string
 	updated: string
 }
@@ -201,6 +202,29 @@ export interface Banner {
 	updated: string
 }
 
+export interface Subscription {
+	collectionId: string
+	collectionName: 'subscription'
+	id: string
+	user_id: string
+	paddle_subscription_id: string
+	status: string
+	current_billing_period_start: string
+	current_billing_period_end: string
+	created: string
+	updated: string
+}
+
+export interface UserDrawEntry {
+	collectionId: string
+	collectionName: 'user_draw_entry'
+	id: string
+	user_id: string
+	draw_id: string
+	created: string
+	updated: string
+}
+
 export interface AuthResult {
 	data: {
 		error: string
@@ -285,6 +309,12 @@ export interface PricingPageData {
 	mensDraw: Draw
 	womensDraw: Draw
 	userAccess: UserAccess
+}
+
+export interface MyAccountPageData {
+	user: UserRecord
+	subscription: Subscription | null
+	enteredDraws: Draw[]
 }
 
 export interface SelectedPlan {

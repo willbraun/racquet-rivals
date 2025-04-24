@@ -9,12 +9,13 @@
 	import { isAuth, currentUser, drawNavUrl } from '$lib/store'
 	import infoIcon from '$lib/images/icons/circle-info-solid.svg'
 	import dollarSign from '$lib/images/icons/dollar-sign-solid.svg'
+	import gear from '$lib/images/icons/gear-solid.svg'
 
 	const drawerStore = getDrawerStore()
 	const drawerSettings: DrawerSettings = {
 		id: 'nav-menu',
 		position: 'right',
-		width: 'w-52'
+		width: 'w-64'
 	}
 
 	interface Props {
@@ -44,14 +45,17 @@
 		<a href={$drawNavUrl}>
 			<img src={bracketLeft} alt="draws" width="24" class:invert={isInverted} />
 		</a>
+		<a href={`/rankings`}>
+			<img src={trophy} alt="rankings" width="24" class:invert={isInverted} />
+		</a>
 		{#if $isAuth}
 			<a href={`/profile/${$currentUser?.username}`}>
 				<img src={user} alt="profile" width="18" class:invert={isInverted} />
 			</a>
+			<a href="/my-account">
+				<img src={gear} alt="my account" width="24" class:invert={isInverted} />
+			</a>
 		{/if}
-		<a href={`/rankings`}>
-			<img src={trophy} alt="rankings" width="24" class:invert={isInverted} />
-		</a>
 		<a href="/pricing">
 			<img src={dollarSign} alt="pricing" width="16" class:invert={isInverted} />
 		</a>

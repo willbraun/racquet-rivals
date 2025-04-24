@@ -11,6 +11,7 @@
 	import { isAuth, currentUser, drawNavUrl } from '$lib/store'
 	import infoIcon from '$lib/images/icons/circle-info-solid.svg'
 	import dollarSign from '$lib/images/icons/dollar-sign-solid.svg'
+	import gear from '$lib/images/icons/gear-solid.svg'
 
 	const drawerStore = getDrawerStore()
 	const closeDrawer = () => {
@@ -31,15 +32,16 @@
 
 <nav class="flex h-full w-full flex-col items-start gap-8 p-8">
 	{@render menuLink('Draws', bracketLeft, 'draws', 24, $drawNavUrl)}
+	{@render menuLink('Rankings', trophy, 'rankings', 24, '/rankings')}
 	{#if $isAuth}
 		{@render menuLink('My Profile', user, 'profile', 18, `/profile/${$currentUser?.username}`)}
+		{@render menuLink('My Account', gear, 'account', 24, '/my-account')}
 	{/if}
-	{@render menuLink('Rankings', trophy, 'rankings', 24, '/rankings')}
-	{@render menuLink('Pricing', dollarSign, 'rankings', 16, '/pricing')}
+	{@render menuLink('Pricing', dollarSign, 'pricing', 16, '/pricing')}
 	{@render about()}
 	<ShareLink />
 	{#if $isAuth}
-		<LogoutButton onLogout={closeDrawer}>
+		<LogoutButton styles={'w-full'} onLogout={closeDrawer}>
 			<div class="grid w-full grid-cols-4 items-center gap-4">
 				<img src={logout} alt="logout" width="24" class="justify-self-center" />
 				<p class="col-span-3 justify-self-start text-xl">Log out</p>

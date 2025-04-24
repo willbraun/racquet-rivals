@@ -5,11 +5,12 @@
 	import { goto } from '$app/navigation'
 
 	interface Props {
+		styles?: string
 		children?: Snippet
 		onLogout?: () => void
 	}
 
-	let { children, onLogout }: Props = $props()
+	let { styles, children, onLogout }: Props = $props()
 
 	const handleLogout = () => {
 		pb.authStore.clear()
@@ -31,6 +32,7 @@
 	onkeydown={(e) => e.key === 'Enter' && handleLogout()}
 	type="button"
 	tabindex="0"
+	class={styles}
 >
 	{@render children?.()}
 </button>
