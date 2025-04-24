@@ -20,7 +20,6 @@
 	let modal: ModalSettings = {
 		type: 'component',
 		component: 'drawPricingModal',
-		title: 'Purchase Entry',
 		backdropClasses: 'bg-surface-500',
 		meta: {
 			draw,
