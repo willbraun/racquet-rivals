@@ -11,6 +11,7 @@ import {
 import {
 	DrawStatus,
 	type Draw,
+	type DrawEntry,
 	type DrawResult,
 	type Prediction,
 	type SelectedUser,
@@ -62,28 +63,34 @@ export const makeSetType = <T>() => {
 	}
 }
 
-const isDraw = (draw: Draw | DrawResult): draw is Draw => {
+const isDraw = (draw: any): draw is Draw => {
 	return draw.collectionName === 'draw'
 }
 
-const isDrawResult = (draw: Draw | DrawResult): draw is DrawResult => {
+const isDrawResult = (draw: any): draw is DrawResult => {
 	return draw.collectionName === 'draw_results'
+}
+
+const isDrawEntry = (draw: any): draw is DrawEntry => {
+	return draw.collectionName === 'entries_with_draw'
 }
 
 const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-').replaceAll("'", '')
 
-export const getSlug = (draw: Draw | DrawResult): string => {
+export const getSlug = (draw: Draw | DrawResult | DrawEntry): string => {
 	if (isDraw(draw)) {
 		return `${slugify(draw.name)}-${slugify(draw.event)}-${draw.year}-${draw.id}`
 	} else if (isDrawResult(draw)) {
 		return `${slugify(draw.draw_name)}-${slugify(draw.draw_event)}-${draw.draw_year}-${draw.draw_id}`
+	} else if (isDrawEntry(draw)) {
+		return `${slugify(draw.name)}-${slugify(draw.event)}-${draw.year}-${draw.draw_id}`
 	} else {
 		return ''
 	}
 }
 
-export const getTitle = (draw: Draw | DrawResult): string => {
-	if (isDraw(draw)) {
+export const getTitle = (draw: Draw | DrawResult | DrawEntry): string => {
+	if (isDraw(draw) || isDrawEntry(draw)) {
 		return `${draw.name} ${draw.event} ${draw.year}`
 	} else if (isDrawResult(draw)) {
 		return `${draw.draw_name} ${draw.draw_event} ${draw.draw_year}`

@@ -6,7 +6,7 @@ import type {
 	MyAccountPageData,
 	PbListResponse,
 	Subscription,
-	UserDrawEntry,
+	DrawEntry,
 	UserRecord
 } from '$lib/types'
 
@@ -35,24 +35,15 @@ export async function load({ locals }) {
 		token
 	)
 
-	const userDrawEntries: PbListResponse<UserDrawEntry> = await fetchJson(
-		`${url}/api/collections/user_draw_entry/records?filter=(user_id="${userId}")&sort=-created`,
+	const entries: PbListResponse<DrawEntry> = await fetchJson(
+		`${url}/api/collections/entries_with_draw/records?filter=(user_id="${userId}")&sort=-created`,
 		fetch,
 		token
 	)
 
-	const draws: Draw[] =
-		userDrawEntries.items.length > 0
-			? await Promise.all(
-					userDrawEntries.items.map((entry) =>
-						fetchJson(`${url}/api/collections/draw/records/${entry.draw_id}`, fetch, token)
-					)
-				)
-			: []
-
 	return {
 		user,
 		subscription: subscriptions.items.length > 0 ? subscriptions.items[0] : null,
-		enteredDraws: draws
+		entries: entries.items
 	} as MyAccountPageData
 }

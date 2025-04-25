@@ -34,11 +34,13 @@
 	{@render menuLink('Draws', bracketLeft, 'draws', 24, $drawNavUrl)}
 	{@render menuLink('Rankings', trophy, 'rankings', 24, '/rankings')}
 	{#if $isAuth}
-		{@render menuLink('My Profile', user, 'profile', 18, `/profile/${$currentUser?.username}`)}
+		{@render menuLink('Profile', user, 'profile', 18, `/profile/${$currentUser?.username}`)}
+	{/if}
+	{@render about()}
+	{@render menuLink('Pricing', dollarSign, 'pricing', 16, '/pricing')}
+	{#if $isAuth}
 		{@render menuLink('My Account', gear, 'account', 24, '/my-account')}
 	{/if}
-	{@render menuLink('Pricing', dollarSign, 'pricing', 16, '/pricing')}
-	{@render about()}
 	<ShareLink />
 	{#if $isAuth}
 		<LogoutButton styles={'w-full'} onLogout={closeDrawer}>

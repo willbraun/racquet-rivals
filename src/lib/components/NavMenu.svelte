@@ -52,16 +52,18 @@
 			<a href={`/profile/${$currentUser?.username}`}>
 				<img src={user} alt="profile" width="18" class:invert={isInverted} />
 			</a>
+		{/if}
+		<a href="/about">
+			<img src={infoIcon} alt="about" width="24" class:invert={isInverted} />
+		</a>
+		<a href="/pricing">
+			<img src={dollarSign} alt="pricing" width="16" class:invert={isInverted} />
+		</a>
+		{#if $isAuth}
 			<a href="/my-account">
 				<img src={gear} alt="my account" width="24" class:invert={isInverted} />
 			</a>
 		{/if}
-		<a href="/pricing">
-			<img src={dollarSign} alt="pricing" width="16" class:invert={isInverted} />
-		</a>
-		<a href="/about">
-			<img src={infoIcon} alt="about" width="24" class:invert={isInverted} />
-		</a>
 		{#if $isAuth}
 			<LogoutButton>
 				<div class={buttonStyle}>Log out</div>

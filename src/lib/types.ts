@@ -215,14 +215,18 @@ export interface Subscription {
 	updated: string
 }
 
-export interface UserDrawEntry {
+export interface DrawEntry {
 	collectionId: string
-	collectionName: 'user_draw_entry'
+	collectionName: 'entries_with_draw'
 	id: string
 	user_id: string
 	draw_id: string
 	created: string
-	updated: string
+	name: TournamentName
+	event: Event
+	year: number
+	start_date: string
+	end_date: string
 }
 
 export interface AuthResult {
@@ -314,7 +318,7 @@ export interface PricingPageData {
 export interface MyAccountPageData {
 	user: UserRecord
 	subscription: Subscription | null
-	enteredDraws: Draw[]
+	entries: DrawEntry[]
 }
 
 export interface SelectedPlan {
