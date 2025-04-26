@@ -319,6 +319,7 @@ export interface MyAccountPageData {
 	user: UserRecord
 	subscription: Subscription | null
 	entries: DrawEntry[]
+	paddleCustomerPortalUrl: string
 }
 
 export interface SelectedPlan {

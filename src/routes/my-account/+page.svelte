@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { format } from 'date-fns'
 	import Header from '$lib/components/Header.svelte'
-	import { currentUser } from '$lib/store'
-	import { Events } from '$lib/types'
-	import type { MyAccountPageData, Subscription } from '$lib/types'
-	import { getSlug, getTitle, setupPaddle } from '$lib/utils'
-	import { onMount } from 'svelte'
-	import type { Paddle } from '@paddle/paddle-js'
+	import type { MyAccountPageData } from '$lib/types'
+	import { getSlug, getTitle } from '$lib/utils'
 	import { goto } from '$app/navigation'
+	import externalLink from '$lib/images/icons/arrow-up-right-from-square-solid.svg'
 
 	interface Props {
 		data: MyAccountPageData
@@ -15,29 +12,44 @@
 
 	let { data }: Props = $props()
 
-	let paddle = $state<Paddle>()
-	onMount(async () => {
-		paddle = await setupPaddle()
-	})
-
 	const formatDate = (dateString: string) => {
 		return format(new Date(dateString), 'MMM d, yyyy')
 	}
 
 	const openPaddleCustomerPortal = () => {
-		if (!paddle || !data.user.paddle_customer_id) {
+		if (!data.paddleCustomerPortalUrl) {
 			return
 		}
 
-		// TODO - Open the customer portal
+		window.open(data.paddleCustomerPortalUrl)
 	}
 </script>
 
 <Header />
 <main class="min-h-screen bg-stone-100">
 	<div class="mx-auto max-w-screen-lg px-4 py-8">
-		<h1 class="mb-8 text-4xl font-semibold md:text-6xl">My Account</h1>
-
+		<div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+			<h1 class="text-4xl font-semibold md:text-6xl">My Account</h1>
+			{#if data.user.paddle_customer_id}
+				{#if data.paddleCustomerPortalUrl}
+					<button
+						type="button"
+						class="variant-filled-primary btn font-semibold shadow"
+						onclick={openPaddleCustomerPortal}
+					>
+						<p>Manage Payments</p>
+						<img
+							src={externalLink}
+							alt="External link icon"
+							class="ml-2 inline h-4 w-4 invert"
+							width="16"
+						/>
+					</button>
+				{:else}
+					<p class="text-red-500">Error displaying Manage Payments link</p>
+				{/if}
+			{/if}
+		</div>
 		{#if data.user.grandfathered}
 			<div class="mb-8 rounded-md border-l-4 border-green-500 bg-green-100 p-4 shadow">
 				<p class="text-xl font-semibold">Thanks for being an early supporter of Racquet Rivals!</p>
@@ -69,13 +81,6 @@
 						<p class="text-xl">{formatDate(data.subscription.current_billing_period_end)}</p>
 					</div>
 				</div>
-				<button
-					type="button"
-					class="variant-filled-primary btn w-fit font-semibold"
-					onclick={openPaddleCustomerPortal}
-				>
-					Manage Subscription
-				</button>
 			{:else}
 				<p class="text-xl">No active subscription.</p>
 				{#if !data.user.grandfathered}
