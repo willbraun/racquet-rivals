@@ -30,6 +30,14 @@
 	})
 </script>
 
+<svelte:head>
+	<title>Racquet Rivals</title>
+	<meta
+		name="description"
+		content="Your fantasy tennis community. Predict match winners and compete with fellow fans!"
+	/>
+</svelte:head>
+
 {#snippet drawList(listTitle: string, draws: Draw[])}
 	{#if draws.length > 0}
 		<div class="mb-8 flex flex-col overflow-hidden rounded-xl shadow sm:mb-16" use:fadeAndSlideIn>
@@ -56,7 +64,7 @@
 		<div class="absolute inset-0 bg-gradient-to-b from-primary-500/40 to-black"></div>
 		<div class="absolute flex h-3/4 w-full items-center justify-center">
 			<img src={bracketLeft} alt="left bracket" class="block h-24 invert sm:h-32 md:h-48 lg:h-64" />
-			<h1 class="w-1/2 text-center text-5xl text-white md:text-7xl lg:text-9xl">
+			<h1 class="w-1/2 text-center font-PoetsenOne text-5xl text-white md:text-7xl lg:text-9xl">
 				Racquet<br />Rivals
 			</h1>
 			<img

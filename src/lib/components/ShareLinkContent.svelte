@@ -26,7 +26,7 @@
 
 <div class="flex h-full w-full flex-col items-center gap-8 bg-green-100">
 	<div class="relative w-full bg-green-300 p-2 text-center">
-		<p class="font-PoetsenOne text-3xl font-bold">Share</p>
+		<p class="text-3xl font-bold">Share</p>
 		<button
 			onclick={() => drawerStore.close()}
 			class="absolute right-4 top-0 top-1/2 -translate-y-1/2"

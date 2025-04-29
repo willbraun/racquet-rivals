@@ -75,7 +75,11 @@
 		data-testid="Footer"
 	>
 		<div class="flex w-full flex-col items-center justify-center gap-4">
-			<div class="flex items-center justify-center gap-8">
+			<div
+				class="flex w-full flex-col items-start justify-start gap-4 sm:flex-row sm:items-center sm:justify-center sm:gap-8"
+			>
+				<a href="/about" class="hover:underline">About</a>
+				<a href="/pricing" class="hover:underline">Pricing</a>
 				<a href="/terms-of-service" class="hover:underline">Terms of Service</a>
 				<a href="/privacy-policy" class="hover:underline">Privacy Policy</a>
 				<a href="/refund-policy" class="hover:underline">Refund Policy</a>

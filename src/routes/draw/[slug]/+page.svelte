@@ -338,7 +338,7 @@
 
 <Header color="bg-primary-50">
 	<select
-		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 font-PoetsenOne text-xl hover:bg-primary-200 md:text-2xl"
+		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 text-xl font-bold hover:bg-primary-200 md:text-2xl"
 		onchange={(e) => goto(e.currentTarget.value)}
 	>
 		{@render drawSelectOptions('Upcoming', data.upcoming)}

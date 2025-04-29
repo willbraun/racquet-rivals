@@ -53,9 +53,6 @@
 				<img src={user} alt="profile" width="18" class:invert={isInverted} />
 			</a>
 		{/if}
-		<a href="/about">
-			<img src={infoIcon} alt="about" width="24" class:invert={isInverted} />
-		</a>
 		<a href="/pricing">
 			<img src={dollarSign} alt="pricing" width="16" class:invert={isInverted} />
 		</a>

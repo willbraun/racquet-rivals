@@ -11,9 +11,8 @@ describe('NavMenu component', () => {
 		render(PageSetup, { component: NavMenuContent })
 
 		expect(screen.queryByText('Draws')).toBeInTheDocument()
-		expect(screen.queryByText('My Profile')).not.toBeInTheDocument()
+		expect(screen.queryByText('Profile')).not.toBeInTheDocument()
 		expect(screen.queryByText('Rankings')).toBeInTheDocument()
-		expect(screen.getByText('About')).toBeInTheDocument()
 		expect(screen.getByText('Log in')).toBeInTheDocument()
 		expect(screen.getByText('Sign up')).toBeInTheDocument()
 		expect(screen.queryByText('Log out')).not.toBeInTheDocument()
@@ -28,14 +27,14 @@ describe('NavMenu component', () => {
 			emailVisibility: true,
 			created: '2024-05-02 15:42:20.397Z',
 			updated: '2024-05-02 15:42:20.397Z',
-			grandfathered: false
+			grandfathered: false,
+			paddle_customer_id: 'ctm_123'
 		})
 		render(PageSetup, { component: NavMenuContent })
 
 		expect(screen.getByText('Draws')).toBeInTheDocument()
-		expect(screen.getByText('My Profile')).toBeInTheDocument()
+		expect(screen.getByText('Profile')).toBeInTheDocument()
 		expect(screen.getByText('Rankings')).toBeInTheDocument()
-		expect(screen.getByText('About')).toBeInTheDocument()
 		expect(screen.queryByText('Log in')).not.toBeInTheDocument()
 		expect(screen.queryByText('Sign up')).not.toBeInTheDocument()
 		expect(screen.getByText('Log out')).toBeInTheDocument()

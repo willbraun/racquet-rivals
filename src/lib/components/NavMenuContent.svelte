@@ -26,17 +26,12 @@
 	</a>
 {/snippet}
 
-{#snippet about()}
-	{@render menuLink('About', infoIcon, 'info', 24, '/about')}
-{/snippet}
-
 <nav class="flex h-full w-full flex-col items-start gap-8 p-8">
 	{@render menuLink('Draws', bracketLeft, 'draws', 24, $drawNavUrl)}
 	{@render menuLink('Rankings', trophy, 'rankings', 24, '/rankings')}
 	{#if $isAuth}
 		{@render menuLink('Profile', user, 'profile', 18, `/profile/${$currentUser?.username}`)}
 	{/if}
-	{@render about()}
 	{@render menuLink('Pricing', dollarSign, 'pricing', 16, '/pricing')}
 	{#if $isAuth}
 		{@render menuLink('My Account', gear, 'account', 24, '/my-account')}

@@ -30,6 +30,11 @@
 					notifications.
 				</li>
 				<li>
+					Purchase entry to participate in a draw or a subscription for access to all draws. You can
+					find pricing information
+					<a href="/pricing" class="text-blue-500 underline">here</a>.
+				</li>
+				<li>
 					When the Round of 16 has been filled for a draw, you'll be notified via email that you
 					have 12 hours to create your bracket for the <span class="font-bold"
 						>entire rest of the tournament</span
@@ -113,8 +118,12 @@
 					</tr>
 				</tbody>
 			</table>
+			<p class="text-2xl">
+				You can see the full <a href="/rankings" class="text-blue-500 underline">rankings</a> page as
+				well.
+			</p>
 			<h3 class="text-3xl font-bold">Results</h3>
-			<p class="text-2xl">You can view your past draws and see how you did in each one.</p>
+			<p class="text-2xl">View your past draws and see your performance in each one.</p>
 		</section>
 	</div>
 </main>
