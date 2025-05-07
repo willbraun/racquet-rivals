@@ -101,7 +101,7 @@
 </script>
 
 <AuthBase>
-	<h1 class="mb-8 text-4xl font-semibold">Login</h1>
+	<h1 class="mb-8 text-4xl font-bold">Login</h1>
 	<form method="POST" class="[&>*]:mb-4" onsubmit={handleLogin}>
 		<label class="label">
 			<p>Username or email</p>

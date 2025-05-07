@@ -98,7 +98,7 @@
 							Sign up
 						</a>
 					</div>
-					<a href="/about" class="text-center text-white underline">Learn More</a>
+					<a href="/about" class="text-center text-white underline">How it works</a>
 				</div>
 			{/if}
 		</div>

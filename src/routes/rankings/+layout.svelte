@@ -21,7 +21,7 @@
 <main class="bg-stone-100">
 	<div class="mx-auto max-w-screen-lg px-4 pb-16">
 		<div class="mb-8 flex flex-wrap items-center gap-4">
-			<h1 class="flex-grow text-4xl font-semibold sm:text-6xl">Rankings</h1>
+			<h1 class="flex-grow text-4xl font-bold sm:text-6xl">Rankings</h1>
 			<select
 				class="select h-11 w-[230px] cursor-pointer border-none bg-stone-200 text-xl md:h-14 md:w-[320px] md:text-3xl"
 				onchange={navigateToPage}

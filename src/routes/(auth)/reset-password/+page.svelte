@@ -58,7 +58,7 @@
 </script>
 
 <AuthBase>
-	<h1 class="mb-8 text-4xl font-semibold">Reset Password</h1>
+	<h1 class="mb-8 text-4xl font-bold">Reset Password</h1>
 	<p class="mb-4">Enter your email and we'll send you a link to reset your password</p>
 	<form onsubmit={handleResetPassword}>
 		<EmailField bind:email bind:showValidation={showEmailValidation} bind:ref={emailRef} />

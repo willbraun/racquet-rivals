@@ -29,7 +29,7 @@
 <main class="min-h-screen bg-stone-100">
 	<div class="mx-auto max-w-screen-lg px-4 py-8">
 		<div class="mb-8 flex flex-wrap items-center justify-between gap-4">
-			<h1 class="text-4xl font-semibold md:text-6xl">My Account</h1>
+			<h1 class="text-4xl font-bold md:text-6xl">My Account</h1>
 			{#if data.user.paddle_customer_id}
 				{#if data.paddleCustomerPortalUrl}
 					<button

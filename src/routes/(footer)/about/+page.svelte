@@ -10,7 +10,7 @@
 <main class="bg-stone-100">
 	<div class="mx-auto flex max-w-screen-lg flex-col gap-8 px-4 pb-8">
 		<section>
-			<h1 class="text-4xl font-semibold sm:text-6xl">About Racquet Rivals</h1>
+			<h1 class="text-4xl font-bold sm:text-6xl">About Racquet Rivals</h1>
 		</section>
 		<section>
 			<p class="text-2xl">

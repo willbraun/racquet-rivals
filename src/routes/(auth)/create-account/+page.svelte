@@ -88,7 +88,7 @@
 </script>
 
 <AuthBase>
-	<h1 class="mb-8 text-4xl font-semibold">Create Account</h1>
+	<h1 class="mb-8 text-4xl font-bold">Create Account</h1>
 	<form onsubmit={handleCreateAccount}>
 		<label class="label mb-4">
 			<p>Username</p>

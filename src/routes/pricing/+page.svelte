@@ -223,7 +223,7 @@
 <main class="bg-stone-100 px-4 pb-24 sm:px-6 lg:px-8">
 	<div class="mx-auto max-w-7xl">
 		<div class="mb-12 text-center">
-			<h1 class="mb-4 text-4xl font-semibold sm:text-6xl">Pricing Plans</h1>
+			<h1 class="mb-4 text-4xl font-bold sm:text-6xl">Pricing Plans</h1>
 			<p class="mx-auto max-w-3xl text-xl text-gray-600">
 				Choose the plan that works best for you and get ready to make your predictions.
 			</p>
