@@ -34,10 +34,10 @@
 		event.preventDefault()
 		loading = true
 		error = ''
+		success = false
 
 		if (email === '') {
 			error = 'Please enter your email'
-			success = false
 			loading = false
 			return
 		}
@@ -78,7 +78,7 @@
 		<div class="relative my-4 overflow-hidden rounded-md bg-green-100">
 			<div
 				class="p-4 text-center text-green-900"
-				transition:slide={{ duration: 300, axis: 'y', easing: (t) => t * (2 - t) }}
+				in:slide={{ duration: 300, axis: 'y', easing: (t) => t * (2 - t) }}
 			>
 				Sent! Please check your email and spam folder for your password reset link.
 			</div>
