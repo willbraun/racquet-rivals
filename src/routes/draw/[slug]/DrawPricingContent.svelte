@@ -95,7 +95,7 @@
 </script>
 
 <header>
-	<h2 class="text-2xl">Select Plan</h2>
+	<h2 class="text-2xl font-bold">Select Plan</h2>
 </header>
 <div class="my-6 flex flex-col items-center justify-center space-y-5">
 	<div

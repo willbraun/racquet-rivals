@@ -6,10 +6,8 @@
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/state'
-	import { initializePaddle, type Paddle, type Environments } from '@paddle/paddle-js'
+	import { type Paddle } from '@paddle/paddle-js'
 	import {
-		PUBLIC_PADDLE_CLIENT_TOKEN,
-		PUBLIC_PADDLE_ENVIRONMENT,
 		PUBLIC_PADDLE_BOTH_DRAWS_PRICE_ID,
 		PUBLIC_PADDLE_MENS_DRAW_PRICE_ID,
 		PUBLIC_PADDLE_SUBSCRIPTION_PRICE_ID,
