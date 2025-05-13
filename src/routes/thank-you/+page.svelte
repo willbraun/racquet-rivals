@@ -50,7 +50,9 @@
 <Header />
 <main class="h-svh bg-stone-100">
 	<div class="flex h-full flex-col items-center justify-center gap-8 px-8 pb-48 pt-24 text-center">
-		<h1 class="text-4xl sm:text-7xl">{`Thank you ${$currentUser?.username}, you're in!`}</h1>
+		<h1 class="text-4xl font-semibold sm:text-7xl">
+			{`Thank you ${$currentUser?.username}, you're in!`}
+		</h1>
 		<p>
 			Your {orderText[plan]} has been successfully processed. You will receive a confirmation email shortly.
 		</p>
