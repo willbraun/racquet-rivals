@@ -6,12 +6,13 @@
 	import { capitalize } from '$lib/utils'
 	import { onMount } from 'svelte'
 	import { drawColorMap } from '$lib/data'
+	import { replaceState } from '$app/navigation'
 
 	const plan = page.url.searchParams.get('plan') ?? 'none'
 	const mensDrawSlug = page.url.searchParams.get('mensDrawSlug') ?? ''
 	const womensDrawSlug = page.url.searchParams.get('womensDrawSlug') ?? ''
 	onMount(() => {
-		history.replaceState(null, '', '/thank-you')
+		replaceState('/thank-you', page.state)
 	})
 
 	const slugToTitle = (str: string) => {
