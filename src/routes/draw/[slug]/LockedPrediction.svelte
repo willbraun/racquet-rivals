@@ -53,9 +53,8 @@
 	type="button"
 	class="chip relative flex h-6 w-fit items-center justify-between rounded-full border border-dashed border-black bg-slate-300 text-black duration-0"
 	onclick={handleClick}
+	data-testid="LockedPrediction"
 >
-	<div>
-		<p class="text-xs">Add</p>
-	</div>
+	<p class="text-xs">Add</p>
 	<img src={lock} alt="lock" width="12" />
 </button>

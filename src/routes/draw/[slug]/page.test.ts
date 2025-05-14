@@ -248,7 +248,9 @@ const testUser = {
 	username: 'will',
 	emailVisibility: true,
 	created: '2024-05-02 15:42:20.397Z',
-	updated: '2024-05-02 15:42:20.397Z'
+	updated: '2024-05-02 15:42:20.397Z',
+	grandfathered: false,
+	paddle_customer_id: ''
 } as UserRecord
 
 describe('Draw page component', () => {
@@ -263,7 +265,7 @@ describe('Draw page component', () => {
 		predictionStore.set(predictions)
 	})
 
-	test('Renders', () => {
+	test('Renders', async () => {
 		render(PageSetup, {
 			props: {
 				component: Page,
@@ -461,6 +463,50 @@ describe('Draw page component', () => {
 
 		expect(screen.getByTestId('SlotNameR8P1')).toHaveTextContent('TBD')
 		expect(screen.queryByTestId('SlotScoreR8P1')).not.toBeInTheDocument()
+	})
+
+	test('Shows LockedPredictions when user is logged in but has no access', async () => {
+		const futureEndDate = new Date()
+		futureEndDate.setMonth(futureEndDate.getMonth() + 1)
+
+		render(PageSetup, {
+			props: {
+				component: Page,
+				data: {
+					...data,
+					hasAccess: false,
+					draw: {
+						...data.draw,
+						end_date: futureEndDate.toISOString()
+					}
+				}
+			}
+		})
+
+		// Wait for locked predictions to appear after mock prediction fetch
+		const lockedPredictions = await screen.findAllByTestId('LockedPrediction')
+		expect(lockedPredictions.length).toBe(15)
+	})
+
+	test('No LockedPredictions when user is logged in and has access', () => {
+		const futureEndDate = new Date()
+		futureEndDate.setMonth(futureEndDate.getMonth() + 1)
+
+		render(PageSetup, {
+			props: {
+				component: Page,
+				data: {
+					...data,
+					draw: {
+						...data.draw,
+						end_date: futureEndDate.toISOString()
+					}
+				}
+			}
+		})
+
+		const lockedPredictions = screen.queryAllByTestId('LockedPrediction')
+		expect(lockedPredictions.length).toBe(0)
 	})
 })
 
