@@ -1,18 +1,25 @@
 <script lang="ts">
+	import { browser } from '$app/environment'
+	import { afterNavigate, goto } from '$app/navigation'
+	import { getPredictions } from '$lib/api'
+	import Header from '$lib/components/Header.svelte'
+	import MatchScore from '$lib/components/MatchScore.svelte'
+	import Rank from '$lib/components/Rank.svelte'
+	import { exampleSelectedUsers, mainColor } from '$lib/data'
+	import edit from '$lib/images/icons/pen-to-square.svg'
+	import plus from '$lib/images/icons/plus.svg'
+	import x from '$lib/images/icons/x.svg'
 	import { pb } from '$lib/pocketbase'
-	import AddPrediction from './AddPrediction.svelte'
-	import ViewPrediction from './ViewPrediction.svelte'
-	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import {
-		isAuth,
-		mySelectedUsers,
-		isLeaderboard,
-		predictionStore,
-		drawNavUrl,
-		loginGoto,
 		currentDrawId,
+		currentUser,
+		drawNavUrl,
+		isAuth,
+		isLeaderboard,
+		loginGoto,
+		mySelectedUsers,
 		predictionsError,
-		currentUser
+		predictionStore
 	} from '$lib/store'
 	import {
 		Events,
@@ -23,10 +30,9 @@
 		type SelectedUserWithPoints,
 		type Slot
 	} from '$lib/types'
-	import { afterNavigate, goto } from '$app/navigation'
-	import { format, addDays } from 'date-fns'
 	import {
 		addUser,
+		customSlide,
 		getAllRounds,
 		getFullDrawRounds,
 		getOurRounds,
@@ -34,19 +40,13 @@
 		getTitle,
 		removeUser
 	} from '$lib/utils'
-	import { getPredictions } from '$lib/api'
-	import { browser } from '$app/environment'
+	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
+	import { addDays, format } from 'date-fns'
 	import Cookies from 'js-cookie'
-	import plus from '$lib/images/icons/plus.svg'
-	import edit from '$lib/images/icons/pen-to-square.svg'
-	import x from '$lib/images/icons/x.svg'
-	import Rank from '$lib/components/Rank.svelte'
-	import Header from '$lib/components/Header.svelte'
-	import { customSlide } from '$lib/utils'
-	import MatchScore from '$lib/components/MatchScore.svelte'
-	import { exampleSelectedUsers, mainColor } from '$lib/data'
 	import { onMount } from 'svelte'
+	import AddPrediction from './AddPrediction.svelte'
 	import LockedPrediction from './LockedPrediction.svelte'
+	import ViewPrediction from './ViewPrediction.svelte'
 
 	interface Props {
 		data: DrawPageData

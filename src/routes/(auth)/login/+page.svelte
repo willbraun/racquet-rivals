@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { pb } from '$lib/pocketbase'
-	import PasswordField from '$lib/components/PasswordField.svelte'
-	import FormError from '$lib/components/FormError.svelte'
 	import { goto } from '$app/navigation'
-	import { onMount } from 'svelte'
-	import { loginGoto } from '$lib/store'
-	import AuthBase from '../AuthBase.svelte'
-	import { errorMessage } from '$lib/utils'
-	import type { SelectedPlan } from '$lib/types'
+	import FormError from '$lib/components/FormError.svelte'
+	import PasswordField from '$lib/components/PasswordField.svelte'
 	import x from '$lib/images/icons/x.svg'
+	import { pb } from '$lib/pocketbase'
+	import { loginGoto } from '$lib/store'
+	import type { SelectedPlan } from '$lib/types'
+	import { errorMessage } from '$lib/utils'
+	import { onMount } from 'svelte'
+	import AuthBase from '../AuthBase.svelte'
 
 	let usernameOrEmail = $state('')
 	let password = $state('')
@@ -102,7 +102,7 @@
 
 <AuthBase>
 	<h1 class="mb-8 text-4xl font-bold">Login</h1>
-	<form method="POST" class="[&>*]:mb-4" onsubmit={handleLogin}>
+	<form class="[&>*]:mb-4" onsubmit={handleLogin}>
 		<label class="label">
 			<p>Username or email</p>
 			<input

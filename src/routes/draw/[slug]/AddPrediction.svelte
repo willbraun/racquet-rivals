@@ -1,14 +1,14 @@
 <script lang="ts">
+	import { enhance } from '$app/forms'
+	import FormError from '$lib/components/FormError.svelte'
+	import { mainColor } from '$lib/data'
+	import plus from '$lib/images/icons/plus.svg'
 	import { pb } from '$lib/pocketbase'
+	import { predictionStore } from '$lib/store'
+	import type { AddPredictionResult, Prediction, Slot } from '$lib/types'
+	import { makeSetType } from '$lib/utils'
 	import { popup } from '@skeletonlabs/skeleton'
 	import ViewPrediction from './ViewPrediction.svelte'
-	import type { Prediction, Slot, AddPredictionResult } from '$lib/types'
-	import plus from '$lib/images/icons/plus.svg'
-	import { makeSetType } from '$lib/utils'
-	import FormError from '$lib/components/FormError.svelte'
-	import { predictionStore } from '$lib/store'
-	import { enhance } from '$app/forms'
-	import { mainColor } from '$lib/data'
 
 	interface Props {
 		slot: Slot
@@ -108,7 +108,15 @@
 					predictionStore.update((store) => {
 						const copy = [...store]
 						const index = copy.map((p) => p.id).indexOf(record.id)
-						copy.splice(index, 1, record)
+
+						if (index >= 0) {
+							// Update existing prediction
+							copy.splice(index, 1, record)
+						} else {
+							// Add new prediction
+							copy.push(record)
+						}
+
 						return copy
 					})
 					prediction = record
