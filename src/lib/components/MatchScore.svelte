@@ -11,7 +11,6 @@
 
 	let { slot, prevSlot1, prevSlot2, draw }: Props = $props()
 
-	let showTieBreak = $derived(draw.event === "Men's Singles")
 	let firstToSets = $derived(draw.event === "Men's Singles" ? 3 : 2)
 	const showScores = $derived(
 		slot.name && slot.round > 4 && compareAsc(draw.start_date, '2024-06-30') > 0
@@ -105,11 +104,11 @@
 				<p>
 					{set.winner.games}
 				</p>
-				{#if showTieBreak && set.winner.games === 6 && set.loser.games === 7}
+				{#if set.winner.games === 6 && set.loser.games === 7}
 					<sup class="relative top-[3px]">{set.winner.tiebreak}</sup>
 				{/if}
 				<p>{`-${set.loser.games}`}</p>
-				{#if showTieBreak && set.winner.games === 7 && set.loser.games === 6}
+				{#if set.winner.games === 7 && set.loser.games === 6}
 					<sup class="relative top-[3px]">{set.loser.tiebreak}</sup>
 				{/if}
 				{#if i !== sets.length - 1}
