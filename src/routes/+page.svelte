@@ -139,8 +139,11 @@
 		</a>
 	{/if}
 	<section class="mx-auto max-w-screen-sm px-4 sm:px-0">
-		{@render drawList('Upcoming', data.upcoming)}
-		{@render drawList('Active', data.active)}
+		{#if data.active.length > 0}
+			{@render drawList('Active', data.active)}
+		{:else if data.upcoming.length > 0}
+			{@render drawList('Upcoming', data.upcoming)}
+		{/if}
 		{@render drawList('Completed', data.completed)}
 	</section>
 </main>

@@ -341,8 +341,11 @@
 		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 text-xl font-bold hover:bg-primary-200 md:text-2xl"
 		onchange={(e) => goto(e.currentTarget.value)}
 	>
-		{@render drawSelectOptions('Upcoming', data.upcoming)}
-		{@render drawSelectOptions('Active', data.active)}
+		{#if data.active.length > 0}
+			{@render drawSelectOptions('Active', data.active)}
+		{:else if data.upcoming.length > 0}
+			{@render drawSelectOptions('Upcoming', data.upcoming)}
+		{/if}
 		{@render drawSelectOptions('Completed', data.completed)}
 	</select>
 </Header>
