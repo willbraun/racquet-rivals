@@ -1,10 +1,10 @@
+import PageSetup from '$lib/components/PageSetup.test.svelte'
+import { currentUser } from '$lib/store'
+import type { HomePageData } from '$lib/types'
+import '@testing-library/jest-dom/vitest'
 import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
-import '@testing-library/jest-dom/vitest'
-import type { HomePageData } from '$lib/types'
-import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
-import { currentUser, isAuth } from '$lib/store'
 
 // Mock the Intersection Observer
 class IntersectionObserverMock {
@@ -64,17 +64,7 @@ const data: HomePageData = {
 			url: 'https://www.atptour.com/en/scores/current/australian-open/580/draws',
 			year: 2024
 		}
-	],
-	banner: {
-		collectionId: 'asvzq3z4d9ojqcd',
-		collectionName: 'banner',
-		created: '2024-05-02 15:42:20.397Z',
-		id: 'j5mehm6fvdf9105',
-		next_tournament: 'French Open',
-		start_date: '2024-05-26 12:00:00.000Z',
-		end_date: '2024-06-09 23:00:00.000Z',
-		updated: '2024-05-02 15:44:08.159Z'
-	}
+	]
 }
 
 describe('Home page component', () => {
@@ -88,7 +78,8 @@ describe('Home page component', () => {
 			emailVisibility: true,
 			created: '2024-05-02 15:42:20.397Z',
 			updated: '2024-05-02 15:42:20.397Z',
-			grandfathered: false
+			grandfathered: false,
+			paddle_customer_id: 'ctm_12345'
 		})
 		render(PageSetup, {
 			props: {
@@ -102,6 +93,9 @@ describe('Home page component', () => {
 		expect(screen.queryByText('Log in')).not.toBeInTheDocument()
 		expect(screen.queryByText('Sign up')).not.toBeInTheDocument()
 		expect(screen.getByText('Log out')).toBeInTheDocument()
+		expect(screen.getByTestId('banner-draw')).toHaveTextContent(
+			'French Open May 26, 2024 - Jun 9, 2024'
+		)
 	})
 
 	test('Logged out', () => {
@@ -118,5 +112,8 @@ describe('Home page component', () => {
 		expect(screen.getAllByText('Log in')).toHaveLength(2)
 		expect(screen.getAllByText('Sign up')).toHaveLength(2)
 		expect(screen.queryByText('Log out')).not.toBeInTheDocument()
+		expect(screen.getByTestId('banner-draw')).toHaveTextContent(
+			'French Open May 26, 2024 - Jun 9, 2024'
+		)
 	})
 })

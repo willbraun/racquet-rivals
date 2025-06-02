@@ -191,17 +191,6 @@ export interface OverallRank {
 	rank: number
 }
 
-export interface Banner {
-	collectionId: string
-	collectionName: 'banner'
-	created: string
-	id: string
-	next_tournament: TournamentName
-	start_date: string
-	end_date: string
-	updated: string
-}
-
 export interface Subscription {
 	collectionId: string
 	collectionName: 'subscription'
@@ -285,7 +274,6 @@ export interface HomePageData {
 	upcoming: Draw[]
 	active: Draw[]
 	completed: Draw[]
-	banner: Banner
 }
 
 export interface DrawPageData {

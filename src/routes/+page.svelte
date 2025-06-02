@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { fadeAndSlideIn } from '$lib/actions/fadeAndSlideIn'
-	import { isAuth, currentUser, loginGoto } from '$lib/store'
-	import { capitalize, getSlug, getTitle } from '$lib/utils'
-	import { bannerStyleMap } from '$lib/data'
-	import bracketLeft from '$lib/images/icons/bracket-left.svg'
-	import { onMount } from 'svelte'
-	import { type Draw, type HomePageData } from '$lib/types'
-	import { format } from 'date-fns'
 	import Header from '$lib/components/Header.svelte'
-	import wimbledon from '$lib/images/wimbledon.jpg'
+	import { bannerStyleMap } from '$lib/data'
 	import arrow from '$lib/images/icons/arrow-down-solid.svg'
+	import bracketLeft from '$lib/images/icons/bracket-left.svg'
+	import wimbledon from '$lib/images/wimbledon.jpg'
+	import { currentUser, isAuth, loginGoto } from '$lib/store'
+	import { type Draw, type HomePageData } from '$lib/types'
+	import { capitalize, getSlug, getTitle } from '$lib/utils'
+	import { format } from 'date-fns'
+	import { onMount } from 'svelte'
 
 	interface Props {
 		data: HomePageData
@@ -23,7 +23,21 @@
 		return `${format(startDate, 'MMM d, yyyy')} - ${format(endDate, 'MMM d, yyyy')}`
 	}
 
-	const dateRange = formatDateRange(data.banner.start_date, data.banner.end_date)
+	let bannerDraw = $derived.by(() => {
+		if (data.active.length > 0) {
+			return data.active[0]
+		} else if (data.upcoming.length > 0) {
+			return data.upcoming[0]
+		} else if (data.completed.length > 0) {
+			return data.completed[0]
+		}
+		return null
+	})
+
+	const dateRange = $derived.by(() => {
+		if (!bannerDraw) return ''
+		return formatDateRange(bannerDraw.start_date, bannerDraw.end_date)
+	})
 
 	onMount(() => {
 		loginGoto.set('/')
@@ -111,14 +125,19 @@
 			/>
 		</div>
 	</section>
-	<section
-		class="mx-auto mb-8 flex flex-col gap-8 py-24 text-center font-bold text-white sm:mb-16 {bannerStyleMap[
-			data.banner.next_tournament
-		]}"
-	>
-		<p class="text-4xl sm:text-7xl" use:fadeAndSlideIn>{data.banner.next_tournament}</p>
-		<p class="text-2xl sm:text-4xl" use:fadeAndSlideIn>{dateRange}</p>
-	</section>
+	{#if bannerDraw}
+		<a href={`/draw/${getSlug(bannerDraw)}`}>
+			<section
+				class="mx-auto mb-8 flex flex-col gap-8 py-24 text-center font-bold text-white sm:mb-16 {bannerStyleMap[
+					bannerDraw.name
+				]}"
+				data-testid="banner-draw"
+			>
+				<p class="text-4xl sm:text-7xl" use:fadeAndSlideIn>{bannerDraw.name}</p>
+				<p class="text-2xl sm:text-4xl" use:fadeAndSlideIn>{dateRange}</p>
+			</section>
+		</a>
+	{/if}
 	<section class="mx-auto max-w-screen-sm px-4 sm:px-0">
 		{@render drawList('Upcoming', data.upcoming)}
 		{@render drawList('Active', data.active)}
