@@ -1,8 +1,6 @@
-import { fail, type Actions } from '@sveltejs/kit'
-import { classifyDraws, errorMessage, generateDummySlots, getFullDrawRounds } from '$lib/utils'
+import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { mainColor } from '$lib/data'
 import { fetchJson, getActiveRound } from '$lib/server/utils'
-import type { ClientResponseError } from 'pocketbase'
 import type {
 	Draw,
 	DrawAccess,
@@ -11,11 +9,11 @@ import type {
 	PbListResponse,
 	PredictionRecord,
 	SelectedUser,
-	SelectedUserNoColor,
 	Slot
 } from '$lib/types'
-import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
-import { SCRIPT_USERNAME } from '$env/static/private'
+import { classifyDraws, errorMessage, generateDummySlots, getFullDrawRounds } from '$lib/utils'
+import { fail, type Actions } from '@sveltejs/kit'
+import type { ClientResponseError } from 'pocketbase'
 
 const getCurrentUser = (locals: App.Locals): SelectedUser => {
 	return {
@@ -80,49 +78,6 @@ export async function load({ fetch, params, locals, cookies }) {
 }
 
 export const actions: Actions = {
-	selectUser: async ({ request, locals }) => {
-		const form = await request.formData()
-		const username = (form.get('username') ?? '') as string
-		const currentUser = getCurrentUser(locals)
-
-		if (username === '') {
-			return fail(400, {
-				error: 'Please enter a username'
-			})
-		}
-
-		if (username === SCRIPT_USERNAME) {
-			return fail(404, {
-				error: 'Error: 404 - Username not found'
-			})
-		}
-
-		try {
-			// search for username, case insensitive
-			const user = await locals.pb
-				.collection('user')
-				.getFirstListItem(`username~"${username}"&&"${username}"~username`)
-			return {
-				user: {
-					selectorId: currentUser.id,
-					id: user.id,
-					username: user.username
-				} as SelectedUserNoColor,
-				error: ''
-			}
-		} catch (e) {
-			const statusCode = (e as ClientResponseError).status
-			if (statusCode === 404) {
-				return fail(statusCode, {
-					error: 'Error: 404 - Username not found'
-				})
-			}
-			return fail(statusCode, {
-				error: errorMessage(e)
-			})
-		}
-	},
-
 	addPrediction: async ({ request, locals }) => {
 		const form = await request.formData()
 		const slotId = (form.get('slotId') ?? '') as string

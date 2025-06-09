@@ -1,17 +1,15 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
-import { currentDrawId, currentUser, predictionStore, selectedUsers } from './store'
-import { addUser, removeUser } from './utils'
 import { get } from 'svelte/store'
+import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
+import { currentDrawId, currentUser, predictionStore, selectedUsers } from './store'
 import type {
-	ViewPredictionRecord,
 	PbListResponse,
-	SelectedUser,
 	Prediction,
+	SelectedUser,
 	UserRecord,
-	Slot,
-	Draw
+	ViewPredictionRecord
 } from './types'
+import { addUser, removeUser } from './utils'
 
 const userWill = {
 	collectionId: '_pb_users_auth_',

@@ -1,18 +1,20 @@
 <script lang="ts">
-	import { getModalStore } from '@skeletonlabs/skeleton'
-	import type { SelectUserResult } from '$lib/types'
-	import { applyAction, enhance } from '$app/forms'
 	import FormError from '$lib/components/FormError.svelte'
-	import { addUser, makeSetType, removeUser } from '$lib/utils'
 	import { mainColor } from '$lib/data'
-	import { fade } from 'svelte/transition'
-	import { selectedUsers, currentUser } from '$lib/store'
 	import x from '$lib/images/icons/x.svg'
+	import { pb } from '$lib/pocketbase'
+	import { currentUser, selectedUsers } from '$lib/store'
+	import type { SelectedUserNoColor } from '$lib/types'
+	import { addUser, errorMessage, removeUser } from '$lib/utils'
+	import { getModalStore } from '@skeletonlabs/skeleton'
+	import type { ClientResponseError } from 'pocketbase'
+	import { fade } from 'svelte/transition'
+
 	let { parent } = $props()
 
 	const modalStore = getModalStore()
 
-	let value = $state('')
+	let username = $state('')
 	let selectLoading = $state(false)
 	let error = $state('')
 	let selections = $derived([
@@ -24,55 +26,69 @@
 		inputRef?.focus()
 	}
 
-	const setTypeSelect = makeSetType<SelectUserResult>()
-
-	// Base Classes
 	const cBase = 'card p-4 w-modal shadow-xl space-y-4 bg-white'
 	const cHeader = 'text-2xl font-bold'
 	const cForm = 'rounded-container-token'
+
+	const handleSubmit = async (event: Event) => {
+		event.preventDefault()
+		selectLoading = true
+
+		if (!$currentUser) {
+			error = 'Error: Must be logged in to select users'
+			selectLoading = false
+			refocus()
+			return
+		}
+
+		if (username === '') {
+			error = 'Please enter a username'
+			selectLoading = false
+			refocus()
+			return
+		}
+
+		const takenNames = [$currentUser.username, ...selections.map((user) => user.username)]
+		if (takenNames.some((name) => name.toLowerCase() === username.toLowerCase())) {
+			error = `User is already selected`
+			selectLoading = false
+			refocus()
+			return
+		}
+
+		try {
+			// search for username, case insensitive
+			const user = await pb
+				.collection('user')
+				.getFirstListItem(`username~"${username}"&&"${username}"~username&&email!=""`)
+			const userNoColor = {
+				selectorId: $currentUser.id,
+				id: user.id,
+				username: user.username
+			} as SelectedUserNoColor
+
+			await addUser(userNoColor)
+			username = ''
+			error = ''
+		} catch (e) {
+			const statusCode = (e as ClientResponseError).status
+			if (statusCode === 404) {
+				error = 'Error: 404 - Username not found'
+			} else {
+				error = errorMessage(e)
+			}
+		} finally {
+			selectLoading = false
+			refocus()
+		}
+	}
 </script>
 
 {#if $modalStore[0]}
 	<div class="modal-example-form {cBase}">
 		<h2 class={cHeader}>{$modalStore[0].title ?? '(title missing)'}</h2>
 		<article>{$modalStore[0].body ?? '(body missing)'}</article>
-		<form
-			class="modal-form relative {cForm}"
-			method="POST"
-			action="?/selectUser"
-			use:enhance={() => {
-				selectLoading = true
-				return async ({ formData, result, update }) => {
-					const username = (formData.get('username') ?? '').toString().trim()
-					if (username === '') {
-						error = 'Please enter a username'
-						selectLoading = false
-						refocus()
-						return
-					}
-
-					const takenNames = [$currentUser?.username, ...selections.map((user) => user.username)]
-					if (takenNames.some((name) => name === username)) {
-						error = `User "${username}" is already selected`
-						selectLoading = false
-						refocus()
-						return
-					}
-
-					await applyAction(result)
-					await update()
-					const typedResult = setTypeSelect(result)
-					if (result.status === 200) {
-						addUser(typedResult.data.user)
-						error = ''
-					} else {
-						error = typedResult.data.error
-					}
-					selectLoading = false
-					refocus()
-				}
-			}}
-		>
+		<form class="modal-form relative {cForm}" onsubmit={handleSubmit}>
 			<label class="label">
 				<span>Username</span>
 				<div class="flex gap-2">
@@ -80,7 +96,7 @@
 						class="input flex-grow rounded-md"
 						type="text"
 						name="username"
-						bind:value
+						bind:value={username}
 						bind:this={inputRef}
 					/>
 					<button
