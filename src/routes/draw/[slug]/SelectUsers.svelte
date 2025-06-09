@@ -34,29 +34,23 @@
 		event.preventDefault()
 		selectLoading = true
 
-		if (!$currentUser) {
-			error = 'Error: Must be logged in to select users'
-			selectLoading = false
-			refocus()
-			return
-		}
-
-		if (username === '') {
-			error = 'Please enter a username'
-			selectLoading = false
-			refocus()
-			return
-		}
-
-		const takenNames = [$currentUser.username, ...selections.map((user) => user.username)]
-		if (takenNames.some((name) => name.toLowerCase() === username.toLowerCase())) {
-			error = `User is already selected`
-			selectLoading = false
-			refocus()
-			return
-		}
-
 		try {
+			if (!$currentUser) {
+				error = 'Error: Must be logged in to select users'
+				return
+			}
+
+			if (username === '') {
+				error = 'Please enter a username'
+				return
+			}
+
+			const takenNames = [$currentUser.username, ...selections.map((user) => user.username)]
+			if (takenNames.some((name) => name.toLowerCase() === username.toLowerCase())) {
+				error = `User is already selected`
+				return
+			}
+
 			// search for username, case insensitive
 			const user = await pb
 				.collection('user')

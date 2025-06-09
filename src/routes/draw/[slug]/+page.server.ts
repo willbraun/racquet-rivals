@@ -1,28 +1,7 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
-import { mainColor } from '$lib/data'
 import { fetchJson, getActiveRound } from '$lib/server/utils'
-import type {
-	Draw,
-	DrawAccess,
-	DrawPageData,
-	DrawResult,
-	PbListResponse,
-	PredictionRecord,
-	SelectedUser,
-	Slot
-} from '$lib/types'
-import { classifyDraws, errorMessage, generateDummySlots, getFullDrawRounds } from '$lib/utils'
-import { fail, type Actions } from '@sveltejs/kit'
-import type { ClientResponseError } from 'pocketbase'
-
-const getCurrentUser = (locals: App.Locals): SelectedUser => {
-	return {
-		selectorId: locals.pb.authStore.record?.id ?? '',
-		id: locals.pb.authStore.record?.id ?? '',
-		username: locals.pb.authStore.record?.username ?? '',
-		color: mainColor
-	}
-}
+import type { Draw, DrawAccess, DrawPageData, DrawResult, PbListResponse, Slot } from '$lib/types'
+import { classifyDraws, generateDummySlots, getFullDrawRounds } from '$lib/utils'
 
 export async function load({ fetch, params, locals, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
@@ -75,66 +54,4 @@ export async function load({ fetch, params, locals, cookies }) {
 		isLeaderboard: cookies.get('isLeaderboard') === 'true',
 		hasAccess: drawAccess.hasAccess
 	} as DrawPageData
-}
-
-export const actions: Actions = {
-	addPrediction: async ({ request, locals }) => {
-		const form = await request.formData()
-		const slotId = (form.get('slotId') ?? '') as string
-		const currentPredictionId = (form.get(`currentPredictionId`) ?? '') as string
-		const predictionValue = (form.get(`predictionValue`) ?? '') as string
-
-		if (!locals.pb.authStore.isValid || !locals.pb.authStore.record) {
-			return fail(400, {
-				error: 'Must be logged in to make a prediction'
-			})
-		}
-
-		if (!predictionValue) {
-			return fail(400, {
-				error: `Invalid prediction: "${predictionValue}"`
-			})
-		}
-
-		if (!slotId) {
-			return fail(400, {
-				error: `Invalid slot: "${slotId}"`
-			})
-		}
-
-		const data = {
-			draw_slot_id: slotId,
-			user_id: locals.pb.authStore.record.id,
-			name: predictionValue,
-			points: 0
-		}
-
-		if (currentPredictionId) {
-			try {
-				const record: PredictionRecord = await locals.pb
-					.collection('prediction')
-					.update(currentPredictionId, data)
-				return {
-					record
-				}
-			} catch (e) {
-				const statusCode = (e as ClientResponseError).status
-				return fail(statusCode, {
-					error: errorMessage(e)
-				})
-			}
-		} else {
-			try {
-				const record: PredictionRecord = await locals.pb.collection('prediction').create(data)
-				return {
-					record
-				}
-			} catch (e) {
-				const statusCode = (e as ClientResponseError).status
-				return fail(statusCode, {
-					error: errorMessage(e)
-				})
-			}
-		}
-	}
 }

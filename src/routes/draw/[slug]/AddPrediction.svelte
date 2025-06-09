@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { enhance } from '$app/forms'
+	import { browser } from '$app/environment'
 	import FormError from '$lib/components/FormError.svelte'
 	import { mainColor } from '$lib/data'
 	import plus from '$lib/images/icons/plus.svg'
 	import { pb } from '$lib/pocketbase'
 	import { predictionStore } from '$lib/store'
-	import type { AddPredictionResult, Prediction, Slot } from '$lib/types'
-	import { makeSetType } from '$lib/utils'
+	import type { Prediction, PredictionRecord, Slot } from '$lib/types'
+	import { errorMessage } from '$lib/utils'
 	import { popup } from '@skeletonlabs/skeleton'
+	import type { ClientResponseError } from 'pocketbase'
 	import ViewPrediction from './ViewPrediction.svelte'
 
 	interface Props {
@@ -31,10 +32,6 @@
 	let loading = $state(false)
 	let error = $state('')
 	let predictionValue = $state(prediction?.name ?? '')
-	let animation = $state(false)
-
-	const animate = () => (animation = true)
-	const stopAnimation = () => (animation = false)
 
 	const displayPrediction = (str: string) => {
 		if (str) return str
@@ -49,87 +46,123 @@
 	}
 
 	const selectPlayer = (player: string) => {
-		if (predictionValue !== player) {
-			animate()
-		}
 		predictionValue = player
 	}
 
-	const setTypeAddPredictionResult = makeSetType<AddPredictionResult>()
-	const setTypePrediction = makeSetType<Prediction>()
+	const handleSubmit = async (event: Event) => {
+		event.preventDefault()
+		loading = true
+		error = ''
+
+		try {
+			// No change
+			if (predictionValue === prediction?.name) {
+				return
+			}
+
+			// Validation
+			if (!pb.authStore.isValid || !pb.authStore.record) {
+				error = 'Must be logged in to make a prediction'
+				return
+			}
+
+			if (!predictionValue) {
+				error = `Invalid prediction: "${predictionValue}"`
+				return
+			}
+
+			if (!slot.id) {
+				error = `Invalid slot: "${slot.id}"`
+				return
+			}
+
+			// Prepare data
+			const data = {
+				draw_slot_id: slot.id,
+				user_id: pb.authStore.record.id,
+				name: predictionValue,
+				points: 0
+			}
+
+			let record: PredictionRecord
+
+			// Update or create prediction
+			if (prediction?.id) {
+				record = await pb.collection('prediction').update(prediction.id, data)
+			} else {
+				record = await pb.collection('prediction').create(data)
+			}
+
+			// Create the prediction object for the store
+			const newPrediction = {
+				...record,
+				collectionName: 'view_predictions',
+				draw_id: slot.draw_id,
+				position: slot.position,
+				round: slot.round,
+				seed: slot.seed,
+				username: pb.authStore.record?.username ?? '',
+				color: mainColor
+			} as Prediction
+
+			// Update the prediction store
+			predictionStore.update((store) => {
+				const copy = [...store]
+				const index = copy.map((p) => p.id).indexOf(newPrediction.id)
+
+				if (index >= 0) {
+					// Update existing prediction
+					copy.splice(index, 1, newPrediction)
+				} else {
+					// Add new prediction
+					copy.push(newPrediction)
+				}
+
+				return copy
+			})
+
+			// Update the local prediction
+			prediction = newPrediction
+		} catch (e) {
+			const statusCode = (e as ClientResponseError).status
+			if (statusCode) {
+				error = errorMessage(e)
+			} else {
+				error = 'An unexpected error occurred'
+			}
+		} finally {
+			loading = false
+		}
+	}
 </script>
 
-<button
-	type="button"
-	class={`${!prediction && 'chip h-6 rounded-full bg-blue-200 '}${!prediction && predictionsAllowed && 'border border-dashed border-black '}${predictionsAllowed && 'hover:brightness-105 '}${!predictionsAllowed && 'pointer-events-none '}${loading && 'brightness-90'}`}
-	disabled={!predictionsAllowed}
-	class:animate-pulse-tilt={animation}
-	onanimationend={stopAnimation}
-	use:popup={{
-		event: 'click',
-		target: `popupCombobox-${slot.id}`,
-		placement: 'top',
-		closeQuery: 'button'
-	}}
->
-	{#if prediction}
-		<ViewPrediction {prediction} />
-	{:else if predictionsAllowed}
-		<span class="text-xs">Add</span>
-		<img src={plus} alt="Add Prediction" width="12" />
-	{:else}
-		<span class="text-xs italic">None</span>
-	{/if}
-</button>
+<!-- Show nothing while client loading to avoid flash of incorrect state -->
+{#if browser}
+	<button
+		type="button"
+		class={`${!prediction && 'chip h-6 rounded-full bg-blue-200 '}${!prediction && predictionsAllowed && 'border border-dashed border-black '}${predictionsAllowed && 'hover:brightness-105 '}${!predictionsAllowed && 'pointer-events-none '}${loading && 'brightness-90'}`}
+		disabled={!predictionsAllowed}
+		use:popup={{
+			event: 'click',
+			target: `popupCombobox-${slot.id}`,
+			placement: 'top',
+			closeQuery: 'button'
+		}}
+	>
+		{#if prediction}
+			<ViewPrediction {prediction} />
+		{:else if predictionsAllowed}
+			<span class="text-xs">Add</span>
+			<img src={plus} alt="Add Prediction" width="12" />
+		{:else}
+			<span class="text-xs italic">None</span>
+		{/if}
+	</button>
+{/if}
 
 <!-- Popup form -->
 <div class="card w-fit shadow-lg" data-popup="popupCombobox-{slot.id}">
-	<form
-		method="POST"
-		action="?/addPrediction"
-		use:enhance={() => {
-			loading = true
-			error = ''
-			return async ({ result, update }) => {
-				await update()
-				const typedResult = setTypeAddPredictionResult(result)
-				if (result.status == 200) {
-					const record = setTypePrediction({
-						...typedResult.data.record,
-						collectionName: 'view_predictions',
-						draw_id: slot.draw_id,
-						position: slot.position,
-						round: slot.round,
-						seed: slot.seed,
-						username: pb.authStore.record?.username ?? '',
-						color: mainColor
-					})
-
-					predictionStore.update((store) => {
-						const copy = [...store]
-						const index = copy.map((p) => p.id).indexOf(record.id)
-
-						if (index >= 0) {
-							// Update existing prediction
-							copy.splice(index, 1, record)
-						} else {
-							// Add new prediction
-							copy.push(record)
-						}
-
-						return copy
-					})
-					prediction = record
-				} else {
-					error = typedResult.data.error
-				}
-				loading = false
-			}
-		}}
-	>
-		<input type="hidden" name="slotId" value={slot.id} />
-		<input type="hidden" name="currentPredictionId" value={prediction?.id ?? ''} />
-		<input type="hidden" name="predictionValue" value={predictionValue} />
+	<form onsubmit={handleSubmit}>
 		<div class="flex flex-col overflow-hidden rounded">
 			<button
 				type="submit"

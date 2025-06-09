@@ -5,7 +5,7 @@ import { describe, expect, test } from 'vitest'
 import SelectUsersTest from './SelectUsers.test.svelte'
 
 describe('SelectUsers component', () => {
-	test('Renders with selections', () => {
+	test('Renders', () => {
 		currentUser.set({
 			collectionId: '_pb_users_auth_',
 			collectionName: 'user',

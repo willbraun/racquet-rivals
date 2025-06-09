@@ -1,12 +1,33 @@
-import { render, screen } from '@testing-library/svelte'
-import { describe, expect, test, vi } from 'vitest'
-import '@testing-library/jest-dom/vitest'
-import AddPrediction from './AddPrediction.svelte'
+import { pb } from '$lib/pocketbase'
+import { predictionStore } from '$lib/store'
 import type { Prediction, Slot } from '$lib/types'
-import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
+import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
 import { storePopup } from '@skeletonlabs/skeleton'
+import '@testing-library/jest-dom/vitest'
+import { render, screen } from '@testing-library/svelte'
+import userEvent from '@testing-library/user-event'
+import { get } from 'svelte/store'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import AddPrediction from './AddPrediction.svelte'
 
 storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
+
+// Mock PocketBase
+vi.mock('$lib/pocketbase', () => ({
+	pb: {
+		authStore: {
+			isValid: true,
+			record: {
+				id: 'testUserId',
+				username: 'testUser'
+			}
+		},
+		collection: vi.fn(() => ({
+			create: vi.fn(),
+			update: vi.fn()
+		}))
+	}
+}))
 
 const props = {
 	slot: {
@@ -57,6 +78,29 @@ const props = {
 }
 
 describe('AddPrediction component', () => {
+	let mockCollection: any
+
+	beforeEach(() => {
+		vi.clearAllMocks()
+
+		// Reset the real store before each test
+		predictionStore.set([])
+
+		// Create mock collection with methods
+		mockCollection = {
+			create: vi.fn(),
+			update: vi.fn()
+		}
+
+		// Setup PocketBase mock to return our mock collection
+		vi.mocked(pb.collection).mockReturnValue(mockCollection)
+	})
+
+	afterEach(() => {
+		vi.clearAllMocks()
+		predictionStore.set([])
+	})
+
 	test('Renders', () => {
 		render(AddPrediction, props)
 
@@ -185,5 +229,83 @@ describe('AddPrediction component', () => {
 		})
 
 		expect(screen.getByText('None')).toHaveTextContent('None')
+	})
+
+	test('Add new prediction', async () => {
+		const user = userEvent.setup()
+		render(AddPrediction, {
+			...props,
+			prediction: undefined
+		})
+
+		const mockCreatedPrediction = {
+			id: 'newPredictionId',
+			draw_id: 'drawId',
+			draw_slot_id: 'slotId',
+			name: 'Roger Federer',
+			user_id: 'testUserId'
+		}
+		mockCollection.create.mockResolvedValue(mockCreatedPrediction)
+
+		expect(get(predictionStore)).toHaveLength(0)
+
+		const [addButton, rogerButton, rafaButton] = screen.getAllByRole('button')
+		expect(addButton).toHaveTextContent('Add')
+		expect(rogerButton).toHaveTextContent('Roger Federer')
+		expect(rafaButton).toHaveTextContent('Rafael Nadal')
+
+		await user.click(rogerButton)
+		await vi.waitFor(() => {
+			expect(mockCollection.create).toHaveBeenCalledOnce()
+			expect(mockCollection.update).not.toHaveBeenCalled()
+		})
+
+		const predictions = get(predictionStore)
+		expect(predictions).toHaveLength(1)
+		expect(predictions[0]).toMatchObject({
+			id: 'newPredictionId',
+			name: 'Roger Federer',
+			draw_id: 'drawId',
+			position: 1,
+			round: 3
+		})
+
+		expect(addButton).toHaveTextContent('Federer')
+	})
+
+	test('Update existing prediction', async () => {
+		const user = userEvent.setup()
+		render(AddPrediction, props)
+
+		const mockUpdatedPrediction = {
+			...props.prediction,
+			name: 'Rafael Nadal'
+		}
+		mockCollection.update.mockResolvedValue(mockUpdatedPrediction)
+
+		expect(get(predictionStore)).toHaveLength(0)
+
+		const [addButton, rogerButton, rafaButton] = screen.getAllByRole('button')
+		expect(addButton).toHaveTextContent('Federer')
+		expect(rogerButton).toHaveTextContent('Roger Federer')
+		expect(rafaButton).toHaveTextContent('Rafael Nadal')
+
+		await user.click(rafaButton)
+		await vi.waitFor(() => {
+			expect(mockCollection.update).toHaveBeenCalledOnce()
+			expect(mockCollection.create).not.toHaveBeenCalled()
+		})
+
+		const predictions = get(predictionStore)
+		expect(predictions).toHaveLength(1)
+		expect(predictions[0]).toMatchObject({
+			id: 'predictionId',
+			name: 'Rafael Nadal',
+			draw_id: 'drawId',
+			position: 1,
+			round: 3
+		})
+
+		expect(addButton).toHaveTextContent('Nadal')
 	})
 })
