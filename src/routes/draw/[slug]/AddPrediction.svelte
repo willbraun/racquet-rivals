@@ -140,7 +140,7 @@
 {#if browser}
 	<button
 		type="button"
-		class={`${!prediction && 'chip h-6 rounded-full bg-blue-200 '}${!prediction && predictionsAllowed && 'border border-dashed border-black '}${predictionsAllowed && 'hover:brightness-105 '}${!predictionsAllowed && 'pointer-events-none '}${loading && 'brightness-90'}`}
+		class={`${!prediction ? 'chip h-6 rounded-full bg-blue-200' : ''} ${!prediction && predictionsAllowed ? 'border border-dashed border-black' : ''} ${predictionsAllowed ? 'hover:brightness-105' : ''} ${!predictionsAllowed ? 'pointer-events-none' : ''}${loading ? 'brightness-90' : ''}`.trim()}
 		disabled={!predictionsAllowed}
 		use:popup={{
 			event: 'click',
