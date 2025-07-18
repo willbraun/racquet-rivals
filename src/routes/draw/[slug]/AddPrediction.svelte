@@ -4,7 +4,7 @@
 	import { mainColor } from '$lib/data'
 	import plus from '$lib/images/icons/plus.svg'
 	import { pb } from '$lib/pocketbase'
-	import { predictionStore } from '$lib/store'
+	import { isAuth, predictionStore } from '$lib/store'
 	import type { Prediction, PredictionRecord, Slot } from '$lib/types'
 	import { errorMessage } from '$lib/utils'
 	import { popup } from '@skeletonlabs/skeleton'
@@ -141,7 +141,7 @@
 	<button
 		type="button"
 		class={`${!prediction ? 'chip h-6 rounded-full bg-blue-200' : ''} ${!prediction && predictionsAllowed ? 'border border-dashed border-black' : ''} ${predictionsAllowed ? 'hover:brightness-105' : ''} ${!predictionsAllowed ? 'pointer-events-none' : ''}${loading ? 'brightness-90' : ''}`.trim()}
-		disabled={!predictionsAllowed}
+		disabled={!predictionsAllowed || !$isAuth}
 		use:popup={{
 			event: 'click',
 			target: `popupCombobox-${slot.id}`,
@@ -168,7 +168,7 @@
 				type="submit"
 				class="whitespace-nowrap border-b-1 border-surface-500 px-4 py-2 hover:bg-surface-400 {!player1 &&
 					'pointer-events-none italic'}"
-				disabled={!player1 || !predictionsAllowed || loading}
+				disabled={!player1 || !predictionsAllowed || loading || !$isAuth}
 				onclick={() => selectPlayer(player1)}
 			>
 				<span class="text-xl">
@@ -179,7 +179,7 @@
 				type="submit"
 				class="whitespace-nowrap px-4 py-2 hover:bg-surface-400 {!player2 &&
 					'pointer-events-none italic'}"
-				disabled={!player2 || !predictionsAllowed || loading}
+				disabled={!player2 || !predictionsAllowed || loading || !$isAuth}
 				onclick={() => selectPlayer(player2)}
 			>
 				<span class="text-xl">

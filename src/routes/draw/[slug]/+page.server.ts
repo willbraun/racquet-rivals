@@ -1,6 +1,6 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { fetchJson, getActiveRound } from '$lib/server/utils'
-import type { Draw, DrawAccess, DrawPageData, DrawResult, PbListResponse, Slot } from '$lib/types'
+import type { Draw, DrawPageData, DrawResult, PbListResponse, Slot } from '$lib/types'
 import { classifyDraws, generateDummySlots, getFullDrawRounds } from '$lib/utils'
 
 export async function load({ fetch, params, locals, cookies }) {
@@ -9,12 +9,11 @@ export async function load({ fetch, params, locals, cookies }) {
 	const userId = locals.pb.authStore.record?.id ?? ''
 	const token = locals.pb.authStore.token
 
-	const [draws, draw, slots, drawResults, drawAccess]: [
+	const [draws, draw, slots, drawResults]: [
 		PbListResponse<Draw>,
 		Draw,
 		PbListResponse<Slot>,
-		PbListResponse<DrawResult>,
-		DrawAccess
+		PbListResponse<DrawResult>
 	] = await Promise.all([
 		fetchJson(`${url}/api/collections/draw/records?sort=-start_date,event`, fetch, token),
 		fetchJson(`${url}/api/collections/draw/records/${id}`, fetch, token),
@@ -29,8 +28,7 @@ export async function load({ fetch, params, locals, cookies }) {
 			)}`,
 			fetch,
 			token
-		),
-		fetchJson(`${url}/access/${userId}/${id}`, fetch, token)
+		)
 	])
 
 	const [upcoming, active, completed] = classifyDraws(draws.items)
@@ -51,7 +49,6 @@ export async function load({ fetch, params, locals, cookies }) {
 		activeRound,
 		slots: renderedSlots,
 		drawResults,
-		isLeaderboard: cookies.get('isLeaderboard') === 'true',
-		hasAccess: drawAccess.hasAccess
+		isLeaderboard: cookies.get('isLeaderboard') === 'true'
 	} as DrawPageData
 }

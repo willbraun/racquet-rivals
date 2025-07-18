@@ -1,24 +1,24 @@
 <script lang="ts">
+	import { afterNavigate } from '$app/navigation'
+	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
+	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
 	import { currentUser, drawNavUrl } from '$lib/store'
-	import '../app.postcss'
+	import type { RootLayoutData } from '$lib/types'
+	import { getSlug } from '$lib/utils'
+	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
 	import {
-		Modal,
 		Drawer,
 		getDrawerStore,
 		initializeStores,
+		Modal,
+		storePopup,
 		type ModalComponent
 	} from '@skeletonlabs/skeleton'
-	import SelectUsers from './draw/[slug]/SelectUsers.svelte'
-	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
-	import { storePopup } from '@skeletonlabs/skeleton'
-	import { afterNavigate } from '$app/navigation'
-	import { getSlug } from '$lib/utils'
-	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
-	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
-	import type { RootLayoutData } from '$lib/types'
 	import { type Snippet } from 'svelte'
-	import DrawPricingModal from './draw/[slug]/DrawPricingModal.svelte'
+	import '../app.postcss'
 	import DrawPricingDrawer from './draw/[slug]/DrawPricingDrawer.svelte'
+	import DrawPricingModal from './draw/[slug]/DrawPricingModal.svelte'
+	import SelectUsers from './draw/[slug]/SelectUsers.svelte'
 
 	interface Props {
 		data: RootLayoutData
@@ -78,11 +78,7 @@
 			<div
 				class="flex w-full flex-col items-start justify-start gap-4 sm:flex-row sm:items-center sm:justify-center sm:gap-8"
 			>
-				<a href="/about" class="hover:underline">About</a>
-				<a href="/pricing" class="hover:underline">Pricing</a>
-				<a href="/terms-of-service" class="hover:underline">Terms of Service</a>
-				<a href="/privacy-policy" class="hover:underline">Privacy Policy</a>
-				<a href="/refund-policy" class="hover:underline">Refund Policy</a>
+				<a href="/about" class="underline">About Racquet Rivals</a>
 			</div>
 			<p>
 				This site is not affiliated with the ATP, WTA, NCAA, any tournament or player. I'm just a

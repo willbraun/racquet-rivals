@@ -45,7 +45,6 @@
 	import Cookies from 'js-cookie'
 	import { onMount } from 'svelte'
 	import AddPrediction from './AddPrediction.svelte'
-	import LockedPrediction from './LockedPrediction.svelte'
 	import ViewPrediction from './ViewPrediction.svelte'
 
 	interface Props {
@@ -561,19 +560,13 @@
 									>
 										{#if !predictionsLoading}
 											{#if slotRenderData}
-												{#if $isAuth}
-													{#if !data.hasAccess && !drawCompleted}
-														<LockedPrediction draw={data.draw} {mensDraw} {womensDraw} />
-													{:else}
-														<AddPrediction
-															{slot}
-															roundIndex={index}
-															{players}
-															prediction={slotRenderData?.currentUserPrediction}
-															{predictionsAllowed}
-														/>
-													{/if}
-												{/if}
+												<AddPrediction
+													{slot}
+													roundIndex={index}
+													{players}
+													prediction={slotRenderData?.currentUserPrediction}
+													{predictionsAllowed}
+												/>
 												{#each slotRenderData?.selectedUserPredictions ?? [] as prediction}
 													<ViewPrediction {prediction} />
 												{/each}

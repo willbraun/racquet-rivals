@@ -1,7 +1,5 @@
-import { render, screen, waitFor, within } from '@testing-library/svelte'
-import userEvent from '@testing-library/user-event'
-import '@testing-library/jest-dom/vitest'
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
+import PageSetup from '$lib/components/PageSetup.test.svelte'
+import { currentUser, predictionStore, selectedUsers } from '$lib/store'
 import type {
 	Draw,
 	DrawPageData,
@@ -12,10 +10,12 @@ import type {
 	UserRecord,
 	ViewPredictionRecord
 } from '$lib/types'
-import PageSetup from '$lib/components/PageSetup.test.svelte'
-import Page from './+page.svelte'
-import { currentUser, predictionStore, selectedUsers } from '$lib/store'
 import { generateDummySlots } from '$lib/utils'
+import '@testing-library/jest-dom/vitest'
+import { render, screen, waitFor, within } from '@testing-library/svelte'
+import userEvent from '@testing-library/user-event'
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
+import Page from './+page.svelte'
 
 const emptySlotData = generateDummySlots('j5mehm6fvdf9105', 4, 8)
 
@@ -120,8 +120,7 @@ const data: DrawPageData = {
 		totalItems: 4,
 		totalPages: 1
 	} as PbListResponse<DrawResult>,
-	isLeaderboard: false,
-	hasAccess: true
+	isLeaderboard: false
 }
 
 // Mock the Resize Observer
@@ -463,50 +462,6 @@ describe('Draw page component', () => {
 
 		expect(screen.getByTestId('SlotNameR8P1')).toHaveTextContent('TBD')
 		expect(screen.queryByTestId('SlotScoreR8P1')).not.toBeInTheDocument()
-	})
-
-	test('Shows LockedPredictions when user is logged in but has no access', async () => {
-		const futureEndDate = new Date()
-		futureEndDate.setMonth(futureEndDate.getMonth() + 1)
-
-		render(PageSetup, {
-			props: {
-				component: Page,
-				data: {
-					...data,
-					hasAccess: false,
-					draw: {
-						...data.draw,
-						end_date: futureEndDate.toISOString()
-					}
-				}
-			}
-		})
-
-		// Wait for locked predictions to appear after mock prediction fetch
-		const lockedPredictions = await screen.findAllByTestId('LockedPrediction')
-		expect(lockedPredictions.length).toBe(15)
-	})
-
-	test('No LockedPredictions when user is logged in and has access', () => {
-		const futureEndDate = new Date()
-		futureEndDate.setMonth(futureEndDate.getMonth() + 1)
-
-		render(PageSetup, {
-			props: {
-				component: Page,
-				data: {
-					...data,
-					draw: {
-						...data.draw,
-						end_date: futureEndDate.toISOString()
-					}
-				}
-			}
-		})
-
-		const lockedPredictions = screen.queryAllByTestId('LockedPrediction')
-		expect(lockedPredictions.length).toBe(0)
 	})
 })
 

@@ -1,15 +1,12 @@
 <script lang="ts">
-	import hamburger from '$lib/images/icons/hamburger-menu.svg'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
-	import user from '$lib/images/icons/user-solid.svg'
+	import hamburger from '$lib/images/icons/hamburger-menu.svg'
 	import trophy from '$lib/images/icons/trophy-solid.svg'
-	import { getDrawerStore } from '@skeletonlabs/skeleton'
+	import user from '$lib/images/icons/user-solid.svg'
+	import { currentUser, drawNavUrl, isAuth } from '$lib/store'
 	import type { DrawerSettings } from '@skeletonlabs/skeleton'
+	import { getDrawerStore } from '@skeletonlabs/skeleton'
 	import LogoutButton from './LogoutButton.svelte'
-	import { isAuth, currentUser, drawNavUrl } from '$lib/store'
-	import infoIcon from '$lib/images/icons/circle-info-solid.svg'
-	import dollarSign from '$lib/images/icons/dollar-sign-solid.svg'
-	import gear from '$lib/images/icons/gear-solid.svg'
 
 	const drawerStore = getDrawerStore()
 	const drawerSettings: DrawerSettings = {
@@ -51,14 +48,6 @@
 		{#if $isAuth}
 			<a href={`/profile/${$currentUser?.username}`}>
 				<img src={user} alt="profile" width="18" class:invert={isInverted} />
-			</a>
-		{/if}
-		<a href="/pricing">
-			<img src={dollarSign} alt="pricing" width="16" class:invert={isInverted} />
-		</a>
-		{#if $isAuth}
-			<a href="/my-account">
-				<img src={gear} alt="my account" width="24" class:invert={isInverted} />
 			</a>
 		{/if}
 		{#if $isAuth}

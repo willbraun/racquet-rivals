@@ -1,17 +1,14 @@
 <script lang="ts">
-	import LogoutButton from './LogoutButton.svelte'
-	import user from '$lib/images/icons/user-solid.svg'
+	import logout from '$lib/images/icons/arrow-right-from-bracket-solid.svg'
+	import login from '$lib/images/icons/arrow-right-to-bracket-solid.svg'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
 	import trophy from '$lib/images/icons/trophy-solid.svg'
-	import login from '$lib/images/icons/arrow-right-to-bracket-solid.svg'
-	import logout from '$lib/images/icons/arrow-right-from-bracket-solid.svg'
 	import signup from '$lib/images/icons/user-plus-solid.svg'
+	import user from '$lib/images/icons/user-solid.svg'
+	import { currentUser, drawNavUrl, isAuth } from '$lib/store'
 	import { getDrawerStore } from '@skeletonlabs/skeleton'
+	import LogoutButton from './LogoutButton.svelte'
 	import ShareLink from './ShareLink.svelte'
-	import { isAuth, currentUser, drawNavUrl } from '$lib/store'
-	import infoIcon from '$lib/images/icons/circle-info-solid.svg'
-	import dollarSign from '$lib/images/icons/dollar-sign-solid.svg'
-	import gear from '$lib/images/icons/gear-solid.svg'
 
 	const drawerStore = getDrawerStore()
 	const closeDrawer = () => {
@@ -31,10 +28,6 @@
 	{@render menuLink('Rankings', trophy, 'rankings', 24, '/rankings')}
 	{#if $isAuth}
 		{@render menuLink('Profile', user, 'profile', 18, `/profile/${$currentUser?.username}`)}
-	{/if}
-	{@render menuLink('Pricing', dollarSign, 'pricing', 16, '/pricing')}
-	{#if $isAuth}
-		{@render menuLink('My Account', gear, 'account', 24, '/my-account')}
 	{/if}
 	<ShareLink />
 	{#if $isAuth}

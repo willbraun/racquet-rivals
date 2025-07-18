@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte'
-	import { currentUser, drawNavUrl, isAuth } from '$lib/store'
 	import { rankingDescriptions } from '$lib/data'
+	import { currentUser, drawNavUrl, isAuth } from '$lib/store'
 
 	const scoreFormatting = 'font-bold bg-green-400 rounded-full w-8 mx-auto shadow'
 </script>
@@ -28,11 +28,6 @@
 				<li>
 					Create an account. Choose a username, as well as an email address to receive
 					notifications.
-				</li>
-				<li>
-					Purchase entry to participate in a draw or a subscription for access to all draws. You can
-					find pricing information
-					<a href="/pricing" class="text-blue-500 underline">here</a>.
 				</li>
 				<li>
 					When the Round of 16 has been filled for a draw, you'll be notified via email that you

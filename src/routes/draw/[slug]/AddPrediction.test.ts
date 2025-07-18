@@ -1,6 +1,6 @@
 import { pb } from '$lib/pocketbase'
-import { predictionStore } from '$lib/store'
-import type { Prediction, Slot } from '$lib/types'
+import { currentUser, predictionStore } from '$lib/store'
+import type { Prediction, Slot, UserRecord } from '$lib/types'
 import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
 import { storePopup } from '@skeletonlabs/skeleton'
 import '@testing-library/jest-dom/vitest'
@@ -77,6 +77,17 @@ const props = {
 	getColor: vi.fn()
 }
 
+const userWill = {
+	collectionId: '_pb_users_auth_',
+	collectionName: 'user',
+	avatar: '',
+	id: 'willId',
+	username: 'will',
+	emailVisibility: true,
+	created: '2024-05-02 15:42:20.397Z',
+	updated: '2024-05-02 15:42:20.397Z'
+} as UserRecord
+
 describe('AddPrediction component', () => {
 	let mockCollection: any
 
@@ -85,6 +96,7 @@ describe('AddPrediction component', () => {
 
 		// Reset the real store before each test
 		predictionStore.set([])
+		currentUser.set(userWill)
 
 		// Create mock collection with methods
 		mockCollection = {
@@ -307,5 +319,17 @@ describe('AddPrediction component', () => {
 		})
 
 		expect(addButton).toHaveTextContent('Nadal')
+	})
+
+	test('Logged out', () => {
+		currentUser.set(null)
+		render(AddPrediction, {
+			...props
+		})
+
+		const [addButton, rogerButton, rafaButton] = screen.getAllByRole('button')
+		expect(addButton).toBeDisabled()
+		expect(rogerButton).toBeDisabled()
+		expect(rafaButton).toBeDisabled()
 	})
 })
