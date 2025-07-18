@@ -1,3 +1,5 @@
+import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
+import { fetchJson } from '$lib/server/utils.js'
 import {
 	Events,
 	UserAccess,
@@ -6,8 +8,6 @@ import {
 	type PricingPageData,
 	type UserRecord
 } from '$lib/types'
-import { fetchJson } from '$lib/server/utils.js'
-import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 
 export async function load({ locals }) {
 	const url = PUBLIC_POCKETBASE_URL

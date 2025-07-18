@@ -1,15 +1,14 @@
-import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { PADDLE_API_KEY, PADDLE_API_URL } from '$env/static/private'
-import { redirect } from '@sveltejs/kit'
+import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { fetchJson } from '$lib/server/utils'
 import type {
-	Draw,
+	DrawEntry,
 	MyAccountPageData,
 	PbListResponse,
 	Subscription,
-	DrawEntry,
 	UserRecord
 } from '$lib/types'
+import { redirect } from '@sveltejs/kit'
 
 export async function load({ locals }) {
 	if (!locals.pb.authStore.isValid) {

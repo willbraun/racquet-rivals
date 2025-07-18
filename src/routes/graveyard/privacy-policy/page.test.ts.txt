@@ -1,0 +1,15 @@
+// import { render, screen } from '@testing-library/svelte'
+// import { describe, test, expect } from 'vitest'
+// import PageSetup from '$lib/components/PageSetup.test.svelte'
+// import Page from './+page.svelte'
+
+// describe('Privacy Policy page', () => {
+// 	test('renders the privacy policy page', () => {
+// 		render(PageSetup, {
+// 			props: {
+// 				component: Page
+// 			}
+// 		})
+// 		expect(screen.getByText('Privacy Policy')).toBeInTheDocument()
+// 	})
+// })
