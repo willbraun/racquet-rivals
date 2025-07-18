@@ -16,8 +16,6 @@
 	} from '@skeletonlabs/skeleton'
 	import { type Snippet } from 'svelte'
 	import '../app.postcss'
-	import DrawPricingDrawer from './draw/[slug]/DrawPricingDrawer.svelte'
-	import DrawPricingModal from './draw/[slug]/DrawPricingModal.svelte'
 	import SelectUsers from './draw/[slug]/SelectUsers.svelte'
 
 	interface Props {
@@ -31,8 +29,7 @@
 
 	const drawerStore = getDrawerStore()
 	const modalRegistry: Record<string, ModalComponent> = {
-		selectUsers: { ref: SelectUsers },
-		drawPricingModal: { ref: DrawPricingModal }
+		selectUsers: { ref: SelectUsers }
 	}
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
@@ -53,12 +50,6 @@
 		<ShareLinkContent />
 	{:else if $drawerStore.id === 'nav-menu'}
 		<NavMenuContent />
-	{:else if $drawerStore.id === 'draw-pricing'}
-		<DrawPricingDrawer
-			draw={$drawerStore.meta?.draw}
-			mensDraw={$drawerStore.meta?.mensDraw}
-			womensDraw={$drawerStore.meta?.womensDraw}
-		/>
 	{:else}
 		<div class="flex h-full w-full items-center justify-center">
 			<p class="text-2xl font-bold">Drawer not found</p>
