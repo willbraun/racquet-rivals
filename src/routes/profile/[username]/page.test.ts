@@ -1,8 +1,8 @@
+import PageSetup from '$lib/components/PageSetup.test.svelte'
+import type { DrawResult, PbListResponse, ProfilePageData } from '$lib/types'
+import '@testing-library/jest-dom/vitest'
 import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
-import '@testing-library/jest-dom/vitest'
-import type { DrawResult, PbListResponse, ProfilePageData } from '$lib/types'
-import PageSetup from '$lib/components/PageSetup.test.svelte'
 import Page from './+page.svelte'
 
 const data: ProfilePageData = {
@@ -79,7 +79,9 @@ const data: ProfilePageData = {
 		perPage: 30,
 		totalItems: 2,
 		totalPages: 1
-	} as PbListResponse<DrawResult>
+	} as PbListResponse<DrawResult>,
+	title: 'will',
+	description: 'View the profile of user will.'
 }
 
 describe('Profile page component', () => {

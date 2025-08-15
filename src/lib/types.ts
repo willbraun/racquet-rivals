@@ -275,7 +275,7 @@ export interface BasePageData {
 	description: string
 }
 
-export interface HomePageData extends BasePageData {
+export interface HomePageData {
 	upcoming: Draw[]
 	active: Draw[]
 	completed: Draw[]

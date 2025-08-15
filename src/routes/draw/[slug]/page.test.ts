@@ -120,7 +120,9 @@ const data: DrawPageData = {
 		totalItems: 4,
 		totalPages: 1
 	} as PbListResponse<DrawResult>,
-	isLeaderboard: false
+	isLeaderboard: false,
+	title: 'French Open',
+	description: 'View the draw for the French Open.'
 }
 
 // Mock the Resize Observer
