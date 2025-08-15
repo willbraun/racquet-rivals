@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { afterNavigate } from '$app/navigation'
+	import { page } from '$app/state'
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
 	import instagram from '$lib/images/icons/instagram.svg'
@@ -44,6 +45,15 @@
 		}
 	})
 </script>
+
+<svelte:head>
+	<title>{`${page.data.title ? `${page.data.title} | ` : ''} Racquet Rivals`}</title>
+	<meta
+		name="description"
+		content={page.data.description ??
+			'Your fantasy tennis community. Predict match winners and compete with fellow fans!'}
+	/>
+</svelte:head>
 
 <Modal components={modalRegistry} />
 <Drawer>

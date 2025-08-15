@@ -270,13 +270,18 @@ export interface RootLayoutData {
 	defaultDraw: Draw
 }
 
-export interface HomePageData {
+export interface BasePageData {
+	title: string
+	description: string
+}
+
+export interface HomePageData extends BasePageData {
 	upcoming: Draw[]
 	active: Draw[]
 	completed: Draw[]
 }
 
-export interface DrawPageData {
+export interface DrawPageData extends BasePageData {
 	upcoming: Draw[]
 	active: Draw[]
 	completed: Draw[]
@@ -287,7 +292,7 @@ export interface DrawPageData {
 	isLeaderboard: boolean
 }
 
-export interface ProfilePageData {
+export interface ProfilePageData extends BasePageData {
 	username: string
 	created: string
 	averagePoints: AveragePoints
@@ -296,24 +301,11 @@ export interface ProfilePageData {
 	drawResults: PbListResponse<DrawResult>
 }
 
-export interface PricingPageData {
-	mensDraw: Draw
-	womensDraw: Draw
-	userAccess: UserAccess
-}
-
-export interface MyAccountPageData {
-	user: UserRecord
-	subscription: Subscription | null
-	entries: DrawEntry[]
-	paddleCustomerPortalUrl: string
+export interface RankingsPageData<T> extends BasePageData {
+	rankings: PbListResponse<T>
 }
 
 export interface SelectedPlan {
 	plan: string
 	title: string
-}
-
-export interface DrawAccess {
-	hasAccess: boolean
 }

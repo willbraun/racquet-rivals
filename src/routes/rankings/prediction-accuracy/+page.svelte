@@ -1,12 +1,12 @@
 <script lang="ts">
+	import { goto } from '$app/navigation'
 	import Rank from '$lib/components/Rank.svelte'
 	import { rankingDescriptions } from '$lib/data'
-	import type { PbListResponse, PredictionAccuracy } from '$lib/types'
+	import type { PredictionAccuracy, RankingsPageData } from '$lib/types'
 	import { formatPercent } from '$lib/utils'
-	import { goto } from '$app/navigation'
 
 	interface Props {
-		data: PbListResponse<PredictionAccuracy>
+		data: RankingsPageData<PredictionAccuracy>
 	}
 
 	let { data }: Props = $props()
@@ -26,7 +26,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each data.items as item, index}
+		{#each data.rankings.items as item, index}
 			<tr
 				class={`grid min-h-16 grid-cols-5 items-center gap-2 px-2 text-start text-xl hover:cursor-pointer hover:brightness-105 md:min-h-20 md:text-3xl ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'}`}
 				onclick={() => goto(`/profile/${item.username}`)}

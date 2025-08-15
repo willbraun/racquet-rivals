@@ -1,5 +1,5 @@
-import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { SCRIPT_USERNAME } from '$env/static/private'
+import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { fetchJson } from '$lib/server/utils.js'
 import type {
 	AveragePoints,
@@ -47,6 +47,8 @@ export async function load({ fetch, params }) {
 		averagePoints,
 		predictionAccuracy,
 		overallRank,
-		drawResults
+		drawResults,
+		title: user.username,
+		description: `Profile information for ${user.username}.`
 	} as ProfilePageData
 }

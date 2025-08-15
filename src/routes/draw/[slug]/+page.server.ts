@@ -1,7 +1,7 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { fetchJson, getActiveRound } from '$lib/server/utils'
 import type { Draw, DrawPageData, DrawResult, PbListResponse, Slot } from '$lib/types'
-import { classifyDraws, generateDummySlots, getFullDrawRounds } from '$lib/utils'
+import { classifyDraws, generateDummySlots, getFullDrawRounds, getTitle } from '$lib/utils'
 
 export async function load({ fetch, params, locals, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
@@ -49,6 +49,8 @@ export async function load({ fetch, params, locals, cookies }) {
 		activeRound,
 		slots: renderedSlots,
 		drawResults,
-		isLeaderboard: cookies.get('isLeaderboard') === 'true'
+		isLeaderboard: cookies.get('isLeaderboard') === 'true',
+		title: getTitle(draw),
+		description: `Draw page for ${getTitle(draw)}. Make predictions, view results, and track your progress in the tournament.`
 	} as DrawPageData
 }

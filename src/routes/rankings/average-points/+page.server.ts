@@ -1,6 +1,7 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { fetchJson } from '$lib/server/utils.js'
-import type { PbListResponse, AveragePoints } from '$lib/types.js'
+import type { AveragePoints, PbListResponse, RankingsPageData } from '$lib/types.js'
+import { rankingDescriptions } from '../../../lib/data'
 
 export async function load({ fetch, locals }) {
 	const url = PUBLIC_POCKETBASE_URL
@@ -10,5 +11,9 @@ export async function load({ fetch, locals }) {
 		fetch
 	)
 
-	return averagePoints
+	return {
+		rankings: averagePoints,
+		title: 'Average Points',
+		description: rankingDescriptions.averagePoints
+	} as RankingsPageData<AveragePoints>
 }

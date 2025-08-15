@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Rank from '$lib/components/Rank.svelte'
-	import type { PbListResponse, OverallRank } from '$lib/types'
-	import { rankingDescriptions } from '$lib/data'
 	import { goto } from '$app/navigation'
+	import Rank from '$lib/components/Rank.svelte'
+	import { rankingDescriptions } from '$lib/data'
+	import type { OverallRank, RankingsPageData } from '$lib/types'
 
 	interface Props {
-		data: PbListResponse<OverallRank>
+		data: RankingsPageData<OverallRank>
 	}
 
 	let { data }: Props = $props()
@@ -23,7 +23,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each data.items as item, index}
+		{#each data.rankings.items as item, index}
 			<tr
 				class={`grid min-h-16 grid-cols-4 items-center gap-2 px-2 text-start text-xl hover:cursor-pointer hover:brightness-105 md:min-h-20 md:text-3xl ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'}`}
 				onclick={() => goto(`/profile/${item.username}`)}

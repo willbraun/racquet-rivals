@@ -1,6 +1,7 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { fetchJson } from '$lib/server/utils.js'
-import type { PbListResponse, PredictionAccuracy } from '$lib/types.js'
+import type { PbListResponse, PredictionAccuracy, RankingsPageData } from '$lib/types.js'
+import { rankingDescriptions } from '../../../lib/data'
 
 export async function load({ fetch }) {
 	const url = PUBLIC_POCKETBASE_URL
@@ -10,5 +11,9 @@ export async function load({ fetch }) {
 		fetch
 	)
 
-	return predictionAccuracy
+	return {
+		rankings: predictionAccuracy,
+		title: 'Prediction Accuracy',
+		description: rankingDescriptions.predictionAccuracy
+	} as RankingsPageData<PredictionAccuracy>
 }

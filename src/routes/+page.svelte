@@ -44,14 +44,6 @@
 	})
 </script>
 
-<svelte:head>
-	<title>Racquet Rivals</title>
-	<meta
-		name="description"
-		content="Your fantasy tennis community. Predict match winners and compete with fellow fans!"
-	/>
-</svelte:head>
-
 {#snippet drawList(listTitle: string, draws: Draw[])}
 	{#if draws.length > 0}
 		<div class="mb-8 flex flex-col overflow-hidden rounded-xl shadow sm:mb-16" use:fadeAndSlideIn>
