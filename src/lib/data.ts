@@ -45,3 +45,5 @@ export const exampleSelectedUsers: SelectedUser[] = [
 		color: 'bg-red-300'
 	}
 ]
+
+export const ROUND_COMPLETE = 'ROUND_COMPLETE'

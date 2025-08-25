@@ -2,6 +2,7 @@ import type { Draw, Slot } from '$lib/types'
 import { errorMessage, getAllRounds, getFullDrawRounds, getOurRounds } from '$lib/utils'
 import { error } from '@sveltejs/kit'
 import type { ClientResponseError } from 'pocketbase'
+import { ROUND_COMPLETE } from '../data'
 
 export const fetchJson = async (url: string, svelteFetch: SvelteFetch, token?: string) => {
 	const options: RequestInit = token
@@ -28,11 +29,17 @@ export const getActiveRound = (draw: Draw, slots: Slot[]) => {
 	const allRounds = getAllRounds(fullDrawRounds)
 	const ourRounds = getOurRounds(allRounds)
 	const filledRounds = allRounds.filter((round) => {
-		return slots
-			.filter((slot) => {
-				return slot.round === round
-			})
-			.every((slot) => slot.name.trim() !== '')
+		const roundSlots = slots.filter((slot) => {
+			return slot.round === round
+		})
+
+		// MANUAL ENTRY
+		// If a URL is broken and can't be scraped, manually enter ROUND_COMPLETE as the name in any slot for that round to mark it complete.
+		// Only do this for the first two rounds, then fill in names for the rest.
+		return (
+			roundSlots.every((slot) => slot.name.trim() !== '') ||
+			roundSlots.some((slot) => slot.name.trim() === ROUND_COMPLETE)
+		)
 	})
 
 	if (filledRounds.at(-1) === fullDrawRounds) {

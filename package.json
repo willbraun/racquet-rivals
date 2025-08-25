@@ -55,8 +55,10 @@
 		"@floating-ui/dom": "^1.6.13",
 		"@paddle/paddle-js": "^1.4.1",
 		"date-fns": "^3.6.0",
+		"dotenv": "^17.2.1",
 		"js-cookie": "^3.0.5",
 		"pocketbase": "^0.22.0",
-		"svelte-persisted-store": "^0.12.0"
+		"svelte-persisted-store": "^0.12.0",
+		"ts-node": "^10.9.2"
 	}
 }
