@@ -1,8 +1,8 @@
+import type { Draw, Slot } from '$lib/types'
+import '@testing-library/jest-dom/vitest'
 import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
-import '@testing-library/jest-dom/vitest'
 import MatchScore from './MatchScore.svelte'
-import type { Draw, Slot } from '$lib/types'
 
 const baseSlot: Slot = {
 	collectionId: 'abc123',
@@ -51,6 +51,77 @@ const draw: Draw = {
 describe('MatchScore component', () => {
 	test('Renders with tiebreak', () => {
 		const prevSlot1: Slot = { ...baseSlot }
+
+		const prevSlot2: Slot = {
+			...baseSlot,
+			id: 'slot2',
+			name: 'Carlos Alcaraz',
+			position: 2,
+			seed: '2',
+			set1_games: 4,
+			set2_games: 6,
+			set2_tiebreak: 4,
+			set3_games: 4
+		}
+
+		const slot: Slot = {
+			...baseSlot,
+			id: 'slot3',
+			round: 5,
+			position: 1
+		}
+
+		render(MatchScore, {
+			slot,
+			prevSlot1,
+			prevSlot2,
+			draw
+		})
+
+		const score = screen.getByTestId('MatchScore').textContent?.replaceAll(' ', '')
+		expect(score).toBe('6-4,7-64,6-4')
+	})
+
+	test('Renders with tiebreak score in other slot', () => {
+		const prevSlot1: Slot = {
+			...baseSlot,
+			set2_tiebreak: 4
+		}
+
+		const prevSlot2: Slot = {
+			...baseSlot,
+			id: 'slot2',
+			name: 'Carlos Alcaraz',
+			position: 2,
+			seed: '2',
+			set1_games: 4,
+			set2_games: 6,
+			set3_games: 4
+		}
+
+		const slot: Slot = {
+			...baseSlot,
+			id: 'slot3',
+			round: 5,
+			position: 1
+		}
+
+		render(MatchScore, {
+			slot,
+			prevSlot1,
+			prevSlot2,
+			draw
+		})
+
+		const score = screen.getByTestId('MatchScore').textContent?.replaceAll(' ', '')
+		expect(score).toBe('6-4,7-64,6-4')
+	})
+
+	test('Renders with tiebreak score in both slots', () => {
+		const prevSlot1: Slot = {
+			...baseSlot,
+			set2_tiebreak: 7
+		}
 
 		const prevSlot2: Slot = {
 			...baseSlot,

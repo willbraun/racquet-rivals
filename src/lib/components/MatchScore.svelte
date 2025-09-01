@@ -101,15 +101,18 @@
 	{#if showScores}
 		{#if sets.length > 0}
 			{#each sets as set, i}
+				{@const tiebreakScore = Math.min(
+					...[set.winner.tiebreak, set.loser.tiebreak].filter((score) => score > 0)
+				)}
 				<p>
 					{set.winner.games}
 				</p>
 				{#if set.winner.games === 6 && set.loser.games === 7}
-					<sup class="relative top-[3px]">{set.winner.tiebreak}</sup>
+					<sup class="relative top-[3px]">{tiebreakScore}</sup>
 				{/if}
 				<p>{`-${set.loser.games}`}</p>
 				{#if set.winner.games === 7 && set.loser.games === 6}
-					<sup class="relative top-[3px]">{set.loser.tiebreak}</sup>
+					<sup class="relative top-[3px]">{tiebreakScore}</sup>
 				{/if}
 				{#if i !== sets.length - 1}
 					<p class="pr-0.5">{','}</p>
