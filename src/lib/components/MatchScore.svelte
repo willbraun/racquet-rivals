@@ -95,24 +95,27 @@
 			return true
 		}
 	}
+
+	const getTiebreakLoserValue = (set: Set) => {
+		const tiebreakValues = [set.winner.tiebreak, set.loser.tiebreak].filter((score) => score > 0)
+		return tiebreakValues.length ? Math.min(...tiebreakValues) : 0
+	}
 </script>
 
 <div class="flex w-full justify-center text-xs text-gray-500" data-testid="MatchScore">
 	{#if showScores}
 		{#if sets.length > 0}
 			{#each sets as set, i}
-				{@const tiebreakScore = Math.min(
-					...[set.winner.tiebreak, set.loser.tiebreak].filter((score) => score > 0)
-				)}
+				{@const tiebreakLoserValue = getTiebreakLoserValue(set)}
 				<p>
 					{set.winner.games}
 				</p>
 				{#if set.winner.games === 6 && set.loser.games === 7}
-					<sup class="relative top-[3px]">{tiebreakScore}</sup>
+					<sup class="relative top-[3px]">{tiebreakLoserValue}</sup>
 				{/if}
 				<p>{`-${set.loser.games}`}</p>
 				{#if set.winner.games === 7 && set.loser.games === 6}
-					<sup class="relative top-[3px]">{tiebreakScore}</sup>
+					<sup class="relative top-[3px]">{tiebreakLoserValue}</sup>
 				{/if}
 				{#if i !== sets.length - 1}
 					<p class="pr-0.5">{','}</p>

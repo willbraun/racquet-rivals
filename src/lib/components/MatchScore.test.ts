@@ -49,196 +49,142 @@ const draw: Draw = {
 }
 
 describe('MatchScore component', () => {
-	test('Renders with tiebreak', () => {
-		const prevSlot1: Slot = { ...baseSlot }
+	describe('Tiebreak score tests', () => {
+		// Test slot1 tiebreak scores from 0-8
+		for (let slot1Score = 0; slot1Score <= 8; slot1Score++) {
+			for (let slot2Score = 0; slot2Score <= 8; slot2Score++) {
+				test(`Renders tiebreak correctly when slot1=${slot1Score}, slot2=${slot2Score}`, () => {
+					const prevSlot1: Slot = {
+						...baseSlot,
+						set2_tiebreak: slot1Score
+					}
 
-		const prevSlot2: Slot = {
-			...baseSlot,
-			id: 'slot2',
-			name: 'Carlos Alcaraz',
-			position: 2,
-			seed: '2',
-			set1_games: 4,
-			set2_games: 6,
-			set2_tiebreak: 4,
-			set3_games: 4
+					const prevSlot2: Slot = {
+						...baseSlot,
+						id: 'slot2',
+						name: 'Carlos Alcaraz',
+						position: 2,
+						seed: '2',
+						set1_games: 4,
+						set2_games: 6,
+						set2_tiebreak: slot2Score,
+						set3_games: 4
+					}
+
+					const slot: Slot = {
+						...baseSlot,
+						id: 'slot3',
+						round: 5,
+						position: 1
+					}
+
+					render(MatchScore, {
+						slot,
+						prevSlot1,
+						prevSlot2,
+						draw
+					})
+
+					// Calculate expected tiebreak score (minimum of non-zero values)
+					const validScores = [slot1Score, slot2Score].filter((score) => score > 0)
+					const expectedTiebreak = validScores.length ? Math.min(...validScores) : 0
+
+					const score = screen.getByTestId('MatchScore').textContent?.replaceAll(' ', '')
+					const expectedScore = `6-4,7-6${expectedTiebreak},6-4`
+					expect(score).toBe(expectedScore)
+				})
+			}
 		}
-
-		const slot: Slot = {
-			...baseSlot,
-			id: 'slot3',
-			round: 5,
-			position: 1
-		}
-
-		render(MatchScore, {
-			slot,
-			prevSlot1,
-			prevSlot2,
-			draw
-		})
-
-		const score = screen.getByTestId('MatchScore').textContent?.replaceAll(' ', '')
-		expect(score).toBe('6-4,7-64,6-4')
 	})
 
-	test('Renders with tiebreak score in other slot', () => {
-		const prevSlot1: Slot = {
-			...baseSlot,
-			set2_tiebreak: 4
-		}
+	describe('Other scenarios', () => {
+		test('Retirement', () => {
+			const prevSlot1: Slot = {
+				...baseSlot,
+				set3_id: null,
+				set3_games: null,
+				set3_tiebreak: null
+			}
 
-		const prevSlot2: Slot = {
-			...baseSlot,
-			id: 'slot2',
-			name: 'Carlos Alcaraz',
-			position: 2,
-			seed: '2',
-			set1_games: 4,
-			set2_games: 6,
-			set3_games: 4
-		}
+			const prevSlot2: Slot = {
+				...baseSlot,
+				id: 'slot2',
+				name: 'Carlos Alcaraz',
+				position: 2,
+				seed: '2',
+				set1_games: 4,
+				set2_games: 6,
+				set2_tiebreak: 4,
+				set3_id: null,
+				set3_games: null,
+				set3_tiebreak: null
+			}
 
-		const slot: Slot = {
-			...baseSlot,
-			id: 'slot3',
-			round: 5,
-			position: 1
-		}
+			const slot: Slot = {
+				...baseSlot,
+				id: 'slot3',
+				round: 5,
+				position: 1
+			}
 
-		render(MatchScore, {
-			slot,
-			prevSlot1,
-			prevSlot2,
-			draw
+			render(MatchScore, {
+				slot,
+				prevSlot1,
+				prevSlot2,
+				draw
+			})
+
+			const score = screen.getByTestId('MatchScore').textContent?.replaceAll(' ', '')
+			expect(score).toBe('6-4,7-64(Ret.)')
 		})
 
-		const score = screen.getByTestId('MatchScore').textContent?.replaceAll(' ', '')
-		expect(score).toBe('6-4,7-64,6-4')
-	})
+		test('Walkover', () => {
+			const prevSlot1: Slot = {
+				...baseSlot,
+				set1_id: null,
+				set1_games: null,
+				set1_tiebreak: null,
+				set2_id: null,
+				set2_games: null,
+				set2_tiebreak: null,
+				set3_id: null,
+				set3_games: null,
+				set3_tiebreak: null
+			}
 
-	test('Renders with tiebreak score in both slots', () => {
-		const prevSlot1: Slot = {
-			...baseSlot,
-			set2_tiebreak: 7
-		}
+			const prevSlot2: Slot = {
+				...baseSlot,
+				id: 'slot2',
+				name: 'Carlos Alcaraz',
+				position: 2,
+				seed: '2',
+				set1_id: null,
+				set1_games: null,
+				set1_tiebreak: null,
+				set2_id: null,
+				set2_games: null,
+				set2_tiebreak: null,
+				set3_id: null,
+				set3_games: null,
+				set3_tiebreak: null
+			}
 
-		const prevSlot2: Slot = {
-			...baseSlot,
-			id: 'slot2',
-			name: 'Carlos Alcaraz',
-			position: 2,
-			seed: '2',
-			set1_games: 4,
-			set2_games: 6,
-			set2_tiebreak: 4,
-			set3_games: 4
-		}
+			const slot: Slot = {
+				...baseSlot,
+				id: 'slot3',
+				round: 5,
+				position: 1
+			}
 
-		const slot: Slot = {
-			...baseSlot,
-			id: 'slot3',
-			round: 5,
-			position: 1
-		}
+			render(MatchScore, {
+				slot,
+				prevSlot1,
+				prevSlot2,
+				draw
+			})
 
-		render(MatchScore, {
-			slot,
-			prevSlot1,
-			prevSlot2,
-			draw
+			const score = screen.getByTestId('MatchScore').textContent?.replaceAll(' ', '')
+			expect(score).toBe('Walkover')
 		})
-
-		const score = screen.getByTestId('MatchScore').textContent?.replaceAll(' ', '')
-		expect(score).toBe('6-4,7-64,6-4')
-	})
-
-	test('Retirement', () => {
-		const prevSlot1: Slot = {
-			...baseSlot,
-			set3_id: null,
-			set3_games: null,
-			set3_tiebreak: null
-		}
-
-		const prevSlot2: Slot = {
-			...baseSlot,
-			id: 'slot2',
-			name: 'Carlos Alcaraz',
-			position: 2,
-			seed: '2',
-			set1_games: 4,
-			set2_games: 6,
-			set2_tiebreak: 4,
-			set3_id: null,
-			set3_games: null,
-			set3_tiebreak: null
-		}
-
-		const slot: Slot = {
-			...baseSlot,
-			id: 'slot3',
-			round: 5,
-			position: 1
-		}
-
-		render(MatchScore, {
-			slot,
-			prevSlot1,
-			prevSlot2,
-			draw
-		})
-
-		const score = screen.getByTestId('MatchScore').textContent?.replaceAll(' ', '')
-		expect(score).toBe('6-4,7-64(Ret.)')
-	})
-
-	test('Walkover', () => {
-		const prevSlot1: Slot = {
-			...baseSlot,
-			set1_id: null,
-			set1_games: null,
-			set1_tiebreak: null,
-			set2_id: null,
-			set2_games: null,
-			set2_tiebreak: null,
-			set3_id: null,
-			set3_games: null,
-			set3_tiebreak: null
-		}
-
-		const prevSlot2: Slot = {
-			...baseSlot,
-			id: 'slot2',
-			name: 'Carlos Alcaraz',
-			position: 2,
-			seed: '2',
-			set1_id: null,
-			set1_games: null,
-			set1_tiebreak: null,
-			set2_id: null,
-			set2_games: null,
-			set2_tiebreak: null,
-			set3_id: null,
-			set3_games: null,
-			set3_tiebreak: null
-		}
-
-		const slot: Slot = {
-			...baseSlot,
-			id: 'slot3',
-			round: 5,
-			position: 1
-		}
-
-		render(MatchScore, {
-			slot,
-			prevSlot1,
-			prevSlot2,
-			draw
-		})
-
-		const score = screen.getByTestId('MatchScore').textContent?.replaceAll(' ', '')
-		expect(score).toBe('Walkover')
 	})
 })
