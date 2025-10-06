@@ -35,8 +35,6 @@
 	}
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
-	console.log('Root layout data:', data)
-
 	// Initialize with server data so authenticated content is available on first render
 	currentUser.set(data.cookieCurrentUser)
 
