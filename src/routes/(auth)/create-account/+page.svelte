@@ -1,15 +1,13 @@
 <script lang="ts">
-	import { pb } from '$lib/pocketbase'
-	import EmailField from '$lib/components/EmailField.svelte'
-	import PasswordField from '$lib/components/PasswordField.svelte'
-	import FormError from '$lib/components/FormError.svelte'
 	import { goto } from '$app/navigation'
-	import { onMount } from 'svelte'
+	import EmailField from '$lib/components/EmailField.svelte'
+	import FormError from '$lib/components/FormError.svelte'
+	import PasswordField from '$lib/components/PasswordField.svelte'
+	import { pb } from '$lib/pocketbase'
 	import { loginGoto } from '$lib/store'
-	import AuthBase from '../AuthBase.svelte'
 	import { errorMessage } from '$lib/utils'
-	import type { SelectedPlan } from '$lib/types'
-	import x from '$lib/images/icons/x.svg'
+	import { onMount } from 'svelte'
+	import AuthBase from '../AuthBase.svelte'
 
 	let username = $state('')
 	let email = $state('')
@@ -23,14 +21,10 @@
 	)
 
 	let usernameRef: HTMLInputElement | null = $state(null)
-	let selectedPlan: SelectedPlan | null = $state(null)
-	let redirectCanceled = $state(false)
 	onMount(() => {
 		if (usernameRef) {
 			usernameRef.focus()
 		}
-		const selectedPlanStr = sessionStorage.getItem('selectedPlan')
-		selectedPlan = selectedPlanStr ? JSON.parse(selectedPlanStr) : null
 	})
 
 	const handleCreateAccount = async (event: Event) => {
@@ -72,13 +66,7 @@
 
 			error = ''
 
-			sessionStorage.removeItem('selectedPlan')
-
-			const redirectUrl =
-				selectedPlan && !redirectCanceled
-					? `/pricing?selectedPlan=${selectedPlan.plan}`
-					: $loginGoto
-			goto(redirectUrl)
+			goto($loginGoto)
 		} catch (err) {
 			error = errorMessage(err)
 		} finally {
@@ -114,35 +102,6 @@
 				{loading ? 'Creating Account...' : 'Create Account'}
 			</button>
 		</div>
-		{#if selectedPlan}
-			<div class="mt-8 flex items-center justify-center gap-4 rounded-lg bg-primary-50 p-4">
-				{#if redirectCanceled}
-					<p class="text-muted-foreground text-center text-sm">
-						Redirect canceled.
-						<button
-							type="button"
-							class="hover:text-foreground ml-2 underline underline-offset-2"
-							onclick={() => (redirectCanceled = false)}
-						>
-							Undo
-						</button>
-					</p>
-				{:else}
-					<p class="text-center text-sm">
-						You'll be redirected to complete your purchase for <span class="font-bold"
-							>{selectedPlan?.title}</span
-						> after creating an account.
-					</p>
-					<button
-						type="button"
-						class="text-muted-foreground text-sm underline underline-offset-2"
-						onclick={() => (redirectCanceled = true)}
-					>
-						<img src={x} alt="cancel redirect to pricing page" class="inline w-6" />
-					</button>
-				{/if}
-			</div>
-		{/if}
 	</form>
 	<div class="mt-2">
 		<FormError {error} />

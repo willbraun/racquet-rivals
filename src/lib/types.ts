@@ -59,7 +59,6 @@ export interface UserRecord extends RecordModel {
 	username: string
 	emailVisibility: boolean
 	grandfathered: boolean
-	paddle_customer_id: string
 	created: string
 	updated: string
 }
@@ -303,9 +302,4 @@ export interface ProfilePageData extends BasePageData {
 
 export interface RankingsPageData<T> extends BasePageData {
 	rankings: PbListResponse<T>
-}
-
-export interface SelectedPlan {
-	plan: string
-	title: string
 }

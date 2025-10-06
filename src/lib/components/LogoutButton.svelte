@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { pb } from '$lib/pocketbase'
-	import type { Snippet } from 'svelte'
-	import Cookies from 'js-cookie'
 	import { goto } from '$app/navigation'
+	import { pb } from '$lib/pocketbase'
+	import Cookies from 'js-cookie'
+	import type { Snippet } from 'svelte'
 
 	interface Props {
 		styles?: string
@@ -15,7 +15,6 @@
 	const handleLogout = () => {
 		pb.authStore.clear()
 		Cookies.remove('isLeaderboard')
-		sessionStorage.removeItem('selectedPlan')
 
 		if (onLogout) {
 			onLogout()
