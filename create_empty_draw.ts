@@ -25,6 +25,7 @@ try {
 		.collection('_superusers')
 		.authWithPassword(process.env.SUPER_USER, process.env.SUPER_USER_PASSWORD)
 } catch (error) {
+	// eslint-disable-next-line no-console
 	console.error('Authentication failed:', error)
 	process.exit(1)
 }
@@ -47,6 +48,7 @@ for (let i = 0; i < numRounds; i++) {
 			created: new Date().toISOString(),
 			updated: new Date().toISOString()
 		})
+		// eslint-disable-next-line no-console
 		console.log(`Created draw_slot for draw ${drawId}, round ${round}, position ${position}`)
 	}
 }

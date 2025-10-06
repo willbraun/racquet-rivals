@@ -82,7 +82,7 @@
 			>
 				<a href="/about" class="hover:underline">About Racquet Rivals</a>
 				<a
-					href={`https://www.instagram.com/racquetrivals/`}
+					href="https://www.instagram.com/racquetrivals/"
 					target="_blank"
 					class="flex items-center gap-2 hover:underline"
 				>
