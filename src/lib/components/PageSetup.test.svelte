@@ -1,10 +1,13 @@
 <script lang="ts">
-	import type { Component } from 'svelte'
+	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
 	import { initializeStores, storePopup } from '@skeletonlabs/skeleton'
-	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom'
+	import type { Component } from 'svelte'
+
 	interface Props {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		component: Component<any, any, any>
-		data?: object
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		data?: any
 	}
 
 	let { component, data = {} }: Props = $props()

@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { format } from 'date-fns'
 	import Header from '$lib/components/Header.svelte'
 	import type { MyAccountPageData } from '$lib/types'
@@ -124,4 +124,4 @@
 			{/if}
 		</section>
 	</div>
-</main>
+</main> -->

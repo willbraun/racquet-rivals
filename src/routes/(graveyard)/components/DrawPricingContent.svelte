@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
 	import { page } from '$app/state'
+	import {
+		PUBLIC_PADDLE_BOTH_DRAWS_PRICE_ID,
+		PUBLIC_PADDLE_MENS_DRAW_PRICE_ID,
+		PUBLIC_PADDLE_SUBSCRIPTION_PRICE_ID,
+		PUBLIC_PADDLE_WOMENS_DRAW_PRICE_ID
+	} from '$env/static/public'
+	import { currentUser } from '$lib/store'
 	import { PlanName, type Draw } from '$lib/types'
-	import { getSlug, setupPaddle } from '$lib/utils'
+	import { getSlug, logErrorInDev, setupPaddle } from '$lib/utils'
 	import type { Paddle } from '@paddle/paddle-js'
 	import { onMount } from 'svelte'
-	import { currentUser } from '$lib/store'
-	import {
-		PUBLIC_PADDLE_MENS_DRAW_PRICE_ID,
-		PUBLIC_PADDLE_WOMENS_DRAW_PRICE_ID,
-		PUBLIC_PADDLE_BOTH_DRAWS_PRICE_ID,
-		PUBLIC_PADDLE_SUBSCRIPTION_PRICE_ID
-	} from '$env/static/public'
 
 	interface Props {
 		draw: Draw
@@ -47,29 +47,29 @@
 	onMount(async () => {
 		paddle = await setupPaddle()
 		if (!paddle) {
-			console.error('Paddle is not initialized')
+			logErrorInDev('Paddle is not initialized')
 			return
 		}
 	})
 
 	const openPaddleCheckout = (priceId: string, plan: PlanName) => {
 		if (!paddle) {
-			console.error('Paddle is not initialized')
+			logErrorInDev('Paddle is not initialized')
 			return
 		}
 
 		if (!$currentUser) {
-			console.error('Current user is not available')
+			logErrorInDev('Current user is not available')
 			return
 		}
 
 		if (!mensDraw) {
-			console.error('Mens draw is not available')
+			logErrorInDev('Mens draw is not available')
 			return
 		}
 
 		if (!womensDraw) {
-			console.error('Womens draw is not available')
+			logErrorInDev('Womens draw is not available')
 			return
 		}
 

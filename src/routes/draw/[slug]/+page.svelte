@@ -22,7 +22,6 @@
 		predictionStore
 	} from '$lib/store'
 	import {
-		Events,
 		type Draw,
 		type DrawPageData,
 		type Prediction,
@@ -106,7 +105,6 @@
 	let predictionsAllowed = $derived(
 		!data.draw.prediction_close || now < new Date(data.draw.prediction_close)
 	)
-	let drawCompleted = $derived(now > new Date(data.draw.end_date))
 
 	let innerWidth = $state(0)
 	let drawHeight = $state(0)
@@ -295,31 +293,6 @@
 			predictionsLoading = false
 		}
 	}
-
-	//////////////////////////////////////////
-	// PADDLE SETUP
-	//////////////////////////////////////////
-
-	let [mensDraw, womensDraw] = $derived.by(() => {
-		let men: Draw | undefined
-		let women: Draw | undefined
-
-		const drawType =
-			data.active.length === 2 ? 'active' : data.upcoming.length === 2 ? 'upcoming' : ''
-
-		if (!drawType) {
-			return [undefined, undefined]
-		}
-
-		data[drawType].forEach((draw) => {
-			if (draw.event === Events.MENS_SINGLES) {
-				men = draw
-			} else {
-				women = draw
-			}
-		})
-		return [men, women]
-	})
 </script>
 
 <svelte:window bind:innerWidth />
@@ -327,7 +300,7 @@
 {#snippet drawSelectOptions(drawType: string, draws: Draw[])}
 	{#if draws.length > 0}
 		<option disabled>{drawType}</option>
-		{#each draws as draw}
+		{#each draws as draw (draw.id)}
 			<option selected={data.draw.id === draw.id} value={`/draw/${getSlug(draw)}`}
 				>{getTitle(draw)}</option
 			>
@@ -380,7 +353,7 @@
 	</div>
 	<div class="col-span-4 mt-1 flex flex-wrap items-center justify-center gap-2 md:justify-start">
 		<p>Users:</p>
-		{#each users as user}
+		{#each users as user (user.id)}
 			<button
 				type="button"
 				class="chip relative h-6 max-w-full rounded-full text-black {user.color} shadow duration-0"
@@ -429,7 +402,7 @@
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Points</div>
 			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Select</div>
 			{#if data.drawResults.items.length > 0}
-				{#each data.drawResults.items as result, index}
+				{#each data.drawResults.items as result, index (index)}
 					{@const selectedUser = users.find((u) => u.id === result.user_id)}
 					{@const rowStyle = `py-4 ${index % 2 ? 'bg-stone-200' : 'bg-stone-100'}`}
 					<div class={rowStyle}>
@@ -505,8 +478,8 @@
 				class="sticky top-0 z-20 overflow-x-hidden {headerColor} font-semibold tracking-wide shadow [&>*]:text-lg"
 				bind:this={roundHeader}
 			>
-				<div class="grid" style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}>
-					{#each Object.entries(pointsByRound) as [round, points]}
+				<div class="grid" style:grid-template-columns="repeat(5, minmax(200px, 1fr))">
+					{#each Object.entries(pointsByRound) as [round, points] (round)}
 						<div class="flex justify-center gap-2 bg-primary-300 py-2 text-center">
 							<p>{round}</p>
 							{#if points > 0}
@@ -518,13 +491,13 @@
 			</div>
 			<div
 				class="relative grid overflow-x-auto overscroll-x-none bg-stone-100 pb-12"
-				style:grid-template-columns={'repeat(5, minmax(200px, 1fr))'}
+				style:grid-template-columns="repeat(5, minmax(200px, 1fr))"
 				bind:this={drawGrid}
 				onscroll={syncScroll}
 			>
-				{#each ourRounds as round, index}
+				{#each ourRounds as round, index (index)}
 					<div class="column">
-						{#each slots.filter((slot) => slot.round === round) as slot}
+						{#each slots.filter((slot) => slot.round === round) as slot (slot.id)}
 							<div
 								class="relative flex flex-col items-center justify-end border-b-2 border-black pb-1 text-center"
 								class:border-r-2={!(slot.position % 2)}
@@ -567,7 +540,7 @@
 													prediction={slotRenderData?.currentUserPrediction}
 													{predictionsAllowed}
 												/>
-												{#each slotRenderData?.selectedUserPredictions ?? [] as prediction}
+												{#each slotRenderData?.selectedUserPredictions ?? [] as prediction (prediction.id)}
 													<ViewPrediction {prediction} />
 												{/each}
 											{:else}

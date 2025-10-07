@@ -27,7 +27,7 @@ const data: RankingsPageData<PredictionAccuracy> = {
 			{
 				collectionId: 'zpjgxcf4d9ojqcd',
 				collectionName: 'prediction_accuracy',
-				id: 'j5mehm6fvdf9105',
+				id: 'j5mehm6fvdf9106',
 				user_id: 'zpjgxcf4d9ojqcd',
 				username: 'bob',
 				percent_correct: 60,
@@ -39,7 +39,7 @@ const data: RankingsPageData<PredictionAccuracy> = {
 			{
 				collectionId: 'zpjgxcf4d9ojqcd',
 				collectionName: 'prediction_accuracy',
-				id: 'j5mehm6fvdf9105',
+				id: 'j5mehm6fvdf9107',
 				user_id: 'zpjgxcf4d9ojqcd',
 				username: 'joe',
 				percent_correct: 20,
@@ -51,7 +51,7 @@ const data: RankingsPageData<PredictionAccuracy> = {
 			{
 				collectionId: 'zpjgxcf4d9ojqcd',
 				collectionName: 'prediction_accuracy',
-				id: 'j5mehm6fvdf9105',
+				id: 'j5mehm6fvdf9108',
 				user_id: 'zpjgxcf4d9ojqcd',
 				username: 'steve',
 				percent_correct: null,

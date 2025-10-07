@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { getDrawerStore } from '@skeletonlabs/skeleton'
-	import { currentUser } from '$lib/store'
-	import x from '$lib/images/icons/x.svg'
+	import check from '$lib/images/icons/check-solid.svg'
 	import clone from '$lib/images/icons/clone-regular.svg'
 	import sms from '$lib/images/icons/comment-sms-solid.svg'
-	import check from '$lib/images/icons/check-solid.svg'
+	import x from '$lib/images/icons/x.svg'
+	import { currentUser } from '$lib/store'
+	import { getDrawerStore } from '@skeletonlabs/skeleton'
 	import { onMount } from 'svelte'
 
 	const message = $currentUser
@@ -15,7 +15,7 @@
 	const drawerStore = getDrawerStore()
 
 	let showCheck = $state(false)
-	let copyEmail: Function | null = $state(null)
+	let copyEmail: (() => void) | null = $state(null)
 	onMount(() => {
 		copyEmail = (): void => {
 			navigator.clipboard.writeText('https://racquetrivals.com')

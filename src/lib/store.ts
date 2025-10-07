@@ -1,7 +1,8 @@
-import { derived, writable } from 'svelte/store'
 import type { Prediction, SelectedUser, UserRecord } from '$lib/types'
-import { persisted } from 'svelte-persisted-store'
 import Cookies from 'js-cookie'
+import { persisted } from 'svelte-persisted-store'
+import { derived, writable } from 'svelte/store'
+import { logErrorInDev } from './utils'
 
 // Authentication
 export const currentUser = writable<UserRecord | null>(null)
@@ -27,7 +28,7 @@ export const predictionStore = writable<Prediction[]>([])
 export const predictionsError = writable<string>('')
 predictionsError.subscribe((value) => {
 	if (value) {
-		console.error(value)
+		logErrorInDev(value)
 	}
 })
 

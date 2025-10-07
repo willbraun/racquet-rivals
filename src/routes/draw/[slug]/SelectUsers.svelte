@@ -108,7 +108,7 @@
 			>
 				<p>{$currentUser?.username}</p>
 			</div>
-			{#each selections as user}
+			{#each selections as user (user.id)}
 				<button
 					type="button"
 					class="variant-filled chip max-w-full rounded-full text-black {user.color} shadow"

@@ -50,7 +50,7 @@
 			<p class="bg-primary-700 px-4 py-2 text-2xl font-bold text-white sm:py-4 sm:text-4xl">
 				{`${capitalize(listTitle)} Draws`}
 			</p>
-			{#each draws as draw, index}
+			{#each draws as draw, index (index)}
 				<a
 					href={`/draw/${getSlug(draw)}`}
 					class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 hover:brightness-105 sm:p-4 sm:text-3xl`}

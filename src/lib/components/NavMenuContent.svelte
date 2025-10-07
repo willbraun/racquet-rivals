@@ -31,7 +31,7 @@
 	{/if}
 	<ShareLink />
 	{#if $isAuth}
-		<LogoutButton styles={'w-full'} onLogout={closeDrawer}>
+		<LogoutButton styles="w-full" onLogout={closeDrawer}>
 			<div class="grid w-full grid-cols-4 items-center gap-4">
 				<img src={logout} alt="logout" width="24" class="justify-self-center" />
 				<p class="col-span-3 justify-self-start text-xl">Log out</p>

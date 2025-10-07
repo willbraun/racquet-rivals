@@ -3,7 +3,7 @@ import { fetchJson } from '$lib/server/utils.js'
 import type { AveragePoints, PbListResponse, RankingsPageData } from '$lib/types.js'
 import { rankingDescriptions } from '../../../lib/data'
 
-export async function load({ fetch, locals }) {
+export async function load({ fetch }) {
 	const url = PUBLIC_POCKETBASE_URL
 
 	const averagePoints: PbListResponse<AveragePoints> = await fetchJson(

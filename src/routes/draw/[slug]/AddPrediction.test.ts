@@ -89,6 +89,7 @@ const userWill = {
 } as UserRecord
 
 describe('AddPrediction component', () => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let mockCollection: any
 
 	beforeEach(() => {

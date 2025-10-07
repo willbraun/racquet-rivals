@@ -1,19 +1,19 @@
-<script lang="ts">
-	import Header from '$lib/components/Header.svelte'
-	import { PlanName, UserAccess, type PricingPageData, type SelectedPlan } from '$lib/types'
-	import { drawColorMap } from '$lib/data'
-	import { currentUser, isAuth, loginGoto } from '$lib/store'
-	import { onMount } from 'svelte'
+<!-- <script lang="ts">
 	import { goto } from '$app/navigation'
 	import { page } from '$app/state'
-	import { type Paddle } from '@paddle/paddle-js'
 	import {
 		PUBLIC_PADDLE_BOTH_DRAWS_PRICE_ID,
 		PUBLIC_PADDLE_MENS_DRAW_PRICE_ID,
 		PUBLIC_PADDLE_SUBSCRIPTION_PRICE_ID,
 		PUBLIC_PADDLE_WOMENS_DRAW_PRICE_ID
 	} from '$env/static/public'
-	import { getSlug, setupPaddle } from '$lib/utils'
+	import Header from '$lib/components/Header.svelte'
+	import { drawColorMap } from '$lib/data'
+	import { currentUser, isAuth, loginGoto } from '$lib/store'
+	import { PlanName, UserAccess, type PricingPageData, type SelectedPlan } from '$lib/types'
+	import { getSlug, logErrorInDev, setupPaddle } from '$lib/utils'
+	import { type Paddle } from '@paddle/paddle-js'
+	import { onMount } from 'svelte'
 
 	interface Props {
 		data: PricingPageData
@@ -44,12 +44,12 @@
 
 	const openPaddleCheckout = (option: PricingOption) => {
 		if (!paddle) {
-			console.error('Paddle is not initialized')
+			logErrorInDev('Paddle is not initialized')
 			return
 		}
 
 		if (!$currentUser) {
-			console.error('Current user is not available')
+			logErrorInDev('Current user is not available')
 			return
 		}
 
@@ -88,7 +88,7 @@
 
 		paddle = await setupPaddle()
 		if (!paddle) {
-			console.error('Paddle is not initialized')
+			logErrorInDev('Paddle is not initialized')
 			return
 		}
 
@@ -103,7 +103,7 @@
 				if (option) {
 					openPaddleCheckout(option)
 				} else {
-					console.error('Invalid selected plan:', selectedPlan)
+					logErrorInDev('Invalid selected plan:', selectedPlan)
 				}
 			}
 		}
@@ -303,4 +303,4 @@
 			</p>
 		</div>
 	{/if}
-</main>
+</main> -->

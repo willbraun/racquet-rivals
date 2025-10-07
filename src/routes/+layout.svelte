@@ -4,6 +4,7 @@
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
 	import instagram from '$lib/images/icons/instagram.svg'
+	import { initPocketbase } from '$lib/pocketbase'
 	import { currentUser, drawNavUrl } from '$lib/store'
 	import type { RootLayoutData } from '$lib/types'
 	import { getSlug } from '$lib/utils'
@@ -28,6 +29,7 @@
 	let { data, children }: Props = $props()
 
 	initializeStores()
+	initPocketbase()
 
 	const drawerStore = getDrawerStore()
 	const modalRegistry: Record<string, ModalComponent> = {

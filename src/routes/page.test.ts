@@ -13,11 +13,11 @@ class IntersectionObserverMock {
 		private options?: IntersectionObserverInit
 	) {}
 
-	observe(target: Element) {
+	observe() {
 		// No-op
 	}
 
-	unobserve(target: Element) {
+	unobserve() {
 		// No-op
 	}
 
@@ -27,6 +27,7 @@ class IntersectionObserverMock {
 }
 
 // Mock the global IntersectionObserver
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 global.IntersectionObserver = IntersectionObserverMock as any
 
 const data: HomePageData = {

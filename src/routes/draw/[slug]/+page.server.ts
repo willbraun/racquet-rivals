@@ -6,7 +6,6 @@ import { classifyDraws, generateDummySlots, getFullDrawRounds, getTitle } from '
 export async function load({ fetch, params, locals, cookies }) {
 	const id: string = params.slug.split('-').at(-1) ?? ''
 	const url = PUBLIC_POCKETBASE_URL
-	const userId = locals.pb.authStore.record?.id ?? ''
 	const token = locals.pb.authStore.token
 
 	const [draws, draw, slots, drawResults]: [

@@ -137,7 +137,7 @@ class ResizeObserverMock {
 		)
 	}
 
-	unobserve(target: Element) {
+	unobserve() {
 		// No-op
 	}
 
@@ -147,6 +147,7 @@ class ResizeObserverMock {
 }
 
 // Mock the global ResizeObserver
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 global.ResizeObserver = ResizeObserverMock as any
 
 // Mock the element.animate function

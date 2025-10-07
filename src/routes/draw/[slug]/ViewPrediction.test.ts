@@ -1,8 +1,8 @@
-import { render, screen } from '@testing-library/svelte'
-import { describe, expect, test, vi } from 'vitest'
-import '@testing-library/jest-dom/vitest'
-import ViewPrediction from './ViewPrediction.svelte'
 import type { Prediction } from '$lib/types'
+import '@testing-library/jest-dom/vitest'
+import { render, screen } from '@testing-library/svelte'
+import { describe, expect, test } from 'vitest'
+import ViewPrediction from './ViewPrediction.svelte'
 
 const prediction = {
 	collectionId: 'collectionId',

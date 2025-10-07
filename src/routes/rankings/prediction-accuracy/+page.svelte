@@ -26,7 +26,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each data.rankings.items as item, index}
+		{#each data.rankings.items as item, index (item.id)}
 			<tr
 				class={`grid min-h-16 grid-cols-5 items-center gap-2 px-2 text-start text-xl hover:cursor-pointer hover:brightness-105 md:min-h-20 md:text-3xl ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'}`}
 				onclick={() => goto(`/profile/${item.username}`)}
@@ -38,16 +38,16 @@
 					<p class="text-wrap break-words">{item.username}</p>
 				</td>
 				<td>
-					<p class={'text-center font-bold md:text-3xl'}>
+					<p class="text-center font-bold md:text-3xl">
 						{formatPercent(item.percent_correct)}
 					</p>
 				</td>
-				<td class={'hidden text-center sm:block md:text-3xl'}>
+				<td class="hidden text-center sm:block md:text-3xl">
 					<p>
 						{item.correct}/{item.total}
 					</p>
 				</td>
-				<td class={'text-center text-base sm:hidden md:text-xl'}>
+				<td class="text-center text-base sm:hidden md:text-xl">
 					<p>
 						{item.correct}
 					</p>

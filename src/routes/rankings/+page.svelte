@@ -23,7 +23,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each data.rankings.items as item, index}
+		{#each data.rankings.items as item, index (item.id)}
 			<tr
 				class={`grid min-h-16 grid-cols-4 items-center gap-2 px-2 text-start text-xl hover:cursor-pointer hover:brightness-105 md:min-h-20 md:text-3xl ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'}`}
 				onclick={() => goto(`/profile/${item.username}`)}
@@ -36,7 +36,7 @@
 				</td>
 				<td>
 					<div
-						class={`badge-icon mx-auto h-7 w-fit rounded-full bg-green-400 px-2 text-xl md:h-10 md:min-w-10 md:text-3xl`}
+						class="badge-icon mx-auto h-7 w-fit rounded-full bg-green-400 px-2 text-xl md:h-10 md:min-w-10 md:text-3xl"
 					>
 						{item.total_points}
 					</div>

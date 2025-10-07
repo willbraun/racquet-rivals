@@ -26,7 +26,7 @@ const data: RankingsPageData<AveragePoints> = {
 			{
 				collectionId: 'zpjgxcf4d9ojqcd',
 				collectionName: 'average_points',
-				id: 'j5mehm6fvdf9105',
+				id: 'j5mehm6fvdf9106',
 				user_id: 'zpjgxcf4d9ojqcd',
 				username: 'bob',
 				avg_points_per_draw: 15,
@@ -37,7 +37,7 @@ const data: RankingsPageData<AveragePoints> = {
 			{
 				collectionId: 'zpjgxcf4d9ojqcd',
 				collectionName: 'average_points',
-				id: 'j5mehm6fvdf9105',
+				id: 'j5mehm6fvdf9107',
 				user_id: 'zpjgxcf4d9ojqcd',
 				username: 'joe',
 				avg_points_per_draw: 10,
@@ -48,7 +48,7 @@ const data: RankingsPageData<AveragePoints> = {
 			{
 				collectionId: 'zpjgxcf4d9ojqcd',
 				collectionName: 'average_points',
-				id: 'j5mehm6fvdf9105',
+				id: 'j5mehm6fvdf9108',
 				user_id: 'zpjgxcf4d9ojqcd',
 				username: 'steve',
 				avg_points_per_draw: null,

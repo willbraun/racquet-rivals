@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { format } from 'date-fns'
-	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton'
-	import { DrawStatus, type ProfilePageData } from '$lib/types'
-	import { rankingDescriptions } from '$lib/data'
-	import trophy from '$lib/images/icons/trophy-solid.svg'
-	import Rank from '$lib/components/Rank.svelte'
-	import { getDrawStatus, getSlug, getTitle, formatAvg, formatPercent } from '$lib/utils'
-	import info from '$lib/images/icons/circle-info-solid.svg'
-	import Header from '$lib/components/Header.svelte'
 	import { goto } from '$app/navigation'
+	import Header from '$lib/components/Header.svelte'
+	import Rank from '$lib/components/Rank.svelte'
+	import { rankingDescriptions } from '$lib/data'
+	import info from '$lib/images/icons/circle-info-solid.svg'
+	import trophy from '$lib/images/icons/trophy-solid.svg'
+	import { DrawStatus, type ProfilePageData } from '$lib/types'
+	import { formatAvg, formatPercent, getDrawStatus, getSlug, getTitle } from '$lib/utils'
+	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton'
+	import { format } from 'date-fns'
 
 	interface Props {
 		data: ProfilePageData
@@ -155,7 +155,7 @@
 				</thead>
 				<tbody>
 					{#if data.drawResults.items.length > 0}
-						{#each data.drawResults.items as item, index}
+						{#each data.drawResults.items as item, index (item.id)}
 							{@const status = getDrawStatus(item.draw_start_date, item.draw_end_date)}
 							{@const showCutoff = index === 7 && data.drawResults.items.length > 8}
 							<tr
@@ -170,7 +170,7 @@
 								{#if item.prediction_count > 0 || status === DrawStatus.ACTIVE}
 									<td>
 										<div
-											class={`badge-icon mx-auto w-fit rounded-full bg-green-400 px-2 text-lg md:h-10 md:min-w-10 md:text-3xl`}
+											class="badge-icon mx-auto w-fit rounded-full bg-green-400 px-2 text-lg md:h-10 md:min-w-10 md:text-3xl"
 										>
 											{item.total_points}
 										</div>

@@ -24,7 +24,7 @@ const data: RankingsPageData<OverallRank> = {
 			{
 				collectionId: 'zpjgxcf4d9ojqcd',
 				collectionName: 'overall_leaderboard',
-				id: 'j5mehm6fvdf9105',
+				id: 'j5mehm6fvdf9106',
 				user_id: 'zpjgxcf4d9ojqcd',
 				username: 'bob',
 				total_points: 132,
@@ -33,7 +33,7 @@ const data: RankingsPageData<OverallRank> = {
 			{
 				collectionId: 'zpjgxcf4d9ojqcd',
 				collectionName: 'overall_leaderboard',
-				id: 'j5mehm6fvdf9105',
+				id: 'j5mehm6fvdf9107',
 				user_id: 'zpjgxcf4d9ojqcd',
 				username: 'joe',
 				total_points: 100,

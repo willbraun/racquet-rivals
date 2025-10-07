@@ -105,7 +105,7 @@
 <div class="flex w-full justify-center text-xs text-gray-500" data-testid="MatchScore">
 	{#if showScores}
 		{#if sets.length > 0}
-			{#each sets as set, i}
+			{#each sets as set, i (i)}
 				{@const tiebreakLoserValue = getTiebreakLoserValue(set)}
 				<p>
 					{set.winner.games}
@@ -118,7 +118,7 @@
 					<sup class="relative top-[3px]">{tiebreakLoserValue}</sup>
 				{/if}
 				{#if i !== sets.length - 1}
-					<p class="pr-0.5">{','}</p>
+					<p class="pr-0.5">,</p>
 				{/if}
 			{/each}
 			{#if isRetirement(sets)}

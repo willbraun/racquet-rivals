@@ -1,12 +1,20 @@
-import type { ClientResponseError } from 'pocketbase'
+import { PUBLIC_PADDLE_CLIENT_TOKEN, PUBLIC_PADDLE_ENVIRONMENT } from '$env/static/public'
 import { pb } from '$lib/pocketbase'
+import { initializePaddle, type Environments } from '@paddle/paddle-js'
+import { compareAsc } from 'date-fns'
+import type { ClientResponseError } from 'pocketbase'
+import { cubicInOut } from 'svelte/easing'
+import { get } from 'svelte/store'
+import { type TransitionConfig } from 'svelte/transition'
+import { getPredictions } from './api'
+import { selectColors } from './data'
 import {
-	selectedUsers,
-	mySelectedUsers,
 	currentDrawId,
+	currentUser,
+	mySelectedUsers,
 	predictionStore,
 	predictionsError,
-	currentUser
+	selectedUsers
 } from './store'
 import {
 	DrawStatus,
@@ -18,14 +26,6 @@ import {
 	type SelectedUserNoColor,
 	type Slot
 } from './types'
-import { get } from 'svelte/store'
-import { selectColors } from './data'
-import { cubicInOut } from 'svelte/easing'
-import { type TransitionConfig } from 'svelte/transition'
-import { getPredictions } from './api'
-import { compareAsc } from 'date-fns'
-import { initializePaddle, type Environments } from '@paddle/paddle-js'
-import { PUBLIC_PADDLE_CLIENT_TOKEN, PUBLIC_PADDLE_ENVIRONMENT } from '$env/static/public'
 
 type ErrorObjData = {
 	[key: string]: {
@@ -48,7 +48,7 @@ export const errorMessage = (error: unknown) => {
 	const result = `Error: ${errorObj.status} - ${errorObj.message}${
 		dataMessage && `\n${dataMessage}`
 	}`
-	console.error(result)
+	logErrorInDev(result)
 	return result
 }
 
@@ -63,16 +63,31 @@ export const makeSetType = <T>() => {
 	}
 }
 
-const isDraw = (draw: any): draw is Draw => {
-	return draw.collectionName === 'draw'
+const isDraw = (draw: unknown): draw is Draw => {
+	return (
+		typeof draw === 'object' &&
+		draw !== null &&
+		'collectionName' in draw &&
+		draw.collectionName === 'draw'
+	)
 }
 
-const isDrawResult = (draw: any): draw is DrawResult => {
-	return draw.collectionName === 'draw_results'
+const isDrawResult = (draw: unknown): draw is DrawResult => {
+	return (
+		typeof draw === 'object' &&
+		draw !== null &&
+		'collectionName' in draw &&
+		draw.collectionName === 'draw_results'
+	)
 }
 
-const isDrawEntry = (draw: any): draw is DrawEntry => {
-	return draw.collectionName === 'entries_with_draw'
+const isDrawEntry = (draw: unknown): draw is DrawEntry => {
+	return (
+		typeof draw === 'object' &&
+		draw !== null &&
+		'collectionName' in draw &&
+		draw.collectionName === 'entries_with_draw'
+	)
 }
 
 const slugify = (str: string) => str.toLowerCase().replaceAll(' ', '-').replaceAll("'", '')
@@ -289,9 +304,9 @@ export const generateDummySlots = (
 export const classifyDraws = (draws: Draw[]) => {
 	const today = new Date()
 
-	let future: Draw[] = []
-	let active: Draw[] = []
-	let completed: Draw[] = []
+	const future: Draw[] = []
+	const active: Draw[] = []
+	const completed: Draw[] = []
 	for (const draw of draws) {
 		if (new Date(draw.start_date) >= today) {
 			future.push(draw)
@@ -329,6 +344,13 @@ export const setupPaddle = async () => {
 		})
 		return paddleInstance
 	} catch (error) {
-		console.error('Failed to initialize Paddle:', error)
+		logErrorInDev('Failed to initialize Paddle:', error)
+	}
+}
+
+export const logErrorInDev = (error: unknown, ...additionalInfo: unknown[]) => {
+	if (process.env.NODE_ENV === 'development') {
+		// eslint-disable-next-line no-console
+		console.error(error, ...additionalInfo)
 	}
 }

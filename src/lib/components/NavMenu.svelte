@@ -42,7 +42,7 @@
 		<a href={$drawNavUrl}>
 			<img src={bracketLeft} alt="draws" width="24" class:invert={isInverted} />
 		</a>
-		<a href={`/rankings`}>
+		<a href="/rankings">
 			<img src={trophy} alt="rankings" width="24" class:invert={isInverted} />
 		</a>
 		{#if $isAuth}
