@@ -26,7 +26,7 @@
 
 <button
 	onclick={() => drawerStore.open(drawerSettings)}
-	class="block flex-shrink-0 sm:hidden"
+	class="block shrink-0 sm:hidden"
 	data-testid="user-menu-icon"
 >
 	<img
@@ -37,7 +37,7 @@
 		class:invert={isInverted}
 	/>
 </button>
-<nav class="hidden flex-shrink-0 sm:block">
+<nav class="hidden shrink-0 sm:block">
 	<div class="flex items-center gap-4">
 		<a href={$drawNavUrl}>
 			<img src={bracketLeft} alt="draws" width="24" class:invert={isInverted} />

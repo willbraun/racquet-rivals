@@ -88,7 +88,7 @@
 
 <AuthBase>
 	<h1 class="mb-8 text-4xl font-bold">Login</h1>
-	<form class="[&>*]:mb-4" onsubmit={handleLogin}>
+	<form class="*:mb-4" onsubmit={handleLogin}>
 		<label class="label">
 			<p>Username or email</p>
 			<input

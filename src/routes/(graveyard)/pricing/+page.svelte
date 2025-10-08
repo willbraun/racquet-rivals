@@ -257,7 +257,7 @@
 						<ul class="space-y-4">
 							{#each option.features as feature}
 								<li class="flex items-start">
-									<div class="flex-shrink-0">
+									<div class="shrink-0">
 										<svg
 											class="h-6 w-6 text-green-500"
 											fill="none"

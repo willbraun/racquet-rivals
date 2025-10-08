@@ -14,7 +14,7 @@
 <p class="pb-8 sm:text-xl">
 	{rankingDescriptions.overall}
 </p>
-<table class="w-full overflow-hidden rounded-xl shadow">
+<table class="w-full overflow-hidden rounded-xl shadow-sm">
 	<thead class="bg-primary-700 text-xl text-white md:text-3xl">
 		<tr class="grid grid-cols-4 gap-2 p-2 md:py-4">
 			<th>Rank</th>

@@ -11,7 +11,7 @@
 </script>
 
 <div
-	class="chip pointer-events-none relative flex h-6 w-fit items-center justify-between rounded-full text-black {prediction.color} shadow duration-0"
+	class="chip pointer-events-none relative flex h-6 w-fit items-center justify-between rounded-full text-black {prediction.color} shadow-sm duration-0"
 >
 	<div>
 		<p class="text-xs">{display}</p>

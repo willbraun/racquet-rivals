@@ -310,7 +310,7 @@
 
 <Header color="bg-primary-50">
 	<select
-		class="select flex-grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 text-xl font-bold hover:bg-primary-200 md:text-2xl"
+		class="select grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 text-xl font-bold hover:bg-primary-200 md:text-2xl"
 		onchange={(e) => goto(e.currentTarget.value)}
 	>
 		{#if data.active.length > 0}
@@ -321,7 +321,7 @@
 		{@render drawSelectOptions('Completed', data.completed)}
 	</select>
 </Header>
-<section class="grid grid-cols-4 items-start gap-2 px-4 pb-4 {headerColor} [&>*]:text-lg">
+<section class="grid grid-cols-4 items-start gap-2 px-4 pb-4 {headerColor} *:text-lg">
 	<div class="col-span-4 text-center md:col-span-1 md:text-start">
 		Dates: <span class="font-bold"
 			>{format(data.draw.start_date, 'MMM d, yyyy')} - {format(
@@ -356,7 +356,7 @@
 		{#each users as user (user.id)}
 			<button
 				type="button"
-				class="chip relative h-6 max-w-full rounded-full text-black {user.color} shadow duration-0"
+				class="chip relative h-6 max-w-full rounded-full text-black {user.color} shadow-sm duration-0"
 				onclick={() => goto(`/profile/${user.username}`)}
 				data-testid={`User_${user.username}`}
 			>
@@ -475,7 +475,7 @@
 			data-testid="Draw"
 		>
 			<div
-				class="sticky top-0 z-20 overflow-x-hidden {headerColor} font-semibold tracking-wide shadow [&>*]:text-lg"
+				class="sticky top-0 z-20 overflow-x-hidden {headerColor} font-semibold tracking-wide shadow-sm *:text-lg"
 				bind:this={roundHeader}
 			>
 				<div class="grid" style:grid-template-columns="repeat(5, minmax(200px, 1fr))">
@@ -483,7 +483,7 @@
 						<div class="flex justify-center gap-2 bg-primary-300 py-2 text-center">
 							<p>{round}</p>
 							{#if points > 0}
-								<div class="aspect-square h-full rounded-full bg-green-400 shadow">{points}</div>
+								<div class="aspect-square h-full rounded-full bg-green-400 shadow-sm">{points}</div>
 							{/if}
 						</div>
 					{/each}

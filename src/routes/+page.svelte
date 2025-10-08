@@ -46,7 +46,7 @@
 
 {#snippet drawList(listTitle: string, draws: Draw[])}
 	{#if draws.length > 0}
-		<div class="mb-8 flex flex-col overflow-hidden rounded-xl shadow sm:mb-16" use:fadeAndSlideIn>
+		<div class="mb-8 flex flex-col overflow-hidden rounded-xl shadow-sm sm:mb-16" use:fadeAndSlideIn>
 			<p class="bg-primary-700 px-4 py-2 text-2xl font-bold text-white sm:py-4 sm:text-4xl">
 				{`${capitalize(listTitle)} Draws`}
 			</p>
@@ -67,7 +67,7 @@
 	<section class="relative h-svh w-full overflow-hidden">
 		<!-- Photo credit to Shep McAllister on Unsplash - https://unsplash.com/photos/two-person-playing-tennis-J1j3cImjmgE -->
 		<img src={wimbledon} alt="Wimbledon" class="absolute inset-0 h-full w-full object-cover" />
-		<div class="absolute inset-0 bg-gradient-to-b from-primary-500/40 to-black"></div>
+		<div class="absolute inset-0 bg-linear-to-b from-primary-500/40 to-black"></div>
 		<div class="absolute flex h-3/4 w-full items-center justify-center">
 			<img src={bracketLeft} alt="left bracket" class="block h-24 invert sm:h-32 md:h-48 lg:h-64" />
 			<h1 class="w-1/2 text-center font-PoetsenOne text-5xl text-white md:text-7xl lg:text-9xl">
@@ -90,16 +90,16 @@
 						<p>Your fantasy tennis community.</p>
 						<p>Predict match winners and compete with fellow fans!</p>
 					</div>
-					<div class="flex w-full max-w-screen-sm justify-center gap-4">
+					<div class="flex w-full max-w-(--breakpoint-sm) justify-center gap-4">
 						<a
 							href="/login"
-							class="w-1/2 rounded-xl border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
+							class="w-1/2 rounded-xl border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow-sm duration-100 hover:scale-105"
 						>
 							Log in
 						</a>
 						<a
 							href="/create-account"
-							class="w-1/2 rounded-xl border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow duration-100 hover:scale-105"
+							class="w-1/2 rounded-xl border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow-sm duration-100 hover:scale-105"
 						>
 							Sign up
 						</a>
@@ -130,7 +130,7 @@
 			</section>
 		</a>
 	{/if}
-	<section class="mx-auto max-w-screen-sm px-4 sm:px-0">
+	<section class="mx-auto max-w-(--breakpoint-sm) px-4 sm:px-0">
 		{#if data.active.length > 0}
 			{@render drawList('Active', data.active)}
 		{:else if data.upcoming.length > 0}

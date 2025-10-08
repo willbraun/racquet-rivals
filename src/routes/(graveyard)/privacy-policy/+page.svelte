@@ -4,7 +4,7 @@
 
 <Header />
 <main class="bg-stone-100">
-	<div class="mx-auto flex max-w-screen-lg flex-col gap-8 px-4 py-8">
+	<div class="mx-auto flex max-w-(--breakpoint-lg) flex-col gap-8 px-4 py-8">
 		<section>
 			<h1 class="text-4xl font-bold sm:text-6xl">Privacy Policy</h1>
 			<p class="mt-4 text-xl text-gray-600">Last Updated: April 2025</p>

@@ -15,21 +15,21 @@
 <div class={containerStyle}>
 	{#if rank === 1}
 		<img
-			class="w-full rounded-full shadow"
+			class="w-full rounded-full shadow-sm"
 			src={goldMedal}
 			alt="gold medal"
 			data-testid="gold-medal"
 		/>
 	{:else if rank === 2}
 		<img
-			class="w-full rounded-full shadow"
+			class="w-full rounded-full shadow-sm"
 			src={silverMedal}
 			alt="silver medal"
 			data-testid="silver-medal"
 		/>
 	{:else if rank === 3}
 		<img
-			class="w-full rounded-full shadow"
+			class="w-full rounded-full shadow-sm"
 			src={bronzeMedal}
 			alt="bronze medal"
 			data-testid="bronze-medal"

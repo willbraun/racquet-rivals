@@ -87,7 +87,7 @@
 				<span>Username</span>
 				<div class="flex gap-2">
 					<input
-						class="input flex-grow rounded-md"
+						class="input grow rounded-md"
 						type="text"
 						name="username"
 						bind:value={username}
@@ -104,14 +104,14 @@
 
 		<div class="flex flex-wrap gap-2">
 			<div
-				class="variant-filled chip pointer-events-none break-all rounded-full text-black {mainColor} shadow"
+				class="variant-filled chip pointer-events-none break-all rounded-full text-black {mainColor} shadow-sm"
 			>
 				<p>{$currentUser?.username}</p>
 			</div>
 			{#each selections as user (user.id)}
 				<button
 					type="button"
-					class="variant-filled chip max-w-full rounded-full text-black {user.color} shadow"
+					class="variant-filled chip max-w-full rounded-full text-black {user.color} shadow-sm"
 					onclick={() => removeUser(user.id)}
 					transition:fade={{ duration: 100 }}
 				>

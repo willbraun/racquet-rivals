@@ -11,10 +11,10 @@ export const selectColors = [
 ]
 
 export const bannerStyleMap: { [key in TournamentName]: string } = {
-	[TournamentName.AUSTRALIAN_OPEN]: 'bg-gradient-to-r from-indigo-800 via-blue-500 to-cyan-300',
-	[TournamentName.FRENCH_OPEN]: 'bg-gradient-to-r from-red-700 via-orange-500 to-amber-300',
-	[TournamentName.WIMBLEDON]: 'bg-gradient-to-r from-green-600 via-blue-400 to-purple-600',
-	[TournamentName.US_OPEN]: 'bg-gradient-to-r from-blue-700 via-orange-500 to-yellow-300'
+	[TournamentName.AUSTRALIAN_OPEN]: 'bg-linear-to-r from-indigo-800 via-blue-500 to-cyan-300',
+	[TournamentName.FRENCH_OPEN]: 'bg-linear-to-r from-red-700 via-orange-500 to-amber-300',
+	[TournamentName.WIMBLEDON]: 'bg-linear-to-r from-green-600 via-blue-400 to-purple-600',
+	[TournamentName.US_OPEN]: 'bg-linear-to-r from-blue-700 via-orange-500 to-yellow-300'
 }
 
 export const drawColorMap: { [key in TournamentName]: string } = {

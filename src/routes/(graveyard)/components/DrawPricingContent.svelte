@@ -117,7 +117,7 @@
 		class="relative flex w-full items-center justify-between gap-2 rounded-lg border px-5 py-8 transition-all duration-200 hover:border-primary-500 hover:shadow-md"
 	>
 		<div
-			class="absolute left-0 top-0 rounded-br-lg rounded-tl-md bg-gradient-to-r from-green-500 to-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-md"
+			class="absolute left-0 top-0 rounded-br-lg rounded-tl-md bg-linear-to-r from-green-500 to-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-md"
 		>
 			SAVE 20%
 		</div>
@@ -141,7 +141,7 @@
 		class="relative flex w-full items-center justify-between gap-2 rounded-lg border border-primary-500 px-5 py-8 transition-all duration-200 hover:shadow-lg dark:bg-primary-900/20"
 	>
 		<div
-			class="absolute left-0 top-0 rounded-br-lg rounded-tl-md bg-gradient-to-r from-orange-500 to-orange-600 px-3 py-1.5 text-xs font-bold text-white shadow-md"
+			class="absolute left-0 top-0 rounded-br-lg rounded-tl-md bg-linear-to-r from-orange-500 to-orange-600 px-3 py-1.5 text-xs font-bold text-white shadow-md"
 		>
 			BEST VALUE, SAVE 50%
 		</div>

@@ -3,12 +3,12 @@
 	import { rankingDescriptions } from '$lib/data'
 	import { currentUser, drawNavUrl, isAuth } from '$lib/store'
 
-	const scoreFormatting = 'font-bold bg-green-400 rounded-full w-8 mx-auto shadow'
+	const scoreFormatting = 'font-bold bg-green-400 rounded-full w-8 mx-auto shadow-sm'
 </script>
 
 <Header />
 <main class="bg-stone-100">
-	<div class="mx-auto flex max-w-screen-lg flex-col gap-8 px-4 pb-8">
+	<div class="mx-auto flex max-w-(--breakpoint-lg) flex-col gap-8 px-4 pb-8">
 		<section>
 			<h1 class="text-4xl font-bold sm:text-6xl">About Racquet Rivals</h1>
 		</section>
@@ -41,7 +41,7 @@
 					See other draws <a href={$drawNavUrl} class="text-blue-500 underline">here</a>.
 				</li>
 				<li>As matches are completed, you'll win points if your predictions are correct.</li>
-				<table class="mx-auto w-full max-w-screen-sm overflow-hidden rounded-xl text-center">
+				<table class="mx-auto w-full max-w-(--breakpoint-sm) overflow-hidden rounded-xl text-center">
 					<thead class="h-12 bg-primary-700 text-white">
 						<tr>
 							<th>Round</th>

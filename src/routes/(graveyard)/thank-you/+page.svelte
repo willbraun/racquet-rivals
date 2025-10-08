@@ -58,7 +58,7 @@
 		</p>
 		<div class="flex max-w-xl flex-col items-center justify-center gap-4">
 			{#if showMensDraw}
-				<button class="w-full shadow">
+				<button class="w-full shadow-sm">
 					<a
 						href="/draw/{mensDrawSlug}"
 						class="btn-primary text-wrap font-semibold text-white sm:text-xl {color} btn w-full"
@@ -68,7 +68,7 @@
 				</button>
 			{/if}
 			{#if showWomensDraw}
-				<button class="w-full shadow">
+				<button class="w-full shadow-sm">
 					<a
 						href="/draw/{womensDrawSlug}"
 						class="btn-primary text-wrap font-semibold text-white sm:text-xl {color} btn w-full"

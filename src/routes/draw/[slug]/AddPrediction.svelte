@@ -163,7 +163,7 @@
 <!-- Popup form -->
 <div class="card w-fit shadow-lg" data-popup="popupCombobox-{slot.id}">
 	<form onsubmit={handleSubmit}>
-		<div class="flex flex-col overflow-hidden rounded">
+		<div class="flex flex-col overflow-hidden rounded-sm">
 			<button
 				type="submit"
 				class="whitespace-nowrap border-b-1 border-surface-500 px-4 py-2 hover:bg-surface-400 {!player1 &&

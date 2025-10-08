@@ -33,12 +33,12 @@
 
 <Header />
 <main class="bg-stone-100">
-	<div class="mx-auto max-w-screen-lg px-4">
+	<div class="mx-auto max-w-(--breakpoint-lg) px-4">
 		<section class="mb-8">
 			<h1 class="mb-4 break-all text-4xl font-bold sm:text-6xl">{data.username}</h1>
 			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM d, yyyy')}</p>
 		</section>
-		<section class="mb-4 rounded-xl bg-stone-250 shadow md:mb-8 md:p-8">
+		<section class="mb-4 rounded-xl bg-stone-250 shadow-sm md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
 					{#snippet summary()}
@@ -64,7 +64,7 @@
 				</AccordionItem>
 			</Accordion>
 		</section>
-		<section class="mb-4 rounded-xl bg-stone-250 shadow md:mb-8 md:p-8">
+		<section class="mb-4 rounded-xl bg-stone-250 shadow-sm md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
 					{#snippet summary()}
@@ -99,7 +99,7 @@
 				</AccordionItem>
 			</Accordion>
 		</section>
-		<section class="mb-4 rounded-xl bg-stone-250 shadow md:mb-8 md:p-8">
+		<section class="mb-4 rounded-xl bg-stone-250 shadow-sm md:mb-8 md:p-8">
 			<Accordion hover="none">
 				<AccordionItem>
 					{#snippet summary()}
@@ -141,7 +141,7 @@
 		</section>
 		<section class="pb-16 pt-8">
 			<h2 class="mb-4 text-3xl font-bold md:text-5xl">Results</h2>
-			<table class="w-full overflow-hidden rounded-xl shadow">
+			<table class="w-full overflow-hidden rounded-xl shadow-sm">
 				<thead class="bg-primary-700 text-white md:text-3xl">
 					<tr class="grid grid-cols-8 gap-4 p-2 md:p-4">
 						<th class="col-span-6 text-start">Draw</th>
@@ -185,7 +185,7 @@
 								{:else}
 									<td class="col-span-2">
 										<div
-											class="mx-auto w-5/6 rounded bg-primary-600 px-2 text-center text-xs font-bold text-white md:text-2xl"
+											class="mx-auto w-5/6 rounded-sm bg-primary-600 px-2 text-center text-xs font-bold text-white md:text-2xl"
 										>
 											<p class="hidden sm:block">DID NOT PLAY</p>
 											<p class="block sm:hidden">DNP</p>
@@ -196,7 +196,7 @@
 							{#if showCutoff}
 								<tr>
 									<td
-										class="absolute left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded bg-pure-red px-2 text-xs font-bold text-white"
+										class="absolute left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-sm bg-pure-red px-2 text-xs font-bold text-white"
 									>
 										OVERALL RANK CUTOFF
 									</td>

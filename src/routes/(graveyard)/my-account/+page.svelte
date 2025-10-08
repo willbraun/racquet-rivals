@@ -27,14 +27,14 @@
 
 <Header />
 <main class="min-h-screen bg-stone-100">
-	<div class="mx-auto max-w-screen-lg px-4 py-8">
+	<div class="mx-auto max-w-(--breakpoint-lg) px-4 py-8">
 		<div class="mb-8 flex flex-wrap items-center justify-between gap-4">
 			<h1 class="text-4xl font-bold md:text-6xl">My Account</h1>
 			{#if data.user.paddle_customer_id}
 				{#if data.paddleCustomerPortalUrl}
 					<button
 						type="button"
-						class="variant-filled-primary btn font-semibold shadow"
+						class="variant-filled-primary btn font-semibold shadow-sm"
 						onclick={openPaddleCustomerPortal}
 					>
 						<p>Manage Payments</p>
@@ -51,12 +51,12 @@
 			{/if}
 		</div>
 		{#if data.user.grandfathered}
-			<div class="mb-8 rounded-md border-l-4 border-green-500 bg-green-100 p-4 shadow">
+			<div class="mb-8 rounded-md border-l-4 border-green-500 bg-green-100 p-4 shadow-sm">
 				<p class="text-xl font-semibold">Thanks for being an early supporter of Racquet Rivals!</p>
 				<p>As one of our original members, you have access to all draws.</p>
 			</div>
 		{/if}
-		<section class="mb-8 flex flex-col gap-4 rounded-xl bg-white p-4 shadow sm:gap-6 sm:p-6">
+		<section class="mb-8 flex flex-col gap-4 rounded-xl bg-white p-4 shadow-sm sm:gap-6 sm:p-6">
 			<h2 class="text-3xl font-semibold">Subscription Status</h2>
 			{#if data.subscription}
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -90,7 +90,7 @@
 				{/if}
 			{/if}
 		</section>
-		<section class="mb-8 flex flex-col gap-4 rounded-xl bg-white p-4 shadow sm:gap-6 sm:p-6">
+		<section class="mb-8 flex flex-col gap-4 rounded-xl bg-white p-4 shadow-sm sm:gap-6 sm:p-6">
 			<h2 class="text-3xl font-semibold">Draw Entries</h2>
 			{#if data.entries.length > 0}
 				<div class="overflow-x-auto">
