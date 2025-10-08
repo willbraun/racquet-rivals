@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import Header from '$lib/components/Header.svelte'
 </script>
 
@@ -143,4 +143,4 @@
 			</p>
 		</section>
 	</div>
-</main>
+</main> -->

@@ -39,8 +39,8 @@
 			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM d, yyyy')}</p>
 		</section>
 		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm md:mb-8 md:p-8">
-			<Accordion hover="none" iconOpen={infoIcon} iconClosed={infoIcon}>
-				<Accordion.Item>
+			<Accordion iconOpen={infoIcon} iconClosed={infoIcon}>
+				<Accordion.Item value="overall-rank">
 					{#snippet control()}
 						<div class="grid grid-cols-2 items-center gap-4">
 							<a href="/rankings" class="flex flex-wrap items-center hover:underline">
@@ -59,8 +59,8 @@
 			</Accordion>
 		</section>
 		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm md:mb-8 md:p-8">
-			<Accordion hover="none" iconOpen={infoIcon} iconClosed={infoIcon}>
-				<Accordion.Item>
+			<Accordion iconOpen={infoIcon} iconClosed={infoIcon}>
+				<Accordion.Item value="average-points">
 					{#snippet control()}
 						<div class="grid grid-cols-4 items-center gap-4">
 							<a
@@ -88,8 +88,8 @@
 			</Accordion>
 		</section>
 		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm md:mb-8 md:p-8">
-			<Accordion hover="none" iconOpen={infoIcon} iconClosed={infoIcon}>
-				<Accordion.Item>
+			<Accordion iconOpen={infoIcon} iconClosed={infoIcon}>
+				<Accordion.Item value="prediction-accuracy">
 					{#snippet control()}
 						<div class=" grid grid-cols-4 items-center gap-4">
 							<a

@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 		import DrawPricingContent from './DrawPricingContent.svelte'
 	import type { Draw } from '$lib/types'
 
@@ -19,4 +19,4 @@
 
 <div class="p-4">
 	<DrawPricingContent {draw} {mensDraw} {womensDraw} onClose={handleClose} />
-</div>
+</div> -->

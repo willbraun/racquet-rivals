@@ -1,12 +1,12 @@
-<script lang="ts">
+<!-- <script lang="ts">
+	import { replaceState } from '$app/navigation'
 	import { page } from '$app/state'
 	import Header from '$lib/components/Header.svelte'
+	import { drawColorMap } from '$lib/data'
 	import { currentUser } from '$lib/store'
 	import { PlanName, TournamentName } from '$lib/types'
 	import { capitalize } from '$lib/utils'
 	import { onMount } from 'svelte'
-	import { drawColorMap } from '$lib/data'
-	import { replaceState } from '$app/navigation'
 
 	const plan = page.url.searchParams.get('plan') ?? 'none'
 	const mensDrawSlug = page.url.searchParams.get('mensDrawSlug') ?? ''
@@ -49,7 +49,7 @@
 
 <Header />
 <main class="h-svh bg-stone-100">
-	<div class="flex h-full flex-col items-center justify-center gap-8 px-8 pb-48 pt-24 text-center">
+	<div class="flex h-full flex-col items-center justify-center gap-8 px-8 pt-24 pb-48 text-center">
 		<h1 class="text-4xl font-semibold sm:text-7xl">
 			{`Thank you ${$currentUser?.username}, you're in!`}
 		</h1>
@@ -61,7 +61,7 @@
 				<button class="w-full shadow-sm">
 					<a
 						href="/draw/{mensDrawSlug}"
-						class="btn-primary text-wrap font-semibold text-white sm:text-xl {color} btn w-full"
+						class="btn-primary font-semibold text-wrap text-white sm:text-xl {color} btn w-full"
 					>
 						{`Continue to ${mensDrawTitle}`}
 					</a>
@@ -71,7 +71,7 @@
 				<button class="w-full shadow-sm">
 					<a
 						href="/draw/{womensDrawSlug}"
-						class="btn-primary text-wrap font-semibold text-white sm:text-xl {color} btn w-full"
+						class="btn-primary font-semibold text-wrap text-white sm:text-xl {color} btn w-full"
 					>
 						{`Continue to ${womensDrawTitle}`}
 					</a>
@@ -79,4 +79,4 @@
 			{/if}
 		</div>
 	</div>
-</main>
+</main> -->

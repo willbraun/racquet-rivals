@@ -13,7 +13,7 @@
 		"types": ["@types/js-cookie"],
 		"lib": ["ESNext", "DOM"]
 	},
-	"exclude": ["/build/**/*"]
+	"exclude": ["/build/**/*", "**/(graveyard)/**/*"]
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//
 	// If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes

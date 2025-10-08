@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import lock from '$lib/images/icons/lock-solid.svg'
 	import type { Draw } from '$lib/types'
 	import {
@@ -55,4 +55,4 @@
 >
 	<p class="text-xs">Add</p>
 	<img src={lock} alt="lock" width="12" />
-</button>
+</button> -->

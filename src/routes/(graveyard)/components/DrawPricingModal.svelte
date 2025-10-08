@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 		import { fade, fly } from 'svelte/transition'
 	import DrawPricingContent from './DrawPricingContent.svelte'
 
@@ -20,4 +20,4 @@
 			onClose={parent.onClose}
 		/>
 	</div>
-{/if}
+{/if} -->

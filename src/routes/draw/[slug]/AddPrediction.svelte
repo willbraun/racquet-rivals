@@ -145,8 +145,7 @@
 		positioning={{ placement: 'top' }}
 		contentBase="card w-fit shadow-lg"
 		contentBackground="bg-white"
-		triggerBase={`${!prediction ? 'chip h-6 rounded-full bg-blue-200' : ''} ${!prediction && predictionsAllowed ? 'border border-dashed border-black' : ''} ${predictionsAllowed ? 'hover:brightness-105' : ''} ${!predictionsAllowed ? 'pointer-events-none' : ''}${loading ? 'brightness-90' : ''}`.trim()}
-		triggerDisabled={!predictionsAllowed || !$isAuth}
+		triggerBase={`${!prediction ? 'chip h-6 rounded-full bg-blue-200' : ''} ${!prediction && predictionsAllowed ? 'border border-dashed border-black' : ''} ${predictionsAllowed ? 'hover:brightness-105' : ''} ${!predictionsAllowed || !$isAuth ? 'pointer-events-none' : ''}${loading ? 'brightness-90' : ''}`.trim()}
 	>
 		{#snippet trigger()}
 			{#if prediction}

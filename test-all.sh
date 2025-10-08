@@ -1,5 +1,25 @@
 #!/bin/zsh
 
+echo "Verifying Svelte files..."
+npm run check
+
+if [ $? -eq 0 ]; then
+    echo "Svelte check passed ✅"
+else
+    echo "Svelte check failed ❌"
+    exit 1
+fi
+
+echo "Linting Racquet Rivals frontend..."
+npx eslint
+
+if [ $? -eq 0 ]; then
+    echo "Frontend linting passed ✅"
+else
+    echo "Frontend linting failed ❌"
+    exit 1
+fi
+
 echo "Testing Racquet Rivals frontend..."
 npm test
 
