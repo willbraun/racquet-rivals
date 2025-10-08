@@ -1,9 +1,7 @@
-import { join } from 'path'
-import type { Config } from 'tailwindcss'
 import forms from '@tailwindcss/forms'
 import typography from '@tailwindcss/typography'
-import { skeleton } from '@skeletonlabs/tw-plugin'
-import { myCustomTheme } from './src/myCustomTheme.ts'
+import { join } from 'path'
+import type { Config } from 'tailwindcss'
 import { mainColor, selectColors } from './src/lib/data'
 
 export default {
@@ -57,13 +55,5 @@ export default {
 			}
 		}
 	},
-	plugins: [
-		forms,
-		typography,
-		skeleton({
-			themes: {
-				custom: [myCustomTheme]
-			}
-		})
-	]
+	plugins: [forms, typography]
 } satisfies Config
