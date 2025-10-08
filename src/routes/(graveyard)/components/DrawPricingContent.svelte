@@ -107,7 +107,7 @@
 		</div>
 		<button
 			type="button"
-			class="variant-filled-primary btn px-6 transition-transform duration-200 hover:scale-105"
+			class="preset-filled-primary-500 btn px-6 transition-transform duration-200 hover:scale-105"
 			onclick={() =>
 				openPaddleCheckout(singleDrawMap[eventType].priceId, singleDrawMap[eventType].plan)}
 			>$4.99</button
@@ -131,7 +131,7 @@
 		</div>
 		<button
 			type="button"
-			class="variant-filled-primary btn px-6 transition-transform duration-200 hover:scale-105"
+			class="preset-filled-primary-500 btn px-6 transition-transform duration-200 hover:scale-105"
 			onclick={() => openPaddleCheckout(PUBLIC_PADDLE_BOTH_DRAWS_PRICE_ID, PlanName.BOTH)}
 		>
 			$7.99
@@ -153,7 +153,7 @@
 		</div>
 		<button
 			type="button"
-			class="variant-filled-primary btn px-6 transition-transform duration-200 hover:scale-105"
+			class="preset-filled-primary-500 btn px-6 transition-transform duration-200 hover:scale-105"
 			onclick={() => openPaddleCheckout(PUBLIC_PADDLE_SUBSCRIPTION_PRICE_ID, PlanName.SUBSCRIPTION)}
 		>
 			$19.99
@@ -172,7 +172,7 @@
 </div>
 <footer class="modal-footer flex justify-end gap-2">
 	<button
-		class="variant-soft btn transition-all duration-200 hover:variant-soft-primary"
+		class="preset-tonal btn transition-all duration-200 hover:preset-tonal-primary"
 		onclick={onClose}
 	>
 		Close

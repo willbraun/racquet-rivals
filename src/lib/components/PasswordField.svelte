@@ -25,7 +25,7 @@
 		/>
 		<button
 			type="button"
-			class="variant-glass-primary btn btn-sm absolute right-1.5 top-1/2 w-14 -translate-y-1/2 rounded-md"
+			class="preset-tonal-primary btn btn-sm absolute right-1.5 top-1/2 w-14 -translate-y-1/2 rounded-md"
 			onclick={toggleShow}
 		>
 			{show ? 'Hide' : 'Show'}

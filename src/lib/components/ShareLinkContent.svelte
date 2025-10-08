@@ -3,16 +3,13 @@
 	import clone from '$lib/images/icons/clone-regular.svg'
 	import sms from '$lib/images/icons/comment-sms-solid.svg'
 	import x from '$lib/images/icons/x.svg'
-	import { currentUser } from '$lib/store'
-	import { getDrawerStore } from '@skeletonlabs/skeleton'
+	import { currentUser, shareLinkOpen } from '$lib/store'
 	import { onMount } from 'svelte'
 
 	const message = $currentUser
 		? `Join me (${$currentUser?.username}) on Racquet Rivals! Click here to play - https://racquetrivals.com`
 		: 'Check out Racquet Rivals! Click here to play - https://racquetrivals.com'
 	const encoded = encodeURIComponent(message)
-
-	const drawerStore = getDrawerStore()
 
 	let showCheck = $state(false)
 	let copyEmail: (() => void) | null = $state(null)
@@ -28,8 +25,8 @@
 	<div class="relative w-full bg-green-300 p-2 text-center">
 		<p class="text-3xl font-bold">Share</p>
 		<button
-			onclick={() => drawerStore.close()}
-			class="absolute right-4 top-0 top-1/2 -translate-y-1/2"
+			onclick={() => shareLinkOpen.set(false)}
+			class="absolute top-0 top-1/2 right-4 -translate-y-1/2"
 		>
 			<img src={x} alt="close" width="24" />
 		</button>

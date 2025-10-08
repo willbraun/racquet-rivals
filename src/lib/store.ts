@@ -41,3 +41,8 @@ if (typeof window !== 'undefined') {
 	const value = 'maxTouchPoints' in navigator && navigator.maxTouchPoints > 0
 	isMobile.set(value)
 }
+
+// Modal/Drawer state (replacing old skeleton stores)
+export const selectUsersModalOpen = writable<boolean>(false)
+export const shareLinkOpen = writable<boolean>(false)
+export const navMenuOpen = writable<boolean>(false)

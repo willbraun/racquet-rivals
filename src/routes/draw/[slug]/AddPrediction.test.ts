@@ -1,16 +1,12 @@
 import { pb } from '$lib/pocketbase'
 import { currentUser, predictionStore } from '$lib/store'
 import type { Prediction, Slot, UserRecord } from '$lib/types'
-import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
-import { storePopup } from '@skeletonlabs/skeleton'
 import '@testing-library/jest-dom/vitest'
 import { render, screen } from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
 import { get } from 'svelte/store'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import AddPrediction from './AddPrediction.svelte'
-
-storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
 // Mock PocketBase
 vi.mock('$lib/pocketbase', () => ({
@@ -120,36 +116,57 @@ describe('AddPrediction component', () => {
 		expect(screen.getByText('Federer')).toHaveTextContent('Federer')
 	})
 
-	test('Predictions allowed, prediction empty, players available', () => {
+	test('Predictions allowed, prediction empty, players available', async () => {
+		const user = userEvent.setup()
 		render(AddPrediction, {
 			...props,
 			prediction: undefined
 		})
 
+		// Only the trigger button is initially visible
+		const triggerButton = screen.getByRole('button')
+		expect(triggerButton).toBeEnabled()
+		expect(triggerButton).toHaveTextContent('Add')
+
+		// Open the popover by clicking the trigger
+		await user.click(triggerButton)
+
+		// Now the player buttons should be visible
 		const buttons = screen.getAllByRole('button')
 		expect(buttons.length).toBe(3)
-		buttons.forEach((button) => expect(button).toBeEnabled())
 
-		const [prediction, player1, player2] = buttons
-		expect(prediction).toHaveTextContent('Add')
+		const [, player1, player2] = buttons
 		expect(player1).toHaveTextContent('Roger Federer')
 		expect(player2).toHaveTextContent('Rafael Nadal')
+		expect(player1).toBeEnabled()
+		expect(player2).toBeEnabled()
 	})
 
-	test('Predictions allowed, prediction filled', () => {
+	test('Predictions allowed, prediction filled', async () => {
+		const user = userEvent.setup()
 		render(AddPrediction, props)
 
+		// Only the trigger button is initially visible
+		const triggerButton = screen.getByRole('button')
+		expect(triggerButton).toBeEnabled()
+		expect(triggerButton).toHaveTextContent('Federer')
+
+		// Open the popover by clicking the trigger
+		await user.click(triggerButton)
+
+		// Now the player buttons should be visible
 		const buttons = screen.getAllByRole('button')
 		expect(buttons.length).toBe(3)
-		buttons.forEach((button) => expect(button).toBeEnabled())
 
-		const [prediction, player1, player2] = buttons
-		expect(prediction).toHaveTextContent('Federer')
+		const [, player1, player2] = buttons
 		expect(player1).toHaveTextContent('Roger Federer')
 		expect(player2).toHaveTextContent('Rafael Nadal')
+		expect(player1).toBeEnabled()
+		expect(player2).toBeEnabled()
 	})
 
-	test('Predictions allowed, players unavailable, roundIndex 1', () => {
+	test('Predictions allowed, players unavailable, roundIndex 1', async () => {
+		const user = userEvent.setup()
 		render(AddPrediction, {
 			...props,
 			roundIndex: 1,
@@ -160,19 +177,26 @@ describe('AddPrediction component', () => {
 			}
 		})
 
+		// Only the trigger button is initially visible
+		const triggerButton = screen.getByRole('button')
+		expect(triggerButton).toBeEnabled()
+
+		// Open the popover by clicking the trigger
+		await user.click(triggerButton)
+
+		// Now the player buttons should be visible
 		const buttons = screen.getAllByRole('button')
 		expect(buttons.length).toBe(3)
 
-		const [prediction, player1, player2] = buttons
-		expect(prediction).toBeEnabled()
-		expect(prediction).toHaveTextContent('')
+		const [, player1, player2] = buttons
 		expect(player1).toBeDisabled()
 		expect(player1).toHaveTextContent('Awaiting previous round')
 		expect(player2).toBeDisabled()
 		expect(player2).toHaveTextContent('Awaiting previous round')
 	})
 
-	test('Predictions allowed, players unavailable, roundIndex 2', () => {
+	test('Predictions allowed, players unavailable, roundIndex 2', async () => {
+		const user = userEvent.setup()
 		render(AddPrediction, {
 			...props,
 			roundIndex: 2,
@@ -183,19 +207,26 @@ describe('AddPrediction component', () => {
 			}
 		})
 
+		// Only the trigger button is initially visible
+		const triggerButton = screen.getByRole('button')
+		expect(triggerButton).toBeEnabled()
+
+		// Open the popover by clicking the trigger
+		await user.click(triggerButton)
+
+		// Now the player buttons should be visible
 		const buttons = screen.getAllByRole('button')
 		expect(buttons.length).toBe(3)
 
-		const [prediction, player1, player2] = buttons
-		expect(prediction).toBeEnabled()
-		expect(prediction).toHaveTextContent('')
+		const [, player1, player2] = buttons
 		expect(player1).toBeDisabled()
 		expect(player1).toHaveTextContent('Predict previous round')
 		expect(player2).toBeDisabled()
 		expect(player2).toHaveTextContent('Predict previous round')
 	})
 
-	test('Predictions allowed, invalid roundIndex', () => {
+	test('Predictions allowed, invalid roundIndex', async () => {
+		const user = userEvent.setup()
 		render(AddPrediction, {
 			...props,
 			roundIndex: 0,
@@ -206,32 +237,48 @@ describe('AddPrediction component', () => {
 			}
 		})
 
+		// Only the trigger button is initially visible
+		const triggerButton = screen.getByRole('button')
+		expect(triggerButton).toBeEnabled()
+
+		// Open the popover by clicking the trigger
+		await user.click(triggerButton)
+
+		// Now the player buttons should be visible
 		const buttons = screen.getAllByRole('button')
 		expect(buttons.length).toBe(3)
 
-		const [prediction, player1, player2] = buttons
-		expect(prediction).toBeEnabled()
-		expect(prediction).toHaveTextContent('')
+		const [, player1, player2] = buttons
 		expect(player1).toBeDisabled()
 		expect(player1).toHaveTextContent('Invalid round index')
 		expect(player2).toBeDisabled()
 		expect(player2).toHaveTextContent('Invalid round index')
 	})
 
-	test('Predictions not allowed, prediction filled', () => {
+	test('Predictions not allowed, prediction filled', async () => {
+		const user = userEvent.setup()
 		render(AddPrediction, {
 			...props,
 			predictionsAllowed: false
 		})
 
+		// Only the trigger button is initially visible
+		const triggerButton = screen.getByRole('button')
+		expect(triggerButton).toBeDisabled()
+		expect(triggerButton).toHaveTextContent('Federer')
+
+		// Since predictions not allowed, trigger is disabled, but we can still open it in tests
+		await user.click(triggerButton)
+
+		// The player buttons should still be disabled
 		const buttons = screen.getAllByRole('button')
 		expect(buttons.length).toBe(3)
-		buttons.forEach((button) => expect(button).toBeDisabled())
 
-		const [prediction, player1, player2] = buttons
-		expect(prediction).toHaveTextContent('Federer')
+		const [, player1, player2] = buttons
 		expect(player1).toHaveTextContent('Roger Federer')
 		expect(player2).toHaveTextContent('Rafael Nadal')
+		expect(player1).toBeDisabled()
+		expect(player2).toBeDisabled()
 	})
 
 	test('Predictions not allowed, prediction empty', () => {
@@ -262,8 +309,14 @@ describe('AddPrediction component', () => {
 
 		expect(get(predictionStore)).toHaveLength(0)
 
-		const [addButton, rogerButton, rafaButton] = screen.getAllByRole('button')
+		// Open the popover first
+		const addButton = screen.getByRole('button')
 		expect(addButton).toHaveTextContent('Add')
+		await user.click(addButton)
+
+		// Now get the player buttons
+		const buttons = screen.getAllByRole('button')
+		const [, rogerButton, rafaButton] = buttons
 		expect(rogerButton).toHaveTextContent('Roger Federer')
 		expect(rafaButton).toHaveTextContent('Rafael Nadal')
 
@@ -283,7 +336,8 @@ describe('AddPrediction component', () => {
 			round: 3
 		})
 
-		expect(addButton).toHaveTextContent('Federer')
+		// After clicking, the popover should close and show the updated trigger
+		expect(screen.getByRole('button')).toHaveTextContent('Federer')
 	})
 
 	test('Update existing prediction', async () => {
@@ -298,8 +352,14 @@ describe('AddPrediction component', () => {
 
 		expect(get(predictionStore)).toHaveLength(0)
 
-		const [addButton, rogerButton, rafaButton] = screen.getAllByRole('button')
+		// Open the popover first
+		const addButton = screen.getByRole('button')
 		expect(addButton).toHaveTextContent('Federer')
+		await user.click(addButton)
+
+		// Now get the player buttons
+		const buttons = screen.getAllByRole('button')
+		const [, rogerButton, rafaButton] = buttons
 		expect(rogerButton).toHaveTextContent('Roger Federer')
 		expect(rafaButton).toHaveTextContent('Rafael Nadal')
 
@@ -319,17 +379,28 @@ describe('AddPrediction component', () => {
 			round: 3
 		})
 
-		expect(addButton).toHaveTextContent('Nadal')
+		// After clicking, the popover should close and show the updated trigger
+		expect(screen.getByRole('button')).toHaveTextContent('Nadal')
 	})
 
-	test('Logged out', () => {
+	test('Logged out', async () => {
+		const user = userEvent.setup()
 		currentUser.set(null)
 		render(AddPrediction, {
 			...props
 		})
 
-		const [addButton, rogerButton, rafaButton] = screen.getAllByRole('button')
-		expect(addButton).toBeDisabled()
+		// The trigger button should be disabled when logged out
+		const triggerButton = screen.getByRole('button')
+		expect(triggerButton).toBeDisabled()
+		expect(triggerButton).toHaveTextContent('Federer')
+
+		// Open the popover (even though disabled in tests we can still test the content)
+		await user.click(triggerButton)
+
+		// The player buttons should also be disabled
+		const buttons = screen.getAllByRole('button')
+		const [, rogerButton, rafaButton] = buttons
 		expect(rogerButton).toBeDisabled()
 		expect(rafaButton).toBeDisabled()
 	})

@@ -3,16 +3,11 @@
 	import { mainColor } from '$lib/data'
 	import x from '$lib/images/icons/x.svg'
 	import { pb } from '$lib/pocketbase'
-	import { currentUser, selectedUsers } from '$lib/store'
+	import { currentUser, selectedUsers, selectUsersModalOpen } from '$lib/store'
 	import type { SelectedUserNoColor } from '$lib/types'
 	import { addUser, errorMessage, removeUser } from '$lib/utils'
-	import { getModalStore } from '@skeletonlabs/skeleton'
 	import type { ClientResponseError } from 'pocketbase'
 	import { fade } from 'svelte/transition'
-
-	let { parent } = $props()
-
-	const modalStore = getModalStore()
 
 	let username = $state('')
 	let selectLoading = $state(false)
@@ -26,9 +21,8 @@
 		inputRef?.focus()
 	}
 
-	const cBase = 'card p-4 w-modal shadow-xl space-y-4 bg-white'
 	const cHeader = 'text-2xl font-bold'
-	const cForm = 'rounded-container-token'
+	const cForm = 'rounded-container'
 
 	const handleSubmit = async (event: Event) => {
 		event.preventDefault()
@@ -78,50 +72,51 @@
 	}
 </script>
 
-{#if $modalStore[0]}
-	<div class="modal-example-form {cBase}">
-		<h2 class={cHeader}>{$modalStore[0].title ?? '(title missing)'}</h2>
-		<article>{$modalStore[0].body ?? '(body missing)'}</article>
-		<form class="modal-form relative {cForm}" onsubmit={handleSubmit}>
-			<label class="label">
-				<span>Username</span>
-				<div class="flex gap-2">
-					<input
-						class="input grow rounded-md"
-						type="text"
-						name="username"
-						bind:value={username}
-						bind:this={inputRef}
-					/>
-					<button
-						class="variant-filled-primary btn btn-md rounded-md"
-						disabled={selectLoading || selections.length >= 5}>Add</button
-					>
-				</div>
-			</label>
-			<FormError {error} />
-		</form>
-
-		<div class="flex flex-wrap gap-2">
-			<div
-				class="variant-filled chip pointer-events-none break-all rounded-full text-black {mainColor} shadow-sm"
-			>
-				<p>{$currentUser?.username}</p>
-			</div>
-			{#each selections as user (user.id)}
+<div>
+	<h2 class={cHeader}>Select Users</h2>
+	<article>Compare predictions with your friends (max of 6 total)</article>
+	<form class="modal-form relative {cForm}" onsubmit={handleSubmit}>
+		<label class="label">
+			<span>Username</span>
+			<div class="flex gap-2">
+				<input
+					class="input grow rounded-md"
+					type="text"
+					name="username"
+					bind:value={username}
+					bind:this={inputRef}
+				/>
 				<button
-					type="button"
-					class="variant-filled chip max-w-full rounded-full text-black {user.color} shadow-sm"
-					onclick={() => removeUser(user.id)}
-					transition:fade={{ duration: 100 }}
+					class="preset-filled-primary-500 btn btn-md rounded-md"
+					disabled={selectLoading || selections.length >= 5}>Add</button
 				>
-					<p class="truncate text-ellipsis">{user.username}</p>
-					<img src={x} alt="close" width="12" />
-				</button>
-			{/each}
+			</div>
+		</label>
+		<FormError {error} />
+	</form>
+
+	<div class="flex flex-wrap gap-2">
+		<div
+			class="preset-filled chip pointer-events-none rounded-full break-all text-black {mainColor} shadow-sm"
+		>
+			<p>{$currentUser?.username}</p>
 		</div>
-		<footer class="modal-footer {parent.regionFooter}">
-			<button class="variant-glass-primary btn rounded-md" onclick={parent.onClose}>Close</button>
-		</footer>
+		{#each selections as user (user.id)}
+			<button
+				type="button"
+				class="preset-filled chip max-w-full rounded-full text-black {user.color} shadow-sm"
+				onclick={() => removeUser(user.id)}
+				transition:fade={{ duration: 100 }}
+			>
+				<p class="truncate text-ellipsis">{user.username}</p>
+				<img src={x} alt="close" width="12" />
+			</button>
+		{/each}
 	</div>
-{/if}
+	<footer class="modal-footer flex justify-end">
+		<button
+			class="preset-tonal-primary btn rounded-md"
+			onclick={() => selectUsersModalOpen.set(false)}>Close</button
+		>
+	</footer>
+</div>

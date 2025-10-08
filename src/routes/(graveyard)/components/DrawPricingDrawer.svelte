@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { getDrawerStore } from '@skeletonlabs/skeleton'
-	import DrawPricingContent from './DrawPricingContent.svelte'
+		import DrawPricingContent from './DrawPricingContent.svelte'
 	import type { Draw } from '$lib/types'
 
 	interface Props {

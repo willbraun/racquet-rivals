@@ -3,17 +3,8 @@
 	import hamburger from '$lib/images/icons/hamburger-menu.svg'
 	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import user from '$lib/images/icons/user-solid.svg'
-	import { currentUser, drawNavUrl, isAuth } from '$lib/store'
-	import type { DrawerSettings } from '@skeletonlabs/skeleton'
-	import { getDrawerStore } from '@skeletonlabs/skeleton'
+	import { currentUser, drawNavUrl, isAuth, navMenuOpen } from '$lib/store'
 	import LogoutButton from './LogoutButton.svelte'
-
-	const drawerStore = getDrawerStore()
-	const drawerSettings: DrawerSettings = {
-		id: 'nav-menu',
-		position: 'right',
-		width: 'w-64'
-	}
 
 	interface Props {
 		isInverted: boolean
@@ -25,7 +16,7 @@
 </script>
 
 <button
-	onclick={() => drawerStore.open(drawerSettings)}
+	onclick={() => navMenuOpen.set(true)}
 	class="block shrink-0 sm:hidden"
 	data-testid="user-menu-icon"
 >

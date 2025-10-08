@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Modal, type ModalComponent } from '@skeletonlabs/skeleton'
+	import { type ModalComponent } from '@skeletonlabs/skeleton-svelte'
 	import SelectUsers from '$lib/../routes/draw/[slug]/SelectUsers.svelte'
 
 	const modalRegistry: Record<string, ModalComponent> = {

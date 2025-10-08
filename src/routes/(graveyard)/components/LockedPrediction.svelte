@@ -2,11 +2,9 @@
 	import lock from '$lib/images/icons/lock-solid.svg'
 	import type { Draw } from '$lib/types'
 	import {
-		getDrawerStore,
-		getModalStore,
 		type DrawerSettings,
 		type ModalSettings
-	} from '@skeletonlabs/skeleton'
+	} from '@skeletonlabs/skeleton-svelte'
 	import { isMobile } from '$lib/store'
 
 	interface Props {

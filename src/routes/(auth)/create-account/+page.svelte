@@ -96,7 +96,7 @@
 		<div class="flex justify-center">
 			<button
 				type="submit"
-				class="variant-filled-primary btn mx-auto mt-4 w-1/2 rounded-xl text-xl font-semibold"
+				class="preset-filled-primary-500 btn mx-auto mt-4 w-1/2 rounded-xl text-xl font-semibold"
 				{disabled}
 			>
 				{loading ? 'Creating Account...' : 'Create Account'}

@@ -5,14 +5,12 @@
 	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import signup from '$lib/images/icons/user-plus-solid.svg'
 	import user from '$lib/images/icons/user-solid.svg'
-	import { currentUser, drawNavUrl, isAuth } from '$lib/store'
-	import { getDrawerStore } from '@skeletonlabs/skeleton'
+	import { currentUser, drawNavUrl, isAuth, navMenuOpen } from '$lib/store'
 	import LogoutButton from './LogoutButton.svelte'
 	import ShareLink from './ShareLink.svelte'
 
-	const drawerStore = getDrawerStore()
 	const closeDrawer = () => {
-		drawerStore.close()
+		navMenuOpen.set(false)
 	}
 </script>
 

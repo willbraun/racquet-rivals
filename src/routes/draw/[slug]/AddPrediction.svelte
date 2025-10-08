@@ -7,7 +7,7 @@
 	import { isAuth, predictionStore } from '$lib/store'
 	import type { Prediction, PredictionRecord, Slot } from '$lib/types'
 	import { errorMessage } from '$lib/utils'
-	import { popup } from '@skeletonlabs/skeleton'
+	import { Popover } from '@skeletonlabs/skeleton-svelte'
 	import type { ClientResponseError } from 'pocketbase'
 	import ViewPrediction from './ViewPrediction.svelte'
 
@@ -32,6 +32,7 @@
 	let loading = $state(false)
 	let error = $state('')
 	let predictionValue = $state(prediction?.name ?? '')
+	let popoverOpen = $state(false)
 
 	const displayPrediction = (str: string) => {
 		if (str) return str
@@ -138,55 +139,59 @@
 
 <!-- Show nothing while client loading to avoid flash of incorrect state -->
 {#if browser}
-	<button
-		type="button"
-		class={`${!prediction ? 'chip h-6 rounded-full bg-blue-200' : ''} ${!prediction && predictionsAllowed ? 'border border-dashed border-black' : ''} ${predictionsAllowed ? 'hover:brightness-105' : ''} ${!predictionsAllowed ? 'pointer-events-none' : ''}${loading ? 'brightness-90' : ''}`.trim()}
-		disabled={!predictionsAllowed || !$isAuth}
-		use:popup={{
-			event: 'click',
-			target: `popupCombobox-${slot.id}`,
-			placement: 'top',
-			closeQuery: 'button'
-		}}
+	<Popover
+		open={popoverOpen}
+		onOpenChange={(details) => (popoverOpen = details.open)}
+		positioning={{ placement: 'top' }}
+		contentBase="card w-fit shadow-lg"
+		contentBackground="bg-white"
+		triggerBase={`${!prediction ? 'chip h-6 rounded-full bg-blue-200' : ''} ${!prediction && predictionsAllowed ? 'border border-dashed border-black' : ''} ${predictionsAllowed ? 'hover:brightness-105' : ''} ${!predictionsAllowed ? 'pointer-events-none' : ''}${loading ? 'brightness-90' : ''}`.trim()}
+		triggerDisabled={!predictionsAllowed || !$isAuth}
 	>
-		{#if prediction}
-			<ViewPrediction {prediction} />
-		{:else if predictionsAllowed}
-			<span class="text-xs">Add</span>
-			<img src={plus} alt="Add Prediction" width="12" />
-		{:else}
-			<span class="text-xs italic">None</span>
-		{/if}
-	</button>
+		{#snippet trigger()}
+			{#if prediction}
+				<ViewPrediction {prediction} />
+			{:else if predictionsAllowed}
+				<span class="text-xs">Add</span>
+				<img src={plus} alt="Add Prediction" width="12" />
+			{:else}
+				<span class="text-xs italic">None</span>
+			{/if}
+		{/snippet}
+		{#snippet content()}
+			<form onsubmit={handleSubmit}>
+				<div class="flex flex-col overflow-hidden rounded-sm">
+					<button
+						type="submit"
+						class="border-surface-500 hover:bg-surface-400 border-b-1 px-4 py-2 whitespace-nowrap {!player1 &&
+							'pointer-events-none italic'}"
+						disabled={!player1 || !predictionsAllowed || loading || !$isAuth}
+						onclick={() => {
+							selectPlayer(player1)
+							popoverOpen = false
+						}}
+					>
+						<span class="text-xl">
+							{displayPrediction(player1)}
+						</span>
+					</button>
+					<button
+						type="submit"
+						class="hover:bg-surface-400 px-4 py-2 whitespace-nowrap {!player2 &&
+							'pointer-events-none italic'}"
+						disabled={!player2 || !predictionsAllowed || loading || !$isAuth}
+						onclick={() => {
+							selectPlayer(player2)
+							popoverOpen = false
+						}}
+					>
+						<span class="text-xl">
+							{displayPrediction(player2)}
+						</span>
+					</button>
+				</div>
+				<FormError {error} />
+			</form>
+		{/snippet}
+	</Popover>
 {/if}
-
-<!-- Popup form -->
-<div class="card w-fit shadow-lg" data-popup="popupCombobox-{slot.id}">
-	<form onsubmit={handleSubmit}>
-		<div class="flex flex-col overflow-hidden rounded-sm">
-			<button
-				type="submit"
-				class="whitespace-nowrap border-b-1 border-surface-500 px-4 py-2 hover:bg-surface-400 {!player1 &&
-					'pointer-events-none italic'}"
-				disabled={!player1 || !predictionsAllowed || loading || !$isAuth}
-				onclick={() => selectPlayer(player1)}
-			>
-				<span class="text-xl">
-					{displayPrediction(player1)}
-				</span>
-			</button>
-			<button
-				type="submit"
-				class="whitespace-nowrap px-4 py-2 hover:bg-surface-400 {!player2 &&
-					'pointer-events-none italic'}"
-				disabled={!player2 || !predictionsAllowed || loading || !$isAuth}
-				onclick={() => selectPlayer(player2)}
-			>
-				<span class="text-xl">
-					{displayPrediction(player2)}
-				</span>
-			</button>
-		</div>
-		<FormError {error} />
-	</form>
-</div>

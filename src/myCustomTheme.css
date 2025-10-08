@@ -1,55 +1,4 @@
-@import 'tailwindcss';
-@import '@skeletonlabs/skeleton';
-@import './myCustomTheme.css';
-@import '@skeletonlabs/skeleton/optional/presets';
-@source "../node_modules/@skeletonlabs/skeleton-svelte/dist";
-@config '../tailwind.config.ts';
-
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-	*,
-	::after,
-	::before,
-	::backdrop,
-	::file-selector-button {
-		border-color: var(--color-gray-200, currentcolor);
-	}
-}
-
-@layer utilities {
-}
-
-@font-face {
-	font-family: 'PoetsenOne-Regular';
-	src: url('/fonts/PoetsenOne-Regular.ttf');
-}
-
-html {
-	height: 100%;
-}
-
-body {
-	height: fit-content;
-	overscroll-behavior: none;
-
-	/* Hide scrollbar for IE, Edge and Firefox */
-	-ms-overflow-style: none; /* IE and Edge */
-	scrollbar-width: none; /* Firefox */
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-body::-webkit-scrollbar {
-	display: none;
-}
-
-[data-theme='my-custom-theme'] {
+[data-theme='theme'] {
 	--text-scaling: 1.067;
 	--base-font-color: var(--color-surface-950);
 	--base-font-color-dark: var(--color-surface-50);
@@ -86,41 +35,41 @@ body::-webkit-scrollbar {
 	--default-ring-width: 1px;
 	--body-background-color: var(--color-surface-50);
 	--body-background-color-dark: var(--color-surface-950);
-	--color-primary-50: oklch(91.66% 0.04 257.51deg);
-	--color-primary-100: oklch(84.1% 0.08 254.61deg);
-	--color-primary-200: oklch(76.5% 0.11 254.28deg);
-	--color-primary-300: oklch(69.52% 0.15 254.36deg);
-	--color-primary-400: oklch(62.85% 0.19 255.71deg);
-	--color-primary-500: oklch(57.32% 0.21 258.29deg);
-	--color-primary-600: oklch(51.62% 0.19 258.15deg);
-	--color-primary-700: oklch(46.06% 0.17 257.78deg);
-	--color-primary-800: oklch(40.05% 0.14 257.62deg);
-	--color-primary-900: oklch(34.15% 0.11 257.14deg);
-	--color-primary-950: oklch(27.73% 0.08 257.49deg);
+	--color-primary-50: oklch(91.73% 0.03 281.33deg);
+	--color-primary-100: oklch(82.21% 0.06 280.82deg);
+	--color-primary-200: oklch(72.59% 0.1 279.72deg);
+	--color-primary-300: oklch(62.96% 0.13 277.96deg);
+	--color-primary-400: oklch(53.5% 0.17 275.18deg);
+	--color-primary-500: oklch(44.75% 0.21 270.92deg);
+	--color-primary-600: oklch(41.55% 0.19 271.06deg);
+	--color-primary-700: oklch(38.29% 0.17 271.22deg);
+	--color-primary-800: oklch(34.79% 0.15 271.65deg);
+	--color-primary-900: oklch(31.38% 0.14 271.95deg);
+	--color-primary-950: oklch(27.89% 0.12 272.34deg);
 	--color-primary-contrast-dark: var(--color-primary-950);
 	--color-primary-contrast-light: var(--color-primary-50);
 	--color-primary-contrast-50: var(--color-primary-contrast-dark);
 	--color-primary-contrast-100: var(--color-primary-contrast-dark);
 	--color-primary-contrast-200: var(--color-primary-contrast-dark);
 	--color-primary-contrast-300: var(--color-primary-contrast-dark);
-	--color-primary-contrast-400: var(--color-primary-contrast-dark);
+	--color-primary-contrast-400: var(--color-primary-contrast-light);
 	--color-primary-contrast-500: var(--color-primary-contrast-light);
 	--color-primary-contrast-600: var(--color-primary-contrast-light);
 	--color-primary-contrast-700: var(--color-primary-contrast-light);
 	--color-primary-contrast-800: var(--color-primary-contrast-light);
 	--color-primary-contrast-900: var(--color-primary-contrast-light);
 	--color-primary-contrast-950: var(--color-primary-contrast-light);
-	--color-secondary-50: oklch(91.73% 0.03 281.33deg);
-	--color-secondary-100: oklch(82.21% 0.06 280.82deg);
-	--color-secondary-200: oklch(72.59% 0.1 279.72deg);
-	--color-secondary-300: oklch(62.96% 0.13 277.96deg);
-	--color-secondary-400: oklch(53.5% 0.17 275.18deg);
-	--color-secondary-500: oklch(44.75% 0.21 270.92deg);
-	--color-secondary-600: oklch(41.55% 0.19 271.06deg);
-	--color-secondary-700: oklch(38.29% 0.17 271.22deg);
-	--color-secondary-800: oklch(34.79% 0.15 271.65deg);
-	--color-secondary-900: oklch(31.38% 0.14 271.95deg);
-	--color-secondary-950: oklch(27.89% 0.12 272.34deg);
+	--color-secondary-50: oklch(86.66% 0.05 300.15deg);
+	--color-secondary-100: oklch(78.51% 0.09 303.57deg);
+	--color-secondary-200: oklch(70.44% 0.13 304.44deg);
+	--color-secondary-300: oklch(62.83% 0.17 303.81deg);
+	--color-secondary-400: oklch(55.48% 0.2 302.75deg);
+	--color-secondary-500: oklch(49.07% 0.23 300.46deg);
+	--color-secondary-600: oklch(45.39% 0.21 299.6deg);
+	--color-secondary-700: oklch(41.75% 0.19 298.26deg);
+	--color-secondary-800: oklch(37.84% 0.17 296.27deg);
+	--color-secondary-900: oklch(34.08% 0.15 293.97deg);
+	--color-secondary-950: oklch(30.18% 0.13 291.16deg);
 	--color-secondary-contrast-dark: var(--color-secondary-950);
 	--color-secondary-contrast-light: var(--color-secondary-50);
 	--color-secondary-contrast-50: var(--color-secondary-contrast-dark);

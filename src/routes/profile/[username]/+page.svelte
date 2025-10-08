@@ -7,7 +7,7 @@
 	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import { DrawStatus, type ProfilePageData } from '$lib/types'
 	import { formatAvg, formatPercent, getDrawStatus, getSlug, getTitle } from '$lib/utils'
-	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton'
+	import { Accordion } from '@skeletonlabs/skeleton-svelte'
 	import { format } from 'date-fns'
 
 	interface Props {
@@ -35,13 +35,13 @@
 <main class="bg-stone-100">
 	<div class="mx-auto max-w-(--breakpoint-lg) px-4">
 		<section class="mb-8">
-			<h1 class="mb-4 break-all text-4xl font-bold sm:text-6xl">{data.username}</h1>
+			<h1 class="mb-4 text-4xl font-bold break-all sm:text-6xl">{data.username}</h1>
 			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM d, yyyy')}</p>
 		</section>
-		<section class="mb-4 rounded-xl bg-stone-250 shadow-sm md:mb-8 md:p-8">
-			<Accordion hover="none">
-				<AccordionItem>
-					{#snippet summary()}
+		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm md:mb-8 md:p-8">
+			<Accordion hover="none" iconOpen={infoIcon} iconClosed={infoIcon}>
+				<Accordion.Item>
+					{#snippet control()}
 						<div class="grid grid-cols-2 items-center gap-4">
 							<a href="/rankings" class="flex flex-wrap items-center hover:underline">
 								<h2 class="font-bold md:text-3xl">Overall Rank</h2>
@@ -52,22 +52,16 @@
 							<p class="self-end text-2xl md:text-6xl">{data.overallRank.total_points}</p>
 						</div>
 					{/snippet}
-					{#snippet content()}
+					{#snippet panel()}
 						{rankingDescriptions.overall}
 					{/snippet}
-					{#snippet iconOpen()}
-						{@render infoIcon()}
-					{/snippet}
-					{#snippet iconClosed()}
-						{@render infoIcon()}
-					{/snippet}
-				</AccordionItem>
+				</Accordion.Item>
 			</Accordion>
 		</section>
-		<section class="mb-4 rounded-xl bg-stone-250 shadow-sm md:mb-8 md:p-8">
-			<Accordion hover="none">
-				<AccordionItem>
-					{#snippet summary()}
+		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm md:mb-8 md:p-8">
+			<Accordion hover="none" iconOpen={infoIcon} iconClosed={infoIcon}>
+				<Accordion.Item>
+					{#snippet control()}
 						<div class="grid grid-cols-4 items-center gap-4">
 							<a
 								href="/rankings/average-points"
@@ -87,23 +81,17 @@
 							</p>
 						</div>
 					{/snippet}
-					{#snippet content()}
+					{#snippet panel()}
 						{rankingDescriptions.averagePoints}
 					{/snippet}
-					{#snippet iconOpen()}
-						{@render infoIcon()}
-					{/snippet}
-					{#snippet iconClosed()}
-						{@render infoIcon()}
-					{/snippet}
-				</AccordionItem>
+				</Accordion.Item>
 			</Accordion>
 		</section>
-		<section class="mb-4 rounded-xl bg-stone-250 shadow-sm md:mb-8 md:p-8">
-			<Accordion hover="none">
-				<AccordionItem>
-					{#snippet summary()}
-						<div class=" grid grid-cols-4 items-center items-center gap-4">
+		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm md:mb-8 md:p-8">
+			<Accordion hover="none" iconOpen={infoIcon} iconClosed={infoIcon}>
+				<Accordion.Item>
+					{#snippet control()}
+						<div class=" grid grid-cols-4 items-center gap-4">
 							<a
 								href="/rankings/prediction-accuracy"
 								class="col-span-2 flex flex-wrap items-center hover:underline"
@@ -127,19 +115,13 @@
 							</p>
 						</div>
 					{/snippet}
-					{#snippet content()}
+					{#snippet panel()}
 						{rankingDescriptions.predictionAccuracy}
 					{/snippet}
-					{#snippet iconOpen()}
-						{@render infoIcon()}
-					{/snippet}
-					{#snippet iconClosed()}
-						{@render infoIcon()}
-					{/snippet}
-				</AccordionItem>
+				</Accordion.Item>
 			</Accordion>
 		</section>
-		<section class="pb-16 pt-8">
+		<section class="pt-8 pb-16">
 			<h2 class="mb-4 text-3xl font-bold md:text-5xl">Results</h2>
 			<table class="w-full overflow-hidden rounded-xl shadow-sm">
 				<thead class="bg-primary-700 text-white md:text-3xl">
@@ -161,7 +143,7 @@
 							<tr
 								class={`grid w-full grid-cols-8 items-center gap-4 p-2 hover:cursor-pointer hover:brightness-105 md:p-4 ${
 									index % 2 ? 'bg-primary-50' : 'bg-primary-200'
-								} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${showCutoff ? 'border-b-2 border-pure-red' : ''}`}
+								} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${showCutoff ? 'border-pure-red border-b-2' : ''}`}
 								onclick={() => goto(`/draw/${getSlug(item)}`)}
 							>
 								<td class="col-span-6 md:text-3xl">
@@ -185,7 +167,7 @@
 								{:else}
 									<td class="col-span-2">
 										<div
-											class="mx-auto w-5/6 rounded-sm bg-primary-600 px-2 text-center text-xs font-bold text-white md:text-2xl"
+											class="bg-primary-600 mx-auto w-5/6 rounded-sm px-2 text-center text-xs font-bold text-white md:text-2xl"
 										>
 											<p class="hidden sm:block">DID NOT PLAY</p>
 											<p class="block sm:hidden">DNP</p>
@@ -196,7 +178,7 @@
 							{#if showCutoff}
 								<tr>
 									<td
-										class="absolute left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-sm bg-pure-red px-2 text-xs font-bold text-white"
+										class="bg-pure-red absolute left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-sm px-2 text-xs font-bold text-white"
 									>
 										OVERALL RANK CUTOFF
 									</td>

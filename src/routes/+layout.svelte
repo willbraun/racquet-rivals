@@ -5,20 +5,18 @@
 	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
 	import instagram from '$lib/images/icons/instagram.svg'
 	import { initPocketbase } from '$lib/pocketbase'
-	import { currentUser, drawNavUrl } from '$lib/store'
+	import {
+		currentUser,
+		drawNavUrl,
+		navMenuOpen,
+		selectUsersModalOpen,
+		shareLinkOpen
+	} from '$lib/store'
 	import type { RootLayoutData } from '$lib/types'
 	import { getSlug } from '$lib/utils'
-	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom'
-	import {
-		Drawer,
-		getDrawerStore,
-		initializeStores,
-		Modal,
-		storePopup,
-		type ModalComponent
-	} from '@skeletonlabs/skeleton'
+	import { Modal } from '@skeletonlabs/skeleton-svelte'
 	import { type Snippet } from 'svelte'
-	import '../app.postcss'
+	import '../app.css'
 	import SelectUsers from './draw/[slug]/SelectUsers.svelte'
 
 	interface Props {
@@ -28,14 +26,7 @@
 
 	let { data, children }: Props = $props()
 
-	initializeStores()
 	initPocketbase()
-
-	const drawerStore = getDrawerStore()
-	const modalRegistry: Record<string, ModalComponent> = {
-		selectUsers: { ref: SelectUsers }
-	}
-	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow })
 
 	// Initialize with server data so authenticated content is available on first render
 	currentUser.set(data.cookieCurrentUser)
@@ -57,18 +48,60 @@
 	/>
 </svelte:head>
 
-<Modal components={modalRegistry} />
-<Drawer>
-	{#if $drawerStore.id === 'share-link'}
+<!-- Select Users Modal -->
+<Modal
+	open={$selectUsersModalOpen}
+	onOpenChange={(details) => selectUsersModalOpen.set(details.open)}
+	contentBase="card w-modal space-y-4 rounded-xl border border-surface-300-700 bg-white p-6 shadow-xl"
+	backdropBase="fixed inset-0 z-50"
+	backdropBackground="bg-surface-500/50"
+	positionerBase="fixed inset-0 z-50"
+	positionerDisplay="flex"
+	positionerJustify="justify-center"
+	positionerAlign="items-center"
+>
+	{#snippet content()}
+		<SelectUsers />
+	{/snippet}
+</Modal>
+
+<!-- Share Link Drawer -->
+<Modal
+	open={$shareLinkOpen}
+	onOpenChange={(details) => shareLinkOpen.set(details.open)}
+	contentBase="h-auto w-full"
+	backdropBase="fixed inset-0 z-50"
+	backdropBackground="bg-surface-50-950/50"
+	positionerBase="fixed inset-0 z-50"
+	positionerDisplay="flex"
+	positionerJustify="justify-center"
+	positionerAlign="items-end"
+	transitionsPositionerIn={{ y: 500, duration: 300 }}
+	transitionsPositionerOut={{ y: 500, duration: 300 }}
+>
+	{#snippet content()}
 		<ShareLinkContent />
-	{:else if $drawerStore.id === 'nav-menu'}
+	{/snippet}
+</Modal>
+
+<!-- Nav Menu Drawer -->
+<Modal
+	open={$navMenuOpen}
+	onOpenChange={(details) => navMenuOpen.set(details.open)}
+	contentBase="h-screen w-64 bg-white"
+	backdropBase="fixed inset-0 z-50"
+	backdropBackground="bg-surface-50-950/50"
+	positionerBase="fixed inset-0 z-50"
+	positionerDisplay="flex"
+	positionerJustify="justify-end"
+	positionerAlign="items-stretch"
+	transitionsPositionerIn={{ x: 300, duration: 300 }}
+	transitionsPositionerOut={{ x: 300, duration: 300 }}
+>
+	{#snippet content()}
 		<NavMenuContent />
-	{:else}
-		<div class="flex h-full w-full items-center justify-center">
-			<p class="text-2xl font-bold">Drawer not found</p>
-		</div>
-	{/if}
-</Drawer>
+	{/snippet}
+</Modal>
 
 <div class="flex min-h-screen flex-col">
 	<div class="grow">

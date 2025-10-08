@@ -19,7 +19,8 @@
 		loginGoto,
 		mySelectedUsers,
 		predictionsError,
-		predictionStore
+		predictionStore,
+		selectUsersModalOpen
 	} from '$lib/store'
 	import {
 		type Draw,
@@ -39,7 +40,6 @@
 		getTitle,
 		removeUser
 	} from '$lib/utils'
-	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton'
 	import { addDays, format } from 'date-fns'
 	import Cookies from 'js-cookie'
 	import { onMount } from 'svelte'
@@ -152,19 +152,6 @@
 	})
 
 	let userIds = $derived(users.map((user) => user.id))
-
-	const modalStore = getModalStore()
-	let modal: ModalSettings = $derived(
-		$isAuth
-			? {
-					type: 'component',
-					component: 'selectUsers',
-					title: 'Select Users',
-					body: 'Compare predictions with your friends (max of 6 total)',
-					backdropClasses: 'bg-surface-500'
-				}
-			: ({} as ModalSettings)
-	)
 
 	//////////////////////////////////////////
 	// DRAW SETUP
@@ -310,7 +297,7 @@
 
 <Header color="bg-primary-50">
 	<select
-		class="select grow cursor-pointer whitespace-pre-wrap border-none bg-transparent px-1 py-0 text-xl font-bold hover:bg-primary-200 md:text-2xl"
+		class="select hover:bg-primary-200 grow cursor-pointer border-none bg-transparent px-1 py-0 text-xl font-bold whitespace-pre-wrap md:text-2xl"
 		onchange={(e) => goto(e.currentTarget.value)}
 	>
 		{#if data.active.length > 0}
@@ -362,7 +349,7 @@
 			>
 				<p class="truncate text-ellipsis">{user.username}</p>
 				<div
-					class="badge-icon absolute -right-1.5 -top-1.5 z-10 h-4 w-fit rounded-full bg-green-400 px-1 text-sm"
+					class="badge-icon absolute -top-1.5 -right-1.5 z-10 h-4 w-fit rounded-full bg-green-400 px-1 text-sm"
 					data-testid={`UserPoints_${user.username}`}
 				>
 					<p>
@@ -372,8 +359,8 @@
 			</button>
 		{/each}
 		<button
-			class="chip flex h-6 justify-center rounded-full border border-dashed border-black hover:bg-primary-100"
-			onclick={() => modalStore.trigger(modal)}
+			class="chip hover:bg-primary-100 flex h-6 justify-center rounded-full border border-dashed border-black"
+			onclick={() => selectUsersModalOpen.set(true)}
 			disabled={!$isAuth}
 		>
 			<img src={edit} alt="edit icon" width="16" class="mb-0.5 ml-0.5" />
@@ -397,10 +384,10 @@
 			bind:offsetHeight={leaderboardHeight}
 			data-testid="Leaderboard"
 		>
-			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Rank</div>
-			<div class="sticky top-0 z-20 col-span-2 bg-primary-300 py-2 font-bold">User</div>
-			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Points</div>
-			<div class="sticky top-0 z-20 bg-primary-300 py-2 font-bold">Select</div>
+			<div class="bg-primary-300 sticky top-0 z-20 py-2 font-bold">Rank</div>
+			<div class="bg-primary-300 sticky top-0 z-20 col-span-2 py-2 font-bold">User</div>
+			<div class="bg-primary-300 sticky top-0 z-20 py-2 font-bold">Points</div>
+			<div class="bg-primary-300 sticky top-0 z-20 py-2 font-bold">Select</div>
 			{#if data.drawResults.items.length > 0}
 				{#each data.drawResults.items as result, index (index)}
 					{@const selectedUser = users.find((u) => u.id === result.user_id)}
@@ -415,7 +402,7 @@
 							class={`rounded-3xl px-3 py-1 ${selectedUser ? `shadow ${selectedUser.color} hover:brightness-105` : 'hover:underline'}`}
 							onclick={() => goto(`/profile/${result.username}`)}
 						>
-							<p class="break-all text-lg">
+							<p class="text-lg break-all">
 								{result.username}
 							</p>
 						</button>
@@ -480,7 +467,7 @@
 			>
 				<div class="grid" style:grid-template-columns="repeat(5, minmax(200px, 1fr))">
 					{#each Object.entries(pointsByRound) as [round, points] (round)}
-						<div class="flex justify-center gap-2 bg-primary-300 py-2 text-center">
+						<div class="bg-primary-300 flex justify-center gap-2 py-2 text-center">
 							<p>{round}</p>
 							{#if points > 0}
 								<div class="aspect-square h-full rounded-full bg-green-400 shadow-sm">{points}</div>
@@ -519,7 +506,7 @@
 									<MatchScore {slot} {prevSlot1} {prevSlot2} draw={data.draw} />
 								{:else}
 									<p
-										class="text-lg italic text-surface-800"
+										class="text-surface-800 text-lg italic"
 										data-testid={`SlotNameR${slot.round}P${slot.position}`}
 									>
 										TBD
