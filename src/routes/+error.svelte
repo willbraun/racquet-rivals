@@ -9,7 +9,7 @@
 </script>
 
 <main
-	class="flex h-screen w-full flex-col items-center justify-center gap-8 bg-primary-300 text-center"
+	class="bg-primary-200 flex h-screen w-full flex-col items-center justify-center gap-8 text-center"
 >
 	<h1 class="text-7xl font-bold">Error</h1>
 	<p class="text-4xl">{page.status}: {page?.error?.message}</p>

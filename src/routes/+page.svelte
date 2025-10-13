@@ -46,14 +46,17 @@
 
 {#snippet drawList(listTitle: string, draws: Draw[])}
 	{#if draws.length > 0}
-		<div class="mb-8 flex flex-col overflow-hidden rounded-xl shadow-sm sm:mb-16" use:fadeAndSlideIn>
+		<div
+			class="mb-8 flex flex-col overflow-hidden rounded-xl shadow-sm sm:mb-16"
+			use:fadeAndSlideIn
+		>
 			<p class="bg-primary-700 px-4 py-2 text-2xl font-bold text-white sm:py-4 sm:text-4xl">
 				{`${capitalize(listTitle)} Draws`}
 			</p>
 			{#each draws as draw, index (index)}
 				<a
 					href={`/draw/${getSlug(draw)}`}
-					class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-200'} p-2 hover:brightness-105 sm:p-4 sm:text-3xl`}
+					class={`w-full ${index % 2 ? 'bg-primary-50' : 'bg-primary-100'} p-2 hover:brightness-105 sm:p-4 sm:text-3xl`}
 				>
 					{getTitle(draw)}
 				</a>
@@ -67,10 +70,10 @@
 	<section class="relative h-svh w-full overflow-hidden">
 		<!-- Photo credit to Shep McAllister on Unsplash - https://unsplash.com/photos/two-person-playing-tennis-J1j3cImjmgE -->
 		<img src={wimbledon} alt="Wimbledon" class="absolute inset-0 h-full w-full object-cover" />
-		<div class="absolute inset-0 bg-linear-to-b from-primary-500/40 to-black"></div>
+		<div class="from-primary-500/40 absolute inset-0 bg-linear-to-b to-black"></div>
 		<div class="absolute flex h-3/4 w-full items-center justify-center">
 			<img src={bracketLeft} alt="left bracket" class="block h-24 invert sm:h-32 md:h-48 lg:h-64" />
-			<h1 class="w-1/2 text-center font-PoetsenOne text-5xl text-white md:text-7xl lg:text-9xl">
+			<h1 class="font-PoetsenOne w-1/2 text-center text-5xl text-white md:text-7xl lg:text-9xl">
 				Racquet<br />Rivals
 			</h1>
 			<img

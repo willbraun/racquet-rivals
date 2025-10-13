@@ -142,7 +142,7 @@
 							{@const showCutoff = index === 7 && data.drawResults.items.length > 8}
 							<tr
 								class={`grid w-full grid-cols-8 items-center gap-4 p-2 hover:cursor-pointer hover:brightness-105 md:p-4 ${
-									index % 2 ? 'bg-primary-50' : 'bg-primary-200'
+									index % 2 ? 'bg-primary-50' : 'bg-primary-100'
 								} ${status === DrawStatus.ACTIVE && 'animate-pulse-green'} ${showCutoff ? 'border-pure-red border-b-2' : ''}`}
 								onclick={() => goto(`/draw/${getSlug(item)}`)}
 							>
@@ -167,7 +167,7 @@
 								{:else}
 									<td class="col-span-2">
 										<div
-											class="bg-primary-600 mx-auto w-5/6 rounded-sm px-2 text-center text-xs font-bold text-white md:text-2xl"
+											class="bg-primary-600 mx-auto w-5/6 rounded-sm px-2 text-center text-xs font-bold text-white md:text-xl"
 										>
 											<p class="hidden sm:block">DID NOT PLAY</p>
 											<p class="block sm:hidden">DNP</p>
@@ -186,7 +186,7 @@
 							{/if}
 						{/each}
 					{:else}
-						<tr class="bg-primary-200">
+						<tr class="bg-primary-100">
 							<td colspan="8" class="py-4 text-center md:text-3xl"> No results yet</td>
 						</tr>
 					{/if}

@@ -41,27 +41,29 @@
 					See other draws <a href={$drawNavUrl} class="text-blue-500 underline">here</a>.
 				</li>
 				<li>As matches are completed, you'll win points if your predictions are correct.</li>
-				<table class="mx-auto w-full max-w-(--breakpoint-sm) overflow-hidden rounded-xl text-center">
-					<thead class="h-12 bg-primary-700 text-white">
+				<table
+					class="mx-auto w-full max-w-(--breakpoint-sm) overflow-hidden rounded-xl text-center"
+				>
+					<thead class="bg-primary-700 h-12 text-white">
 						<tr>
 							<th>Round</th>
 							<th>Points</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="h-12 bg-primary-200 font-semibold">
+						<tr class="bg-primary-100 h-12 font-semibold">
 							<td>Quarterfinals</td>
 							<td><div class={scoreFormatting}>1</div></td>
 						</tr>
-						<tr class="h-12 bg-primary-50 font-semibold">
+						<tr class="bg-primary-50 h-12 font-semibold">
 							<td>Semifinals</td>
 							<td><div class={scoreFormatting}>2</div></td>
 						</tr>
-						<tr class="h-12 bg-primary-200 font-semibold">
+						<tr class="bg-primary-100 h-12 font-semibold">
 							<td>Final</td>
 							<td><div class={scoreFormatting}>4</div></td>
 						</tr>
-						<tr class="h-12 bg-primary-50 font-semibold">
+						<tr class="bg-primary-50 h-12 font-semibold">
 							<td>Champion</td>
 							<td><div class={scoreFormatting}>8</div></td>
 						</tr>
@@ -92,22 +94,22 @@
 				In addition, you'll be ranked against all other users for each category.
 			</p>
 			<table class="mx-auto w-full overflow-hidden rounded-xl text-center">
-				<thead class="h-12 bg-primary-700 text-2xl text-white">
+				<thead class="bg-primary-700 h-12 text-2xl text-white">
 					<tr>
 						<th style="width:25%">Stat</th>
 						<th>Description</th>
 					</tr>
 				</thead>
 				<tbody class="md:text-xl [&>tr>td]:p-4">
-					<tr class="h-12 bg-primary-200">
+					<tr class="bg-primary-100 h-12">
 						<td class="font-bold">Overall Ranking</td>
 						<td>{rankingDescriptions.overall}</td>
 					</tr>
-					<tr class="h-12 bg-primary-50">
+					<tr class="bg-primary-50 h-12">
 						<td class="font-bold">Average Points</td>
 						<td>{rankingDescriptions.averagePoints}</td>
 					</tr>
-					<tr class="h-12 bg-primary-200">
+					<tr class="bg-primary-100 h-12">
 						<td class="font-bold">Prediction Accuracy</td>
 						<td>{rankingDescriptions.predictionAccuracy}</td>
 					</tr>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
-	import Header from '$lib/components/Header.svelte'
 	import { page } from '$app/state'
+	import Header from '$lib/components/Header.svelte'
 	import type { Snippet } from 'svelte'
 
 	interface Props {
@@ -23,7 +23,7 @@
 		<div class="mb-8 flex flex-wrap items-center gap-4">
 			<h1 class="grow text-4xl font-bold sm:text-6xl">Rankings</h1>
 			<select
-				class="select h-11 w-[230px] cursor-pointer border-none bg-stone-200 text-xl md:h-14 md:w-[320px] md:text-3xl"
+				class="select h-11 w-[245px] cursor-pointer border-none bg-stone-200 text-xl md:h-14 md:w-[350px] md:text-3xl"
 				onchange={navigateToPage}
 			>
 				<option value="" selected={page.route?.id === '/rankings'}>Overall</option>

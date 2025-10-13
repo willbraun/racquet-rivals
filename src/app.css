@@ -3,7 +3,10 @@
 @import './myCustomTheme.css';
 @import '@skeletonlabs/skeleton/optional/presets';
 @source "../node_modules/@skeletonlabs/skeleton-svelte/dist";
-@config '../tailwind.config.ts';
+
+@plugin '@tailwindcss/typography';
+
+@variant dark (&:where(.dark, .dark *));
 
 /*
   The default border color has changed to `currentcolor` in Tailwind CSS v4,
@@ -29,6 +32,59 @@
 @font-face {
 	font-family: 'PoetsenOne-Regular';
 	src: url('/fonts/PoetsenOne-Regular.ttf');
+}
+
+@theme {
+	/* Fonts */
+	--font-PoetsenOne: 'PoetsenOne-Regular', sans-serif;
+
+	/* Colors */
+	--color-pure-red: #ff0000;
+	--color-stone-250: #dedcda;
+
+	/* Border widths */
+	--border-1: 1px;
+	--border-16: 16px;
+
+	/* Grid template columns */
+	--grid-cols-5: repeat(5, 1fr);
+
+	/* Animations */
+	--animate-fade-and-slide-in: fade-and-slide-in 400ms ease-out;
+	--animate-pulse-green: pulse-green 3s infinite;
+	--animate-pulse-tilt: pulse-tilt 0.3s;
+}
+
+/* Keyframe animations */
+@keyframes fade-and-slide-in {
+	0% {
+		opacity: 0;
+		transform: translateX(-1rem);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes pulse-green {
+	0%,
+	100% {
+	}
+	50% {
+		background-color: #a7f3d0;
+	}
+}
+
+@keyframes pulse-tilt {
+	0%,
+	100% {
+	}
+	50% {
+		scale: 0.85;
+		rotate: -5deg;
+		opacity: 0.6;
+	}
 }
 
 html {

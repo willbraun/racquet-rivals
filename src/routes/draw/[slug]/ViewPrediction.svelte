@@ -18,9 +18,9 @@
 	</div>
 	{#if prediction.points}
 		<div
-			class="badge-icon absolute -right-1.5 -top-1 z-10 aspect-square h-4 w-fit rounded-full bg-green-400 px-1 text-sm"
+			class="badge-icon absolute -top-1 -right-2 z-10 h-4 w-fit rounded-full bg-green-400 py-0 text-sm font-medium"
 		>
-			<p>{prediction.points}</p>
+			{prediction.points}
 		</div>
 	{/if}
 </div>

@@ -297,8 +297,10 @@
 
 <Header color="bg-primary-50">
 	<select
-		class="select hover:bg-primary-200 grow cursor-pointer border-none bg-transparent px-1 py-0 text-xl font-bold whitespace-pre-wrap md:text-2xl"
+		class="select hover:bg-primary-100 -mt-1 grow cursor-pointer border-none bg-transparent px-1 py-0 text-xl font-bold whitespace-pre-wrap md:text-2xl"
 		onchange={(e) => goto(e.currentTarget.value)}
+		id="DrawSelect"
+		style="appearance: base-select; border: none; box-shadow: none; height: 100%;"
 	>
 		{#if data.active.length > 0}
 			{@render drawSelectOptions('Active', data.active)}
@@ -330,11 +332,11 @@
 		data-testid="LeaderboardToggle"
 	>
 		<button
-			class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-300 hover:brightness-105' : 'bg-primary-500 text-white'}`}
+			class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-200 hover:brightness-105' : 'bg-primary-500 text-white'}`}
 			onclick={() => toggleLeaderboard(false)}>Draw</button
 		>
 		<button
-			class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-300 hover:brightness-105'}`}
+			class={`px-3 py-1 text-sm ${combinedIsLeaderboard ? 'bg-primary-500 text-white' : 'bg-primary-200 hover:brightness-105'}`}
 			onclick={() => toggleLeaderboard(true)}>Leaderboard</button
 		>
 	</div>
@@ -349,12 +351,10 @@
 			>
 				<p class="truncate text-ellipsis">{user.username}</p>
 				<div
-					class="badge-icon absolute -top-1.5 -right-1.5 z-10 h-4 w-fit rounded-full bg-green-400 px-1 text-sm"
+					class="badge-icon absolute -top-1.5 -right-2 z-10 h-4 w-fit rounded-full bg-green-400 py-0 text-sm font-semibold"
 					data-testid={`UserPoints_${user.username}`}
 				>
-					<p>
-						{user.points}
-					</p>
+					{user.points}
 				</div>
 			</button>
 		{/each}
@@ -384,10 +384,10 @@
 			bind:offsetHeight={leaderboardHeight}
 			data-testid="Leaderboard"
 		>
-			<div class="bg-primary-300 sticky top-0 z-20 py-2 font-bold">Rank</div>
-			<div class="bg-primary-300 sticky top-0 z-20 col-span-2 py-2 font-bold">User</div>
-			<div class="bg-primary-300 sticky top-0 z-20 py-2 font-bold">Points</div>
-			<div class="bg-primary-300 sticky top-0 z-20 py-2 font-bold">Select</div>
+			<div class="bg-primary-200 sticky top-0 z-20 py-2 font-bold">Rank</div>
+			<div class="bg-primary-200 sticky top-0 z-20 col-span-2 py-2 font-bold">User</div>
+			<div class="bg-primary-200 sticky top-0 z-20 py-2 font-bold">Points</div>
+			<div class="bg-primary-200 sticky top-0 z-20 py-2 font-bold">Select</div>
 			{#if data.drawResults.items.length > 0}
 				{#each data.drawResults.items as result, index (index)}
 					{@const selectedUser = users.find((u) => u.id === result.user_id)}
@@ -467,7 +467,7 @@
 			>
 				<div class="grid" style:grid-template-columns="repeat(5, minmax(200px, 1fr))">
 					{#each Object.entries(pointsByRound) as [round, points] (round)}
-						<div class="bg-primary-300 flex justify-center gap-2 py-2 text-center">
+						<div class="bg-primary-200 flex justify-center gap-2 py-2 text-center">
 							<p>{round}</p>
 							{#if points > 0}
 								<div class="aspect-square h-full rounded-full bg-green-400 shadow-sm">{points}</div>
