@@ -23,8 +23,7 @@
 		<div class="mb-8 flex flex-wrap items-center gap-4">
 			<h1 class="grow text-4xl font-bold sm:text-6xl">Rankings</h1>
 			<select
-				class="select flex h-11 w-[245px] cursor-pointer items-center bg-stone-200 px-2 text-xl md:h-14 md:w-[350px] md:text-3xl"
-				style="appearance: base-select; border: none; box-shadow: none;"
+				class="select flex h-11 w-[245px] cursor-pointer items-center bg-stone-200 text-xl md:h-14 md:w-[350px] md:text-3xl"
 				onchange={navigateToPage}
 			>
 				<option value="" selected={page.route?.id === '/rankings'}>Overall</option>

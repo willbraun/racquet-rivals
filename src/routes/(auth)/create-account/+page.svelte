@@ -93,7 +93,7 @@
 		<PasswordField bind:password />
 		<p class="text-xs text-gray-500">Must be at least 8 characters</p>
 
-		<div class="flex justify-center">
+		<div class="mt-2 flex justify-center">
 			<button
 				type="submit"
 				class="preset-filled-primary-500 btn mx-auto mt-4 w-1/2 rounded-xl text-xl font-semibold"

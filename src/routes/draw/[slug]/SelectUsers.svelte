@@ -21,9 +21,6 @@
 		inputRef?.focus()
 	}
 
-	const cHeader = 'text-2xl font-bold'
-	const cForm = 'rounded-container'
-
 	const handleSubmit = async (event: Event) => {
 		event.preventDefault()
 		selectLoading = true
@@ -72,10 +69,12 @@
 	}
 </script>
 
-<div>
-	<h2 class={cHeader}>Select Users</h2>
-	<article>Compare predictions with your friends (max of 6 total)</article>
-	<form class="modal-form relative {cForm}" onsubmit={handleSubmit}>
+<div class="space-y-2">
+	<div>
+		<h2 class="text-2xl font-bold">Select Users</h2>
+		<p>Compare predictions with your friends (max of 6 total)</p>
+	</div>
+	<form class="modal-form rounded-container relative" onsubmit={handleSubmit}>
 		<label class="label">
 			<span>Username</span>
 			<div class="flex gap-2">
@@ -94,7 +93,6 @@
 		</label>
 		<FormError {error} />
 	</form>
-
 	<div class="flex flex-wrap gap-2">
 		<div
 			class="preset-filled chip pointer-events-none rounded-full break-all text-black {mainColor} shadow-sm"

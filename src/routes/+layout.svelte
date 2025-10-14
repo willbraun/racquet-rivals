@@ -52,7 +52,7 @@
 <Modal
 	open={$selectUsersModalOpen}
 	onOpenChange={(details) => selectUsersModalOpen.set(details.open)}
-	contentBase="card w-modal space-y-4 rounded-xl border border-surface-300-700 bg-white p-6 shadow-xl"
+	contentBase="card w-modal md:w-xl space-y-4 rounded-xl border border-surface-300-700 bg-white p-6 shadow-xl"
 	backdropBase="fixed inset-0 z-50"
 	backdropBackground="bg-surface-500/50"
 	positionerBase="fixed inset-0 z-50"

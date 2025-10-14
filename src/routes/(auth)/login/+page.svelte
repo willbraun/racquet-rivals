@@ -102,7 +102,7 @@
 		</label>
 		<PasswordField bind:password bind:ref={passwordRef} />
 		<div class="flex justify-between">
-			<label class="flex items-center space-x-2">
+			<label class="mt-4 flex items-center space-x-2">
 				<input
 					class="checkbox"
 					type="checkbox"
@@ -117,7 +117,7 @@
 				/>
 				<p>Remember me</p>
 			</label>
-			<a class="-translate-y-4 text-sm text-gray-500" href="/reset-password">Forgot password?</a>
+			<a class="text-sm text-gray-500" href="/reset-password">Forgot password?</a>
 		</div>
 		<div class="flex justify-center">
 			<button
