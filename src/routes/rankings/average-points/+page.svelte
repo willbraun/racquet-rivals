@@ -37,7 +37,7 @@
 					<p class="text-wrap break-words">{item.username}</p>
 				</td>
 				<td
-					class={`mx-auto w-fit font-bold ${item.rank !== null && 'badge-icon rounded-full bg-green-400'} h-7 px-2 text-xl md:h-10 md:min-w-10 md:text-3xl`}
+					class={`mx-auto w-fit font-bold shadow-sm ${item.rank !== null && 'badge-icon rounded-full bg-green-400'} h-7 px-2.5 text-xl md:h-8 md:min-w-8 md:text-3xl`}
 				>
 					{formatAvg(item.avg_points_per_draw)}
 				</td>

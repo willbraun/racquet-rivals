@@ -351,7 +351,7 @@
 			>
 				<p class="truncate text-ellipsis">{user.username}</p>
 				<div
-					class="badge-icon absolute -top-1.5 -right-2 z-10 h-4 w-fit rounded-full bg-green-400 py-0 text-sm font-semibold"
+					class="badge-icon absolute -top-1.5 -right-2 z-10 h-4 w-fit rounded-full bg-green-400 py-0 text-xs font-semibold shadow-sm"
 					data-testid={`UserPoints_${user.username}`}
 				>
 					{user.points}
@@ -408,7 +408,9 @@
 						</button>
 					</div>
 					<div class={rowStyle}>
-						<div class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-2 text-lg">
+						<div
+							class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-2 text-lg font-bold shadow-sm"
+						>
 							{result.total_points}
 						</div>
 					</div>

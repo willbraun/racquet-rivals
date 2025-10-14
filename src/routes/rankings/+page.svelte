@@ -34,9 +34,9 @@
 				<td class="col-span-2">
 					<p class="text-wrap break-words">{item.username}</p>
 				</td>
-				<td>
+				<td class="flex justify-center">
 					<div
-						class="badge-icon mx-auto h-7 w-fit rounded-full bg-green-400 px-2 text-xl md:h-10 md:min-w-10 md:text-3xl"
+						class="badge-icon w-fit rounded-full bg-green-400 px-2.5 text-lg font-bold shadow-sm md:h-8 md:min-w-8 md:text-3xl"
 					>
 						{item.total_points}
 					</div>

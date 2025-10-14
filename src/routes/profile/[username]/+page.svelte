@@ -150,9 +150,9 @@
 									<p class="text-wrap break-words">{getTitle(item)}</p>
 								</td>
 								{#if item.prediction_count > 0 || status === DrawStatus.ACTIVE}
-									<td>
+									<td class="flex justify-center">
 										<div
-											class="badge-icon mx-auto w-fit rounded-full bg-green-400 px-2 text-lg md:h-10 md:min-w-10 md:text-3xl"
+											class="badge-icon w-fit rounded-full bg-green-400 px-2.5 text-lg font-bold shadow-sm md:h-8 md:min-w-8 md:text-3xl"
 										>
 											{item.total_points}
 										</div>

@@ -3,7 +3,7 @@
 	import { rankingDescriptions } from '$lib/data'
 	import { currentUser, drawNavUrl, isAuth } from '$lib/store'
 
-	const scoreFormatting = 'font-bold bg-green-400 rounded-full w-8 mx-auto shadow-sm'
+	const scoreFormatting = 'font-bold bg-green-400 rounded-full w-9 h-9 mx-auto shadow-sm'
 </script>
 
 <Header />
