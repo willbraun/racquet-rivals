@@ -297,10 +297,10 @@
 
 <Header color="bg-primary-50">
 	<select
-		class="select hover:bg-primary-100 -mt-1 grow cursor-pointer border-none bg-transparent px-1 py-0 text-xl font-bold whitespace-pre-wrap md:text-2xl"
+		class="select hover:bg-primary-100 -mt-1 h-full grow cursor-pointer bg-transparent px-1 py-0 text-xl font-bold whitespace-pre-wrap md:text-2xl"
 		onchange={(e) => goto(e.currentTarget.value)}
 		id="DrawSelect"
-		style="appearance: base-select; border: none; box-shadow: none; height: 100%;"
+		style="appearance: base-select; border: none; box-shadow: none;"
 	>
 		{#if data.active.length > 0}
 			{@render drawSelectOptions('Active', data.active)}
