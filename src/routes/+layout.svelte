@@ -69,13 +69,12 @@
 <Modal
 	open={$shareLinkOpen}
 	onOpenChange={(details) => shareLinkOpen.set(details.open)}
-	contentBase="h-auto w-full"
+	contentBase="h-1/2 w-full"
 	backdropBase="fixed inset-0 z-50"
 	backdropBackground="bg-surface-50-950/50"
-	positionerBase="fixed inset-0 z-50"
-	positionerDisplay="flex"
-	positionerJustify="justify-center"
+	positionerJustify=""
 	positionerAlign="items-end"
+	positionerPadding=""
 	transitionsPositionerIn={{ y: 500, duration: 300 }}
 	transitionsPositionerOut={{ y: 500, duration: 300 }}
 >
@@ -91,10 +90,9 @@
 	contentBase="h-screen w-64 bg-white"
 	backdropBase="fixed inset-0 z-50"
 	backdropBackground="bg-surface-50-950/50"
-	positionerBase="fixed inset-0 z-50"
-	positionerDisplay="flex"
 	positionerJustify="justify-end"
-	positionerAlign="items-stretch"
+	positionerAlign=""
+	positionerPadding=""
 	transitionsPositionerIn={{ x: 300, duration: 300 }}
 	transitionsPositionerOut={{ x: 300, duration: 300 }}
 >
