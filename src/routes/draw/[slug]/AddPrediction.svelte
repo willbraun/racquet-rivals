@@ -30,7 +30,7 @@
 	let [player1, player2] = $derived(players)
 
 	let loading = $state(false)
-	let error = $state('')
+	let error = $state('TEST ERROR')
 	let predictionValue = $state(prediction?.name ?? '')
 	let popoverOpen = $state(false)
 
@@ -141,13 +141,12 @@
 {#if browser}
 	<Popover
 		open={popoverOpen}
-		onOpenChange={(details) => (popoverOpen = details.open)}
+		onOpenChange={(details: { open: boolean }) => (popoverOpen = details.open)}
 		positioning={{ placement: 'top' }}
-		contentBase="card w-fit shadow-lg"
-		contentBackground="bg-white"
-		triggerBase={`${!prediction ? 'chip h-6 rounded-full bg-blue-200' : ''} ${!prediction && predictionsAllowed ? 'border border-dashed border-black' : ''} ${predictionsAllowed ? 'hover:brightness-105' : ''} ${!predictionsAllowed || !$isAuth ? 'pointer-events-none' : ''}${loading ? 'brightness-90' : ''}`.trim()}
 	>
-		{#snippet trigger()}
+		<Popover.Trigger
+			class={`z-0 ${!prediction ? 'chip h-6 rounded-full bg-blue-200' : ''} ${!prediction && predictionsAllowed ? 'border border-dashed border-black' : ''} ${predictionsAllowed ? 'hover:brightness-105' : ''} ${!predictionsAllowed || !$isAuth ? 'pointer-events-none' : ''} ${loading ? 'brightness-90' : ''}`.trim()}
+		>
 			{#if prediction}
 				<ViewPrediction {prediction} />
 			{:else if predictionsAllowed}
@@ -156,41 +155,43 @@
 			{:else}
 				<span class="text-xs italic">None</span>
 			{/if}
-		{/snippet}
-		{#snippet content()}
-			<form onsubmit={handleSubmit}>
-				<div class="flex flex-col overflow-hidden rounded-sm">
-					<button
-						type="submit"
-						class="border-surface-500 hover:bg-surface-400 border-b-1 px-4 py-2 whitespace-nowrap {!player1 &&
-							'pointer-events-none italic'}"
-						disabled={!player1 || !predictionsAllowed || loading || !$isAuth}
-						onclick={() => {
-							selectPlayer(player1)
-							popoverOpen = false
-						}}
-					>
-						<span class="text-xl">
-							{displayPrediction(player1)}
-						</span>
-					</button>
-					<button
-						type="submit"
-						class="hover:bg-surface-400 px-4 py-2 whitespace-nowrap {!player2 &&
-							'pointer-events-none italic'}"
-						disabled={!player2 || !predictionsAllowed || loading || !$isAuth}
-						onclick={() => {
-							selectPlayer(player2)
-							popoverOpen = false
-						}}
-					>
-						<span class="text-xl">
-							{displayPrediction(player2)}
-						</span>
-					</button>
-				</div>
-				<FormError {error} />
-			</form>
-		{/snippet}
+		</Popover.Trigger>
+		<Popover.Positioner>
+			<Popover.Content class="card w-fit bg-white shadow-lg">
+				<form onsubmit={handleSubmit}>
+					<FormError {error} />
+					<div class="flex flex-col overflow-hidden rounded-sm">
+						<button
+							type="submit"
+							class="border-surface-500 hover:bg-surface-400 border-b-1 px-4 py-2 whitespace-nowrap {!player1 &&
+								'pointer-events-none italic'}"
+							disabled={!player1 || !predictionsAllowed || loading || !$isAuth}
+							onclick={() => {
+								selectPlayer(player1)
+								popoverOpen = false
+							}}
+						>
+							<span class="text-xl">
+								{displayPrediction(player1)}
+							</span>
+						</button>
+						<button
+							type="submit"
+							class="hover:bg-surface-400 px-4 py-2 whitespace-nowrap {!player2 &&
+								'pointer-events-none italic'}"
+							disabled={!player2 || !predictionsAllowed || loading || !$isAuth}
+							onclick={() => {
+								selectPlayer(player2)
+								popoverOpen = false
+							}}
+						>
+							<span class="text-xl">
+								{displayPrediction(player2)}
+							</span>
+						</button>
+					</div>
+				</form>
+			</Popover.Content>
+		</Popover.Positioner>
 	</Popover>
 {/if}

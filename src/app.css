@@ -3,8 +3,7 @@
 @plugin '@tailwindcss/typography';
 @import '@skeletonlabs/skeleton';
 @import './myCustomTheme.css';
-@import '@skeletonlabs/skeleton/optional/presets';
-@source "../node_modules/@skeletonlabs/skeleton-svelte/dist";
+@import '@skeletonlabs/skeleton-svelte';
 
 @variant dark (&:where(.dark, .dark *));
 

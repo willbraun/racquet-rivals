@@ -39,9 +39,9 @@
 			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM d, yyyy')}</p>
 		</section>
 		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm md:mb-8 md:p-8">
-			<Accordion iconOpen={infoIcon} iconClosed={infoIcon}>
+			<Accordion>
 				<Accordion.Item value="overall-rank">
-					{#snippet control()}
+					<Accordion.ItemTrigger class="w-full">
 						<div class="grid grid-cols-2 items-center gap-4">
 							<a href="/rankings" class="flex flex-wrap items-center hover:underline">
 								<h2 class="font-bold md:text-3xl">Overall Rank</h2>
@@ -51,17 +51,20 @@
 							<p class="text-2xl font-semibold md:text-7xl">{formatRank(data.overallRank.rank)}</p>
 							<p class="self-end text-2xl md:text-6xl">{data.overallRank.total_points}</p>
 						</div>
-					{/snippet}
-					{#snippet panel()}
+						<Accordion.ItemIndicator class="ml-auto">
+							{@render infoIcon()}
+						</Accordion.ItemIndicator>
+					</Accordion.ItemTrigger>
+					<Accordion.ItemContent class="pt-4">
 						{rankingDescriptions.overall}
-					{/snippet}
+					</Accordion.ItemContent>
 				</Accordion.Item>
 			</Accordion>
 		</section>
 		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm md:mb-8 md:p-8">
-			<Accordion iconOpen={infoIcon} iconClosed={infoIcon}>
+			<Accordion>
 				<Accordion.Item value="average-points">
-					{#snippet control()}
+					<Accordion.ItemTrigger class="w-full">
 						<div class="grid grid-cols-4 items-center gap-4">
 							<a
 								href="/rankings/average-points"
@@ -80,17 +83,20 @@
 								{formatPercent(data.averagePoints.percentile)}
 							</p>
 						</div>
-					{/snippet}
-					{#snippet panel()}
+						<Accordion.ItemIndicator class="ml-auto">
+							{@render infoIcon()}
+						</Accordion.ItemIndicator>
+					</Accordion.ItemTrigger>
+					<Accordion.ItemContent class="pt-4">
 						{rankingDescriptions.averagePoints}
-					{/snippet}
+					</Accordion.ItemContent>
 				</Accordion.Item>
 			</Accordion>
 		</section>
 		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm md:mb-8 md:p-8">
-			<Accordion iconOpen={infoIcon} iconClosed={infoIcon}>
+			<Accordion>
 				<Accordion.Item value="prediction-accuracy">
-					{#snippet control()}
+					<Accordion.ItemTrigger class="w-full">
 						<div class=" grid grid-cols-4 items-center gap-4">
 							<a
 								href="/rankings/prediction-accuracy"
@@ -114,10 +120,13 @@
 								{`(${data.predictionAccuracy.correct}/${data.predictionAccuracy.total})`}
 							</p>
 						</div>
-					{/snippet}
-					{#snippet panel()}
+						<Accordion.ItemIndicator class="ml-auto">
+							{@render infoIcon()}
+						</Accordion.ItemIndicator>
+					</Accordion.ItemTrigger>
+					<Accordion.ItemContent class="pt-4">
 						{rankingDescriptions.predictionAccuracy}
-					{/snippet}
+					</Accordion.ItemContent>
 				</Accordion.Item>
 			</Accordion>
 		</section>

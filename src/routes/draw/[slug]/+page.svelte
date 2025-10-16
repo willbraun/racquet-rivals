@@ -408,7 +408,7 @@
 					</div>
 					<div class={rowStyle}>
 						<div
-							class="badge-icon mx-auto h-6 w-fit rounded-full bg-green-400 px-2 text-lg font-bold shadow-sm"
+							class="badge-icon mx-auto h-6 w-fit min-w-5 rounded-full bg-green-400 px-2 text-lg font-bold shadow-sm"
 						>
 							{result.total_points}
 						</div>

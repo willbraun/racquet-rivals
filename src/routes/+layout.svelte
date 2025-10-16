@@ -14,7 +14,7 @@
 	} from '$lib/store'
 	import type { RootLayoutData } from '$lib/types'
 	import { getSlug } from '$lib/utils'
-	import { Modal } from '@skeletonlabs/skeleton-svelte'
+	import { Dialog } from '@skeletonlabs/skeleton-svelte'
 	import { type Snippet } from 'svelte'
 	import '../app.css'
 	import SelectUsers from './draw/[slug]/SelectUsers.svelte'
@@ -49,57 +49,49 @@
 </svelte:head>
 
 <!-- Select Users Modal -->
-<Modal
+<Dialog
 	open={$selectUsersModalOpen}
-	onOpenChange={(details) => selectUsersModalOpen.set(details.open)}
-	contentBase="card w-modal md:w-xl space-y-4 rounded-xl border border-surface-300-700 bg-white p-6 shadow-xl"
-	backdropBase="fixed inset-0 z-50"
-	backdropBackground="bg-surface-500/50"
-	positionerBase="fixed inset-0 z-50"
-	positionerDisplay="flex"
-	positionerJustify="justify-center"
-	positionerAlign="items-center"
+	onOpenChange={(details: { open: boolean }) => selectUsersModalOpen.set(details.open)}
 >
-	{#snippet content()}
-		<SelectUsers />
-	{/snippet}
-</Modal>
+	<Dialog.Backdrop class="bg-surface-500/50 fixed inset-0 z-50" />
+	<Dialog.Positioner class="fixed inset-0 z-50 flex items-center justify-center">
+		<Dialog.Content
+			class="card w-modal border-surface-300-700 mx-4 space-y-4 rounded-xl border bg-white p-6 shadow-xl md:w-xl"
+		>
+			<SelectUsers />
+		</Dialog.Content>
+	</Dialog.Positioner>
+</Dialog>
 
 <!-- Share Link Drawer -->
-<Modal
+<Dialog
 	open={$shareLinkOpen}
-	onOpenChange={(details) => shareLinkOpen.set(details.open)}
-	contentBase="h-1/2 w-full"
-	backdropBase="fixed inset-0 z-50"
-	backdropBackground="bg-surface-50-950/50"
-	positionerJustify=""
-	positionerAlign="items-end"
-	positionerPadding=""
-	transitionsPositionerIn={{ y: 500, duration: 300 }}
-	transitionsPositionerOut={{ y: 500, duration: 300 }}
+	onOpenChange={(details: { open: boolean }) => shareLinkOpen.set(details.open)}
 >
-	{#snippet content()}
-		<ShareLinkContent />
-	{/snippet}
-</Modal>
+	<Dialog.Backdrop class="bg-surface-500/50 fixed inset-0 z-50" />
+	<Dialog.Positioner class="fixed inset-0 z-50 flex items-end">
+		<Dialog.Content
+			class="h-1/2 w-full translate-y-full opacity-0 shadow-xl transition transition-discrete data-[state=open]:translate-y-0 data-[state=open]:opacity-100 starting:data-[state=open]:translate-y-full starting:data-[state=open]:opacity-0"
+		>
+			<ShareLinkContent />
+		</Dialog.Content>
+	</Dialog.Positioner>
+</Dialog>
 
 <!-- Nav Menu Drawer -->
-<Modal
+<Dialog
 	open={$navMenuOpen}
-	onOpenChange={(details) => navMenuOpen.set(details.open)}
-	contentBase="h-screen w-64 bg-white"
-	backdropBase="fixed inset-0 z-50"
-	backdropBackground="bg-surface-50-950/50"
-	positionerJustify="justify-end"
-	positionerAlign=""
-	positionerPadding=""
-	transitionsPositionerIn={{ x: 300, duration: 300 }}
-	transitionsPositionerOut={{ x: 300, duration: 300 }}
+	onOpenChange={(details: { open: boolean }) => navMenuOpen.set(details.open)}
 >
-	{#snippet content()}
-		<NavMenuContent />
-	{/snippet}
-</Modal>
+	<Dialog.Backdrop class="bg-surface-500/50 fixed inset-0 z-50" />
+	<Dialog.Positioner class="fixed inset-0 z-50 flex justify-end">
+		<Dialog.Content
+			class="h-screen w-64 translate-x-full bg-white opacity-0 shadow-xl transition transition-discrete data-[state=open]:translate-x-0 data-[state=open]:opacity-100 starting:data-[state=open]:translate-x-full starting:data-[state=open]:opacity-0"
+		>
+			<NavMenuContent />
+		</Dialog.Content>
+	</Dialog.Positioner>
+</Dialog>
 
 <div class="flex min-h-screen flex-col">
 	<div class="grow">
