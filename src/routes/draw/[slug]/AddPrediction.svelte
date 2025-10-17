@@ -30,7 +30,7 @@
 	let [player1, player2] = $derived(players)
 
 	let loading = $state(false)
-	let error = $state('TEST ERROR')
+	let error = $state('')
 	let predictionValue = $state(prediction?.name ?? '')
 	let popoverOpen = $state(false)
 
@@ -160,10 +160,10 @@
 			<Popover.Content class="card w-fit bg-white shadow-lg">
 				<form onsubmit={handleSubmit}>
 					<FormError {error} />
-					<div class="flex flex-col overflow-hidden rounded-sm">
+					<div class="flex flex-col overflow-hidden rounded-xl">
 						<button
 							type="submit"
-							class="border-surface-500 hover:bg-surface-400 border-b-1 px-4 py-2 whitespace-nowrap {!player1 &&
+							class="border-surface-200 rounded-none border-b-1 px-4 py-2 whitespace-nowrap hover:bg-blue-100 {!player1 &&
 								'pointer-events-none italic'}"
 							disabled={!player1 || !predictionsAllowed || loading || !$isAuth}
 							onclick={() => {
@@ -177,7 +177,7 @@
 						</button>
 						<button
 							type="submit"
-							class="hover:bg-surface-400 px-4 py-2 whitespace-nowrap {!player2 &&
+							class="rounded-none px-4 py-2 whitespace-nowrap hover:bg-blue-100 {!player2 &&
 								'pointer-events-none italic'}"
 							disabled={!player2 || !predictionsAllowed || loading || !$isAuth}
 							onclick={() => {
