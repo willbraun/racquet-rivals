@@ -11,7 +11,7 @@ else
 fi
 
 echo "Linting Racquet Rivals frontend..."
-npx eslint
+npm run lint
 
 if [ $? -eq 0 ]; then
     echo "Frontend linting passed ✅"

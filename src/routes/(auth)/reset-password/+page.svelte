@@ -1,11 +1,11 @@
 <script lang="ts">
 	import EmailField from '$lib/components/EmailField.svelte'
 	import FormError from '$lib/components/FormError.svelte'
-	import { onMount } from 'svelte'
-	import AuthBase from '../AuthBase.svelte'
 	import { pb } from '$lib/pocketbase'
 	import { errorMessage } from '$lib/utils'
+	import { onMount } from 'svelte'
 	import { slide } from 'svelte/transition'
+	import AuthBase from '../AuthBase.svelte'
 
 	let email = $state('')
 	let showEmailValidation = $state(false)
@@ -84,7 +84,7 @@
 			</div>
 			<!-- Gradient overlay for blur effect -->
 			<div
-				class="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-linear-to-t from-green-100 to-transparent"
+				class="pointer-events-none absolute right-0 bottom-0 left-0 h-6 bg-linear-to-t from-green-100 to-transparent"
 			></div>
 		</div>
 	{/if}
