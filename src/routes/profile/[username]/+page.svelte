@@ -26,9 +26,11 @@
 </script>
 
 {#snippet infoIcon()}
-	<div class="w-4 sm:w-6">
-		<img src={info} alt="info" />
-	</div>
+	<Accordion.ItemIndicator class="absolute -right-2">
+		<div class="w-4 sm:w-6">
+			<img src={info} alt="info" />
+		</div>
+	</Accordion.ItemIndicator>
 {/snippet}
 
 <Header />
@@ -38,11 +40,11 @@
 			<h1 class="mb-4 text-4xl font-bold break-all sm:text-6xl">{data.username}</h1>
 			<p class="sm:text-2xl">Joined {format(new Date(data.created), 'MMM d, yyyy')}</p>
 		</section>
-		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm md:mb-8 md:p-8">
-			<Accordion>
+		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm">
+			<Accordion collapsible>
 				<Accordion.Item value="overall-rank">
-					<Accordion.ItemTrigger class="w-full">
-						<div class="grid grid-cols-2 items-center gap-4">
+					<Accordion.ItemTrigger class="hover:bg-stone-200 hover:text-black md:p-8">
+						<div class="relative grid grid-cols-2 items-center gap-4">
 							<a href="/rankings" class="flex flex-wrap items-center hover:underline">
 								<h2 class="font-bold md:text-3xl">Overall Rank</h2>
 								<img src={trophy} alt="trophy" class="ml-2 inline w-4 md:w-8" />
@@ -50,22 +52,20 @@
 							<p class="self-end md:text-2xl">Ranking Points</p>
 							<p class="text-2xl font-semibold md:text-7xl">{formatRank(data.overallRank.rank)}</p>
 							<p class="self-end text-2xl md:text-6xl">{data.overallRank.total_points}</p>
-						</div>
-						<Accordion.ItemIndicator class="ml-auto">
 							{@render infoIcon()}
-						</Accordion.ItemIndicator>
+						</div>
 					</Accordion.ItemTrigger>
-					<Accordion.ItemContent class="pt-4">
+					<Accordion.ItemContent class="md:px-8 md:pb-8">
 						{rankingDescriptions.overall}
 					</Accordion.ItemContent>
 				</Accordion.Item>
 			</Accordion>
 		</section>
-		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm md:mb-8 md:p-8">
-			<Accordion>
+		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm">
+			<Accordion collapsible>
 				<Accordion.Item value="average-points">
-					<Accordion.ItemTrigger class="w-full">
-						<div class="grid grid-cols-4 items-center gap-4">
+					<Accordion.ItemTrigger class="hover:bg-stone-200 hover:text-black md:p-8">
+						<div class="relative grid grid-cols-4 items-center gap-4">
 							<a
 								href="/rankings/average-points"
 								class="col-span-2 flex flex-wrap items-center hover:underline"
@@ -82,22 +82,20 @@
 							<p class="self-end text-2xl md:text-6xl">
 								{formatPercent(data.averagePoints.percentile)}
 							</p>
-						</div>
-						<Accordion.ItemIndicator class="ml-auto">
 							{@render infoIcon()}
-						</Accordion.ItemIndicator>
+						</div>
 					</Accordion.ItemTrigger>
-					<Accordion.ItemContent class="pt-4">
+					<Accordion.ItemContent class="md:px-8 md:pb-8">
 						{rankingDescriptions.averagePoints}
 					</Accordion.ItemContent>
 				</Accordion.Item>
 			</Accordion>
 		</section>
-		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm md:mb-8 md:p-8">
-			<Accordion>
+		<section class="bg-stone-250 mb-4 rounded-xl shadow-sm">
+			<Accordion collapsible>
 				<Accordion.Item value="prediction-accuracy">
-					<Accordion.ItemTrigger class="w-full">
-						<div class=" grid grid-cols-4 items-center gap-4">
+					<Accordion.ItemTrigger class="hover:bg-stone-200 hover:text-black md:p-8">
+						<div class="relative grid grid-cols-4 items-center gap-4">
 							<a
 								href="/rankings/prediction-accuracy"
 								class="col-span-2 flex flex-wrap items-center hover:underline"
@@ -119,12 +117,10 @@
 							<p class="text-xs text-gray-500 md:text-base">
 								{`(${data.predictionAccuracy.correct}/${data.predictionAccuracy.total})`}
 							</p>
-						</div>
-						<Accordion.ItemIndicator class="ml-auto">
 							{@render infoIcon()}
-						</Accordion.ItemIndicator>
+						</div>
 					</Accordion.ItemTrigger>
-					<Accordion.ItemContent class="pt-4">
+					<Accordion.ItemContent class="md:px-8 md:pb-8">
 						{rankingDescriptions.predictionAccuracy}
 					</Accordion.ItemContent>
 				</Accordion.Item>
