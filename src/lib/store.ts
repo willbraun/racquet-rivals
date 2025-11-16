@@ -46,3 +46,4 @@ if (typeof window !== 'undefined') {
 export const selectUsersModalOpen = writable<boolean>(false)
 export const shareLinkOpen = writable<boolean>(false)
 export const navMenuOpen = writable<boolean>(false)
+export const slotStatsOpen = writable<string | null>(null)

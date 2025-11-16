@@ -7,9 +7,11 @@
 	import {
 		currentUser,
 		drawNavUrl,
+		isMobile,
 		navMenuOpen,
 		selectUsersModalOpen,
-		shareLinkOpen
+		shareLinkOpen,
+		slotStatsOpen
 	} from '$lib/store'
 	import type { RootLayoutData } from '$lib/types'
 	import { getSlug } from '$lib/utils'
@@ -17,6 +19,7 @@
 	import { type Snippet } from 'svelte'
 	import '../app.css'
 	import Footer from '../lib/components/Footer.svelte'
+	import SlotStats from '../lib/components/SlotStats.svelte'
 	import SelectUsers from './draw/[slug]/SelectUsers.svelte'
 
 	interface Props {
@@ -61,6 +64,32 @@
 			<SelectUsers />
 		</Dialog.Content>
 	</Dialog.Positioner>
+</Dialog>
+
+<!-- Slot Stats Drawer -->
+<Dialog
+	open={!!$slotStatsOpen}
+	onOpenChange={(details: { open: boolean }) =>
+		slotStatsOpen.set(details.open ? $slotStatsOpen : null)}
+>
+	<Dialog.Backdrop class="bg-surface-500/50 fixed inset-0 z-50" />
+	{#if $isMobile}
+		<Dialog.Positioner class="fixed inset-0 z-50 flex items-end">
+			<Dialog.Content
+				class="h-1/2 w-full translate-y-full opacity-0 shadow-xl transition transition-discrete data-[state=open]:translate-y-0 data-[state=open]:opacity-100 starting:data-[state=open]:translate-y-full starting:data-[state=open]:opacity-0"
+			>
+				<SlotStats slotId={$slotStatsOpen} />
+			</Dialog.Content>
+		</Dialog.Positioner>
+	{:else}
+		<Dialog.Positioner class="fixed inset-0 z-50 flex justify-end">
+			<Dialog.Content
+				class="h-screen w-64 translate-x-full bg-white opacity-0 shadow-xl transition transition-discrete data-[state=open]:translate-x-0 data-[state=open]:opacity-100 starting:data-[state=open]:translate-x-full starting:data-[state=open]:opacity-0"
+			>
+				<SlotStats slotId={$slotStatsOpen} />
+			</Dialog.Content>
+		</Dialog.Positioner>
+	{/if}
 </Dialog>
 
 <!-- Share Link Drawer -->
