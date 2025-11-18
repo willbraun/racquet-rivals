@@ -138,6 +138,20 @@ export interface PredictionRecord {
 	user_id: string
 }
 
+export interface PredictionDistribution {
+	collectionId: string
+	collectionName: 'prediction_stats'
+	id: string
+	draw_id: string
+	draw_slot_id: string
+	round: number
+	position: number
+	name: string
+	percentage: number | null
+	name_count: number
+	is_correct: boolean
+}
+
 export interface DrawResult {
 	collectionId: string
 	collectionName: 'draw_results'
@@ -288,6 +302,7 @@ export interface DrawPageData extends BasePageData {
 	activeRound: string
 	slots: Slot[]
 	drawResults: PbListResponse<DrawResult>
+	predictionDistribution: PbListResponse<PredictionDistribution>
 	isLeaderboard: boolean
 }
 

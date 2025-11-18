@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
 	import { afterNavigate, goto } from '$app/navigation'
-	import { getPredictions } from '$lib/api'
+	import { getPredictionDistribution, getPredictions } from '$lib/api'
 	import Header from '$lib/components/Header.svelte'
 	import MatchScore from '$lib/components/MatchScore.svelte'
 	import Rank from '$lib/components/Rank.svelte'
@@ -18,6 +18,8 @@
 		isLeaderboard,
 		loginGoto,
 		mySelectedUsers,
+		predictionDistributionError,
+		predictionDistributionStore,
 		predictionsError,
 		predictionStore,
 		selectUsersModalOpen,
@@ -171,6 +173,7 @@
 		loginGoto.set(url)
 		currentDrawId.set(data.draw.id)
 		getAllUserPredictions()
+		getDrawPredictionDistribution()
 	})
 
 	//////////////////////////////////////////
@@ -250,6 +253,25 @@
 		}
 
 		return [player1, player2]
+	}
+
+	//////////////////////////////////////////
+	// SLOT STATS
+	//////////////////////////////////////////
+
+	const getDrawPredictionDistribution = async () => {
+		try {
+			const predictionDistributionRecords = await getPredictionDistribution(
+				data.draw.id,
+				pb.authStore.token
+			)
+			predictionDistributionStore.set(predictionDistributionRecords.items)
+			predictionDistributionError.set('')
+		} catch (error) {
+			predictionDistributionError.set(
+				`Error: ${error instanceof Error ? error.message : 'Failed to load prediction distribution'}`
+			)
+		}
 	}
 
 	//////////////////////////////////////////
@@ -370,6 +392,11 @@
 		{/if}
 		{#if $predictionsError}
 			<p class="text-red-500" data-testid="PredictionsError">{$predictionsError}</p>
+		{/if}
+		{#if $predictionDistributionError}
+			<p class="text-red-500" data-testid="PredictionDistributionError">
+				{$predictionDistributionError}
+			</p>
 		{/if}
 	</div>
 </section>

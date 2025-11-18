@@ -1,4 +1,4 @@
-import type { Prediction, SelectedUser, UserRecord } from '$lib/types'
+import type { Prediction, PredictionDistribution, SelectedUser, UserRecord } from '$lib/types'
 import Cookies from 'js-cookie'
 import { persisted } from 'svelte-persisted-store'
 import { derived, writable } from 'svelte/store'
@@ -24,9 +24,18 @@ export const mySelectedUsers = derived(
 		return $selectedUsers.filter((user) => user.selectorId === $currentUser?.id)
 	}
 )
+
+// Predictions
 export const predictionStore = writable<Prediction[]>([])
 export const predictionsError = writable<string>('')
 predictionsError.subscribe((value) => {
+	if (value) {
+		logErrorInDev(value)
+	}
+})
+export const predictionDistributionStore = writable<PredictionDistribution[]>([])
+export const predictionDistributionError = writable<string>('')
+predictionDistributionError.subscribe((value) => {
 	if (value) {
 		logErrorInDev(value)
 	}
@@ -42,7 +51,7 @@ if (typeof window !== 'undefined') {
 	isMobile.set(value)
 }
 
-// Modal/Drawer state (replacing old skeleton stores)
+// Modal/Drawer state
 export const selectUsersModalOpen = writable<boolean>(false)
 export const shareLinkOpen = writable<boolean>(false)
 export const navMenuOpen = writable<boolean>(false)
