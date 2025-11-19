@@ -1,4 +1,5 @@
 <script lang="ts">
+	import x from '$lib/images/icons/x.svg'
 	import { Chart } from 'chart.js/auto'
 	import { onMount } from 'svelte'
 	import { predictionDistributionStore, slotStatsOpen } from '../store'
@@ -75,6 +76,15 @@
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
+				plugins: {
+					legend: {
+						labels: {
+							font: {
+								size: 16
+							}
+						}
+					}
+				},
 				elements: {
 					arc: {
 						borderWidth: (context) => {
@@ -101,10 +111,18 @@
 	})
 </script>
 
-<div class="flex h-full w-full flex-col items-center gap-8 bg-white p-8">
-	<h2 class="text-xl font-semibold">
-		{roundMap[round] || 'Unknown round'}
-		{round !== 8 ? `#${position}` : ''}
-	</h2>
-	<canvas bind:this={canvasEl}></canvas>
+<div class="flex h-full w-full flex-col items-center justify-between gap-4 bg-white">
+	<div class="relative w-full bg-stone-200 p-2 text-center shadow">
+		<p class="text-xl font-bold">
+			{roundMap[round] || 'Unknown round'}
+			{round !== 8 ? `#${position}` : ''}
+		</p>
+		<button
+			onclick={() => slotStatsOpen.set(null)}
+			class="absolute top-0 top-1/2 right-4 -translate-y-1/2"
+		>
+			<img src={x} alt="close" width="24" />
+		</button>
+	</div>
+	<canvas class="px-4" bind:this={canvasEl}></canvas>
 </div>

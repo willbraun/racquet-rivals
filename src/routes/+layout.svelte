@@ -76,7 +76,7 @@
 	{#if $isMobile}
 		<Dialog.Positioner class="fixed inset-0 z-50 flex items-end">
 			<Dialog.Content
-				class="h-1/2 w-full translate-y-full opacity-0 shadow-xl transition transition-discrete data-[state=open]:translate-y-0 data-[state=open]:opacity-100 starting:data-[state=open]:translate-y-full starting:data-[state=open]:opacity-0"
+				class="h-3/4 w-full translate-y-full opacity-0 shadow-xl transition transition-discrete data-[state=open]:translate-y-0 data-[state=open]:opacity-100 starting:data-[state=open]:translate-y-full starting:data-[state=open]:opacity-0"
 			>
 				<SlotStats />
 			</Dialog.Content>
