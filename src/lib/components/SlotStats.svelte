@@ -7,29 +7,34 @@
 	let round = $derived($slotStatsOpen?.round ?? 0)
 	let position = $derived($slotStatsOpen?.position ?? 0)
 	let name = $derived($slotStatsOpen?.name ?? 'Unknown')
+	let seed = $derived($slotStatsOpen?.seed ?? '')
 
+	let winningIcon = $derived(round === 8 ? '🏆' : '✅')
 	let chartData = $derived.by(() => {
 		const distributions = $predictionDistributionStore.filter(
 			(item) => item.draw_slot_id === $slotStatsOpen?.id
 		)
 
-		return {
-			labels: distributions.map((d) => d.name),
-			values: distributions.map((d) => d.name_count)
-		}
-	})
+		const labels = distributions.map((d) => d.name)
+		const values = distributions.map((d) => d.name_count)
 
-	let winningIcon = $derived(round === 8 ? '🏆' : '✅')
-	let winningArcIndex = $derived.by(() => {
-		const naiveIndex = chartData.labels.findIndex((label) => label.includes(name))
+		let winningArcIndex = -1
+
+		const naiveIndex = labels.findIndex((label) => label.includes(name))
 		if (naiveIndex === -1) {
-			chartData.labels.push(`${name} ${winningIcon}`)
-			chartData.values.push(0)
-			return chartData.labels.length - 1
+			labels.push(`${seed} ${name} ${winningIcon}`)
+			values.push(0)
+			winningArcIndex = labels.length - 1
+		} else {
+			labels[naiveIndex] = `${labels[naiveIndex]} ${winningIcon}`
+			winningArcIndex = naiveIndex
 		}
 
-		chartData.labels[naiveIndex] = `${chartData.labels[naiveIndex]} ${winningIcon}`
-		return naiveIndex
+		return {
+			labels,
+			values,
+			winningArcIndex
+		}
 	})
 
 	const roundMap: Record<number, string> = {
@@ -41,6 +46,10 @@
 
 	let canvasEl: HTMLCanvasElement
 	let chart: Chart
+
+	const isWinningArc = (dataIndex: number) => dataIndex === chartData.winningArcIndex
+	const getArcBorderWidth = (dataIndex: number) => (isWinningArc(dataIndex) ? 4 : 2)
+	const getArcBorderColor = (dataIndex: number) => (isWinningArc(dataIndex) ? '#000' : '#fff')
 
 	// Initialize chart on mount
 	onMount(() => {
@@ -87,12 +96,8 @@
 				},
 				elements: {
 					arc: {
-						borderWidth: (context) => {
-							return context.dataIndex === winningArcIndex ? 4 : 2
-						},
-						borderColor: (context) => {
-							return context.dataIndex === winningArcIndex ? '#000' : '#fff'
-						}
+						borderWidth: (context) => getArcBorderWidth(context.dataIndex),
+						borderColor: (context) => getArcBorderColor(context.dataIndex)
 					}
 				}
 			}
@@ -106,6 +111,8 @@
 		if (chart) {
 			chart.data.labels = chartData.labels
 			chart.data.datasets[0].data = chartData.values
+			chart.options.elements!.arc!.borderWidth = (context) => getArcBorderWidth(context.dataIndex)
+			chart.options.elements!.arc!.borderColor = (context) => getArcBorderColor(context.dataIndex)
 			chart.update()
 		}
 	})
