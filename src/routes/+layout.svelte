@@ -84,7 +84,7 @@
 	{:else}
 		<Dialog.Positioner class="fixed inset-0 z-50 flex justify-end">
 			<Dialog.Content
-				class="h-screen max-w-screen-lg translate-x-full bg-white opacity-0 shadow-xl transition transition-discrete data-[state=open]:translate-x-0 data-[state=open]:opacity-100 starting:data-[state=open]:translate-x-full starting:data-[state=open]:opacity-0"
+				class="h-screen w-96 translate-x-full bg-white opacity-0 shadow-xl transition transition-discrete data-[state=open]:translate-x-0 data-[state=open]:opacity-100 starting:data-[state=open]:translate-x-full starting:data-[state=open]:opacity-0"
 			>
 				<SlotStats />
 			</Dialog.Content>
