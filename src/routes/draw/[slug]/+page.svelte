@@ -45,7 +45,6 @@
 	} from '$lib/utils'
 	import { addDays, format } from 'date-fns'
 	import Cookies from 'js-cookie'
-	import { onMount } from 'svelte'
 	import AddPrediction from './AddPrediction.svelte'
 	import ViewPrediction from './ViewPrediction.svelte'
 
@@ -164,16 +163,16 @@
 	const allRounds = $derived(getAllRounds(fullDrawRounds))
 	const ourRounds = $derived(getOurRounds(allRounds))
 
-	onMount(() => {
-		getAllUserPredictions()
-	})
 	afterNavigate(() => {
 		const url = `/draw/${getSlug(data.draw)}`
 		drawNavUrl.set(url)
 		loginGoto.set(url)
 		currentDrawId.set(data.draw.id)
 		getAllUserPredictions()
-		getDrawPredictionDistribution()
+
+		if (!predictionsAllowed) {
+			getDrawPredictionDistribution()
+		}
 	})
 
 	//////////////////////////////////////////
@@ -545,7 +544,7 @@
 									{#if !predictionsAllowed}
 										<button
 											class="absolute right-0 bottom-0 p-1"
-											onclick={() => slotStatsOpen.set(slot.id)}
+											onclick={() => slotStatsOpen.set(slot)}
 										>
 											<svg
 												class="fill-stone-400 duration-100 hover:scale-110 hover:fill-stone-600"

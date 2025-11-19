@@ -1,4 +1,4 @@
-import type { Prediction, PredictionDistribution, SelectedUser, UserRecord } from '$lib/types'
+import type { Prediction, PredictionDistribution, SelectedUser, Slot, UserRecord } from '$lib/types'
 import Cookies from 'js-cookie'
 import { persisted } from 'svelte-persisted-store'
 import { derived, writable } from 'svelte/store'
@@ -55,4 +55,4 @@ if (typeof window !== 'undefined') {
 export const selectUsersModalOpen = writable<boolean>(false)
 export const shareLinkOpen = writable<boolean>(false)
 export const navMenuOpen = writable<boolean>(false)
-export const slotStatsOpen = writable<string | null>(null)
+export const slotStatsOpen = writable<Slot | null>(null)
