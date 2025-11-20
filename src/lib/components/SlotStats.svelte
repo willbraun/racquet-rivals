@@ -50,10 +50,10 @@
 	})
 
 	const roundMap: Record<number, string> = {
-		5: 'Round of 16',
-		6: 'Quarterfinal',
-		7: 'Semifinal',
-		8: 'Final'
+		5: 'Quarterfinalist',
+		6: 'Semifinalist',
+		7: 'Finalist',
+		8: 'Champion'
 	}
 
 	let canvasEl: HTMLCanvasElement

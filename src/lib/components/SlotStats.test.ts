@@ -57,40 +57,40 @@ describe('SlotStats component', () => {
 	})
 
 	describe('Round display tests', () => {
-		test('Displays correct round name and position for Round of 16', () => {
+		test('Displays correct round name and position for Quarterfinalist', () => {
 			const slot: Slot = { ...baseSlot, round: 5, position: 3 }
 			slotStatsOpen.set(slot)
 
 			render(SlotStats)
 
-			expect(screen.getByText(/Round of 16 #3/)).toBeInTheDocument()
+			expect(screen.getByText(/Quarterfinalist #3/)).toBeInTheDocument()
 		})
 
-		test('Displays correct round name and position for Quarterfinal', () => {
+		test('Displays correct round name and position for Semifinalist', () => {
 			const slot: Slot = { ...baseSlot, round: 6, position: 2 }
 			slotStatsOpen.set(slot)
 
 			render(SlotStats)
 
-			expect(screen.getByText(/Quarterfinal #2/)).toBeInTheDocument()
+			expect(screen.getByText(/Semifinalist #2/)).toBeInTheDocument()
 		})
 
-		test('Displays correct round name and position for Semifinal', () => {
+		test('Displays correct round name and position for Finalist', () => {
 			const slot: Slot = { ...baseSlot, round: 7, position: 1 }
 			slotStatsOpen.set(slot)
 
 			render(SlotStats)
 
-			expect(screen.getByText(/Semifinal #1/)).toBeInTheDocument()
+			expect(screen.getByText(/Finalist #1/)).toBeInTheDocument()
 		})
 
-		test('Displays Final without position number', () => {
+		test('Displays Champion without position number', () => {
 			const slot: Slot = { ...baseSlot, round: 8, position: 1 }
 			slotStatsOpen.set(slot)
 
 			render(SlotStats)
 
-			expect(screen.getByText('Final')).toBeInTheDocument()
+			expect(screen.getByText('Champion')).toBeInTheDocument()
 			expect(screen.queryByText(/#1/)).not.toBeInTheDocument()
 		})
 
@@ -234,14 +234,14 @@ describe('SlotStats component', () => {
 
 			const { rerender } = render(SlotStats)
 
-			expect(screen.getByText(/Quarterfinal #1/)).toBeInTheDocument()
+			expect(screen.getByText(/Semifinalist #1/)).toBeInTheDocument()
 
 			// Change to different slot
 			const slot2: Slot = { ...baseSlot, id: 'slot2', round: 7, position: 2 }
 			slotStatsOpen.set(slot2)
 			await rerender({})
 
-			expect(screen.getByText(/Semifinal #2/)).toBeInTheDocument()
+			expect(screen.getByText(/Finalist #2/)).toBeInTheDocument()
 		})
 
 		test('Updates when predictionDistributionStore changes', async () => {
