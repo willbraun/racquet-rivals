@@ -29,8 +29,8 @@ export async function handle({ event, resolve }) {
 		'set-cookie',
 		event.locals.pb.authStore.exportToCookie({
 			httpOnly: false, // so it can be cleared from a client logout
-			secure: true, // set to false if testing on phone
-			sameSite: true // set to false if testing on phone
+			secure: false, // set to false if testing on phone
+			sameSite: false // set to false if testing on phone
 		})
 	)
 

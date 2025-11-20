@@ -45,6 +45,7 @@
 	} from '$lib/utils'
 	import { addDays, format } from 'date-fns'
 	import Cookies from 'js-cookie'
+	import { onMount } from 'svelte'
 	import AddPrediction from './AddPrediction.svelte'
 	import ViewPrediction from './ViewPrediction.svelte'
 
@@ -162,6 +163,14 @@
 	const fullDrawRounds = $derived(getFullDrawRounds(data.draw))
 	const allRounds = $derived(getAllRounds(fullDrawRounds))
 	const ourRounds = $derived(getOurRounds(allRounds))
+
+	onMount(() => {
+		getAllUserPredictions()
+
+		if (!predictionsAllowed) {
+			getDrawPredictionDistribution()
+		}
+	})
 
 	afterNavigate(() => {
 		const url = `/draw/${getSlug(data.draw)}`

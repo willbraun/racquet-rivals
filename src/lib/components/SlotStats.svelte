@@ -3,6 +3,7 @@
 	import { Chart } from 'chart.js/auto'
 	import { onMount } from 'svelte'
 	import { predictionDistributionStore, slotStatsOpen } from '../store'
+	import { IsCorrect } from '../types'
 
 	let round = $derived($slotStatsOpen?.round ?? 0)
 	let position = $derived($slotStatsOpen?.position ?? 0)
@@ -11,9 +12,9 @@
 
 	let winningIcon = $derived(round === 8 ? '🏆' : '✅')
 	let chartData = $derived.by(() => {
-		const distributions = $predictionDistributionStore.filter(
-			(item) => item.draw_slot_id === $slotStatsOpen?.id
-		)
+		const distributions = $predictionDistributionStore
+			.filter((item) => item.draw_slot_id === $slotStatsOpen?.id)
+			.sort((a, b) => b.name_count - a.name_count)
 
 		const labels = distributions.map((d) => d.name)
 		const values = distributions.map((d) => d.name_count)
@@ -30,7 +31,7 @@
 		}
 
 		// Find the arc index of the winner
-		const naiveIndex = labels.findIndex((label) => label.includes(name))
+		const naiveIndex = distributions.map((d) => d.is_correct).indexOf(IsCorrect.CORRECT)
 		if (naiveIndex === -1) {
 			// Nobody predicted the winner, so add a new arc of size 0
 			labels.push(`${seed} ${name} ${winningIcon}`)
@@ -95,13 +96,21 @@
 			},
 			options: {
 				responsive: true,
-				maintainAspectRatio: false,
+				maintainAspectRatio: true,
 				plugins: {
 					legend: {
 						labels: {
 							font: {
-								size: 16
+								size: 18
 							}
+						}
+					},
+					tooltip: {
+						titleFont: {
+							size: 18
+						},
+						bodyFont: {
+							size: 18
 						}
 					}
 				},
@@ -130,8 +139,8 @@
 </script>
 
 <div class="flex h-full w-full flex-col items-center justify-between gap-4 bg-white">
-	<div class="relative w-full bg-stone-200 p-2 text-center shadow">
-		<p class="text-xl font-bold">
+	<div class="relative w-full bg-stone-200 text-center shadow">
+		<p class="p-2 text-xl font-bold">
 			{roundMap[round] || 'Unknown round'}
 			{round !== 8 ? `#${position}` : ''}
 		</p>
@@ -142,5 +151,5 @@
 			<img src={x} alt="close" width="24" />
 		</button>
 	</div>
-	<canvas class="px-4" bind:this={canvasEl}></canvas>
+	<canvas class="my-auto overflow-y-auto sm:p-4" bind:this={canvasEl}></canvas>
 </div>

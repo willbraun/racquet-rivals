@@ -120,6 +120,13 @@ const data: DrawPageData = {
 		totalItems: 4,
 		totalPages: 1
 	} as PbListResponse<DrawResult>,
+	predictionDistribution: {
+		items: [],
+		page: 1,
+		perPage: 30,
+		totalItems: 0,
+		totalPages: 0
+	},
 	isLeaderboard: false,
 	title: 'French Open',
 	description: 'View the draw for the French Open.'

@@ -10,6 +10,30 @@ window.matchMedia =
 		}
 	}
 
+// Mock Chart.js globally to prevent canvas rendering issues in tests
+vi.mock('chart.js/auto', () => {
+	const mockChart = vi.fn().mockImplementation(() => ({
+		data: {
+			labels: [],
+			datasets: [{ data: [] }]
+		},
+		options: {
+			elements: {
+				arc: {
+					borderWidth: vi.fn(),
+					borderColor: vi.fn()
+				}
+			}
+		},
+		update: vi.fn(),
+		destroy: vi.fn()
+	}))
+
+	return {
+		Chart: mockChart
+	}
+})
+
 vi.mock('$app/stores', async () => {
 	const { readable, writable } = await import('svelte/store')
 	/**

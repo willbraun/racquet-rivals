@@ -23,6 +23,13 @@ export const DrawStatus = {
 } as const
 export type DrawStatus = (typeof DrawStatus)[keyof typeof DrawStatus]
 
+export const IsCorrect = {
+	CORRECT: 'correct',
+	INCORRECT: 'incorrect',
+	PENDING: 'pending'
+} as const
+export type IsCorrect = (typeof IsCorrect)[keyof typeof IsCorrect]
+
 export const PlanName = {
 	MEN: 'men',
 	WOMEN: 'women',
@@ -149,7 +156,7 @@ export interface PredictionDistribution {
 	name: string
 	percentage: number | null
 	name_count: number
-	is_correct: boolean
+	is_correct: IsCorrect
 }
 
 export interface DrawResult {
