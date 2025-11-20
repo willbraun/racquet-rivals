@@ -6,7 +6,7 @@
 
 	let round = $derived($slotStatsOpen?.round ?? 0)
 	let position = $derived($slotStatsOpen?.position ?? 0)
-	let name = $derived($slotStatsOpen?.name ?? 'Unknown')
+	let name = $derived($slotStatsOpen?.name ?? '')
 	let seed = $derived($slotStatsOpen?.seed ?? '')
 
 	let winningIcon = $derived(round === 8 ? '🏆' : '✅')
@@ -20,8 +20,19 @@
 
 		let winningArcIndex = -1
 
+		// Predictions have been made but no winner yet
+		if (!name) {
+			return {
+				labels,
+				values,
+				winningArcIndex
+			}
+		}
+
+		// Find the arc index of the winner
 		const naiveIndex = labels.findIndex((label) => label.includes(name))
 		if (naiveIndex === -1) {
+			// Nobody predicted the winner, so add a new arc of size 0
 			labels.push(`${seed} ${name} ${winningIcon}`)
 			values.push(0)
 			winningArcIndex = labels.length - 1
