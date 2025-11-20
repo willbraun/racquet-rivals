@@ -139,8 +139,8 @@
 </script>
 
 <div class="flex h-full w-full flex-col items-center justify-between gap-4 bg-white">
-	<div class="relative w-full bg-stone-200 text-center shadow">
-		<p class="p-2 text-xl font-bold">
+	<div class="relative w-full bg-stone-200 p-2 text-center">
+		<p class="text-3xl font-bold">
 			{roundMap[round] || 'Unknown round'}
 			{round !== 8 ? `#${position}` : ''}
 		</p>
