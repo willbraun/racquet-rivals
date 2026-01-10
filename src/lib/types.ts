@@ -30,6 +30,12 @@ export const IsCorrect = {
 } as const
 export type IsCorrect = (typeof IsCorrect)[keyof typeof IsCorrect]
 
+export const UserRole = {
+	ADMIN: 'admin',
+	USER: 'user'
+} as const
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
 // Pocketbase API types
 export interface PbListResponse<T> {
 	page: number
@@ -44,6 +50,7 @@ export interface UserRecord extends RecordModel {
 	collectionName: 'user'
 	avatar: string
 	id: string
+	role: UserRole
 	username: string
 	emailVisibility: boolean
 	created: string
@@ -205,6 +212,17 @@ export interface DrawEntry {
 	end_date: string
 }
 
+export interface ScraperHealthCheck {
+	collectionId: string
+	collectionName: 'scraper_health_check'
+	id: string
+	draw_type: 'atp' | 'wta'
+	draw_url: string
+	error: string
+	created: string
+	updated: string
+}
+
 export interface AuthResult {
 	data: {
 		error: string
@@ -291,4 +309,9 @@ export interface ProfilePageData extends BasePageData {
 
 export interface RankingsPageData<T> extends BasePageData {
 	rankings: PbListResponse<T>
+}
+
+export interface AdminPageData {
+	atpHealth: ScraperHealthCheck | null
+	wtaHealth: ScraperHealthCheck | null
 }

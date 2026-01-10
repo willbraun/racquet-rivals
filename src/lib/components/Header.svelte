@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state'
-	import home from '$lib/images/icons/home.svg'
 	import NavMenu from '$lib/components/NavMenu.svelte'
+	import home from '$lib/images/icons/home.svg'
 	import type { Snippet } from 'svelte'
 
 	interface Props {

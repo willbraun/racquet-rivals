@@ -2,6 +2,7 @@
 	import logout from '$lib/images/icons/arrow-right-from-bracket-solid.svg'
 	import login from '$lib/images/icons/arrow-right-to-bracket-solid.svg'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
+	import gear from '$lib/images/icons/gear-solid.svg'
 	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import signup from '$lib/images/icons/user-plus-solid.svg'
 	import user from '$lib/images/icons/user-solid.svg'
@@ -12,6 +13,8 @@
 	const closeDrawer = () => {
 		navMenuOpen.set(false)
 	}
+
+	const isAdmin = $derived($currentUser?.role === 'admin')
 </script>
 
 {#snippet menuLink(name: string, image: string, alt: string, imgWidth: number, url: string)}
@@ -26,6 +29,9 @@
 	{@render menuLink('Rankings', trophy, 'rankings', 24, '/rankings')}
 	{#if $isAuth}
 		{@render menuLink('Profile', user, 'profile', 18, `/profile/${$currentUser?.username}`)}
+	{/if}
+	{#if isAdmin}
+		{@render menuLink('Admin', gear, 'admin', 20, '/admin')}
 	{/if}
 	<ShareLink />
 	{#if $isAuth}

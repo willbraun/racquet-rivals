@@ -1,5 +1,6 @@
 <script lang="ts">
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
+	import gear from '$lib/images/icons/gear-solid.svg'
 	import hamburger from '$lib/images/icons/hamburger-menu.svg'
 	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import user from '$lib/images/icons/user-solid.svg'
@@ -11,6 +12,7 @@
 	}
 
 	let { isInverted }: Props = $props()
+	const isAdmin = $derived($currentUser?.role === 'admin')
 
 	const buttonStyle = `btn btn-sm rounded-lg ${isInverted ? 'bg-white text-black' : 'bg-black text-white'}`
 </script>
@@ -39,6 +41,11 @@
 		{#if $isAuth}
 			<a href={`/profile/${$currentUser?.username}`}>
 				<img src={user} alt="profile" width="18" class:invert={isInverted} />
+			</a>
+		{/if}
+		{#if isAdmin}
+			<a href="/admin" title="Admin: Scraper Health">
+				<img src={gear} alt="admin" width="20" class:invert={isInverted} />
 			</a>
 		{/if}
 		{#if $isAuth}
