@@ -1,8 +1,8 @@
+import type { Draw, RootLayoutData, UserRecord } from '$lib/types'
+import '@testing-library/jest-dom/vitest'
 import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
-import '@testing-library/jest-dom/vitest'
 import Layout from './+layout.svelte'
-import type { Draw, RootLayoutData, UserRecord } from '$lib/types'
 
 const data: RootLayoutData = {
 	cookieCurrentUser: {
@@ -13,8 +13,7 @@ const data: RootLayoutData = {
 		username: 'will',
 		emailVisibility: true,
 		created: '2024-05-02 15:42:20.397Z',
-		updated: '2024-05-02 15:42:20.397Z',
-		grandfathered: false
+		updated: '2024-05-02 15:42:20.397Z'
 	},
 	defaultDraw: {
 		collectionId: 'zpjgxcf4d9ojqcd',

@@ -56,7 +56,6 @@
 	"type": "module",
 	"dependencies": {
 		"@floating-ui/dom": "^1.6.13",
-		"@paddle/paddle-js": "^1.4.1",
 		"@tailwindcss/vite": "^4.1.14",
 		"chart.js": "^4.5.1",
 		"date-fns": "^3.6.0",

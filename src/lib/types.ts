@@ -30,25 +30,6 @@ export const IsCorrect = {
 } as const
 export type IsCorrect = (typeof IsCorrect)[keyof typeof IsCorrect]
 
-export const PlanName = {
-	MEN: 'men',
-	WOMEN: 'women',
-	BOTH: 'both',
-	SUBSCRIPTION: 'subscription'
-}
-export type PlanName = (typeof PlanName)[keyof typeof PlanName]
-
-export const UserAccess = {
-	GRANDFATHERED: 'grandfathered',
-	SUBSCRIPTION: PlanName.SUBSCRIPTION,
-	MEN: PlanName.MEN,
-	WOMEN: PlanName.WOMEN,
-	BOTH: PlanName.BOTH,
-	NONE: 'none',
-	LOGGED_OUT: 'loggedOut'
-}
-export type UserAccess = (typeof UserAccess)[keyof typeof UserAccess]
-
 // Pocketbase API types
 export interface PbListResponse<T> {
 	page: number
@@ -65,7 +46,6 @@ export interface UserRecord extends RecordModel {
 	id: string
 	username: string
 	emailVisibility: boolean
-	grandfathered: boolean
 	created: string
 	updated: string
 }
@@ -209,19 +189,6 @@ export interface OverallRank {
 	username: string
 	total_points: number
 	rank: number
-}
-
-export interface Subscription {
-	collectionId: string
-	collectionName: 'subscription'
-	id: string
-	user_id: string
-	paddle_subscription_id: string
-	status: string
-	current_billing_period_start: string
-	current_billing_period_end: string
-	created: string
-	updated: string
 }
 
 export interface DrawEntry {

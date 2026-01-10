@@ -78,9 +78,7 @@ describe('Home page component', () => {
 			username: 'will',
 			emailVisibility: true,
 			created: '2024-05-02 15:42:20.397Z',
-			updated: '2024-05-02 15:42:20.397Z',
-			grandfathered: false,
-			paddle_customer_id: 'ctm_12345'
+			updated: '2024-05-02 15:42:20.397Z'
 		})
 		render(PageSetup, {
 			props: {
