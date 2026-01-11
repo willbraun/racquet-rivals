@@ -2,26 +2,50 @@
 	import logout from '$lib/images/icons/arrow-right-from-bracket-solid.svg'
 	import login from '$lib/images/icons/arrow-right-to-bracket-solid.svg'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
-	import gear from '$lib/images/icons/gear-solid.svg'
+	import crown from '$lib/images/icons/crown-solid-full.svg'
 	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import signup from '$lib/images/icons/user-plus-solid.svg'
 	import user from '$lib/images/icons/user-solid.svg'
-	import { currentUser, drawNavUrl, isAuth, navMenuOpen } from '$lib/store'
+	import {
+		currentUser,
+		drawNavUrl,
+		isAdmin,
+		isAuth,
+		navMenuOpen,
+		scrapersHealthy
+	} from '$lib/store'
+	import type { Snippet } from 'svelte'
 	import LogoutButton from './LogoutButton.svelte'
 	import ShareLink from './ShareLink.svelte'
 
 	const closeDrawer = () => {
 		navMenuOpen.set(false)
 	}
-
-	const isAdmin = $derived($currentUser?.role === 'admin')
 </script>
 
-{#snippet menuLink(name: string, image: string, alt: string, imgWidth: number, url: string)}
+{#snippet menuLink(
+	name: string,
+	image: string,
+	alt: string,
+	imgWidth: number,
+	url: string,
+	extraSnippet?: Snippet
+)}
 	<a href={url} class="grid w-full grid-cols-4 items-center gap-4" onclick={closeDrawer}>
 		<img src={image} {alt} width={imgWidth} class="justify-self-center" />
-		<p class="col-span-3 text-xl">{name}</p>
+		<p class="{extraSnippet ? 'col-span-2' : 'col-span-3'} text-xl">{name}</p>
+		{@render extraSnippet?.()}
 	</a>
+{/snippet}
+
+{#snippet scrapersHealthStatus()}
+	<span
+		class="rounded-full py-1 text-center font-semibold {$scrapersHealthy
+			? 'bg-green-100 text-green-800'
+			: 'bg-red-100 text-red-800'}"
+	>
+		{$scrapersHealthy ? '✅' : '❌'}
+	</span>
 {/snippet}
 
 <nav class="flex h-full w-full flex-col items-start gap-8 p-8">
@@ -31,7 +55,7 @@
 		{@render menuLink('Profile', user, 'profile', 18, `/profile/${$currentUser?.username}`)}
 	{/if}
 	{#if isAdmin}
-		{@render menuLink('Admin', gear, 'admin', 20, '/admin')}
+		{@render menuLink('Admin', crown, 'admin', 26, '/admin', scrapersHealthStatus)}
 	{/if}
 	<ShareLink />
 	{#if $isAuth}

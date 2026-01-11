@@ -9,6 +9,9 @@ export const currentUser = writable<UserRecord | null>(null)
 export const isAuth = derived(currentUser, ($currentUser) => {
 	return !!$currentUser
 })
+export const isAdmin = derived(currentUser, ($currentUser) => {
+	return $currentUser?.role === 'admin'
+})
 isAuth.subscribe((value) => {
 	if (value === false) {
 		Cookies.remove('isLeaderboard')
@@ -50,6 +53,7 @@ if (typeof window !== 'undefined') {
 	const value = 'maxTouchPoints' in navigator && navigator.maxTouchPoints > 0
 	isMobile.set(value)
 }
+export const scrapersHealthy = writable<boolean>(true)
 
 // Modal/Drawer state
 export const selectUsersModalOpen = writable<boolean>(false)

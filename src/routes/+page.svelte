@@ -5,7 +5,7 @@
 	import arrow from '$lib/images/icons/arrow-down-solid.svg'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
 	import wimbledon from '$lib/images/wimbledon.jpg'
-	import { currentUser, isAuth, loginGoto } from '$lib/store'
+	import { currentUser, isAdmin, isAuth, isMobile, loginGoto, scrapersHealthy } from '$lib/store'
 	import { type Draw, type HomePageData } from '$lib/types'
 	import { capitalize, getSlug, getTitle } from '$lib/utils'
 	import { format } from 'date-fns'
@@ -65,7 +65,21 @@
 	{/if}
 {/snippet}
 
-<Header twClass="absolute z-10" color="transparent" />
+<Header twClass="absolute z-10" color="transparent">
+	{#if $isAdmin}
+		<a href="/admin" class="flex items-center gap-2">
+			{#if $isMobile}
+				<span
+					class="-mt-0.5 rounded-full px-2 py-1 font-semibold sm:text-base {$scrapersHealthy
+						? 'bg-green-100 text-green-800'
+						: 'bg-red-100 text-red-800'}"
+				>
+					{$scrapersHealthy ? '✅' : '❌ Scrapers Unhealthy'}
+				</span>
+			{/if}
+		</a>
+	{/if}
+</Header>
 <main class="w-full bg-stone-100 pb-8">
 	<section class="relative h-svh w-full overflow-hidden">
 		<!-- Photo credit to Shep McAllister on Unsplash - https://unsplash.com/photos/two-person-playing-tennis-J1j3cImjmgE -->

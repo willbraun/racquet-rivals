@@ -273,6 +273,7 @@ declare global {
 export interface RootLayoutData {
 	cookieCurrentUser: UserRecord
 	defaultDraw: Draw
+	scrapersHealthy: boolean
 }
 
 export interface BasePageData {

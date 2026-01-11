@@ -1,10 +1,17 @@
 <script lang="ts">
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
-	import gear from '$lib/images/icons/gear-solid.svg'
+	import crown from '$lib/images/icons/crown-solid-full.svg'
 	import hamburger from '$lib/images/icons/hamburger-menu.svg'
 	import trophy from '$lib/images/icons/trophy-solid.svg'
 	import user from '$lib/images/icons/user-solid.svg'
-	import { currentUser, drawNavUrl, isAuth, navMenuOpen } from '$lib/store'
+	import {
+		currentUser,
+		drawNavUrl,
+		isAdmin,
+		isAuth,
+		navMenuOpen,
+		scrapersHealthy
+	} from '$lib/store'
 	import LogoutButton from './LogoutButton.svelte'
 
 	interface Props {
@@ -12,7 +19,6 @@
 	}
 
 	let { isInverted }: Props = $props()
-	const isAdmin = $derived($currentUser?.role === 'admin')
 
 	const buttonStyle = `btn btn-sm rounded-lg ${isInverted ? 'bg-white text-black' : 'bg-black text-white'}`
 </script>
@@ -44,8 +50,17 @@
 			</a>
 		{/if}
 		{#if isAdmin}
-			<a href="/admin" title="Admin: Scraper Health">
-				<img src={gear} alt="admin" width="20" class:invert={isInverted} />
+			<a href="/admin">
+				<div class="flex items-center gap-2">
+					<img src={crown} class="mr-2" alt="admin" width="26" class:invert={isInverted} />
+					<span
+						class="rounded-full px-3 font-semibold sm:text-base {$scrapersHealthy
+							? 'bg-green-100 text-green-800'
+							: 'bg-red-100 text-red-800'}"
+					>
+						{$scrapersHealthy ? '✅' : '❌ Scrapers Unhealthy'}
+					</span>
+				</div>
 			</a>
 		{/if}
 		{#if $isAuth}

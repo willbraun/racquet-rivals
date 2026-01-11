@@ -4,7 +4,6 @@ import type { AdminPageData, PbListResponse, ScraperHealthCheck } from '$lib/typ
 import { error } from '@sveltejs/kit'
 
 export async function load({ locals, fetch }) {
-	// Check if user is admin
 	if (locals.pb.authStore.record?.role !== 'admin') {
 		throw error(403, 'Access denied. Admin privileges required.')
 	}
@@ -12,14 +11,12 @@ export async function load({ locals, fetch }) {
 	const url = PUBLIC_POCKETBASE_URL
 	const token = locals.pb.authStore.token
 
-	// Fetch latest ATP health check
 	const atpHealthResponse: PbListResponse<ScraperHealthCheck> = await fetchJson(
 		`${url}/api/collections/scraper_health_check/records?filter=(draw_type='atp')&sort=-created&perPage=1`,
 		fetch,
 		token
 	)
 
-	// Fetch latest WTA health check
 	const wtaHealthResponse: PbListResponse<ScraperHealthCheck> = await fetchJson(
 		`${url}/api/collections/scraper_health_check/records?filter=(draw_type='wta')&sort=-created&perPage=1`,
 		fetch,

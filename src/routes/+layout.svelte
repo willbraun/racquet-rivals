@@ -9,6 +9,7 @@
 		drawNavUrl,
 		isMobile,
 		navMenuOpen,
+		scrapersHealthy,
 		selectUsersModalOpen,
 		shareLinkOpen,
 		slotStatsOpen
@@ -39,6 +40,7 @@
 			const url = `/draw/${getSlug(data.defaultDraw)}`
 			drawNavUrl.set(url)
 		}
+		scrapersHealthy.set(data.scrapersHealthy)
 	})
 </script>
 
