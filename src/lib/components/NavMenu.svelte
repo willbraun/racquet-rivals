@@ -54,7 +54,7 @@
 				<div class="flex items-center gap-2">
 					<img src={crown} class="mr-2" alt="admin" width="26" class:invert={isInverted} />
 					<span
-						class="rounded-full px-3 font-semibold sm:text-base {$scrapersHealthy
+						class="rounded-full px-3 py-0.5 text-sm font-semibold {$scrapersHealthy
 							? 'bg-green-100 text-green-800'
 							: 'bg-red-100 text-red-800'}"
 					>

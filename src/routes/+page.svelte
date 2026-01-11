@@ -66,17 +66,15 @@
 {/snippet}
 
 <Header twClass="absolute z-10" color="transparent">
-	{#if $isAdmin}
+	{#if $isAdmin && $isMobile}
 		<a href="/admin" class="flex items-center gap-2">
-			{#if $isMobile}
-				<span
-					class="-mt-0.5 rounded-full px-2 py-1 font-semibold sm:text-base {$scrapersHealthy
-						? 'bg-green-100 text-green-800'
-						: 'bg-red-100 text-red-800'}"
-				>
-					{$scrapersHealthy ? '✅' : '❌ Scrapers Unhealthy'}
-				</span>
-			{/if}
+			<span
+				class="-mt-0.5 rounded-full px-2 py-1 font-semibold sm:text-base {$scrapersHealthy
+					? 'bg-green-100 text-green-800'
+					: 'bg-red-100 text-red-800'}"
+			>
+				{$scrapersHealthy ? '✅' : '❌ Scrapers Unhealthy'}
+			</span>
 		</a>
 	{/if}
 </Header>
