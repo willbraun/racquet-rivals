@@ -54,7 +54,7 @@
 	{#if $isAuth}
 		{@render menuLink('Profile', user, 'profile', 18, `/profile/${$currentUser?.username}`)}
 	{/if}
-	{#if isAdmin}
+	{#if $isAdmin}
 		{@render menuLink('Admin', crown, 'admin', 26, '/admin', scrapersHealthStatus)}
 	{/if}
 	<ShareLink />

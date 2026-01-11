@@ -49,7 +49,7 @@
 				<img src={user} alt="profile" width="18" class:invert={isInverted} />
 			</a>
 		{/if}
-		{#if isAdmin}
+		{#if $isAdmin}
 			<a href="/admin">
 				<div class="flex items-center gap-2">
 					<img src={crown} class="mr-2" alt="admin" width="26" class:invert={isInverted} />
