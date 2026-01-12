@@ -1,4 +1,11 @@
-import type { Prediction, PredictionDistribution, SelectedUser, Slot, UserRecord } from '$lib/types'
+import {
+	ScraperHealth,
+	type Prediction,
+	type PredictionDistribution,
+	type SelectedUser,
+	type Slot,
+	type UserRecord
+} from '$lib/types'
 import Cookies from 'js-cookie'
 import { persisted } from 'svelte-persisted-store'
 import { derived, writable } from 'svelte/store'
@@ -53,7 +60,7 @@ if (typeof window !== 'undefined') {
 	const value = 'maxTouchPoints' in navigator && navigator.maxTouchPoints > 0
 	isMobile.set(value)
 }
-export const scrapersHealthy = writable<boolean>(true)
+export const scrapersHealthy = writable<ScraperHealth>(ScraperHealth.SUCCESS)
 
 // Modal/Drawer state
 export const selectUsersModalOpen = writable<boolean>(false)

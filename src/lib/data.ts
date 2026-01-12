@@ -1,4 +1,4 @@
-import { type SelectedUser, TournamentName } from './types'
+import { ScraperHealth, type SelectedUser, TournamentName } from './types'
 
 export const mainColor = 'bg-blue-300'
 
@@ -23,6 +23,32 @@ export const drawColorMap: { [key in TournamentName]: string } = {
 	[TournamentName.WIMBLEDON]: 'bg-[#199F79]',
 	[TournamentName.US_OPEN]: 'bg-[#3772FF]'
 }
+
+export const scraperHealthColorMap: { [key in ScraperHealth]: string } = {
+	[ScraperHealth.SUCCESS]: 'text-green-700 bg-green-100',
+	[ScraperHealth.WAITING]: 'text-yellow-800 bg-yellow-200',
+	[ScraperHealth.ERROR]: 'text-red-600 bg-red-100'
+}
+
+export const scraperHealthEmojiMap: { [key in ScraperHealth]: string } = {
+	[ScraperHealth.SUCCESS]: '✅',
+	[ScraperHealth.WAITING]: '⏳',
+	[ScraperHealth.ERROR]: '❌'
+}
+
+export const scraperHealthAggregateTextMap: { [key in ScraperHealth]: string } = {
+	[ScraperHealth.SUCCESS]: '',
+	[ScraperHealth.WAITING]: 'Scrapers Waiting',
+	[ScraperHealth.ERROR]: 'Scrapers Unhealthy'
+}
+
+export const scraperHealthSingleTextMap: { [key in ScraperHealth]: string } = {
+	[ScraperHealth.SUCCESS]: 'Success',
+	[ScraperHealth.WAITING]: 'Waiting',
+	[ScraperHealth.ERROR]: 'Error'
+}
+
+export const scrapersHealthyWaitingErrors = ['not found', 'not started']
 
 export const rankingDescriptions = {
 	overall: `Your total points from the last year of play (8 major tournaments, men's and women's singles). This is how

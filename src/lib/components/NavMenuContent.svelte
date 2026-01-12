@@ -15,6 +15,7 @@
 		scrapersHealthy
 	} from '$lib/store'
 	import type { Snippet } from 'svelte'
+	import { scraperHealthColorMap, scraperHealthEmojiMap } from '../data'
 	import LogoutButton from './LogoutButton.svelte'
 	import ShareLink from './ShareLink.svelte'
 
@@ -40,11 +41,9 @@
 
 {#snippet scrapersHealthStatus()}
 	<span
-		class="rounded-full py-1 text-center font-semibold {$scrapersHealthy
-			? 'bg-green-100 text-green-800'
-			: 'bg-red-100 text-red-800'}"
+		class="rounded-full py-1 text-center font-semibold {scraperHealthColorMap[$scrapersHealthy]}"
 	>
-		{$scrapersHealthy ? '✅' : '❌'}
+		{scraperHealthEmojiMap[$scrapersHealthy]}
 	</span>
 {/snippet}
 

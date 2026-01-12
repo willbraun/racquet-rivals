@@ -77,6 +77,7 @@ describe('Home page component', () => {
 			id: 'willId',
 			username: 'will',
 			emailVisibility: true,
+			role: 'user',
 			created: '2024-05-02 15:42:20.397Z',
 			updated: '2024-05-02 15:42:20.397Z'
 		})

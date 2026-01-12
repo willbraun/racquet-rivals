@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { fadeAndSlideIn } from '$lib/actions/fadeAndSlideIn'
 	import Header from '$lib/components/Header.svelte'
-	import { bannerStyleMap } from '$lib/data'
+	import {
+		bannerStyleMap,
+		scraperHealthAggregateTextMap,
+		scraperHealthColorMap,
+		scraperHealthEmojiMap
+	} from '$lib/data'
 	import arrow from '$lib/images/icons/arrow-down-solid.svg'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
 	import wimbledon from '$lib/images/wimbledon.jpg'
@@ -69,11 +74,12 @@
 	{#if $isAdmin && $isMobile}
 		<a href="/admin" class="flex items-center gap-2">
 			<span
-				class="-mt-0.5 rounded-full px-2 py-1 font-semibold sm:text-base {$scrapersHealthy
-					? 'bg-green-100 text-green-800'
-					: 'bg-red-100 text-red-800'}"
+				class="-mt-0.5 rounded-full px-2 py-1 font-semibold sm:text-base {scraperHealthColorMap[
+					$scrapersHealthy
+				]}"
 			>
-				{$scrapersHealthy ? '✅' : '❌ Scrapers Unhealthy'}
+				{scraperHealthEmojiMap[$scrapersHealthy]}
+				{scraperHealthAggregateTextMap[$scrapersHealthy]}
 			</span>
 		</a>
 	{/if}

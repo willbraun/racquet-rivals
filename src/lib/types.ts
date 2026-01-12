@@ -36,6 +36,13 @@ export const UserRole = {
 } as const
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
+export const ScraperHealth = {
+	SUCCESS: 'success',
+	WAITING: 'waiting',
+	ERROR: 'error'
+} as const
+export type ScraperHealth = (typeof ScraperHealth)[keyof typeof ScraperHealth]
+
 // Pocketbase API types
 export interface PbListResponse<T> {
 	page: number
@@ -273,7 +280,7 @@ declare global {
 export interface RootLayoutData {
 	cookieCurrentUser: UserRecord
 	defaultDraw: Draw
-	scrapersHealthy: boolean
+	scrapersHealthy: ScraperHealth
 }
 
 export interface BasePageData {
@@ -312,7 +319,7 @@ export interface RankingsPageData<T> extends BasePageData {
 	rankings: PbListResponse<T>
 }
 
-export interface AdminPageData {
+export interface AdminPageData extends BasePageData {
 	atpHealth: ScraperHealthCheck | null
 	wtaHealth: ScraperHealthCheck | null
 }
