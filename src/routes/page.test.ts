@@ -1,5 +1,5 @@
 import PageSetup from '$lib/components/PageSetup.test.svelte'
-import { currentUser } from '$lib/store'
+import { currentUser, isMobile } from '$lib/store'
 import type { HomePageData } from '$lib/types'
 import '@testing-library/jest-dom/vitest'
 import { render, screen } from '@testing-library/svelte'
@@ -96,6 +96,69 @@ describe('Home page component', () => {
 		expect(screen.getByTestId('banner-draw')).toHaveTextContent(
 			'French Open May 26, 2024 - Jun 9, 2024'
 		)
+		expect(screen.queryByTestId('scraper-health-status-mobile')).not.toBeInTheDocument()
+	})
+
+	test('Admin logged in desktop', () => {
+		currentUser.set({
+			collectionId: '_pb_users_auth_',
+			collectionName: 'user',
+			avatar: '',
+			id: 'adminId',
+			username: 'admin',
+			emailVisibility: true,
+			role: 'admin',
+			created: '2024-05-02 15:42:20.397Z',
+			updated: '2024-05-02 15:42:20.397Z'
+		})
+		isMobile.set(false)
+		render(PageSetup, {
+			props: {
+				component: Page,
+				data
+			}
+		})
+
+		expect(screen.getByText(/Racquet\s*Rivals/i)).toBeInTheDocument()
+		expect(screen.getByText('Welcome admin!')).toBeInTheDocument()
+		expect(screen.queryByText('Log in')).not.toBeInTheDocument()
+		expect(screen.queryByText('Sign up')).not.toBeInTheDocument()
+		expect(screen.getByText('Log out')).toBeInTheDocument()
+		expect(screen.getByTestId('banner-draw')).toHaveTextContent(
+			'French Open May 26, 2024 - Jun 9, 2024'
+		)
+		expect(screen.queryByTestId('scraper-health-status-mobile')).not.toBeInTheDocument()
+	})
+
+	test('Admin logged in mobile', () => {
+		currentUser.set({
+			collectionId: '_pb_users_auth_',
+			collectionName: 'user',
+			avatar: '',
+			id: 'adminId',
+			username: 'admin',
+			emailVisibility: true,
+			role: 'admin',
+			created: '2024-05-02 15:42:20.397Z',
+			updated: '2024-05-02 15:42:20.397Z'
+		})
+		isMobile.set(true)
+		render(PageSetup, {
+			props: {
+				component: Page,
+				data
+			}
+		})
+
+		expect(screen.getByText(/Racquet\s*Rivals/i)).toBeInTheDocument()
+		expect(screen.getByText('Welcome admin!')).toBeInTheDocument()
+		expect(screen.queryByText('Log in')).not.toBeInTheDocument()
+		expect(screen.queryByText('Sign up')).not.toBeInTheDocument()
+		expect(screen.getByText('Log out')).toBeInTheDocument()
+		expect(screen.getByTestId('banner-draw')).toHaveTextContent(
+			'French Open May 26, 2024 - Jun 9, 2024'
+		)
+		expect(screen.getByTestId('scraper-health-status-mobile')).toBeInTheDocument()
 	})
 
 	test('Logged out', () => {

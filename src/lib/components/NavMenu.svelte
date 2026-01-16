@@ -56,7 +56,7 @@
 		{/if}
 		{#if $isAdmin}
 			<a href="/admin">
-				<div class="flex items-center gap-2">
+				<div class="flex items-center gap-2" data-testid="admin-nav-link">
 					<img src={crown} class="mr-2" alt="admin" width="26" class:invert={isInverted} />
 					<span
 						class="rounded-full px-3 py-0.5 text-sm font-semibold {scraperHealthColorMap[

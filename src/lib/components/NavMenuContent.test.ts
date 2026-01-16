@@ -17,7 +17,8 @@ describe('NavMenu component', () => {
 		expect(screen.getByText('Sign up')).toBeInTheDocument()
 		expect(screen.queryByText('Log out')).not.toBeInTheDocument()
 	})
-	test('Renders logged in', () => {
+
+	test('Renders logged in for non-admin', () => {
 		currentUser.set({
 			collectionId: '_pb_users_auth_',
 			collectionName: 'user',
@@ -32,8 +33,34 @@ describe('NavMenu component', () => {
 		render(PageSetup, { component: NavMenuContent })
 
 		expect(screen.getByText('Draws')).toBeInTheDocument()
-		expect(screen.getByText('Profile')).toBeInTheDocument()
 		expect(screen.getByText('Rankings')).toBeInTheDocument()
+		expect(screen.getByText('Profile')).toBeInTheDocument()
+		expect(screen.queryByText('Admin')).not.toBeInTheDocument()
+		expect(screen.queryByTestId('scraper-health-status-mobile-nav')).not.toBeInTheDocument()
+		expect(screen.queryByText('Log in')).not.toBeInTheDocument()
+		expect(screen.queryByText('Sign up')).not.toBeInTheDocument()
+		expect(screen.getByText('Log out')).toBeInTheDocument()
+	})
+
+	test('Renders logged in for admin', () => {
+		currentUser.set({
+			collectionId: '_pb_users_auth_',
+			collectionName: 'user',
+			avatar: '',
+			id: 'willId',
+			username: 'will',
+			role: 'admin',
+			emailVisibility: true,
+			created: '2024-05-02 15:42:20.397Z',
+			updated: '2024-05-02 15:42:20.397Z'
+		})
+		render(PageSetup, { component: NavMenuContent })
+
+		expect(screen.getByText('Draws')).toBeInTheDocument()
+		expect(screen.getByText('Rankings')).toBeInTheDocument()
+		expect(screen.getByText('Profile')).toBeInTheDocument()
+		expect(screen.getByText('Admin')).toBeInTheDocument()
+		expect(screen.getByTestId('scraper-health-status-mobile-nav')).toBeInTheDocument()
 		expect(screen.queryByText('Log in')).not.toBeInTheDocument()
 		expect(screen.queryByText('Sign up')).not.toBeInTheDocument()
 		expect(screen.getByText('Log out')).toBeInTheDocument()

@@ -73,14 +73,15 @@
 <Header twClass="absolute z-10" color="transparent">
 	{#if $isAdmin && $isMobile}
 		<a href="/admin" class="flex items-center gap-2">
-			<span
+			<div
 				class="-mt-0.5 rounded-full px-2 py-1 font-semibold sm:text-base {scraperHealthColorMap[
 					$scrapersHealthy
 				]}"
+				data-testid="scraper-health-status-mobile"
 			>
 				{scraperHealthEmojiMap[$scrapersHealthy]}
 				{scraperHealthAggregateTextMap[$scrapersHealthy]}
-			</span>
+			</div>
 		</a>
 	{/if}
 </Header>

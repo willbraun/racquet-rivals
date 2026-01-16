@@ -42,6 +42,7 @@
 {#snippet scrapersHealthStatus()}
 	<span
 		class="rounded-full py-1 text-center font-semibold {scraperHealthColorMap[$scrapersHealthy]}"
+		data-testid="scraper-health-status-mobile-nav"
 	>
 		{scraperHealthEmojiMap[$scrapersHealthy]}
 	</span>

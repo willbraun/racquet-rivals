@@ -249,16 +249,17 @@ const predictions = mockViewPredictionRecords.map((p) => ({
 	color: 'bg-blue-300'
 }))
 
-const testUser = {
+const testUser: UserRecord = {
 	collectionId: '_pb_users_auth_',
 	collectionName: 'user',
 	avatar: '',
 	id: 'willId',
 	username: 'will',
+	role: 'user',
 	emailVisibility: true,
 	created: '2024-05-02 15:42:20.397Z',
 	updated: '2024-05-02 15:42:20.397Z'
-} as UserRecord
+}
 
 describe('Draw page component', () => {
 	beforeEach(() => {
