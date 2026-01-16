@@ -24,6 +24,7 @@ describe('NavMenu component', () => {
 			avatar: '',
 			id: 'willId',
 			username: 'will',
+			role: 'user',
 			emailVisibility: true,
 			created: '2024-05-02 15:42:20.397Z',
 			updated: '2024-05-02 15:42:20.397Z'

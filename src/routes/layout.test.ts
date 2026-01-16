@@ -1,4 +1,4 @@
-import type { Draw, RootLayoutData, UserRecord } from '$lib/types'
+import { ScraperHealth, type Draw, type RootLayoutData, type UserRecord } from '$lib/types'
 import '@testing-library/jest-dom/vitest'
 import { render, screen } from '@testing-library/svelte'
 import { describe, expect, test } from 'vitest'
@@ -11,6 +11,7 @@ const data: RootLayoutData = {
 		avatar: '',
 		id: 'willId',
 		username: 'will',
+		role: 'user',
 		emailVisibility: true,
 		created: '2024-05-02 15:42:20.397Z',
 		updated: '2024-05-02 15:42:20.397Z'
@@ -29,7 +30,8 @@ const data: RootLayoutData = {
 		updated: '2024-05-02 15:44:08.159Z',
 		url: 'https://www.atptour.com/en/scores/archive/roland-garros/520/2024/draws',
 		year: 2024
-	} as Draw
+	} as Draw,
+	scrapersHealthy: ScraperHealth.SUCCESS
 }
 
 describe('Root layout component', () => {
