@@ -11,6 +11,13 @@
 <main
 	class="bg-primary-200 flex h-screen w-full flex-col items-center justify-center gap-8 text-center"
 >
+	<div class="bg-yellow-300 p-1 text-center text-sm font-medium">
+		Hey, it's Will. Apologies for the error, please click the home icon to proceed.
+		<br />
+		<br />
+		There were some issues in the backend and the link in your email may be incorrect, but the site should
+		be working now. Thanks for your patience!
+	</div>
 	<h1 class="text-7xl font-bold">Error</h1>
 	<p class="text-4xl">{page.status}: {page?.error?.message}</p>
 	<div class="flex items-center gap-16">
