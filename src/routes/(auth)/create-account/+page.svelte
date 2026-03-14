@@ -63,7 +63,8 @@
 			email,
 			emailVisibility: true,
 			password,
-			passwordConfirm: password
+			passwordConfirm: password,
+			role: 'user'
 		}
 
 		try {
@@ -104,6 +105,7 @@
 			<button
 				type="submit"
 				class="preset-filled-primary-500 btn mx-auto mt-4 w-1/2 rounded-xl text-xl font-semibold"
+				data-testid="CreateAccountButton"
 				{disabled}
 			>
 				{loading ? 'Creating Account...' : 'Create Account'}

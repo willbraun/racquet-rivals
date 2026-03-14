@@ -48,16 +48,14 @@ describe('Create account component', () => {
 		const email = screen.getByTestId('EmailField')
 		const password = screen.getByTestId('PasswordField')
 		const honeypot = document.querySelector('input[name="nickname"]') as HTMLInputElement
-		const button = screen
-			.getAllByRole('button')
-			.find((button) => button.textContent === 'Create Account')
+		const button = screen.getByTestId('CreateAccountButton')
 
 		await user.type(username, 'username')
 		await user.type(email, 'test@email.com')
 		await user.type(password, 'validpassword')
 		await user.type(honeypot, 'bot-fill')
 
-		await user.click(button!)
+		await user.click(button)
 
 		expect(screen.getByText('Something went wrong, please try again')).toBeInTheDocument()
 	})
@@ -69,9 +67,7 @@ describe('Create account component', () => {
 		const username = screen.getByTestId('UsernameField')
 		const email = screen.getByTestId('EmailField')
 		const password = screen.getByTestId('PasswordField')
-		const button = screen
-			.getAllByRole('button')
-			.find((button) => button.textContent === 'Create Account')
+		const button = screen.getByTestId('CreateAccountButton')
 
 		await user.type(username, 'username')
 		await user.type(email, 'notanemail')
