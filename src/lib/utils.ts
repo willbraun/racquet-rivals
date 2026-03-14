@@ -16,6 +16,7 @@ import {
 } from './store'
 import {
 	DrawStatus,
+	Events,
 	type Draw,
 	type DrawEntry,
 	type DrawResult,
@@ -320,6 +321,24 @@ export const classifyDraws = (draws: Draw[]) => {
 		.slice(0, 2)
 
 	return [upcoming, active, completed]
+}
+
+export const findMostRecentMatchingCompletedDraws = (completed: Draw[]) => {
+	const mensCompleted = completed.filter((d) => d.event === Events.MENS_SINGLES)
+	const womensCompleted = completed.filter((d) => d.event === Events.WOMENS_SINGLES)
+
+	// Find the first men's draw that has a corresponding completed women's draw
+	const mensDraw = mensCompleted.find((mensDraw) =>
+		womensCompleted.some(
+			(womensDraw) => womensDraw.name === mensDraw.name && womensDraw.year === mensDraw.year
+		)
+	)
+
+	// Find the corresponding women's draw for the identified men's draw
+	const womensDraw = womensCompleted.find(
+		(womensDraw) => womensDraw.name === mensDraw?.name && womensDraw.year === mensDraw?.year
+	)
+	return [mensDraw, womensDraw]
 }
 
 export const logErrorInDev = (error: unknown, ...additionalInfo: unknown[]) => {

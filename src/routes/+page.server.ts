@@ -1,7 +1,7 @@
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import { fetchJson } from '$lib/server/utils.js'
 import type { Draw, DrawResult, HomePageData, PbListResponse } from '$lib/types.js'
-import { classifyDraws } from '$lib/utils.js'
+import { classifyDraws, findMostRecentMatchingCompletedDraws } from '$lib/utils.js'
 
 export async function load({ fetch, locals }) {
 	const url = PUBLIC_POCKETBASE_URL
@@ -14,9 +14,7 @@ export async function load({ fetch, locals }) {
 	)
 
 	const [upcoming, active, completed] = classifyDraws(draws.items)
-
-	const mensDraw = completed.find((d) => d.event === "Men's Singles")
-	const womensDraw = completed.find((d) => d.event === "Women's Singles")
+	const [mensDraw, womensDraw] = findMostRecentMatchingCompletedDraws(completed)
 
 	const winnerFetches: (PbListResponse<DrawResult> | null)[] = await Promise.all([
 		mensDraw

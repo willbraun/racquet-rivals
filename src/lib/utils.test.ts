@@ -3,13 +3,14 @@ import { get } from 'svelte/store'
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
 import { currentDrawId, currentUser, predictionStore, selectedUsers } from './store'
 import type {
+	Draw,
 	PbListResponse,
 	Prediction,
 	SelectedUser,
 	UserRecord,
 	ViewPredictionRecord
 } from './types'
-import { addUser, removeUser } from './utils'
+import { addUser, classifyDraws, findMostRecentMatchingCompletedDraws, removeUser } from './utils'
 
 const userWill = {
 	collectionId: '_pb_users_auth_',
@@ -337,6 +338,180 @@ describe('removeUser', () => {
 
 		const predictions = get(predictionStore)
 		expect(predictions).toEqual(testPredictions)
+	})
+})
+
+const makeDraw = (overrides: Partial<Draw>): Draw => ({
+	collectionId: 'col',
+	collectionName: 'draw',
+	created: '',
+	end_date: '2025-07-13T23:00:00.000Z',
+	event: "Men's Singles",
+	id: 'id',
+	name: 'Wimbledon',
+	prediction_close: '',
+	size: 128,
+	start_date: '2025-06-30T12:00:00.000Z',
+	updated: '',
+	url: '',
+	year: 2025,
+	...overrides
+})
+
+describe('findMostRecentMatchingCompletedDraws', () => {
+	test('Returns both draws when the same tournament has both completed', () => {
+		const completed = [
+			makeDraw({ id: 'm1', event: "Men's Singles", name: 'Wimbledon', year: 2025 }),
+			makeDraw({ id: 'w1', event: "Women's Singles", name: 'Wimbledon', year: 2025 })
+		]
+
+		const [mensDraw, womensDraw] = findMostRecentMatchingCompletedDraws(completed)
+
+		expect(mensDraw?.id).toBe('m1')
+		expect(womensDraw?.id).toBe('w1')
+		expect(mensDraw?.name).toBe('Wimbledon')
+		expect(womensDraw?.name).toBe('Wimbledon')
+	})
+
+	test("Falls back to previous tournament when women's completed ahead of men's", () => {
+		// Draws sorted by descending start_date: Wimbledon Women's is most recent completed
+		// but Wimbledon Men's hasn't finished yet. French Open has both completed.
+		const completed = [
+			makeDraw({
+				id: 'w2',
+				event: "Women's Singles",
+				name: 'Wimbledon',
+				year: 2025,
+				start_date: '2025-06-30T12:00:00.000Z'
+			}),
+			makeDraw({
+				id: 'm1',
+				event: "Men's Singles",
+				name: 'French Open',
+				year: 2025,
+				start_date: '2025-05-26T12:00:00.000Z'
+			}),
+			makeDraw({
+				id: 'w1',
+				event: "Women's Singles",
+				name: 'French Open',
+				year: 2025,
+				start_date: '2025-05-26T12:00:00.000Z'
+			})
+		]
+
+		const [mensDraw, womensDraw] = findMostRecentMatchingCompletedDraws(completed)
+
+		expect(mensDraw?.name).toBe('French Open')
+		expect(womensDraw?.name).toBe('French Open')
+	})
+
+	test('Returns [undefined, undefined] when no matching pair exists', () => {
+		const completed = [
+			makeDraw({ id: 'm1', event: "Men's Singles", name: 'Wimbledon', year: 2025 }),
+			makeDraw({ id: 'w1', event: "Women's Singles", name: 'French Open', year: 2025 })
+		]
+
+		const [mensDraw, womensDraw] = findMostRecentMatchingCompletedDraws(completed)
+
+		expect(mensDraw).toBeUndefined()
+		expect(womensDraw).toBeUndefined()
+	})
+})
+
+describe('classifyDraws', () => {
+	beforeAll(() => {
+		vi.useFakeTimers()
+		vi.setSystemTime(new Date('2026-03-14T12:00:00.000Z'))
+	})
+
+	afterAll(() => {
+		vi.useRealTimers()
+	})
+
+	test('Classifies a completed draw (end_date in the past)', () => {
+		const draws = [
+			makeDraw({
+				start_date: '2026-01-13T12:00:00.000Z',
+				end_date: '2026-01-26T23:00:00.000Z'
+			})
+		]
+
+		const [upcoming, active, completed] = classifyDraws(draws)
+
+		expect(completed).toHaveLength(1)
+		expect(upcoming).toHaveLength(0)
+		expect(active).toHaveLength(0)
+	})
+
+	test('Classifies an active draw (start_date past, end_date future)', () => {
+		const draws = [
+			makeDraw({
+				start_date: '2026-03-10T12:00:00.000Z',
+				end_date: '2026-03-23T23:00:00.000Z'
+			})
+		]
+
+		const [upcoming, active, completed] = classifyDraws(draws)
+
+		expect(active).toHaveLength(1)
+		expect(upcoming).toHaveLength(0)
+		expect(completed).toHaveLength(0)
+	})
+
+	test('Classifies upcoming draws (start_date in the future), capped at 2 sorted by start_date', () => {
+		const draws = [
+			makeDraw({
+				id: 'f3',
+				start_date: '2026-08-25T12:00:00.000Z',
+				end_date: '2026-09-07T23:00:00.000Z'
+			}),
+			makeDraw({
+				id: 'f1',
+				start_date: '2026-05-26T12:00:00.000Z',
+				end_date: '2026-06-09T23:00:00.000Z'
+			}),
+			makeDraw({
+				id: 'f2',
+				start_date: '2026-06-30T12:00:00.000Z',
+				end_date: '2026-07-13T23:00:00.000Z'
+			})
+		]
+
+		const [upcoming] = classifyDraws(draws)
+
+		expect(upcoming).toHaveLength(2)
+		expect(upcoming[0].id).toBe('f1')
+		expect(upcoming[1].id).toBe('f2')
+	})
+
+	test('Classifies a mixed set of draws correctly', () => {
+		const draws = [
+			makeDraw({
+				id: 'c1',
+				start_date: '2026-01-13T12:00:00.000Z',
+				end_date: '2026-01-26T23:00:00.000Z'
+			}),
+			makeDraw({
+				id: 'a1',
+				start_date: '2026-03-10T12:00:00.000Z',
+				end_date: '2026-03-23T23:00:00.000Z'
+			}),
+			makeDraw({
+				id: 'f1',
+				start_date: '2026-05-26T12:00:00.000Z',
+				end_date: '2026-06-09T23:00:00.000Z'
+			})
+		]
+
+		const [upcoming, active, completed] = classifyDraws(draws)
+
+		expect(upcoming).toHaveLength(1)
+		expect(upcoming[0].id).toBe('f1')
+		expect(active).toHaveLength(1)
+		expect(active[0].id).toBe('a1')
+		expect(completed).toHaveLength(1)
+		expect(completed[0].id).toBe('c1')
 	})
 })
 
