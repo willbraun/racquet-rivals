@@ -9,9 +9,10 @@
 	} from '$lib/data'
 	import arrow from '$lib/images/icons/arrow-down-solid.svg'
 	import bracketLeft from '$lib/images/icons/bracket-left.svg'
+	import goldmedal from '$lib/images/icons/goldmedal.png'
 	import wimbledon from '$lib/images/wimbledon.jpg'
 	import { currentUser, isAdmin, isAuth, isMobile, loginGoto, scrapersHealthy } from '$lib/store'
-	import { type Draw, type HomePageData } from '$lib/types'
+	import { type Draw, type DrawResult, type HomePageData, type TournamentName } from '$lib/types'
 	import { capitalize, getSlug, getTitle } from '$lib/utils'
 	import { format } from 'date-fns'
 	import { onMount } from 'svelte'
@@ -44,10 +45,43 @@
 		return formatDateRange(bannerDraw.start_date, bannerDraw.end_date)
 	})
 
+	const hasWinners = $derived(data.mensWinners.length > 0 || data.womensWinners.length > 0)
+
+	const winnerTournamentName = $derived(
+		(data.mensWinners[0]?.draw_name ?? data.womensWinners[0]?.draw_name) as
+			| TournamentName
+			| undefined
+	)
+
+	const winnerYear = $derived(data.mensWinners[0]?.draw_year ?? data.womensWinners[0]?.draw_year)
+
 	onMount(() => {
 		loginGoto.set('/')
 	})
 </script>
+
+{#snippet winnerCard(winners: DrawResult[], label: string)}
+	<a
+		href={`/draw/${getSlug(winners[0])}`}
+		class="flex h-fit flex-col gap-2 rounded-xl bg-white px-5 py-4 shadow-md transition-transform duration-200 hover:scale-[1.02]"
+		data-testid="winner-card"
+	>
+		<p class="text-sm font-semibold tracking-wide text-stone-500 uppercase">{label}</p>
+		{#each winners as winner (winner.id)}
+			<div class="flex items-center gap-2 text-start">
+				<img src={goldmedal} alt="gold medal" class="h-6 w-6 sm:h-7 sm:w-7" />
+				<p class="ml-2 text-xl font-bold break-all text-stone-800 sm:text-2xl">
+					{winner.username}
+				</p>
+				<div
+					class="badge-icon ml-auto h-4 w-fit min-w-4 rounded-full bg-green-400 px-2 text-base font-bold text-black shadow-sm"
+				>
+					{winner.total_points}
+				</div>
+			</div>
+		{/each}
+	</a>
+{/snippet}
 
 {#snippet drawList(listTitle: string, draws: Draw[])}
 	{#if draws.length > 0}
@@ -112,7 +146,7 @@
 						<p>Your fantasy tennis community.</p>
 						<p>Predict match winners and compete with fellow fans!</p>
 					</div>
-					<div class="flex w-full max-w-(--breakpoint-sm) justify-center gap-4">
+					<div class="flex w-full max-w-screen-md justify-center gap-4">
 						<a
 							href="/login"
 							class="w-1/2 rounded-xl border-2 border-white p-4 text-center text-2xl font-semibold text-white shadow-sm duration-100 hover:scale-105"
@@ -142,7 +176,7 @@
 	{#if bannerDraw}
 		<a href={`/draw/${getSlug(bannerDraw)}`}>
 			<section
-				class="mx-auto mb-8 flex flex-col gap-8 py-24 text-center font-bold text-white sm:mb-16 {bannerStyleMap[
+				class="mx-auto flex flex-col gap-8 py-24 text-center font-bold text-white {bannerStyleMap[
 					bannerDraw.name
 				]}"
 				data-testid="banner-draw"
@@ -152,7 +186,51 @@
 			</section>
 		</a>
 	{/if}
-	<section class="mx-auto max-w-(--breakpoint-sm) px-4 sm:px-0">
+	{#if hasWinners && winnerTournamentName}
+		<section
+			class="confetti-container relative mx-auto mb-8 flex flex-col items-center gap-8 overflow-hidden py-16 text-center font-bold text-white sm:mb-16 sm:py-24 {bannerStyleMap[
+				winnerTournamentName
+			]}"
+			data-testid="recent-winners"
+		>
+			<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
+			{#each Array(50) as _, i (i)}
+				<div
+					class="confetti-piece"
+					style="--x: {Math.random() * 100}%; --delay: {Math.random() * 5}s; --duration: {3 +
+						Math.random() * 4}s; --rotation: {Math.random() * 360}deg; --color: {[
+						'#f94144',
+						'#f3722c',
+						'#f8961e',
+						'#f9c74f',
+						'#90be6d',
+						'#43aa8b',
+						'#577590',
+						'#fff',
+						'#ffd166',
+						'#06d6a0'
+					][i % 10]};"
+				></div>
+			{/each}
+			<h2 class="relative z-10 text-2xl font-bold sm:text-4xl" use:fadeAndSlideIn>
+				Congratulations to our
+				{winnerTournamentName}
+				{winnerYear} winners! 🎉
+			</h2>
+			<div
+				class="relative z-10 grid w-full max-w-screen-md grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:gap-6"
+				use:fadeAndSlideIn
+			>
+				{#if data.mensWinners.length > 0}
+					{@render winnerCard(data.mensWinners, "Men's Singles")}
+				{/if}
+				{#if data.womensWinners.length > 0}
+					{@render winnerCard(data.womensWinners, "Women's Singles")}
+				{/if}
+			</div>
+		</section>
+	{/if}
+	<section class="mx-auto max-w-screen-md px-4">
 		{#if data.active.length > 0}
 			{@render drawList('Active', data.active)}
 		{:else if data.upcoming.length > 0}
@@ -161,3 +239,31 @@
 		{@render drawList('Completed', data.completed)}
 	</section>
 </main>
+
+<style>
+	.confetti-piece {
+		position: absolute;
+		top: -50px;
+		left: var(--x);
+		width: 8px;
+		height: 12px;
+		background: var(--color);
+		border-radius: 2px;
+		animation: confetti-fall var(--duration) var(--delay) linear infinite;
+	}
+
+	.confetti-piece:nth-child(odd) {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+	}
+
+	@keyframes confetti-fall {
+		0% {
+			transform: translateY(0) rotate(0deg);
+		}
+		100% {
+			transform: translateY(calc(100vh)) rotate(var(--rotation));
+		}
+	}
+</style>

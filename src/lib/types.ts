@@ -292,6 +292,8 @@ export interface HomePageData {
 	upcoming: Draw[]
 	active: Draw[]
 	completed: Draw[]
+	mensWinners: DrawResult[]
+	womensWinners: DrawResult[]
 }
 
 export interface DrawPageData extends BasePageData {

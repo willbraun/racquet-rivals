@@ -65,6 +65,42 @@ const data: HomePageData = {
 			url: 'https://www.atptour.com/en/scores/current/australian-open/580/draws',
 			year: 2024
 		}
+	],
+	mensWinners: [
+		{
+			collectionId: 'draw_results_id',
+			collectionName: 'draw_results',
+			id: 'mr1',
+			draw_id: '757duh3a8vpgyrq',
+			draw_name: 'Australian Open',
+			draw_event: "Men's Singles",
+			draw_year: 2024,
+			draw_start_date: '2024-01-13 13:00:00.000Z',
+			draw_end_date: '2024-01-28 23:00:00.000Z',
+			user_id: 'willId',
+			username: 'will',
+			total_points: 42,
+			rank: 1,
+			prediction_count: 15
+		}
+	],
+	womensWinners: [
+		{
+			collectionId: 'draw_results_id',
+			collectionName: 'draw_results',
+			id: 'wr1',
+			draw_id: '757duh3a8vpgyrq',
+			draw_name: 'Australian Open',
+			draw_event: "Women's Singles",
+			draw_year: 2024,
+			draw_start_date: '2024-01-13 13:00:00.000Z',
+			draw_end_date: '2024-01-28 23:00:00.000Z',
+			user_id: 'teresemId',
+			username: 'TereseM',
+			total_points: 38,
+			rank: 1,
+			prediction_count: 15
+		}
 	]
 }
 
@@ -97,6 +133,9 @@ describe('Home page component', () => {
 			'French Open May 26, 2024 - Jun 9, 2024'
 		)
 		expect(screen.queryByTestId('scraper-health-status-mobile')).not.toBeInTheDocument()
+		expect(screen.getByTestId('recent-winners')).toBeInTheDocument()
+		expect(screen.getByText('will')).toBeInTheDocument()
+		expect(screen.getByText('42')).toBeInTheDocument()
 	})
 
 	test('Admin logged in desktop', () => {
@@ -159,6 +198,30 @@ describe('Home page component', () => {
 			'French Open May 26, 2024 - Jun 9, 2024'
 		)
 		expect(screen.getByTestId('scraper-health-status-mobile')).toBeInTheDocument()
+	})
+
+	test('Shows mens and womens winner cards', () => {
+		currentUser.set(null)
+		render(PageSetup, {
+			props: {
+				component: Page,
+				data
+			}
+		})
+
+		const winnersSection = screen.getByTestId('recent-winners')
+		expect(winnersSection).toBeInTheDocument()
+
+		const winnerCards = screen.getAllByTestId('winner-card')
+		expect(winnerCards).toHaveLength(2)
+
+		expect(winnersSection).toHaveTextContent("Men's Singles")
+		expect(winnersSection).toHaveTextContent('will')
+		expect(winnersSection).toHaveTextContent('42')
+
+		expect(winnersSection).toHaveTextContent("Women's Singles")
+		expect(winnersSection).toHaveTextContent('TereseM')
+		expect(winnersSection).toHaveTextContent('38')
 	})
 
 	test('Logged out', () => {
