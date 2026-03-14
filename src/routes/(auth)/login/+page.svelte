@@ -6,10 +6,12 @@
 	import { loginGoto } from '$lib/store'
 	import { errorMessage } from '$lib/utils'
 	import { onMount } from 'svelte'
+	import Honeypot from '../../../lib/components/Honeypot.svelte'
 	import AuthBase from '../AuthBase.svelte'
 
 	let usernameOrEmail = $state('')
 	let password = $state('')
+	let honeypot = $state('')
 	let error = $state('')
 	let loading = $state(false)
 	let rememberMe = $state(false)
@@ -58,6 +60,10 @@
 			clientError += 'Please enter your password'
 		}
 
+		if (clientError === '' && honeypot !== '') {
+			clientError += 'Something went wrong, please try again'
+		}
+
 		if (clientError) {
 			error = clientError
 			loading = false
@@ -101,6 +107,7 @@
 			/>
 		</label>
 		<PasswordField bind:password bind:ref={passwordRef} />
+		<Honeypot bind:value={honeypot} />
 		<div class="flex justify-between">
 			<label class="mt-4 flex items-center space-x-2">
 				<input
@@ -123,6 +130,7 @@
 			<button
 				type="submit"
 				class="preset-filled-primary-500 btn mx-auto mt-4 w-1/2 rounded-xl text-xl font-semibold"
+				data-testid="LoginButton"
 				disabled={loading}
 			>
 				{loading ? 'Logging in...' : 'Log in'}

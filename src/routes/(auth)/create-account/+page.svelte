@@ -7,12 +7,14 @@
 	import { loginGoto } from '$lib/store'
 	import { errorMessage } from '$lib/utils'
 	import { onMount } from 'svelte'
+	import Honeypot from '../../../lib/components/Honeypot.svelte'
 	import AuthBase from '../AuthBase.svelte'
 
 	let username = $state('')
 	let email = $state('')
 	let showEmailValidation = $state(false)
 	let password = $state('')
+	let honeypot = $state('')
 	let error = $state('')
 	let loading = $state(false)
 
@@ -44,6 +46,10 @@
 
 		if (password === '') {
 			clientError += 'Please enter your password'
+		}
+
+		if (clientError === '' && honeypot !== '') {
+			clientError += 'Something went wrong, please try again'
 		}
 
 		if (clientError) {
@@ -91,6 +97,7 @@
 		</label>
 		<EmailField bind:email bind:showValidation={showEmailValidation} />
 		<PasswordField bind:password />
+		<Honeypot bind:value={honeypot} />
 		<p class="text-xs text-gray-500">Must be at least 8 characters</p>
 
 		<div class="mt-2 flex justify-center">
