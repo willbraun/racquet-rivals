@@ -212,10 +212,10 @@
 					][i % 10]};"
 				></div>
 			{/each}
-			<h2 class="relative z-10 text-2xl font-bold sm:text-4xl" use:fadeAndSlideIn>
+			<h2 class="relative z-10 px-4 text-2xl font-bold sm:text-4xl" use:fadeAndSlideIn>
 				Congratulations to our
 				{winnerTournamentName}
-				{winnerYear} winners! 🎉
+				{winnerYear} winners!
 			</h2>
 			<div
 				class="relative z-10 grid w-full max-w-screen-md grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:gap-6"
