@@ -18,31 +18,33 @@ export async function load({ fetch, locals }) {
 	const mensDraw = completed.find((d) => d.event === "Men's Singles")
 	const womensDraw = completed.find((d) => d.event === "Women's Singles")
 
-	const winnerFetches = await Promise.all([
+	const winnerFetches: (PbListResponse<DrawResult> | null)[] = await Promise.all([
 		mensDraw
 			? fetchJson(
-					`${url}/api/collections/draw_results/records?filter=${encodeURIComponent(`(draw_id="${mensDraw.id}" && rank=1 && prediction_count > 0)`)}&sort=username`,
+					`${url}/api/collections/draw_results/records?filter=${encodeURIComponent(`(draw_id="${mensDraw.id}" && rank=1 && prediction_count > 0)`)}`,
 					fetch,
 					token
 				)
 			: null,
 		womensDraw
 			? fetchJson(
-					`${url}/api/collections/draw_results/records?filter=${encodeURIComponent(`(draw_id="${womensDraw.id}" && rank=1 && prediction_count > 0)`)}&sort=username`,
+					`${url}/api/collections/draw_results/records?filter=${encodeURIComponent(`(draw_id="${womensDraw.id}" && rank=1 && prediction_count > 0)`)}`,
 					fetch,
 					token
 				)
 			: null
 	])
 
-	const mensWinnerResult: PbListResponse<DrawResult> | null = winnerFetches[0]
-	const womensWinnerResult: PbListResponse<DrawResult> | null = winnerFetches[1]
+	const mensWinnerResult =
+		winnerFetches[0]?.items.sort((a, b) => a.username.localeCompare(b.username)) ?? []
+	const womensWinnerResult =
+		winnerFetches[1]?.items.sort((a, b) => a.username.localeCompare(b.username)) ?? []
 
 	return {
 		upcoming,
 		active,
 		completed,
-		mensWinners: mensWinnerResult?.items ?? [],
-		womensWinners: womensWinnerResult?.items ?? []
+		mensWinners: mensWinnerResult,
+		womensWinners: womensWinnerResult
 	} as HomePageData
 }
