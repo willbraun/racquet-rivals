@@ -21,14 +21,14 @@ export async function load({ fetch, locals }) {
 	const winnerFetches = await Promise.all([
 		mensDraw
 			? fetchJson(
-					`${url}/api/collections/draw_results/records?filter=${encodeURIComponent(`(draw_id="${mensDraw.id}" && rank=1 && prediction_count > 0)`)}`,
+					`${url}/api/collections/draw_results/records?filter=${encodeURIComponent(`(draw_id="${mensDraw.id}" && rank=1 && prediction_count > 0)`)}&sort=username`,
 					fetch,
 					token
 				)
 			: null,
 		womensDraw
 			? fetchJson(
-					`${url}/api/collections/draw_results/records?filter=${encodeURIComponent(`(draw_id="${womensDraw.id}" && rank=1 && prediction_count > 0)`)}`,
+					`${url}/api/collections/draw_results/records?filter=${encodeURIComponent(`(draw_id="${womensDraw.id}" && rank=1 && prediction_count > 0)`)}&sort=username`,
 					fetch,
 					token
 				)
