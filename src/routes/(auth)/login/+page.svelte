@@ -129,7 +129,7 @@
 		<div class="flex justify-center">
 			<button
 				type="submit"
-				class="preset-filled-primary-500 btn mx-auto mt-4 w-1/2 rounded-xl text-xl font-semibold"
+				class="preset-filled-primary-500 btn mx-auto mt-4 w-1/2 rounded-xl text-xl font-semibold text-white"
 				data-testid="LoginButton"
 				disabled={loading}
 			>

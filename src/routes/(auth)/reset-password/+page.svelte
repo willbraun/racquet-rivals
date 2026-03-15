@@ -65,7 +65,7 @@
 		<div class="flex justify-center">
 			<button
 				type="submit"
-				class="preset-filled-primary-500 btn mx-auto my-4 rounded-xl text-xl font-semibold"
+				class="preset-filled-primary-500 btn mx-auto my-4 rounded-xl text-xl font-semibold text-white"
 				{disabled}
 				bind:this={buttonRef}
 			>

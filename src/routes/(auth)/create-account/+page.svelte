@@ -140,7 +140,7 @@
 		<div class="mt-2 flex justify-center">
 			<button
 				type="submit"
-				class="preset-filled-primary-500 btn mx-auto mt-4 w-fit rounded-xl px-4 text-xl font-semibold"
+				class="preset-filled-primary-500 btn mx-auto mt-4 w-fit rounded-xl px-4 text-xl font-semibold text-white"
 				data-testid="CreateAccountButton"
 				{disabled}
 			>
