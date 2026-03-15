@@ -13,3 +13,24 @@ declare global {
 		// interface Platform {}
 	}
 }
+
+// Extend the Window interface to include the cloudflare turnstile object that is loaded via a script tag in app.html. This allows us to use the turnstile object in our Svelte components without TypeScript errors.
+declare global {
+	interface Window {
+		turnstile: {
+			render: (
+				container: string | HTMLElement,
+				options: {
+					sitekey: string
+					callback?: (token: string) => void
+					[key: string]: unknown
+					'error-callback'?: () => void
+				}
+			) => string
+			remove: (widgetId: string) => void
+			reset: (widgetId: string) => void
+			getResponse: (widgetId: string) => string | undefined
+			isExpired: (widgetId: string) => boolean
+		}
+	}
+}

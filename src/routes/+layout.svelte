@@ -3,7 +3,7 @@
 	import { page } from '$app/state'
 	import NavMenuContent from '$lib/components/NavMenuContent.svelte'
 	import ShareLinkContent from '$lib/components/ShareLinkContent.svelte'
-	import { initPocketbase } from '$lib/pocketbase'
+	import { initPocketbase, pb } from '$lib/pocketbase'
 	import {
 		currentUser,
 		drawNavUrl,
@@ -36,6 +36,10 @@
 	currentUser.set(data.cookieCurrentUser)
 
 	afterNavigate(() => {
+		// Sync client pb auth from current cookies — correctly reflects login (server set cookie)
+		// and logout (cookie cleared client-side) without relying on potentially stale data.
+		// The onChange handler in initPocketbase will update currentUser accordingly.
+		pb.authStore.loadFromCookie(document.cookie)
 		if ($drawNavUrl === '') {
 			const url = `/draw/${getSlug(data.defaultDraw)}`
 			drawNavUrl.set(url)

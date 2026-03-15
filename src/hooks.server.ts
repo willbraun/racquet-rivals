@@ -1,3 +1,4 @@
+import { dev } from '$app/environment'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import PocketBase from 'pocketbase'
 
@@ -29,7 +30,7 @@ export async function handle({ event, resolve }) {
 		'set-cookie',
 		event.locals.pb.authStore.exportToCookie({
 			httpOnly: false, // so it can be cleared from a client logout
-			secure: true, // set to false if testing on phone
+			secure: !dev,
 			sameSite: true // set to false if testing on phone
 		})
 	)

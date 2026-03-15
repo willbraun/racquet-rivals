@@ -11,6 +11,11 @@ export function initPocketbase() {
 	if (initialized || typeof window === 'undefined') return
 	initialized = true
 
+	// Bootstrap the client-side pb instance from the server-set cookie so that
+	// the onChange handler below fires with the correct auth state, rather than
+	// wiping the server cookie with an empty one.
+	pb.authStore.loadFromCookie(document.cookie)
+
 	// Lazy import to avoid circular dependency
 	import('./store').then(({ currentUser }) => {
 		pb.authStore.onChange(() => {
