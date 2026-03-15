@@ -1,8 +1,31 @@
 import '@testing-library/jest-dom/vitest'
-import { render, screen } from '@testing-library/svelte'
+import { render, screen, waitFor } from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 import Page from './+page.svelte'
+
+let turnstileErrorCallback: (() => void) | undefined
+
+beforeEach(() => {
+	turnstileErrorCallback = undefined
+
+	window.turnstile = {
+		render: vi
+			.fn()
+			.mockImplementation(
+				(_container: string, options: Parameters<Window['turnstile']['render']>[1]) => {
+					turnstileErrorCallback = options['error-callback']
+					// Simulate Cloudflare resolving the challenge immediately
+					options.callback?.('fake-token')
+					return 'fake-widget-id'
+				}
+			),
+		remove: vi.fn(),
+		reset: vi.fn(),
+		getResponse: vi.fn().mockReturnValue('fake-token'),
+		isExpired: vi.fn().mockReturnValue(false)
+	}
+})
 
 describe('Create account component', () => {
 	test('Renders', () => {
@@ -11,7 +34,7 @@ describe('Create account component', () => {
 		expect(screen.getAllByText('Create Account').length).toBe(2)
 	})
 
-	test('Renders, check if button is enabled', async () => {
+	test('Button requires all fields and Turnstile token to be enabled', async () => {
 		render(Page)
 
 		const user = userEvent.setup()
@@ -27,6 +50,7 @@ describe('Create account component', () => {
 		expect(password).toBeInTheDocument()
 		expect(button).toBeInTheDocument()
 
+		// Turnstile mock fires callback on mount, but empty fields still disable the button
 		expect(button).toBeDisabled()
 		await user.type(username, 'username')
 		expect(button).toBeDisabled()
@@ -40,24 +64,25 @@ describe('Create account component', () => {
 		expect(button).toBeDisabled()
 	})
 
-	test('Filled honeypot shows error message on submit', async () => {
+	test('Shows error and disables button when Turnstile verification fails', async () => {
 		render(Page)
 
+		// Trigger the Cloudflare error callback (e.g. network failure during challenge)
+		turnstileErrorCallback?.()
+
+		await waitFor(() => {
+			expect(
+				screen.getByText('Cloudflare verification error, please try again')
+			).toBeInTheDocument()
+		})
+
 		const user = userEvent.setup()
-		const username = screen.getByTestId('UsernameField')
-		const email = screen.getByTestId('EmailField')
-		const password = screen.getByTestId('PasswordField')
-		const honeypot = document.querySelector('input[name="nickname"]') as HTMLInputElement
-		const button = screen.getByTestId('CreateAccountButton')
+		await user.type(screen.getByTestId('UsernameField'), 'username')
+		await user.type(screen.getByTestId('EmailField'), 'test@email.com')
+		await user.type(screen.getByTestId('PasswordField'), 'validpassword')
 
-		await user.type(username, 'username')
-		await user.type(email, 'test@email.com')
-		await user.type(password, 'validpassword')
-		await user.type(honeypot, 'bot-fill')
-
-		await user.click(button)
-
-		expect(screen.getByText('Something went wrong, please try again')).toBeInTheDocument()
+		// Button still disabled because token was cleared by the error callback
+		expect(screen.getByTestId('CreateAccountButton')).toBeDisabled()
 	})
 
 	test('Invalid email shows inline validation error and disables button', async () => {
