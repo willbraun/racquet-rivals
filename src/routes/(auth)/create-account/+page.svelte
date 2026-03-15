@@ -8,6 +8,7 @@
 	import { loginGoto } from '$lib/store'
 	import { onDestroy, onMount } from 'svelte'
 	import Honeypot from '../../../lib/components/Honeypot.svelte'
+	import { logErrorInDev } from '../../../lib/utils'
 	import AuthBase from '../AuthBase.svelte'
 	import type { ActionData } from './$types'
 
@@ -46,15 +47,35 @@
 					cfChallengeToken = t
 					error = ''
 				},
-				'error-callback': () => {
-					cfChallengeToken = ''
-					error = 'Cloudflare verification error, please try again'
+				'error-callback': (errorCode: number) => {
+					logErrorInDev('Turnstile error occurred:', errorCode)
+					handleTurnstileError(errorCode)
+					return true // Indicates we handled the error
 				}
 			})
 		}
 	})
 
 	onDestroy(() => window.turnstile.remove(widgetId))
+
+	const handleTurnstileError = (errorCode: number) => {
+		const errorFamily = Math.floor(errorCode / 1000)
+
+		switch (errorFamily) {
+			case 100:
+				error = 'Please refresh the page and try again.'
+				break
+			case 110:
+				error = 'Configuration error. Please contact support.'
+				break
+			case 300:
+			case 600:
+				error = 'Security check failed. Please try refreshing or using a different browser.'
+				break
+			default:
+				error = 'An unexpected error occurred. Please try again.'
+		}
+	}
 
 	const handleEnhance = () => {
 		let clientError = ''

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import Page from './+page.svelte'
 
-let turnstileErrorCallback: (() => void) | undefined
+let turnstileErrorCallback: ((errorCode: number) => void) | undefined
 
 beforeEach(() => {
 	turnstileErrorCallback = undefined
@@ -64,24 +64,63 @@ describe('Create account component', () => {
 		expect(button).toBeDisabled()
 	})
 
-	test('Shows error and disables button when Turnstile verification fails', async () => {
+	test('Shows error and disables button for error family 100 (initialization error)', async () => {
 		render(Page)
+		turnstileErrorCallback?.(100001)
 
-		// Trigger the Cloudflare error callback (e.g. network failure during challenge)
-		turnstileErrorCallback?.()
+		await waitFor(() => {
+			expect(screen.getByText('Please refresh the page and try again.')).toBeInTheDocument()
+		})
+		expect(screen.getByTestId('CreateAccountButton')).toBeDisabled()
+	})
+
+	test('Shows error and disables button for error family 110 (configuration error)', async () => {
+		render(Page)
+		turnstileErrorCallback?.(110200)
+
+		await waitFor(() => {
+			expect(screen.getByText('Configuration error. Please contact support.')).toBeInTheDocument()
+		})
+		expect(screen.getByTestId('CreateAccountButton')).toBeDisabled()
+	})
+
+	test('Shows error and disables button for error family 300 (security error)', async () => {
+		render(Page)
+		turnstileErrorCallback?.(300030)
 
 		await waitFor(() => {
 			expect(
-				screen.getByText('Cloudflare verification error, please try again')
+				screen.getByText(
+					'Security check failed. Please try refreshing or using a different browser.'
+				)
 			).toBeInTheDocument()
 		})
+		expect(screen.getByTestId('CreateAccountButton')).toBeDisabled()
+	})
 
-		const user = userEvent.setup()
-		await user.type(screen.getByTestId('UsernameField'), 'username')
-		await user.type(screen.getByTestId('EmailField'), 'test@email.com')
-		await user.type(screen.getByTestId('PasswordField'), 'validpassword')
+	test('Shows error and disables button for error family 600 (security error)', async () => {
+		render(Page)
+		turnstileErrorCallback?.(600010)
 
-		// Button still disabled because token was cleared by the error callback
+		await waitFor(() => {
+			expect(
+				screen.getByText(
+					'Security check failed. Please try refreshing or using a different browser.'
+				)
+			).toBeInTheDocument()
+		})
+		expect(screen.getByTestId('CreateAccountButton')).toBeDisabled()
+	})
+
+	test('Shows generic error and disables button for unknown error codes', async () => {
+		render(Page)
+		turnstileErrorCallback?.(999999)
+
+		await waitFor(() => {
+			expect(
+				screen.getByText('An unexpected error occurred. Please try again.')
+			).toBeInTheDocument()
+		})
 		expect(screen.getByTestId('CreateAccountButton')).toBeDisabled()
 	})
 

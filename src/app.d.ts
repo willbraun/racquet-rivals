@@ -24,7 +24,7 @@ declare global {
 					sitekey: string
 					callback?: (token: string) => void
 					[key: string]: unknown
-					'error-callback'?: () => void
+					'error-callback'?: (errorCode: number) => void
 				}
 			) => string
 			remove: (widgetId: string) => void
