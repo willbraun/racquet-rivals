@@ -64,16 +64,20 @@
 		switch (errorFamily) {
 			case 100:
 				error = 'Please refresh the page and try again.'
+				window.turnstile.reset(widgetId)
 				break
 			case 110:
+				// Invalid sitekey — resetting won't help
 				error = 'Configuration error. Please contact support.'
 				break
 			case 300:
 			case 600:
 				error = 'Security check failed. Please try refreshing or using a different browser.'
+				window.turnstile.reset(widgetId)
 				break
 			default:
 				error = 'An unexpected error occurred. Please try again.'
+				window.turnstile.reset(widgetId)
 		}
 	}
 

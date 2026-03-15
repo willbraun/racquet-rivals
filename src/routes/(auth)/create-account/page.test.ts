@@ -64,7 +64,7 @@ describe('Create account component', () => {
 		expect(button).toBeDisabled()
 	})
 
-	test('Shows error and disables button for error family 100 (initialization error)', async () => {
+	test('Shows error and resets widget for error family 100 (initialization error)', async () => {
 		render(Page)
 		turnstileErrorCallback?.(100001)
 
@@ -72,9 +72,10 @@ describe('Create account component', () => {
 			expect(screen.getByText('Please refresh the page and try again.')).toBeInTheDocument()
 		})
 		expect(screen.getByTestId('CreateAccountButton')).toBeDisabled()
+		expect(window.turnstile.reset).toHaveBeenCalledWith('fake-widget-id')
 	})
 
-	test('Shows error and disables button for error family 110 (configuration error)', async () => {
+	test('Shows error and does NOT reset widget for error family 110 (configuration error)', async () => {
 		render(Page)
 		turnstileErrorCallback?.(110200)
 
@@ -82,9 +83,10 @@ describe('Create account component', () => {
 			expect(screen.getByText('Configuration error. Please contact support.')).toBeInTheDocument()
 		})
 		expect(screen.getByTestId('CreateAccountButton')).toBeDisabled()
+		expect(window.turnstile.reset).not.toHaveBeenCalled()
 	})
 
-	test('Shows error and disables button for error family 300 (security error)', async () => {
+	test('Shows error and resets widget for error family 300 (security error)', async () => {
 		render(Page)
 		turnstileErrorCallback?.(300030)
 
@@ -96,9 +98,10 @@ describe('Create account component', () => {
 			).toBeInTheDocument()
 		})
 		expect(screen.getByTestId('CreateAccountButton')).toBeDisabled()
+		expect(window.turnstile.reset).toHaveBeenCalledWith('fake-widget-id')
 	})
 
-	test('Shows error and disables button for error family 600 (security error)', async () => {
+	test('Shows error and resets widget for error family 600 (security error)', async () => {
 		render(Page)
 		turnstileErrorCallback?.(600010)
 
@@ -110,9 +113,10 @@ describe('Create account component', () => {
 			).toBeInTheDocument()
 		})
 		expect(screen.getByTestId('CreateAccountButton')).toBeDisabled()
+		expect(window.turnstile.reset).toHaveBeenCalledWith('fake-widget-id')
 	})
 
-	test('Shows generic error and disables button for unknown error codes', async () => {
+	test('Shows generic error and resets widget for unknown error codes', async () => {
 		render(Page)
 		turnstileErrorCallback?.(999999)
 
@@ -122,6 +126,7 @@ describe('Create account component', () => {
 			).toBeInTheDocument()
 		})
 		expect(screen.getByTestId('CreateAccountButton')).toBeDisabled()
+		expect(window.turnstile.reset).toHaveBeenCalledWith('fake-widget-id')
 	})
 
 	test('Invalid email shows inline validation error and disables button', async () => {
