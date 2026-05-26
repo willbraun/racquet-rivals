@@ -1,21 +1,27 @@
 import type { Draw, Slot } from '$lib/types'
 import { generateDummySlots } from '$lib/utils'
 import { describe, expect, test } from 'vitest'
-import { getActiveRound } from './utils'
 import { ROUND_COMPLETE } from '../data'
+import { getActiveRound } from './utils'
 
 describe('Active Round Labels', () => {
+	const now = new Date()
+	const pastDate = new Date(now)
+	pastDate.setFullYear(now.getFullYear() - 1)
+	const futureDate = new Date(now)
+	futureDate.setFullYear(now.getFullYear() + 1)
+
 	const dummyDraw = {
 		collectionId: 'zpjgxcf4d9ojqcd',
 		collectionName: 'draw',
 		created: '2024-05-02 15:42:20.397Z',
-		end_date: '2024-06-09 23:00:00.000Z',
+		end_date: futureDate.toISOString(),
 		event: "Men's Singles",
 		id: 'j5mehm6fvdf9105',
 		name: 'French Open',
 		prediction_close: '',
 		size: 128,
-		start_date: '2024-05-26 12:00:00.000Z',
+		start_date: pastDate.toISOString(),
 		updated: '2024-05-02 15:44:08.159Z',
 		url: 'https://www.atptour.com/en/scores/archive/roland-garros/520/2024/draws',
 		year: 2024

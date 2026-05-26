@@ -25,6 +25,9 @@ export const fetchJson = async (url: string, svelteFetch: SvelteFetch, token?: s
 }
 
 export const getActiveRound = (draw: Draw, slots: Slot[]) => {
+	const today = new Date()
+	const drawStart = new Date(draw.start_date)
+	const drawEnd = new Date(draw.end_date)
 	const fullDrawRounds = getFullDrawRounds(draw)
 	const allRounds = getAllRounds(fullDrawRounds)
 	const ourRounds = getOurRounds(allRounds)
@@ -41,6 +44,18 @@ export const getActiveRound = (draw: Draw, slots: Slot[]) => {
 			roundSlots.some((slot) => slot.name.trim() === ROUND_COMPLETE)
 		)
 	})
+
+	if (today < drawStart) {
+		return 'Not Started'
+	}
+
+	if (today > drawEnd) {
+		return 'Tournament Completed'
+	}
+
+	if (slots.length === 0) {
+		return 'Will needs to setup the draw'
+	}
 
 	if (filledRounds.at(-1) === fullDrawRounds) {
 		return 'Tournament Completed'
