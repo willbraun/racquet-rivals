@@ -54,7 +54,7 @@ export const getActiveRound = (draw: Draw, slots: Slot[]) => {
 	}
 
 	if (slots.length === 0) {
-		return 'Will needs to setup the draw'
+		return 'Will needs to set up the draw'
 	}
 
 	if (filledRounds.at(-1) === fullDrawRounds) {
