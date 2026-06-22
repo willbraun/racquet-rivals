@@ -303,6 +303,7 @@ export interface DrawPageData extends BasePageData {
 	draw: Draw
 	activeRound: string
 	slots: Slot[]
+	earlySlots: Slot[]
 	drawResults: PbListResponse<DrawResult>
 	predictionDistribution: PbListResponse<PredictionDistribution>
 	isLeaderboard: boolean

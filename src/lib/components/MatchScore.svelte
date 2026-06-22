@@ -7,13 +7,24 @@
 		prevSlot1?: Slot
 		prevSlot2?: Slot
 		draw: Draw
+		forceShowScores?: boolean
+		textSize?: string
 	}
 
-	let { slot, prevSlot1, prevSlot2, draw }: Props = $props()
+	let {
+		slot,
+		prevSlot1,
+		prevSlot2,
+		draw,
+		forceShowScores = false,
+		textSize = 'text-xs'
+	}: Props = $props()
 
 	let firstToSets = $derived(draw.event === "Men's Singles" ? 3 : 2)
 	const showScores = $derived(
-		slot.name && slot.round > 4 && compareAsc(draw.start_date, '2024-06-30') > 0
+		slot.name &&
+			(forceShowScores || slot.round > 4) &&
+			compareAsc(draw.start_date, '2024-06-30') > 0
 	)
 
 	interface Set {
@@ -102,7 +113,7 @@
 	}
 </script>
 
-<div class="flex w-full justify-center text-xs text-gray-500" data-testid="MatchScore">
+<div class="flex w-full justify-center {textSize} text-stone-500" data-testid="MatchScore">
 	{#if showScores}
 		{#if sets.length > 0}
 			{#each sets as set, i (i)}

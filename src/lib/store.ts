@@ -1,5 +1,6 @@
 import {
 	ScraperHealth,
+	type Draw,
 	type Prediction,
 	type PredictionDistribution,
 	type SelectedUser,
@@ -67,3 +68,5 @@ export const selectUsersModalOpen = writable<boolean>(false)
 export const shareLinkOpen = writable<boolean>(false)
 export const navMenuOpen = writable<boolean>(false)
 export const slotStatsOpen = writable<Slot | null>(null)
+export const earlyRoundsOpen = writable<boolean>(false)
+export const earlyRoundsData = writable<{ slot: Slot; earlySlots: Slot[]; draw: Draw } | null>(null)

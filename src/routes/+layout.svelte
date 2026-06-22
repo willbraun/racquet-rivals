@@ -7,6 +7,8 @@
 	import {
 		currentUser,
 		drawNavUrl,
+		earlyRoundsData,
+		earlyRoundsOpen,
 		isMobile,
 		navMenuOpen,
 		scrapersHealthy,
@@ -21,6 +23,7 @@
 	import '../app.css'
 	import Footer from '../lib/components/Footer.svelte'
 	import SlotStats from '../lib/components/SlotStats.svelte'
+	import EarlyRoundsContent from './draw/[slug]/EarlyRoundsContent.svelte'
 	import SelectUsers from './draw/[slug]/SelectUsers.svelte'
 
 	interface Props {
@@ -126,6 +129,45 @@
 			<NavMenuContent />
 		</Dialog.Content>
 	</Dialog.Positioner>
+</Dialog>
+
+<!-- Early Rounds Drawer/Modal -->
+<Dialog
+	open={$earlyRoundsOpen}
+	onOpenChange={(details: { open: boolean }) => earlyRoundsOpen.set(details.open)}
+>
+	<Dialog.Backdrop class="bg-surface-500/50 fixed inset-0 z-50" />
+	{#if $isMobile}
+		<Dialog.Positioner class="fixed inset-0 z-50 flex items-end">
+			<Dialog.Content
+				class="h-3/4 w-full translate-y-full opacity-0 shadow-xl transition transition-discrete data-[state=open]:translate-y-0 data-[state=open]:opacity-100 starting:data-[state=open]:translate-y-full starting:data-[state=open]:opacity-0"
+			>
+				{#if $earlyRoundsData}
+					<EarlyRoundsContent
+						slot={$earlyRoundsData.slot}
+						earlySlots={$earlyRoundsData.earlySlots}
+						draw={$earlyRoundsData.draw}
+						onclose={() => earlyRoundsOpen.set(false)}
+					/>
+				{/if}
+			</Dialog.Content>
+		</Dialog.Positioner>
+	{:else}
+		<Dialog.Positioner class="fixed inset-0 z-50 flex items-center justify-center">
+			<Dialog.Content
+				class="mx-4 w-full max-w-lg rounded-xl bg-white opacity-0 shadow-xl transition transition-discrete data-[state=open]:opacity-100 starting:data-[state=open]:opacity-0"
+			>
+				{#if $earlyRoundsData}
+					<EarlyRoundsContent
+						slot={$earlyRoundsData.slot}
+						earlySlots={$earlyRoundsData.earlySlots}
+						draw={$earlyRoundsData.draw}
+						onclose={() => earlyRoundsOpen.set(false)}
+					/>
+				{/if}
+			</Dialog.Content>
+		</Dialog.Positioner>
+	{/if}
 </Dialog>
 
 <div class="flex min-h-screen flex-col">

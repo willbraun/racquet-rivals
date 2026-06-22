@@ -39,6 +39,7 @@ export async function load({ fetch, params, locals, cookies }) {
 		slots.items.length > 0
 			? slots.items.filter((slot) => slot.round >= fullDrawRounds - 4)
 			: generateDummySlots(draw.id, startRound, fullDrawRounds)
+	const earlySlots = slots.items.filter((slot) => slot.round < startRound)
 
 	return {
 		upcoming,
@@ -47,6 +48,7 @@ export async function load({ fetch, params, locals, cookies }) {
 		draw,
 		activeRound,
 		slots: renderedSlots,
+		earlySlots,
 		drawResults,
 		isLeaderboard: cookies.get('isLeaderboard') === 'true',
 		title: getTitle(draw),
