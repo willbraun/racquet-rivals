@@ -536,39 +536,39 @@
 									{@const prevSlot2 = slots.find(
 										(s) => s.round === slot.round - 1 && s.position === slot.position * 2
 									)}
-									<p
-										class={slot.name.length > 16 ? 'text-sm xl:text-lg' : 'text-lg'}
-										data-testid={`SlotNameR${slot.round}P${slot.position}`}
-									>
-										{`${slot.seed} ${slot.name}`}
-									</p>
-									<MatchScore {slot} {prevSlot1} {prevSlot2} draw={data.draw} />
-									{#if index === 0 && data.earlySlots.length > 0}
-										<button
-											class="flex text-xs text-stone-500"
-											onclick={() => {
-												earlyRoundsData.set({
-													slot,
-													earlySlots: data.earlySlots,
-													draw: data.draw
-												})
-												earlyRoundsOpen.set(true)
-											}}
-											aria-label="View early round results"
+									<div class="flex w-full items-center">
+										{#if index === 0 && data.earlySlots.length > 0}
+											<button
+												class="p-2 text-xs text-stone-500"
+												onclick={() => {
+													earlyRoundsData.set({
+														slot,
+														earlySlots: data.earlySlots,
+														draw: data.draw
+													})
+													earlyRoundsOpen.set(true)
+												}}
+												aria-label="View early round results"
+											>
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													viewBox="0 0 448 512"
+													width="12"
+													class="fill-stone-500"
+													><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path
+														d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"
+													/></svg
+												>
+											</button>
+										{/if}
+										<p
+											class={`${slot.name.length > 16 ? 'text-sm xl:text-lg' : 'text-lg'} w-full text-center leading-tight ${index > 0 ? 'mb-1' : ''}`}
+											data-testid={`SlotNameR${slot.round}P${slot.position}`}
 										>
-											<p>Previous scores</p>
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												viewBox="0 0 640 640"
-												width="12"
-												class="ml-1 fill-stone-500"
-											>
-												><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path
-													d="M471.1 297.4C483.6 309.9 483.6 330.2 471.1 342.7L279.1 534.7C266.6 547.2 246.3 547.2 233.8 534.7C221.3 522.2 221.3 501.9 233.8 489.4L403.2 320L233.9 150.6C221.4 138.1 221.4 117.8 233.9 105.3C246.4 92.8 266.7 92.8 279.2 105.3L471.2 297.3z"
-												/></svg
-											>
-										</button>
-									{/if}
+											{`${slot.seed} ${slot.name}`}
+										</p>
+									</div>
+									<MatchScore {slot} {prevSlot1} {prevSlot2} draw={data.draw} />
 								{:else}
 									<p
 										class="text-surface-800 text-lg italic"

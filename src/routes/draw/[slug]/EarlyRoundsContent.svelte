@@ -16,6 +16,16 @@
 
 	let { slot, earlySlots, draw, onclose }: Props = $props()
 
+	let accordionValues = $state<Record<string, string[]>>({})
+
+	const getAccordionValue = (key: string): string[] => accordionValues[key] ?? []
+
+	const setAccordionValue = (key: string, value: string[]) => {
+		accordionValues = { ...accordionValues, [key]: value }
+	}
+
+	const isAccordionOpen = (key: string): boolean => getAccordionValue(key).includes(key)
+
 	const startRound = $derived(getFullDrawRounds(draw) - 4)
 
 	interface MatchDisplay {
@@ -140,11 +150,26 @@
 			})
 		}
 
+		result.sort((a, b) => b.matchRound - a.matchRound)
+
 		return result
 	})
 </script>
 
-<div class="flex h-full w-full flex-col items-center rounded-xl bg-white">
+{#snippet Chevron(open: boolean)}
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 640 640"
+		width="16"
+		class={`ml-1 fill-stone-500 ${open ? 'rotate-90' : ''} transition-transform`}
+	>
+		<path
+			d="M471.1 297.4C483.6 309.9 483.6 330.2 471.1 342.7L279.1 534.7C266.6 547.2 246.3 547.2 233.8 534.7C221.3 522.2 221.3 501.9 233.8 489.4L403.2 320L233.9 150.6C221.4 138.1 221.4 117.8 233.9 105.3C246.4 92.8 266.7 92.8 279.2 105.3L471.2 297.3z"
+		/>
+	</svg>
+{/snippet}
+
+<div class="flex h-full w-full flex-col items-center rounded-xl bg-stone-50">
 	<div class="bg-primary-100 relative w-full p-3 text-center" class:rounded-t-xl={!$isMobile}>
 		<p class="text-2xl font-bold">{slot.seed} {slot.name}</p>
 		<p class="text-sm">Early Round Results</p>
@@ -156,14 +181,21 @@
 	<div class="w-full divide-y divide-stone-200 overflow-y-auto">
 		{#each matches as match (match.label)}
 			{#if match.matchRound === 3 && match.opponentHistory}
+				<!-- R3 -->
 				{@const r3R2 = match.opponentHistory}
 				{@const r3R1 = r3R2.opponentHistory}
 				{@const r3R2R1 = r3R2.opponentSlot?.name
 					? getMatchForWinner(r3R2.opponentSlot, r3R2.opponentSlot.name)
 					: undefined}
-				<Accordion collapsible>
-					<Accordion.Item value={`${match.id}-r3-history`}>
-						<Accordion.ItemTrigger class="w-full px-6 py-4 hover:bg-stone-50 hover:text-inherit">
+				{@const r3Key = `${match.id}-r3-history`}
+				{@const r3R2Key = `${r3R2.id}-details`}
+				<Accordion
+					collapsible
+					value={getAccordionValue(r3Key)}
+					onValueChange={(details) => setAccordionValue(r3Key, details.value)}
+				>
+					<Accordion.Item value={r3Key}>
+						<Accordion.ItemTrigger class="w-full rounded-none px-6 py-4 hover:text-inherit">
 							<div class="flex w-full items-center gap-4 text-left">
 								<p class="w-8 shrink-0 font-semibold text-stone-500">{match.label}</p>
 								<div class="flex-1">
@@ -173,19 +205,23 @@
 										prevSlot1={match.prevSlot1}
 										prevSlot2={match.prevSlot2}
 										{draw}
-										forceShowScores={true}
+										forceShowScores
 										textSize="text-sm"
 									/>
 								</div>
-								<p class="font-semibold text-green-600">W</p>
+								{@render Chevron(isAccordionOpen(r3Key))}
 							</div>
 						</Accordion.ItemTrigger>
-						<Accordion.ItemContent class="px-6 pb-4">
-							<div class="border-primary-100 ml-12 border-l pl-4">
-								<Accordion collapsible>
-									<Accordion.Item value={`${r3R2.id}-details`}>
+						<Accordion.ItemContent class="pb-4">
+							<div class="border-primary-100 ml-8 border-l-2">
+								<Accordion
+									collapsible
+									value={getAccordionValue(r3R2Key)}
+									onValueChange={(details) => setAccordionValue(r3R2Key, details.value)}
+								>
+									<Accordion.Item value={r3R2Key}>
 										<Accordion.ItemTrigger
-											class="w-full py-3 text-left hover:bg-stone-50 hover:text-inherit"
+											class="w-full rounded-none py-3 text-left hover:text-inherit"
 										>
 											<div class="flex w-full items-center gap-4">
 												<p class="w-8 shrink-0 font-semibold text-stone-500">{r3R2.label}</p>
@@ -198,16 +234,16 @@
 														prevSlot1={r3R2.prevSlot1}
 														prevSlot2={r3R2.prevSlot2}
 														{draw}
-														forceShowScores={true}
+														forceShowScores
 														textSize="text-sm"
 													/>
 												</div>
-												<p class="font-semibold text-green-600">W</p>
+												{@render Chevron(isAccordionOpen(r3R2Key))}
 											</div>
 										</Accordion.ItemTrigger>
 										<Accordion.ItemContent class="pb-2">
 											{#if r3R2R1}
-												<div class="border-primary-100 ml-12 border-l pl-4">
+												<div class="border-primary-100 ml-8 border-l-2 pl-4">
 													<div class="flex items-center gap-4 py-3">
 														<p class="w-8 shrink-0 font-semibold text-stone-500">{r3R2R1.label}</p>
 														<div class="flex-1">
@@ -219,11 +255,10 @@
 																prevSlot1={r3R2R1.prevSlot1}
 																prevSlot2={r3R2R1.prevSlot2}
 																{draw}
-																forceShowScores={true}
+																forceShowScores
 																textSize="text-sm"
 															/>
 														</div>
-														<p class="font-semibold text-green-600">W</p>
 													</div>
 												</div>
 											{/if}
@@ -232,7 +267,7 @@
 								</Accordion>
 
 								{#if r3R1}
-									<div class="flex items-center gap-4 py-3">
+									<div class="flex items-center gap-4 py-3 pl-4">
 										<p class="w-8 shrink-0 font-semibold text-stone-500">{r3R1.label}</p>
 										<div class="flex-1">
 											<p class="text-lg font-medium">{getPlayerDisplayName(r3R1.opponentSlot)}</p>
@@ -241,11 +276,10 @@
 												prevSlot1={r3R1.prevSlot1}
 												prevSlot2={r3R1.prevSlot2}
 												{draw}
-												forceShowScores={true}
+												forceShowScores
 												textSize="text-sm"
 											/>
 										</div>
-										<p class="font-semibold text-green-600">W</p>
 									</div>
 								{/if}
 							</div>
@@ -253,9 +287,15 @@
 					</Accordion.Item>
 				</Accordion>
 			{:else if match.opponentHistory}
-				<Accordion collapsible>
-					<Accordion.Item value={`${match.id}-opponent-history`}>
-						<Accordion.ItemTrigger class="w-full px-6 py-4 hover:bg-stone-50 hover:text-inherit">
+				<!-- R2 -->
+				{@const r2Key = `${match.id}-opponent-history`}
+				<Accordion
+					collapsible
+					value={getAccordionValue(r2Key)}
+					onValueChange={(details) => setAccordionValue(r2Key, details.value)}
+				>
+					<Accordion.Item value={r2Key}>
+						<Accordion.ItemTrigger class="w-full rounded-none px-6 py-4 hover:text-inherit">
 							<div class="flex w-full items-center gap-4 text-left">
 								<p class="w-8 shrink-0 font-semibold text-stone-500">{match.label}</p>
 								<div class="flex-1">
@@ -265,74 +305,64 @@
 										prevSlot1={match.prevSlot1}
 										prevSlot2={match.prevSlot2}
 										{draw}
-										forceShowScores={true}
+										forceShowScores
 										textSize="text-sm"
 									/>
 								</div>
-								<p class="font-semibold text-green-600">W</p>
+								{@render Chevron(isAccordionOpen(r2Key))}
 							</div>
 						</Accordion.ItemTrigger>
 						<Accordion.ItemContent class="px-6 pb-4">
-							<div class="border-primary-100 ml-12 border-l pl-4">
-								<Accordion collapsible>
-									<Accordion.Item value={`${match.opponentHistory.id}-details`}>
-										<Accordion.ItemTrigger
-											class="w-full py-3 text-left hover:bg-stone-50 hover:text-inherit"
-										>
-											<div class="flex w-full items-center gap-4">
-												<p class="w-8 shrink-0 font-semibold text-stone-500">
-													{match.opponentHistory.label}
+							<div class="border-primary-100 ml-8 border-l-2 pl-4">
+								<div class="flex w-full items-center gap-4">
+									<p class="w-8 shrink-0 font-semibold text-stone-500">
+										{match.opponentHistory.label}
+									</p>
+									<div class="flex-1">
+										<p class="text-lg font-medium">
+											{getPlayerDisplayName(match.opponentHistory.opponentSlot)}
+										</p>
+										<MatchScore
+											slot={match.opponentHistory.advancingSlot}
+											prevSlot1={match.opponentHistory.prevSlot1}
+											prevSlot2={match.opponentHistory.prevSlot2}
+											{draw}
+											forceShowScores
+											textSize="text-sm"
+										/>
+									</div>
+								</div>
+								{#if match.opponentHistory.opponentHistory}
+									<div class="border-primary-100 ml-8 border-l-2 pl-4">
+										<div class="flex items-center gap-4 py-3">
+											<p class="w-8 shrink-0 font-semibold text-stone-500">
+												{match.opponentHistory.opponentHistory.label}
+											</p>
+											<div class="flex-1">
+												<p class="font-mediu text-lg">
+													{getPlayerDisplayName(match.opponentHistory.opponentHistory.opponentSlot)}
 												</p>
-												<div class="flex-1">
-													<p class="text-lg font-medium">
-														{getPlayerDisplayName(match.opponentHistory.opponentSlot)}
-													</p>
-													<MatchScore
-														slot={match.opponentHistory.advancingSlot}
-														prevSlot1={match.opponentHistory.prevSlot1}
-														prevSlot2={match.opponentHistory.prevSlot2}
-														{draw}
-														forceShowScores={true}
-														textSize="text-sm"
-													/>
-												</div>
-												<p class="font-semibold text-green-600">W</p>
+												<MatchScore
+													slot={match.opponentHistory.opponentHistory.advancingSlot}
+													prevSlot1={match.opponentHistory.opponentHistory.prevSlot1}
+													prevSlot2={match.opponentHistory.opponentHistory.prevSlot2}
+													{draw}
+													forceShowScores
+													textSize="text-sm"
+												/>
 											</div>
-										</Accordion.ItemTrigger>
-										<Accordion.ItemContent class="pb-2">
-											{#if match.opponentHistory.opponentHistory}
-												<div class="border-primary-100 ml-12 border-l pl-4">
-													<div class="flex items-center gap-4 py-3">
-														<p class="w-8 shrink-0 font-semibold text-stone-500">
-															{match.opponentHistory.opponentHistory.label}
-														</p>
-														<div class="flex-1">
-															<p class="text-lg font-medium">
-																{getPlayerDisplayName(
-																	match.opponentHistory.opponentHistory.opponentSlot
-																)}
-															</p>
-															<MatchScore
-																slot={match.opponentHistory.opponentHistory.advancingSlot}
-																prevSlot1={match.opponentHistory.opponentHistory.prevSlot1}
-																prevSlot2={match.opponentHistory.opponentHistory.prevSlot2}
-																{draw}
-																forceShowScores={true}
-																textSize="text-sm"
-															/>
-														</div>
-														<p class="font-semibold text-green-600">W</p>
-													</div>
-												</div>
-											{/if}
-										</Accordion.ItemContent>
+										</div>
+									</div>
+								{/if}
+								<!-- </Accordion.ItemContent>
 									</Accordion.Item>
-								</Accordion>
+								</Accordion> -->
 							</div>
 						</Accordion.ItemContent>
 					</Accordion.Item>
 				</Accordion>
 			{:else}
+				<!-- R1 -->
 				<div class="flex items-center gap-4 px-6 py-4">
 					<p class="w-8 shrink-0 font-semibold text-stone-500">{match.label}</p>
 					<div class="flex-1">
@@ -342,11 +372,10 @@
 							prevSlot1={match.prevSlot1}
 							prevSlot2={match.prevSlot2}
 							{draw}
-							forceShowScores={true}
+							forceShowScores
 							textSize="text-sm"
 						/>
 					</div>
-					<p class="font-semibold text-green-600">W</p>
 				</div>
 			{/if}
 		{/each}
