@@ -11,3 +11,5 @@ vite.config.ts.timestamp-*
 launch.json
 .netlify
 start.sh
+scrape.sh
+DRAW_SETUP.md
