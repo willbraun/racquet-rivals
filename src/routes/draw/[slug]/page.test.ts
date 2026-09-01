@@ -72,6 +72,7 @@ const data: DrawPageData = {
 	} as Draw,
 	activeRound: 'Qualifying Rounds',
 	slots: emptySlotData,
+	earlySlots: emptySlotData,
 	drawResults: {
 		items: [
 			{
