@@ -1,3 +1,4 @@
+import { dev } from '$app/environment'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 import Pocketbase from 'pocketbase'
 import type { UserRecord } from './types'
@@ -23,7 +24,9 @@ export function initPocketbase() {
 
 			// Create encoded pb_auth cookie string and set it in the document, or remove it if logging out
 			document.cookie = pb.authStore.exportToCookie({
-				httpOnly: false // so it can be managed from the client in this file
+				httpOnly: false, // so it can be managed from the client in this file
+				secure: !dev, // dev server on a phone over LAN is http, so Secure would silently drop the cookie
+				sameSite: 'lax' // 'strict' can drop the cookie on some mobile Chrome navigations
 			})
 		}, true)
 	})
