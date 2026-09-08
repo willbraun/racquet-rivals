@@ -169,7 +169,7 @@
 	</svg>
 {/snippet}
 
-<div class="flex h-full w-full flex-col items-center rounded-xl bg-stone-50">
+<div class="flex h-full w-full flex-col items-center bg-stone-50 sm:rounded-xl">
 	<div class="bg-primary-100 relative w-full p-3 text-center" class:rounded-t-xl={!$isMobile}>
 		<p class="text-2xl font-bold">{slot.seed} {slot.name}</p>
 		<p class="text-sm">Early Round Results</p>
@@ -354,9 +354,6 @@
 										</div>
 									</div>
 								{/if}
-								<!-- </Accordion.ItemContent>
-									</Accordion.Item>
-								</Accordion> -->
 							</div>
 						</Accordion.ItemContent>
 					</Accordion.Item>

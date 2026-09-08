@@ -537,9 +537,15 @@
 										(s) => s.round === slot.round - 1 && s.position === slot.position * 2
 									)}
 									<div class="flex w-full items-center">
+										<p
+											class={`${slot.name.length > 16 ? 'text-sm xl:text-lg' : 'text-lg'} w-full text-center leading-tight ${index > 0 ? 'mb-1' : ''}`}
+											data-testid={`SlotNameR${slot.round}P${slot.position}`}
+										>
+											{`${slot.seed} ${slot.name}`}
+										</p>
 										{#if index === 0 && data.earlySlots.length > 0}
 											<button
-												class="p-2 text-xs text-stone-500"
+												class={`pr-1 text-xs text-stone-500 ${slot.position % 2 === 1 ? 'mr-[2px]' : ''}`}
 												onclick={() => {
 													earlyRoundsData.set({
 														slot,
@@ -550,23 +556,13 @@
 												}}
 												aria-label="View early round results"
 											>
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													viewBox="0 0 448 512"
-													width="12"
-													class="fill-stone-500"
-													><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path
-														d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"
-													/></svg
+												<div
+													class="flex h-4 w-4 items-center justify-center rounded-full border-2 border-stone-400 text-xs font-bold text-stone-400 duration-100 hover:scale-110 hover:border-stone-600 hover:text-stone-600"
 												>
+													i
+												</div>
 											</button>
 										{/if}
-										<p
-											class={`${slot.name.length > 16 ? 'text-sm xl:text-lg' : 'text-lg'} w-full text-center leading-tight ${index > 0 ? 'mb-1' : ''}`}
-											data-testid={`SlotNameR${slot.round}P${slot.position}`}
-										>
-											{`${slot.seed} ${slot.name}`}
-										</p>
 									</div>
 									<MatchScore {slot} {prevSlot1} {prevSlot2} draw={data.draw} />
 								{:else}
@@ -580,7 +576,7 @@
 								{#if index > 0}
 									{#if !predictionsAllowed}
 										<button
-											class="absolute right-0 bottom-0 p-1"
+											class="absolute right-0 bottom-0 px-1 pb-2"
 											onclick={() => slotStatsOpen.set(slot)}
 										>
 											<svg

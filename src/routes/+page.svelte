@@ -188,7 +188,7 @@
 	{/if}
 	{#if hasWinners && winnerTournamentName}
 		<section
-			class="confetti-container relative mx-auto mb-8 flex flex-col items-center gap-8 overflow-hidden py-16 text-center font-bold text-white sm:mb-16 sm:py-24 {bannerStyleMap[
+			class="confetti-container relative mx-auto mb-8 flex flex-col items-center gap-8 overflow-hidden py-16 text-center font-bold text-white sm:py-24 {bannerStyleMap[
 				winnerTournamentName
 			]}"
 			data-testid="recent-winners"
@@ -230,7 +230,7 @@
 			</div>
 		</section>
 	{/if}
-	<section class="mx-auto max-w-screen-md px-4">
+	<section class="mx-auto mt-16 max-w-screen-md px-4">
 		{#if data.active.length > 0}
 			{@render drawList('Active', data.active)}
 		{:else if data.upcoming.length > 0}
